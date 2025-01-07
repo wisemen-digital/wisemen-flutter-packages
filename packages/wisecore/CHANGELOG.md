@@ -1,0 +1,60 @@
+## 2.0.2
+
+- Removed classes and functions that weren't being used
+- Removed Sentry and OneSignal
+- Added documentation
+- Slightly changed structure
+
+## 2.0.1
+
+- Removed Isar
+
+## 2.0.0
+
+- Removed auto router and routing
+- Changed imports to support upgrades
+- Changed url_launcher implementations
+- Removed generated code files
+- Removed models
+
+## 1.0.14
+
+- Updated Sentry_flutter to 8.3.0
+
+## 1.0.13
+
+- Fixed `AsyncValue` error dialog shower extension method
+
+## 1.0.12
+
+- Added error parsing for DioException
+- Added `customErrorMessage` to `showErrorDialog` 
+
+## 1.0.11
+
+- Removed Secure storage, updated packages
+
+## 1.0.10
+
+- Updated packages
+
+## 1.0.8
+
+- Improved `showErrorDialog` on `AsyncValue`
+
+## 1.0.7
+
+- Updated packages
+
+## 1.0.6
+
+- Added `.history` folder to `.gitignore`
+- Updated packages
+
+## 1.0.5
+
+- Moved repo and updated packages
+
+## 1.0.4
+
+- First version for pub.dev
