@@ -1,1 +1,1 @@
-Wisemen flutter packages monorepo
+Wisemen Flutter packages monorepo
