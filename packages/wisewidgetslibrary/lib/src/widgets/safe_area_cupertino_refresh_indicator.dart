@@ -1,11 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
+/// A Cupertino-style refresh indicator that works with [SafeArea].
 class SafeAreaCupertinoRefreshIndicator extends StatelessWidget {
+  /// Constructor [SafeAreaCupertinoRefreshIndicator]
   const SafeAreaCupertinoRefreshIndicator({
     required this.onRefresh,
     super.key,
   });
 
+  /// Refresh callback
   final RefreshCallback onRefresh;
 
   @override
