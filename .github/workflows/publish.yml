@@ -1,0 +1,39 @@
+# .github/workflows/publish.yml
+name: Publish to pub.dev
+
+on:
+  workflow_dispatch: # Allows manual triggers with input parameters
+    inputs:
+      package_name:
+        description: "The name of the package to publish"
+        required: true
+        default: "." # Default to the current directory if no specific package is specified
+
+jobs:
+  publish:
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: dart-lang/setup-dart@v1
+      
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Fix analysis issues
+        run: dart fix --apply
+
+      - name: Format
+        run: dart format .
+        
+      - name: Publish
+        run: |
+          cd package/${{ github.event.inputs.package_name }}
+          dart pub publish --force
