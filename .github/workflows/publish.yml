@@ -13,6 +13,10 @@ on:
             - "wiseclient"
             - "wisewidgetslibrary"
           default: "wisecore"
+        tag_version:
+          description: "Tag version ie. 1.0.0"
+          required: true
+          default: ""
 
 jobs:
   publish:
@@ -21,7 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+        with:
+          fetch-depth: 0
+
       - uses: dart-lang/setup-dart@v1
       
       - name: Set up Flutter
@@ -42,3 +48,10 @@ jobs:
         run: |
           cd package/${{ github.event.inputs.package_name }}
           dart pub publish --force
+
+      - name: Create Git Tag
+        uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "${{ github.event.inputs.package_name }} v${{ github.event.inputs.tag_version }}"
+          message: "${{ github.event.inputs.package_name }} Release v${{ github.event.inputs.tag_version }}"
+          force_push_tag: true
