@@ -1,6 +1,11 @@
 ## 2.0.0
 
+* Updated PlatformDropdown
+* Added documentation
 * Removed all generation
+* Removed unused widgets
+* Removed localizations
+* [Maintenance] Changed folder structure
 
 ## 1.0.26
 
