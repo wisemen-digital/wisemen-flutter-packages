@@ -1,8 +1,8 @@
 name: wisecore
 description: A flutter core project used by Wisemen. Comes with a bunch of generally useful extensions and functions.
 version: 2.0.2
-homepage: https://github.com/wisemen-digital/flutter-core
-repository: https://github.com/wisemen-digital/flutter-core
+homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
+repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
 
 environment:
   sdk: ">=3.6.0 <4.0.0"

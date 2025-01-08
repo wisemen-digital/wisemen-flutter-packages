@@ -1,8 +1,8 @@
 name: wisewidgetslibrary
 description: Wisemen widgets library containing platform specific widgets and other commonly useful widgets.
 version: 2.0.0
-homepage: https://github.com/wisemen-digital/flutter-widgets-library
-repository: https://github.com/wisemen-digital/flutter-widgets-library
+homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisewidgetslibrary
+repository: https://github.com/wisemen-digital/flutter-widgets-library/packages/wisewidgetslibrary
 
 environment:
   sdk: ">=3.6.0 <4.0.0"
