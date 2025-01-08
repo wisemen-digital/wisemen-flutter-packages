@@ -5,3 +5,4 @@ environment:
 workspace:
   - packages/wiseclient
   - packages/wisecore
+  - packages/wisewidgetslibrary

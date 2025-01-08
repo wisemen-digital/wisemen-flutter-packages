@@ -25,6 +25,7 @@ extension CustomListExtensions<T, I> on List<T>? {
     }
   }
 
+  /// Update single item based on index
   List<T> updateItem({
     required T item,
     required int index,

@@ -1,0 +1,54 @@
+name: wisewidgetslibrary
+description: Wisemen widgets library containing platform specific widgets and other commonly useful widgets.
+version: 2.0.0
+homepage: https://github.com/wisemen-digital/flutter-widgets-library
+repository: https://github.com/wisemen-digital/flutter-widgets-library
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+  flutter: ">=2.19.7"
+resolution: workspace
+dependencies:
+  # Flutter
+  flutter:
+    sdk: flutter
+  intl: any
+
+  # Images
+  cached_network_image: ^3.4.1
+  photo_view: ^0.15.0
+
+  # UI
+  auto_size_text: ^3.0.0
+  pull_down_button: ^0.10.2
+  sliver_tools: ^0.2.12
+  
+  # Extensions
+  collection: ^1.19.0
+  
+  # Validation
+  email_validator: ^3.0.0
+
+  # Animations
+  page_transition: ^2.1.0
+
+  # Conditional wrap
+  conditional_wrap: ^3.0.0
+
+  # Image carousel
+  dismissible_page: ^1.0.2
+  flutter_hooks: ^0.20.5
+
+dev_dependencies:
+  # Static analysis & linting
+  flutter_lints: ^5.0.0
+  custom_lint: ^0.7.0
+  dependency_validator: ^4.1.2
+
+flutter:
+  uses-material-design: true
+  plugin:
+    platforms:
+      ios:
+        pluginClass: WiseWidgetsLibraryPlugin
+
