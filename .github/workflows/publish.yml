@@ -2,12 +2,17 @@
 name: Publish to pub.dev
 
 on:
-  workflow_dispatch: # Allows manual triggers with input parameters
-    inputs:
-      package_name:
-        description: "The name of the package to publish"
-        required: true
-        default: "." # Default to the current directory if no specific package is specified
+    workflow_dispatch: # Allows manual triggers with dropdown options
+      inputs:
+        package_name:
+          description: "Select the package to publish"
+          required: true
+          type: choice
+          options:
+            - "wisecore"
+            - "wiseclient"
+            - "wisewidgetslibrary"
+          default: "wisecore"
 
 jobs:
   publish:
