@@ -22,15 +22,9 @@ dependencies:
   auto_size_text: ^3.0.0
   pull_down_button: ^0.10.2
   sliver_tools: ^0.2.12
-  
-  # Extensions
-  collection: ^1.19.0
-  
-  # Validation
-  email_validator: ^3.0.0
-
+    
   # Animations
-  page_transition: ^2.1.0
+  page_transition: ^2.2.1
 
   # Conditional wrap
   conditional_wrap: ^3.0.0
