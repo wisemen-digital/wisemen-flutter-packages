@@ -1,0 +1,128 @@
+name: sandbox
+description: A Wisemen Flutter project.
+publish_to: 'none'
+
+version: 0.0.1+1
+
+environment:
+  sdk: '>=3.5.4 <4.0.0'
+dependencies:
+  # Flutter
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+
+  # Wisemen
+  wisecore:
+    path: ../wisecore
+  wisewidgetslibrary:
+    path: ../wisewidgetslibrary
+  
+  # Networking
+  wiseclient: 
+    path: ../wiseclient
+  
+ # Riverpod
+  riverpod_annotation: ^2.3.5
+  hooks_riverpod: ^2.5.1
+
+  # UI
+  modal_bottom_sheet: ^3.0.0
+
+  # Utils
+  path_provider: ^2.1.3
+  faker: ^2.2.0
+  
+  # Database
+  drift: ^2.19.1+1
+  sqlite3_flutter_libs: ^0.5.24
+  
+  # Device info
+  package_info_plus: ^8.1.3
+
+  # Splash
+  flutter_native_splash: ^2.4.1
+
+  # Logging
+  talker_flutter: ^4.3.4
+  onesignal_flutter: ^5.2.9
+  sentry_flutter: ^8.12.0
+
+  path: any
+  dio: any
+  fresh_dio: any
+  auto_route: any
+  flutter_secure_storage: any
+  shared_preferences: any
+  flutter_riverpod: any
+dev_dependencies: 
+  # Code generation
+  build_runner: ^2.4.9
+
+  # Riverpod
+  riverpod_generator: ^2.4.0
+
+  # Routing
+  auto_route_generator: ^9.0.0
+  
+  # Data
+  json_serializable: ^6.6.1
+  
+  # Database
+  drift_dev: ^2.19.1
+  
+  # Flavors
+  flutter_flavorizr: ^2.1.6
+  
+  # Linting
+  riverpod_lint: ^2.6.3
+
+# flavors
+flavorizr:
+  flavors:
+    # dev
+    development:
+      app:
+        name: "Sanbox"
+      android:
+        applicationId: "com.wisemen.app.development"
+      ios:
+        bundleId: "com.wisemen.app.development"
+    # staging
+    staging:
+      app:
+        name: "Sanbox"
+      android:
+        applicationId: "com.wisemen.app.staging"
+      ios:
+        bundleId: "com.wisemen.app.staging"
+    # test
+    qa:
+      app:
+        name: "Sanbox"
+      android:
+        applicationId: "com.wisemen.app.qa"
+      ios:
+        bundleId: "com.wisemen.app.qa"
+    # production
+    production:
+      app:
+        name: "Sanbox"
+      android:
+        applicationId: "com.wisemen.app"
+      ios:
+        bundleId: "com.wisemen.app"
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/icons/
+    - assets/images/
+
+flutter_intl:
+  enabled: true # Required. Must be set to true to activate the plugin. Default: false
+  class_name: S # Optional. Sets the name for the generated localization class. Default: S
+  main_locale: en # Optional. Sets the main locale used for generating localization files. Provided value should comply with ISO-639-1 and ISO-3166-1 (e.g. "en", "en_GB"). Default: en
