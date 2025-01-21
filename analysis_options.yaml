@@ -1,4 +1,7 @@
 analyzer:
+  exclude:
+    - packages/sandbox/**
+
   language:
     strict-casts: true
     strict-inference: true

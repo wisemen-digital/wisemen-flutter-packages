@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Dropdown model for `[DropdownPicker]`
-abstract interface class DropdownModel {
+abstract class DropdownModel {
   /// Item name with localization
   String getString(BuildContext context);
 

@@ -1,0 +1,92 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Sandbox Development",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_development.dart",
+            "args": [
+                "--flavor",
+                "development"
+            ]
+        },
+        {
+            "name": "Sandbox Development (release)",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_development.dart",
+            "args": [
+                "--flavor",
+                "development"
+            ],
+            "flutterMode": "release"
+        },
+        {
+            "name": "Sandbox Staging",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_staging.dart",
+            "args": [
+                "--flavor",
+                "staging"
+            ]
+        },
+        {
+            "name": "Sandbox Staging (release)",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_staging.dart",
+            "args": [
+                "--flavor",
+                "staging"
+            ],
+            "flutterMode": "release",
+        },
+        {
+            "name": "Sandbox QA",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_qa.dart",
+            "args": [
+                "--flavor",
+                "qa"
+            ]
+        },
+        {
+            "name": "Sandbox QA (release)",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_qa.dart",
+            "args": [
+                "--flavor",
+                "qa"
+            ],
+            "flutterMode": "release"
+        },
+        {
+            "name": "Sandbox Production",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_production.dart",
+            "args": [
+                "--flavor",
+                "production"
+            ]
+        },
+        {
+            "name": "Sandbox Production (release)",
+            "request": "launch",
+            "type": "dart",
+            "program": "packages/sandbox/lib/main_production.dart",
+            "args": [
+                "--flavor",
+                "production"
+            ],
+            "flutterMode": "release"
+        },
+    ]
+}

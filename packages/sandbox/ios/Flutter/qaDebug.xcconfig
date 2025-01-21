@@ -1,0 +1,7 @@
+#include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
+#include "Generated.xcconfig"
+
+FLUTTER_TARGET=lib/main_qa.dart
+ASSET_PREFIX=qa
+BUNDLE_NAME=Sanbox
+BUNDLE_DISPLAY_NAME=Sanbox
