@@ -52,6 +52,6 @@ jobs:
       - name: Create Git Tag
         uses: rickstaa/action-create-tag@v1
         with:
-          tag: "${{ github.event.inputs.package_name }} v${{ github.event.inputs.tag_version }}"
+          tag: "${{ github.event.inputs.package_name }}-v${{ github.event.inputs.tag_version }}"
           message: "${{ github.event.inputs.package_name }} Release v${{ github.event.inputs.tag_version }}"
           force_push_tag: true
