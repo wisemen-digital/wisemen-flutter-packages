@@ -1,9 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:device_insets/device_insets.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
@@ -11,23 +8,14 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 import '../settings.dart';
 
 @RoutePage()
-class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+class OtherSettingsScreen extends ConsumerWidget {
+  const OtherSettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return BasePlatformScaffold(
       navBar: BaseWiseNavBar(
-        backgroundColor: Theme.of(context).primaryColorLight,
-        actions: [
-          CupertinoButton(
-            padding: EdgeInsets.zero,
-            child: const Icon(Icons.settings),
-            onPressed: () {
-              AutoRouter.of(context).push(const OtherSettingsScreenRoute());
-            },
-          ),
-        ],
+        backgroundColor: Theme.of(context).secondaryHeaderColor,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -76,20 +64,6 @@ class SettingsScreen extends ConsumerWidget {
                 inactiveColor: Theme.of(context).colorScheme.secondary,
                 value: ref.watch(switchValueProvider),
                 onChanged: ref.read(switchValueProvider.notifier).changeValue,
-              ),
-              PlatformAnimatedButton(
-                onPressed: () async {
-                  try {
-                    final insets = await DeviceInsets().getDeviceInsets();
-                    print(insets);
-                  } on Exception catch (e) {
-                    print(e);
-                  }
-                },
-                child: Text(
-                  'Other settings',
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
               ),
               const SizedBox(
                 height: 1000,

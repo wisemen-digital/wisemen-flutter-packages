@@ -1,0 +1,135 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+import '../utils/utils.dart';
+
+/// Base Native [BaseWiseNavBar] that combines the shared variables of [AppBar]
+/// and [CupertinoNavigationBar].
+/// Material specs: https://m3.material.io/components/top-app-bar
+/// Cupertino specs: https://developer.apple.com/design/human-interface-guidelines/navigation-bars
+base class BaseWiseNavBar extends PlatformWidget
+    implements ObstructingPreferredSizeWidget {
+  /// Constructor [BaseWiseNavBar]
+  const BaseWiseNavBar({
+    super.key,
+    this.leading,
+    this.title,
+    this.actions,
+    this.actionSpacing = 8,
+    this.backgroundColor,
+    this.brightness,
+    this.border,
+    this.automaticBackgroundVisibility = true,
+    this.enableBackgroundFilterBlur = true,
+    this.centerTitle = false,
+  });
+
+  /// Title widget of the navigation bar.
+  /// Usually a [Text] widget that describes the content on the screen.
+  /// Material: [AppBar.title] Headline text should easily fit within the top app bar.
+  /// It should not be truncated or shrunken
+  /// Cupertino: [CupertinoNavigationBar.middle] Text should be no longer than
+  /// 15 characters
+  final Widget? title;
+
+  /// Leading widget usually in charge of navigation.
+  /// Material: [AppBar.leading] usually a menu icon or back button
+  /// Cupertino: [CupertinoNavigationBar.leading] usually a back button
+  /// with previous page title
+  final Widget? leading;
+
+  /// List of actions widgets that are usually icons or buttons.
+  /// Could be in charge of navigation too on iOS
+  final List<Widget>? actions;
+
+  /// Spacing between each action widget
+  final double actionSpacing;
+
+  /// Background color of the navigation bar
+  final Color? backgroundColor;
+
+  /// Brightness of the navigation bar. Controls the color of the status bar
+  final Brightness? brightness;
+
+  /// Border around the navigation bar container. Usually only bottom
+  final Border? border;
+
+  /// [CupertinoNavigationBar.automaticBackgroundVisibility] Automatically
+  /// show or hide the background. Ignores [backgroundColor] when set
+  final bool automaticBackgroundVisibility;
+
+  /// [CupertinoNavigationBar.enableBackgroundFilterBlur] Enable background
+  /// filter blur. Defaults to true
+  final bool enableBackgroundFilterBlur;
+
+  /// [AppBar.centerTitle] Center the title widget
+  final bool centerTitle;
+
+  @override
+  PreferredSizeWidget createMaterialWidget(BuildContext context) {
+    return AppBar(
+      key: key,
+      leading: leading,
+      title: title,
+      actions: actions
+          ?.map<Widget>(
+            (e) => Padding(
+              padding: EdgeInsets.only(right: actionSpacing),
+              child: e,
+            ),
+          )
+          .toList(),
+      backgroundColor: backgroundColor,
+      systemOverlayStyle: brightness != null
+          ? SystemUiOverlayStyle(
+              statusBarBrightness: brightness,
+            )
+          : null,
+      shape: border,
+      centerTitle: centerTitle,
+    );
+  }
+
+  @override
+  ObstructingPreferredSizeWidget createCupertinoWidget(BuildContext context) {
+    return CupertinoNavigationBar(
+      key: key,
+      leading: leading,
+      middle: title,
+      trailing: actions != null
+          ? Row(
+              mainAxisSize: MainAxisSize.min,
+              spacing: actionSpacing,
+              children: actions!,
+            )
+          : null,
+      backgroundColor: backgroundColor,
+      brightness: brightness,
+      border: border,
+      enableBackgroundFilterBlur: enableBackgroundFilterBlur,
+      automaticBackgroundVisibility: automaticBackgroundVisibility,
+    );
+  }
+
+  @override
+  Size get preferredSize {
+    if (kIsWeb) {
+      return const Size.fromHeight(kToolbarHeight);
+    }
+    if (Platform.isAndroid || Platform.isFuchsia || Platform.isWindows) {
+      return const Size.fromHeight(kToolbarHeight);
+    } else if (Platform.isIOS || Platform.isMacOS || Platform.isLinux) {
+      return const Size.fromHeight(kMinInteractiveDimensionCupertino);
+    }
+    return Size.zero;
+  }
+
+  @override
+  bool shouldFullyObstruct(BuildContext context) {
+    return true;
+  }
+}

@@ -1,19 +1,42 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
+import 'package:wiseclient/src/secure_token_storage/fresh_secure_token_storage.dart';
+import 'package:wiseclient/src/secure_token_storage/map_from_token_extension.dart';
+import 'package:wiseclient/src/secure_token_storage/token_from_string_extension.dart';
 import 'package:wiseclient/wiseclient.dart';
+
+class MockStorage extends Mock implements FreshSecureTokenStorage {}
+
+class FakeSecureStorage extends Fake implements FlutterSecureStorage {}
+
+class FakeOAuthToken extends Fake implements OAuthToken {}
+
+class MockClient extends Mock implements WiseClient {}
+
+extension VoidAnswer on When<Future<void>> {
+  void thenAnswerWithVoid() => thenAnswer((_) async {});
+}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterSecureStorage.setMockInitialValues({});
+  setUpAll(() {
+    registerFallbackValue(FakeSecureStorage());
+    registerFallbackValue(FakeOAuthToken());
+  });
   group('A group of basic tests to test functionality', () {
     final wiseOptions = WiseOptions.baseWithLocale(
       url: 'https://jsonplaceholder.typicode.com/',
       locale: 'en',
     );
     final awesome = WiseClient(
-      wiseInterceptors: [WiseInterceptor.logging, WiseInterceptor.error],
+      wiseInterceptors: WiseInterceptor.values,
       options: wiseOptions,
+      refreshFunction: (token, client) {
+        return Future.value(OAuthToken(accessToken: 'newToken'));
+      },
     );
 
     test('Client is native', () {
@@ -138,6 +161,82 @@ void main() {
           expect(secondRequest, isMap);
         },
       );
+    });
+
+    test('Can successfully read the refresh token from storage', () async {
+      final storage = MockStorage();
+      when(storage.read).thenAnswer(
+        (_) => Future.value(
+          OAuthToken(accessToken: 'token'),
+        ),
+      );
+      final token = await storage.read();
+      expect(token, isA<OAuthToken>());
+    });
+
+    test('Token tests', () async {
+      final token = OAuthToken(
+        accessToken: 'token',
+        expiresIn: 100,
+        refreshToken: 'refresh',
+        scope: 'scope',
+      );
+      expect(token.accessToken, isA<String>());
+      expect(token.expiresIn, isA<int>());
+      expect(token.refreshToken, isA<String>());
+      expect(token.scope, isA<String>());
+      expect(token.tokenType, 'bearer');
+      final tokenMap = token.toMap();
+      expect(tokenMap, isMap);
+    });
+
+    test('Token from snake case', () async {
+      final token = OAuthToken.fromSnakeCase(
+        {
+          'access_token': 'token',
+          'token_type': 'bearer',
+          'expires_in': 100,
+          'refresh_token': 'refresh',
+          'scope': 'scope',
+        },
+      );
+      expect(token, isA<OAuthToken>());
+    });
+
+    test('Token from camel case', () async {
+      final token = OAuthToken.fromCamelCasing(
+        {
+          'accessToken': 'token',
+          'tokenType': 'bearer',
+          'expiresIn': 100,
+          'refreshToken': 'refresh',
+          'scope': 'scope',
+        },
+      );
+      expect(token, isA<OAuthToken>());
+    });
+
+    test('Token from string', () async {
+      const tokenString =
+          '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope"}';
+      final token = tokenString.toOAuthToken;
+      expect(token, isA<OAuthToken>());
+      expect(token.accessToken, 'token');
+      expect(token.tokenType, 'bearer');
+      expect(token.expiresIn, 100);
+      expect(token.refreshToken, 'refresh');
+      expect(token.scope, 'scope');
+    });
+
+    test('Can set the client token', () async {
+      await awesome.setFreshToken(
+        token: OAuthToken(accessToken: 'accessToken'),
+      );
+      final token = await awesome.fresh.token;
+      expect(token, isA<OAuthToken>());
+
+      await awesome.fresh.clearToken();
+      expect(await awesome.fresh.token, isNull);
     });
   });
 }
