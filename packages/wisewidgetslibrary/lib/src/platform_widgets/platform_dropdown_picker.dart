@@ -118,17 +118,20 @@ class PlatformDropdownPicker<T extends DropdownModel> extends PlatformWidget {
         },
       ).toList(),
       builder: (_, MenuController controller, Widget? nestedChild) {
-        return InkWell(
-          focusNode: focusNode,
-          borderRadius: borderRadius,
-          onTap: () {
-            if (controller.isOpen) {
-              controller.close();
-            } else {
-              controller.open();
-            }
-          },
-          child: this.child,
+        return Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            focusNode: focusNode,
+            borderRadius: borderRadius,
+            onTap: () {
+              if (controller.isOpen) {
+                controller.close();
+              } else {
+                controller.open();
+              }
+            },
+            child: this.child,
+          ),
         );
       },
     );
