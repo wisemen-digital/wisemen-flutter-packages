@@ -46,7 +46,7 @@ jobs:
         
       - name: Publish
         run: |
-          cd package/${{ github.event.inputs.package_name }}
+          cd packages/${{ github.event.inputs.package_name }}
           dart pub publish --force
 
       - name: Create Git Tag
