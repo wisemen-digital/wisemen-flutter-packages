@@ -12,6 +12,7 @@ on:
             - "wisecore"
             - "wiseclient"
             - "wisewidgetslibrary"
+            - "wise_nav_bar"
           default: "wisecore"
         tag_version:
           description: "Tag version ie. 1.0.0"

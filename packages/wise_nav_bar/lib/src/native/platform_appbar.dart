@@ -7,26 +7,46 @@ import 'package:flutter/services.dart';
 
 import '../utils/utils.dart';
 
-/// Base Native [BaseWiseNavBar] that combines the shared variables of [AppBar]
+/// Base Native [PlatformAppBar] that combines the shared variables of [AppBar]
 /// and [CupertinoNavigationBar].
 /// Material specs: https://m3.material.io/components/top-app-bar
 /// Cupertino specs: https://developer.apple.com/design/human-interface-guidelines/navigation-bars
-base class BaseWiseNavBar extends PlatformWidget
-    implements ObstructingPreferredSizeWidget {
-  /// Constructor [BaseWiseNavBar]
-  const BaseWiseNavBar({
+class PlatformAppBar extends PlatformWidget implements ObstructingPreferredSizeWidget {
+  /// Constructor [PlatformAppBar]
+  const PlatformAppBar({
     super.key,
     this.leading,
+    this.previousPageTitle,
     this.title,
     this.actions,
     this.actionSpacing = 8,
     this.backgroundColor,
     this.brightness,
     this.border,
+    this.bottom,
     this.automaticBackgroundVisibility = true,
     this.enableBackgroundFilterBlur = true,
     this.centerTitle = false,
+    this.transitionBetweenRoutes = true,
   });
+
+  /// Constructor [PlatformAppBar.text]
+  PlatformAppBar.text({
+    required String title,
+    super.key,
+    this.leading,
+    this.previousPageTitle,
+    this.actions,
+    this.actionSpacing = 8,
+    this.backgroundColor,
+    this.brightness,
+    this.border,
+    this.bottom,
+    this.automaticBackgroundVisibility = true,
+    this.enableBackgroundFilterBlur = true,
+    this.centerTitle = false,
+    this.transitionBetweenRoutes = true,
+  }) : title = Text(title);
 
   /// Title widget of the navigation bar.
   /// Usually a [Text] widget that describes the content on the screen.
@@ -41,6 +61,10 @@ base class BaseWiseNavBar extends PlatformWidget
   /// Cupertino: [CupertinoNavigationBar.leading] usually a back button
   /// with previous page title
   final Widget? leading;
+
+  /// [CupertinoNavigationBar.previousPageTitle] Title of the previous route, iOS only
+  /// Defaults to 'Back' when title is longer than 12 characters
+  final String? previousPageTitle;
 
   /// List of actions widgets that are usually icons or buttons.
   /// Could be in charge of navigation too on iOS
@@ -66,8 +90,15 @@ base class BaseWiseNavBar extends PlatformWidget
   /// filter blur. Defaults to true
   final bool enableBackgroundFilterBlur;
 
-  /// [AppBar.centerTitle] Center the title widget
+  /// [CupertinoNavigationBar.transitionBetweenRoutes] Animate the transition between pages
+  /// Defaults to true, disable this for things like the first route in a bottom sheet
+  final bool transitionBetweenRoutes;
+
+  /// [AppBar.centerTitle] Center the title widget always true on iOS
   final bool centerTitle;
+
+  /// [AppBar.bottom] on Android, [CupertinoNavigationBar.bottom] widget that appears at the bottom of the app bar
+  final PreferredSizeWidget? bottom;
 
   @override
   PreferredSizeWidget createMaterialWidget(BuildContext context) {
@@ -91,6 +122,7 @@ base class BaseWiseNavBar extends PlatformWidget
           : null,
       shape: border,
       centerTitle: centerTitle,
+      bottom: bottom,
     );
   }
 
@@ -99,6 +131,7 @@ base class BaseWiseNavBar extends PlatformWidget
     return CupertinoNavigationBar(
       key: key,
       leading: leading,
+      previousPageTitle: previousPageTitle,
       middle: title,
       trailing: actions != null
           ? Row(
@@ -112,18 +145,21 @@ base class BaseWiseNavBar extends PlatformWidget
       border: border,
       enableBackgroundFilterBlur: enableBackgroundFilterBlur,
       automaticBackgroundVisibility: automaticBackgroundVisibility,
+      transitionBetweenRoutes: transitionBetweenRoutes,
+      bottom: bottom,
     );
   }
 
   @override
   Size get preferredSize {
+    final heightForDrawer = bottom?.preferredSize.height ?? 0.0;
     if (kIsWeb) {
-      return const Size.fromHeight(kToolbarHeight);
+      return Size.fromHeight(kToolbarHeight + heightForDrawer);
     }
     if (Platform.isAndroid || Platform.isFuchsia || Platform.isWindows) {
-      return const Size.fromHeight(kToolbarHeight);
+      return Size.fromHeight(kToolbarHeight + heightForDrawer);
     } else if (Platform.isIOS || Platform.isMacOS || Platform.isLinux) {
-      return const Size.fromHeight(kMinInteractiveDimensionCupertino);
+      return Size.fromHeight(kMinInteractiveDimensionCupertino + heightForDrawer);
     }
     return Size.zero;
   }

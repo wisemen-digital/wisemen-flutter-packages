@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wise_nav_bar/wise_nav_bar.dart';
 
-import 'platform_nav_bar_helper.dart';
+import '../native/platform_appbar.dart';
+import 'platform_widget_helper.dart';
 
-/// [BasePlatformScaffold] platform scaffold with [navBar] and [body]
-final class BasePlatformScaffold extends PlatformWidget {
-  /// Constructor [BasePlatformScaffold]
-  const BasePlatformScaffold({
+/// [PlatformScaffold] platform scaffold with [appBar] and [body]
+final class PlatformScaffold extends PlatformWidget {
+  /// Constructor [PlatformScaffold]
+  const PlatformScaffold({
     required this.body,
-    this.navBar,
+    this.appBar,
     this.backgroundColor,
     super.key,
   });
@@ -18,7 +18,7 @@ final class BasePlatformScaffold extends PlatformWidget {
   final Widget body;
 
   /// Navigation bar (non sliver)
-  final BaseWiseNavBar? navBar;
+  final PlatformAppBar? appBar;
 
   /// Scaffold background color
   final Color? backgroundColor;
@@ -26,7 +26,7 @@ final class BasePlatformScaffold extends PlatformWidget {
   @override
   Widget createCupertinoWidget(BuildContext context) {
     return CupertinoPageScaffold(
-      navigationBar: navBar,
+      navigationBar: appBar,
       backgroundColor: backgroundColor,
       child: body,
     );
@@ -36,7 +36,7 @@ final class BasePlatformScaffold extends PlatformWidget {
   Widget createMaterialWidget(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-      appBar: navBar,
+      appBar: appBar,
       body: body,
     );
   }
