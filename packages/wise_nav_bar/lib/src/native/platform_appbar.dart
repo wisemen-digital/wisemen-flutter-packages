@@ -11,7 +11,8 @@ import '../utils/utils.dart';
 /// and [CupertinoNavigationBar].
 /// Material specs: https://m3.material.io/components/top-app-bar
 /// Cupertino specs: https://developer.apple.com/design/human-interface-guidelines/navigation-bars
-class PlatformAppBar extends PlatformWidget implements ObstructingPreferredSizeWidget {
+class PlatformAppBar extends PlatformWidget
+    implements ObstructingPreferredSizeWidget {
   /// Constructor [PlatformAppBar]
   const PlatformAppBar({
     super.key,
@@ -159,7 +160,9 @@ class PlatformAppBar extends PlatformWidget implements ObstructingPreferredSizeW
     if (Platform.isAndroid || Platform.isFuchsia || Platform.isWindows) {
       return Size.fromHeight(kToolbarHeight + heightForDrawer);
     } else if (Platform.isIOS || Platform.isMacOS || Platform.isLinux) {
-      return Size.fromHeight(kMinInteractiveDimensionCupertino + heightForDrawer);
+      return Size.fromHeight(
+        kMinInteractiveDimensionCupertino + heightForDrawer,
+      );
     }
     return Size.zero;
   }

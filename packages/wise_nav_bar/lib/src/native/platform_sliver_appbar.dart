@@ -35,7 +35,8 @@ class PlatformSliverAppBar extends PlatformWidget {
   /// Constructor [PlatformSliverAppBar.text]
   PlatformSliverAppBar.text({
     required String title,
-    EdgeInsetsDirectional androidLargeTitlePadding = const EdgeInsetsDirectional.all(16),
+    EdgeInsetsDirectional androidLargeTitlePadding =
+        const EdgeInsetsDirectional.all(16),
     TextStyle androidLargeTitleStyle = const TextStyle(fontSize: 24),
     super.key,
     this.leading,
@@ -190,7 +191,10 @@ class PlatformSliverAppBar extends PlatformWidget {
     TextStyle androidLargeTitleStyle,
     PreferredSizeWidget? bottom,
   ) {
-    if (kIsWeb || Platform.isAndroid || Platform.isFuchsia || Platform.isWindows) {
+    if (kIsWeb ||
+        Platform.isAndroid ||
+        Platform.isFuchsia ||
+        Platform.isWindows) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.end,

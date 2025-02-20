@@ -4,7 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 /// [PlatformWidget] that returns Cupertino widget or Material widget
-abstract class PlatformWidget<I extends Widget, A extends Widget> extends StatelessWidget {
+abstract class PlatformWidget<I extends Widget, A extends Widget>
+    extends StatelessWidget {
   /// Constructor [PlatformWidget]
   const PlatformWidget({super.key});
 
