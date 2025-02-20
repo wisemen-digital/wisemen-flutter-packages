@@ -93,35 +93,6 @@ class FakerWiseClient implements WiseClient {
   }
 
   @override
-  Future<Response<dynamic>> download(
-    String urlPath,
-    dynamic savePath, {
-    ProgressCallback? onReceiveProgress,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-    bool deleteOnError = true,
-    String lengthHeader = Headers.contentLengthHeader,
-    Object? data,
-    Options? options,
-  }) async {
-    return _emptySuccessResponse<dynamic>(urlPath);
-  }
-
-  @override
-  Future<Response<dynamic>> downloadUri(
-    Uri uri,
-    dynamic savePath, {
-    ProgressCallback? onReceiveProgress,
-    CancelToken? cancelToken,
-    bool deleteOnError = true,
-    String lengthHeader = Headers.contentLengthHeader,
-    Object? data,
-    Options? options,
-  }) async {
-    return _emptySuccessResponse<dynamic>(uri.toString());
-  }
-
-  @override
   Future<Response<T>> fetch<T>(RequestOptions requestOptions) async {
     return Response(requestOptions: requestOptions);
   }
@@ -413,4 +384,49 @@ class FakerWiseClient implements WiseClient {
           'next': null,
         },
       };
+
+  @override
+  Dio clone({
+    BaseOptions? options,
+    Interceptors? interceptors,
+    HttpClientAdapter? httpClientAdapter,
+    Transformer? transformer,
+  }) {
+    return FakerWiseClient(
+      wiseInterceptors: [],
+      baseOptions: options,
+      interceptorsToAdd: interceptors,
+    );
+  }
+
+  @override
+  Future<Response> download(
+    String urlPath,
+    savePath, {
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+    CancelToken? cancelToken,
+    bool deleteOnError = true,
+    FileAccessMode fileAccessMode = FileAccessMode.write,
+    String lengthHeader = Headers.contentLengthHeader,
+    Object? data,
+    Options? options,
+  }) async {
+    return _emptySuccessResponse<dynamic>(urlPath);
+  }
+
+  @override
+  Future<Response> downloadUri(
+    Uri uri,
+    savePath, {
+    ProgressCallback? onReceiveProgress,
+    CancelToken? cancelToken,
+    bool deleteOnError = true,
+    FileAccessMode fileAccessMode = FileAccessMode.write,
+    String lengthHeader = Headers.contentLengthHeader,
+    Object? data,
+    Options? options,
+  }) async {
+    return _emptySuccessResponse<dynamic>(uri.toString());
+  }
 }

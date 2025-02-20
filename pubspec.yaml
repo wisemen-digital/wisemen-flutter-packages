@@ -6,3 +6,4 @@ workspace:
   - packages/wiseclient
   - packages/wisecore
   - packages/wisewidgetslibrary
+  - packages/wise_nav_bar

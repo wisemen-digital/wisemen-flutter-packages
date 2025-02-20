@@ -20,6 +20,12 @@ class AppRouter extends RootStackRouter {
     AdaptiveRoute(
       path: '/settings',
       page: SettingsScreenRoute.page,
+      title: (context, data) => 'Settings',
+    ),
+    AdaptiveRoute(
+      path: '/other-settings',
+      page: OtherSettingsScreenRoute.page,
+      title: (context, data) => 'Other settings',
     ),
     //mason: insert auto route
   ];

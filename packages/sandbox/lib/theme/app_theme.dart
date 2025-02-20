@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppTheme {
@@ -345,6 +346,20 @@ class AppTheme {
     ),
     unselectedWidgetColor: const Color(0xb3ffffff),
     visualDensity: VisualDensity.compact,
+    cupertinoOverrideTheme: const CupertinoThemeData(
+      primaryColor: Color(0xff64cfc2),
+      primaryContrastingColor: Color(0xff55b2a6),
+      barBackgroundColor: Color(0xff121313),
+      scaffoldBackgroundColor: Color(0xff121313),
+      textTheme: CupertinoTextThemeData(
+        primaryColor: Color(0xffffffff),
+        textStyle: TextStyle(
+          color: Color(0xffffffff),
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    ),
   );
 
   //light theme
@@ -682,5 +697,19 @@ class AppTheme {
     ),
     unselectedWidgetColor: const Color(0x8a000000),
     visualDensity: VisualDensity.compact,
+    cupertinoOverrideTheme: const CupertinoThemeData(
+      primaryColor: Color(0xff892057),
+      primaryContrastingColor: Color(0xff62143d),
+      barBackgroundColor: Color(0xffe2e5ed),
+      scaffoldBackgroundColor: Color(0xffe2e5ed),
+      textTheme: CupertinoTextThemeData(
+        primaryColor: Color(0xff000000),
+        textStyle: TextStyle(
+          color: Color(0xff000000),
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    ),
   );
 }

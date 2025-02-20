@@ -66,10 +66,13 @@ class PlatformDropdownPicker<T extends DropdownModel> extends PlatformWidget {
           );
         },
       ).toList(),
-      buttonBuilder: (context, showMenu) => InkWell(
-        onTap: showMenu,
-        borderRadius: borderRadius,
-        child: child,
+      buttonBuilder: (context, showMenu) => Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: showMenu,
+          borderRadius: borderRadius,
+          child: child,
+        ),
       ),
     );
   }
