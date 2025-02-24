@@ -19,6 +19,10 @@ dependencies:
     path: ../wisecore
   wisewidgetslibrary:
     path: ../wisewidgetslibrary
+  wise_nav_bar:
+    path: ../wise_nav_bar
+  device_insets:
+    path: ../../../flutter-tests/device_insets
   
   # Networking
   wiseclient: 
@@ -49,14 +53,6 @@ dependencies:
   talker_flutter: ^4.3.4
   onesignal_flutter: ^5.2.9
   sentry_flutter: ^8.12.0
-
-  path: any
-  dio: any
-  fresh_dio: any
-  auto_route: any
-  flutter_secure_storage: any
-  shared_preferences: any
-  flutter_riverpod: any
 dev_dependencies: 
   # Code generation
   build_runner: ^2.4.9

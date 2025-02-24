@@ -5,8 +5,10 @@ import 'package:sandbox/generated/l10n.dart';
 import 'package:wisecore/wisecore.dart';
 
 class ErrorUtils {
-  static Future<void> showErrorDialog<T>(BuildContext context,
-      {required AsyncValue<T> error}) async {
+  static Future<void> showErrorDialog<T>(
+    BuildContext context, {
+    required AsyncValue<T> error,
+  }) async {
     await ErrorDialog(
       networkErrorString: S.of(context).networkErrorSomethingWentWrong,
       appName: F.appName,

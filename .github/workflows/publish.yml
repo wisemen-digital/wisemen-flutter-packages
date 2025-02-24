@@ -6,7 +6,7 @@ on:
       - "wisecore-v*"
       - "wiseclient-v*"
       - "wisewidgetslibrary-v*"
-
+      - "wise_nav_bar-v*"
 jobs:
   publish:
     permissions:
