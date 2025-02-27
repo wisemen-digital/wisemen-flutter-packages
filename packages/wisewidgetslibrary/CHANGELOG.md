@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Bugfix in `FullscreenImageCarousel`
+
 ## 2.0.0
 
 * Updated PlatformDropdown

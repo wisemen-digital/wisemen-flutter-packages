@@ -1,12 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dismissible_page/dismissible_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 /// Custom image carousel with close button and page indicator
-class CustomImageCarousel extends StatelessWidget {
+class CustomImageCarousel extends StatefulWidget {
   /// Constructor [CustomImageCarousel]
   const CustomImageCarousel({
     required this.controller,
@@ -112,15 +111,22 @@ class CustomImageCarousel extends StatelessWidget {
   static const Color _pageIndicatorBackgroundColor = Colors.black;
 
   @override
-  Widget build(BuildContext context) {
-    final currentPage = useState(initialPage ?? 0);
-    final isDragging = useState(false);
-    final isZoomed = useState(false);
+  State<CustomImageCarousel> createState() => _CustomImageCarouselState();
+}
 
+class _CustomImageCarouselState extends State<CustomImageCarousel> {
+  late int currentPage = widget.initialPage ?? 0;
+  bool isDragging = false;
+  bool isZoomed = false;
+
+  @override
+  Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
-        controller.addListener(() {
-          currentPage.value = controller.page!.round();
+        widget.controller.addListener(() {
+          setState(() {
+            currentPage = widget.controller.page!.round();
+          });
         });
       },
     );
@@ -131,66 +137,77 @@ class CustomImageCarousel extends StatelessWidget {
         children: [
           DismissiblePage(
             onDismissed: () => Navigator.of(context).pop(),
-            disabled: isZoomed.value,
+            disabled: isZoomed,
             onDragUpdate: (value) {
-              if (value.overallDragValue > 0.0) {
-                isDragging.value = true;
-              } else {
-                isDragging.value = false;
-              }
+              setState(() {
+                if (value.overallDragValue > 0.0) {
+                  isDragging = true;
+                } else {
+                  isDragging = false;
+                }
+              });
             },
-            direction:
-                dismissDirection ?? DismissiblePageDismissDirection.multi,
-            dismissThresholds: dismissThresholds ??
+            direction: widget.dismissDirection ??
+                DismissiblePageDismissDirection.multi,
+            dismissThresholds: widget.dismissThresholds ??
                 {
                   DismissiblePageDismissDirection.multi: .2,
                 },
             minScale: 1,
             child: PhotoViewGallery.builder(
-              pageController: controller,
-              enableRotation: enableRotation,
+              pageController: widget.controller,
+              enableRotation: widget.enableRotation,
               scaleStateChangedCallback: (value) {
-                if (value == PhotoViewScaleState.initial ||
-                    value == PhotoViewScaleState.zoomedOut) {
-                  isZoomed.value = false;
-                }
-                if (value == PhotoViewScaleState.covering ||
-                    value == PhotoViewScaleState.zoomedIn) {
-                  isZoomed.value = true;
-                }
-              },
-              onPageChanged: (index) {
-                currentPage.value = index;
-              },
-              itemCount: (imageProviders ?? imageUrls)!.length,
-              backgroundDecoration: BoxDecoration(
-                color: photoViewBackgroundColor ?? Colors.transparent,
-              ),
-              builder: (context, index) => PhotoViewGalleryPageOptions(
-                imageProvider: imageProviders?[index] ??
-                    CachedNetworkImageProvider(
-                      imageUrls![index],
-                    ),
-                minScale: PhotoViewComputedScale.contained,
-                maxScale: PhotoViewComputedScale.covered * (maxScale ?? 2.0),
-                heroAttributes: PhotoViewHeroAttributes(
-                  tag:
-                      heroTag ?? (imageProviders ?? imageUrls)![index].hashCode,
-                ),
-                scaleStateCycle: (value) {
+                setState(() {
                   if (value == PhotoViewScaleState.initial ||
                       value == PhotoViewScaleState.zoomedOut) {
-                    isZoomed.value = false;
+                    isZoomed = false;
                   }
                   if (value == PhotoViewScaleState.covering ||
                       value == PhotoViewScaleState.zoomedIn) {
-                    isZoomed.value = true;
+                    isZoomed = true;
                   }
+                });
+              },
+              onPageChanged: (index) {
+                setState(() {
+                  currentPage = index;
+                });
+              },
+              itemCount: (widget.imageProviders ?? widget.imageUrls)!.length,
+              backgroundDecoration: BoxDecoration(
+                color: widget.photoViewBackgroundColor ?? Colors.transparent,
+              ),
+              builder: (context, index) => PhotoViewGalleryPageOptions(
+                imageProvider: widget.imageProviders?[index] ??
+                    CachedNetworkImageProvider(
+                      widget.imageUrls![index],
+                    ),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale:
+                    PhotoViewComputedScale.covered * (widget.maxScale ?? 2.0),
+                heroAttributes: PhotoViewHeroAttributes(
+                  tag: widget.heroTag ??
+                      (widget.imageProviders ?? widget.imageUrls)![index]
+                          .hashCode,
+                ),
+                scaleStateCycle: (value) {
+                  setState(() {
+                    if (value == PhotoViewScaleState.initial ||
+                        value == PhotoViewScaleState.zoomedOut) {
+                      isZoomed = false;
+                    }
+                    if (value == PhotoViewScaleState.covering ||
+                        value == PhotoViewScaleState.zoomedIn) {
+                      isZoomed = true;
+                    }
+                  });
+
                   return value;
                 },
                 errorBuilder: (context, error, stackTrace) => GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: errorWidget ??
+                  child: widget.errorWidget ??
                       const Center(
                         child: Material(
                           type: MaterialType.transparency,
@@ -206,33 +223,36 @@ class CustomImageCarousel extends StatelessWidget {
               ),
             ),
           ),
-          if (showCloseButton)
+          if (widget.showCloseButton)
             PositionedDirectional(
               top: kToolbarHeight,
-              end: _closeIconSidePadding,
+              end: CustomImageCarousel._closeIconSidePadding,
               child: AnimatedSlide(
-                duration: _closeIconAnimationDuration,
-                offset: isDragging.value || isZoomed.value
-                    ? _closeIconSlideOffset
+                duration: CustomImageCarousel._closeIconAnimationDuration,
+                offset: isDragging || isZoomed
+                    ? CustomImageCarousel._closeIconSlideOffset
                     : Offset.zero,
                 child: AnimatedOpacity(
-                  duration: _closeIconAnimationDuration * 2,
-                  opacity: isDragging.value || isZoomed.value ? 0.0 : 1.0,
+                  duration: CustomImageCarousel._closeIconAnimationDuration * 2,
+                  opacity: isDragging || isZoomed ? 0.0 : 1.0,
                   child: Material(
                     type: MaterialType.transparency,
                     child: InkWell(
                       onTap: () => Navigator.of(context).pop(),
-                      borderRadius: BorderRadius.circular(_closeIconSize / 2),
+                      borderRadius: BorderRadius.circular(
+                        CustomImageCarousel._closeIconSize / 2,
+                      ),
                       child: Ink(
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(_closeIconSize / 2),
-                          color: _closeIconBackgroundColor,
+                          borderRadius: BorderRadius.circular(
+                            CustomImageCarousel._closeIconSize / 2,
+                          ),
+                          color: CustomImageCarousel._closeIconBackgroundColor,
                         ),
                         child: const Icon(
                           Icons.close,
-                          size: _closeIconSize,
-                          color: _closeIconColor,
+                          size: CustomImageCarousel._closeIconSize,
+                          color: CustomImageCarousel._closeIconColor,
                         ),
                       ),
                     ),
@@ -240,40 +260,43 @@ class CustomImageCarousel extends StatelessWidget {
                 ),
               ),
             ),
-          if (showPageIndicator)
+          if (widget.showPageIndicator)
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
                 padding:
                     const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
                 child: AnimatedSlide(
-                  duration: _pageIndiatorAnimationDuration,
-                  offset: isDragging.value || isZoomed.value
-                      ? _pageIndicatorSlideOffset
+                  duration: CustomImageCarousel._pageIndiatorAnimationDuration,
+                  offset: isDragging || isZoomed
+                      ? CustomImageCarousel._pageIndicatorSlideOffset
                       : Offset.zero,
                   child: AnimatedOpacity(
-                    duration: _pageIndiatorAnimationDuration * 2,
-                    opacity: isDragging.value || isZoomed.value ? 0.0 : 1.0,
+                    duration:
+                        CustomImageCarousel._pageIndiatorAnimationDuration * 2,
+                    opacity: isDragging || isZoomed ? 0.0 : 1.0,
                     child: Container(
-                      padding: _pageIndicatorPadding,
+                      padding: CustomImageCarousel._pageIndicatorPadding,
                       decoration: BoxDecoration(
-                        borderRadius: _pageIndicatorBorderRadius,
-                        color: _pageIndicatorBackgroundColor,
+                        borderRadius:
+                            CustomImageCarousel._pageIndicatorBorderRadius,
+                        color:
+                            CustomImageCarousel._pageIndicatorBackgroundColor,
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            '${currentPage.value + 1}',
-                            style: currentPageTextstyle,
+                            '${currentPage + 1}',
+                            style: widget.currentPageTextstyle,
                           ),
                           Text(
                             ' / ',
-                            style: pageIndicatorSeperatorTextstyle,
+                            style: widget.pageIndicatorSeperatorTextstyle,
                           ),
                           Text(
-                            '${(imageProviders ?? imageUrls)!.length}',
-                            style: totalAmountOfPagesTextstyle,
+                            '${(widget.imageProviders ?? widget.imageUrls)!.length}',
+                            style: widget.totalAmountOfPagesTextstyle,
                           ),
                         ],
                       ),
@@ -282,7 +305,7 @@ class CustomImageCarousel extends StatelessWidget {
                 ),
               ),
             ),
-          ...extraChildren,
+          ...widget.extraChildren,
         ],
       ),
     );
