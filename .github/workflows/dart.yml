@@ -48,4 +48,5 @@ jobs:
           coverage-files: packages/wiseclient/coverage/lcov.info
           minimum-coverage: 80
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          working-directory: packages/wiseclient
           update-comment: true
