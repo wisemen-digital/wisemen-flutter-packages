@@ -24,6 +24,10 @@ jobs:
         with:
           channel: stable
           cache: true
+          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
+          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:"
+          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
       
       - run: flutter --version
       
@@ -49,4 +53,3 @@ jobs:
           minimum-coverage: 20
           github-token: ${{ secrets.GITHUB_TOKEN }}
           working-directory: packages/wiseclient
-          update-comment: true
