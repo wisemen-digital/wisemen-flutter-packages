@@ -23,6 +23,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true 
       
       - run: flutter --version
       
@@ -38,7 +39,10 @@ jobs:
       - name: Run Flutter WiseClient tests
         run: flutter test --no-pub --coverage --coverage-path=./coverage/lcov.wiseclient.info
         working-directory: packages/wiseclient
-
+      
+      - name: Setup LCOV
+        uses: hrishikesh-kadam/setup-lcov@v1
+      
       - name: Report code coverage
         uses: zgosalvez/github-actions-report-lcov@v4
         with:
