@@ -16,6 +16,10 @@ inputs:
   github_token:
     required: true
     description: The GitHub token to use for reporting coverage
+  collect_score:
+    required: false
+    default: "false"
+    description: Whether to collect the pana score
 
 runs:
   using: "composite"
@@ -61,6 +65,7 @@ runs:
         artifact-name: ${{ inputs.package_name }}-coverage
 
     - name: 💯 Verify Pub Score
+      if: inputs.collect_score == 'true'
       working-directory: ${{ inputs.working_directory }}
       shell: bash
       run: |
