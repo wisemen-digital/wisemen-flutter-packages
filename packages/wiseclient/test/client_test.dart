@@ -263,41 +263,73 @@ void main() {
     });
 
     test('getDetailedClientErrorMessage returns correct message', () {
-      expect(getDetailedClientErrorMessage('en'),
-          'A client error occurred, please try again later');
-      expect(getDetailedClientErrorMessage('nl'),
-          'Er is een fout opgetreden bij de client, probeer het later opnieuw');
-      expect(getDetailedClientErrorMessage('es'),
-          'Se produjo un error del cliente, por favor inténtelo de nuevo más tarde');
-      expect(getDetailedClientErrorMessage('de'),
-          'Es ist ein Clientfehler aufgetreten, bitte versuchen Sie es später erneut');
-      expect(getDetailedClientErrorMessage('fr'),
-          "Une erreur client s'est produite, veuillez réessayer plus tard");
-      expect(getDetailedClientErrorMessage('ar'),
-          'حدث خطأ في العميل، يرجى المحاولة مرة أخرى لاحقًا');
-      expect(getDetailedClientErrorMessage('ja'),
-          'クライアントエラーが発生しました。後でもう一度お試しください');
-      expect(getDetailedClientErrorMessage('unknown'),
-          'A client error occurred, please try again later');
+      expect(
+        getDetailedClientErrorMessage('en'),
+        'A client error occurred, please try again later',
+      );
+      expect(
+        getDetailedClientErrorMessage('nl'),
+        'Er is een fout opgetreden bij de client, probeer het later opnieuw',
+      );
+      expect(
+        getDetailedClientErrorMessage('es'),
+        'Se produjo un error del cliente, por favor inténtelo de nuevo más tarde',
+      );
+      expect(
+        getDetailedClientErrorMessage('de'),
+        'Es ist ein Clientfehler aufgetreten, bitte versuchen Sie es später erneut',
+      );
+      expect(
+        getDetailedClientErrorMessage('fr'),
+        "Une erreur client s'est produite, veuillez réessayer plus tard",
+      );
+      expect(
+        getDetailedClientErrorMessage('ar'),
+        'حدث خطأ في العميل، يرجى المحاولة مرة أخرى لاحقًا',
+      );
+      expect(
+        getDetailedClientErrorMessage('ja'),
+        'クライアントエラーが発生しました。後でもう一度お試しください',
+      );
+      expect(
+        getDetailedClientErrorMessage('unknown'),
+        'A client error occurred, please try again later',
+      );
     });
 
     test('getDetailedServerErrorMesssage returns correct message', () {
-      expect(getDetailedServerErrorMesssage('en'),
-          'A server error occurred, please try again later');
-      expect(getDetailedServerErrorMesssage('nl'),
-          'Er is een serverfout opgetreden, probeer het later opnieuw');
-      expect(getDetailedServerErrorMesssage('es'),
-          'Se produjo un error del servidor, por favor inténtelo de nuevo más tarde');
-      expect(getDetailedServerErrorMesssage('de'),
-          'Es ist ein Serverfehler aufgetreten, bitte versuchen Sie es später erneut');
-      expect(getDetailedServerErrorMesssage('fr'),
-          "Une erreur de serveur s'est produite, veuillez réessayer plus tard");
-      expect(getDetailedServerErrorMesssage('ar'),
-          'حدث خطأ في الخادم، يرجى المحاولة مرة أخرى لاحقًا');
       expect(
-          getDetailedServerErrorMesssage('ja'), 'サーバーエラーが発生しました。後でもう一度お試しください');
-      expect(getDetailedServerErrorMesssage('unknown'),
-          'A server error occurred, please try again later');
+        getDetailedServerErrorMesssage('en'),
+        'A server error occurred, please try again later',
+      );
+      expect(
+        getDetailedServerErrorMesssage('nl'),
+        'Er is een serverfout opgetreden, probeer het later opnieuw',
+      );
+      expect(
+        getDetailedServerErrorMesssage('es'),
+        'Se produjo un error del servidor, por favor inténtelo de nuevo más tarde',
+      );
+      expect(
+        getDetailedServerErrorMesssage('de'),
+        'Es ist ein Serverfehler aufgetreten, bitte versuchen Sie es später erneut',
+      );
+      expect(
+        getDetailedServerErrorMesssage('fr'),
+        "Une erreur de serveur s'est produite, veuillez réessayer plus tard",
+      );
+      expect(
+        getDetailedServerErrorMesssage('ar'),
+        'حدث خطأ في الخادم، يرجى المحاولة مرة أخرى لاحقًا',
+      );
+      expect(
+        getDetailedServerErrorMesssage('ja'),
+        'サーバーエラーが発生しました。後でもう一度お試しください',
+      );
+      expect(
+        getDetailedServerErrorMesssage('unknown'),
+        'A server error occurred, please try again later',
+      );
     });
 
     test('getViewFullMessage returns correct message', () {
