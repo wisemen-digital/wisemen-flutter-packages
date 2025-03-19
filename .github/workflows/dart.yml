@@ -24,20 +24,12 @@ jobs:
         with:
           filters: |
             wiseclient:
-              - ./.github/workflows/dart.yml
-              - ./.github/actions/package/action.yml
               - packages/wiseclient/**
             wisecore:
-              - ./.github/workflows/dart.yml
-              - ./.github/actions/package/action.yml
               - packages/wisecore/**
             wisewidgetslibrary:
-              - ./.github/workflows/dart.yml
-              - ./.github/actions/package/action.yml
               - packages/wisewidgetslibrary/**
             wise_nav_bar:
-              - ./.github/workflows/dart.yml
-              - ./.github/actions/package/action.yml
               - packages/wise_nav_bar/**
       
       - if: steps.changes.outputs.wiseclient == 'true'
