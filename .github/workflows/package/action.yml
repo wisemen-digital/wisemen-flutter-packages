@@ -1,0 +1,63 @@
+name: Flutter Package Workflow
+description: Build and test a Flutter package.
+
+inputs:
+  working_directory:
+    required: true
+    default: "."
+    description: The working directory for this workflow
+  min_coverage:
+    required: false
+    default: "80"
+    description: The minimum coverage percentage value
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        cache: true
+    
+    - run: flutter --version
+    
+    - name: Run flutter pub get
+      run: flutter pub get
+    
+    - name: Verify formatting
+      working-directory: ${{ inputs.working_directory }}
+      run: dart format . --set-exit-if-changed
+
+    - name: Analyze project source
+      working-directory: ${{ inputs.working_directory }}
+      run: dart analyze --fatal-infos --fatal-warnings
+
+    - name: Run Flutter WiseClient tests
+      working-directory: ${{ inputs.working_directory }}
+      run: flutter test --no-pub --coverage
+    
+    - name: Setup LCOV
+      uses: hrishikesh-kadam/setup-lcov@v1
+
+    - name: Report code coverage
+      uses: zgosalvez/github-actions-report-lcov@v4
+      with:
+        coverage-files: ${{ inputs.working_directory }}/coverage/lcov.info
+        minimum-coverage: ${{ inputs.min_coverage }}
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ inputs.working_directory }}
+        artifact-name: ${{ inputs.working_directory }}-coverage
+
+    - name: 💯 Verify Pub Score
+      if: inputs.collect_score == 'true'
+      working-directory: ${{ inputs.working_directory }}
+      shell: ${{ inputs.shell }}
+      run: |
+        dart pub global activate pana 0.22.17
+        sudo apt-get install webp
+        PANA=$(pana . --no-warning); PANA_SCORE=$(echo $PANA | sed -n "s/.*Points: \([0-9]*\)\/\([0-9]*\)./\1\/\2/p")
+        echo "score: $PANA_SCORE"
+        IFS='/'; read -a SCORE_ARR <<< "$PANA_SCORE"; SCORE=SCORE_ARR[0]; TOTAL=SCORE_ARR[1]
+        if [ -z "$1" ]; then MINIMUM_SCORE=TOTAL; else MINIMUM_SCORE=$1; fi
+        if (( $SCORE < $MINIMUM_SCORE )); then echo "minimum score $MINIMUM_SCORE was not met!"; exit 1; fi

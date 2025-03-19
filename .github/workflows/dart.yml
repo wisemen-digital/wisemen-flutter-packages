@@ -19,37 +19,47 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - uses: dorny/paths-filter@v3
+        id: changes
         with:
-          channel: stable
-          cache: true
-          cache-key: "flutter-:os:-:channel:-:version:-:arch:-:hash:"
-          cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
-          pub-cache-key: "flutter-pub:os:-:channel:-:version:-:arch:-:hash:"
-          pub-cache-path: "${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch:"
+          filters: |
+            wiseclient:
+              - ./.github/workflows/main.yaml
+              - ./.github/workflows/package
+              - packages/wiseclient/**
+            wisecore:
+              - ./.github/workflows/main.yaml
+              - ./.github/workflows/package
+              - packages/wisecore/**
+            wisewidgetslibrary:
+              - ./.github/workflows/main.yaml
+              - ./.github/workflows/package
+              - packages/wisewidgetslibrary/**
+            wise_nav_bar:
+              - ./.github/workflows/main.yaml
+              - ./.github/workflows/package
+              - packages/wise_nav_bar/**
       
-      - run: flutter --version
-      
-      - name: Run flutter pub get
-        run: flutter pub get
-      
-      - name: Verify formatting
-        run: dart format . --set-exit-if-changed
-
-      - name: Analyze project source
-        run: dart analyze --fatal-infos --fatal-warnings
-
-      - name: Run Flutter WiseClient tests
-        run: cd packages/wiseclient && flutter test --no-pub --coverage
-      
-      - name: Setup LCOV
-        uses: hrishikesh-kadam/setup-lcov@v1
-
-      - name: Report code coverage
-        uses: zgosalvez/github-actions-report-lcov@v4
+      - if: steps.changes.outputs.wiseclient == 'true'
+        uses: ./.github/workflows/package
         with:
-          coverage-files: packages/wiseclient/coverage/lcov.info
-          minimum-coverage: 20
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          working-directory: packages/wiseclient
+          working_directory: packages/wiseclient
+          min_coverage: 20
+      
+      - if: steps.changes.outputs.wisecore == 'true'
+        uses: ./.github/workflows/package
+        with:
+          working_directory: packages/wisecore
+          min_coverage: 80
+      
+      - if: steps.changes.outputs.wisewidgetslibrary == 'true'
+        uses: ./.github/workflows/package
+        with:
+          working_directory: packages/wisewidgetslibrary
+          min_coverage: 0
+
+      - if: steps.changes.outputs.wise_nav_bar == 'true'
+        uses: ./.github/workflows/package
+        with:
+          working_directory: packages/wise_nav_bar
+          min_coverage: 0
