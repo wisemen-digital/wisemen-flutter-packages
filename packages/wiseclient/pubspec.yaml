@@ -31,3 +31,6 @@ dev_dependencies:
 
   # Testing
   test: ^1.25.15
+
+  # Mocking
+  mockito: ^5.4.0
