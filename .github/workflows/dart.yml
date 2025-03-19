@@ -47,7 +47,6 @@ jobs:
           working_directory: packages/wiseclient
           min_coverage: 20
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          collect_score: true
       
       - if: steps.changes.outputs.wisecore == 'true'
         uses: ./.github/actions/package
