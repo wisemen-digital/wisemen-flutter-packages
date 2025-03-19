@@ -2,6 +2,9 @@ name: Flutter Package Workflow
 description: Build and test a Flutter package.
 
 inputs:
+  package_name:
+    required: true
+    description: Package name (artifacts)
   working_directory:
     required: true
     default: "."
@@ -55,7 +58,7 @@ runs:
         minimum-coverage: ${{ inputs.min_coverage }}
         github-token: ${{ inputs.github_token }}
         working-directory: ${{ inputs.working_directory }}
-        artifact-name: ${{ inputs.working_directory }}-coverage
+        artifact-name: ${{ inputs.package_name }}-coverage
 
     - name: 💯 Verify Pub Score
       working-directory: ${{ inputs.working_directory }}

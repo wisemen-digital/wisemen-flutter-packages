@@ -43,6 +43,7 @@ jobs:
       - if: steps.changes.outputs.wiseclient == 'true'
         uses: ./.github/actions/package
         with:
+          package_name: wiseclient
           working_directory: packages/wiseclient
           min_coverage: 20
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -50,6 +51,7 @@ jobs:
       - if: steps.changes.outputs.wisecore == 'true'
         uses: ./.github/actions/package
         with:
+          package_name: wisecore
           working_directory: packages/wisecore
           min_coverage: 80
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +59,7 @@ jobs:
       - if: steps.changes.outputs.wisewidgetslibrary == 'true'
         uses: ./.github/actions/package
         with:
+          package_name: wisewidgetslibrary
           working_directory: packages/wisewidgetslibrary
           min_coverage: 0
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -64,6 +67,7 @@ jobs:
       - if: steps.changes.outputs.wise_nav_bar == 'true'
         uses: ./.github/actions/package
         with:
+          package_name: wise_nav_bar
           working_directory: packages/wise_nav_bar
           min_coverage: 0
           github_token: ${{ secrets.GITHUB_TOKEN }}
