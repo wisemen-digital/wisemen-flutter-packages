@@ -24,42 +24,42 @@ jobs:
         with:
           filters: |
             wiseclient:
-              - ./.github/workflows/main.yaml
-              - ./.github/workflows/package
+              - ./.github/workflows/dart.yml
+              - ./.github/actions/package/action.yaml
               - packages/wiseclient/**
             wisecore:
-              - ./.github/workflows/main.yaml
-              - ./.github/workflows/package
+              - ./.github/workflows/dart.yml
+              - ./.github/actions/package/action.yaml
               - packages/wisecore/**
             wisewidgetslibrary:
-              - ./.github/workflows/main.yaml
-              - ./.github/workflows/package
+              - ./.github/workflows/dart.yml
+              - ./.github/actions/package/action.yaml
               - packages/wisewidgetslibrary/**
             wise_nav_bar:
-              - ./.github/workflows/main.yaml
-              - ./.github/workflows/package
+              - ./.github/workflows/dart.yml
+              - ./.github/actions/package/action.yaml
               - packages/wise_nav_bar/**
       
       - if: steps.changes.outputs.wiseclient == 'true'
-        uses: ./.github/workflows/package
+        uses: ./.github/actions/package
         with:
           working_directory: packages/wiseclient
           min_coverage: 20
       
       - if: steps.changes.outputs.wisecore == 'true'
-        uses: ./.github/workflows/package
+        uses: ./.github/actions/package
         with:
           working_directory: packages/wisecore
           min_coverage: 80
       
       - if: steps.changes.outputs.wisewidgetslibrary == 'true'
-        uses: ./.github/workflows/package
+        uses: ./.github/actions/package
         with:
           working_directory: packages/wisewidgetslibrary
           min_coverage: 0
 
       - if: steps.changes.outputs.wise_nav_bar == 'true'
-        uses: ./.github/workflows/package
+        uses: ./.github/actions/package
         with:
           working_directory: packages/wise_nav_bar
           min_coverage: 0

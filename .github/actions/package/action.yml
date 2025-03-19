@@ -21,19 +21,24 @@ runs:
         cache: true
     
     - run: flutter --version
+      shell: bash
     
     - name: Run flutter pub get
+      shell: bash
       run: flutter pub get
     
     - name: Verify formatting
+      shell: bash
       working-directory: ${{ inputs.working_directory }}
       run: dart format . --set-exit-if-changed
 
     - name: Analyze project source
+      shell: bash
       working-directory: ${{ inputs.working_directory }}
       run: dart analyze --fatal-infos --fatal-warnings
 
     - name: Run Flutter WiseClient tests
+      shell: bash
       working-directory: ${{ inputs.working_directory }}
       run: flutter test --no-pub --coverage
     
@@ -50,9 +55,8 @@ runs:
         artifact-name: ${{ inputs.working_directory }}-coverage
 
     - name: 💯 Verify Pub Score
-      if: inputs.collect_score == 'true'
       working-directory: ${{ inputs.working_directory }}
-      shell: ${{ inputs.shell }}
+      shell: bash
       run: |
         dart pub global activate pana 0.22.17
         sudo apt-get install webp
