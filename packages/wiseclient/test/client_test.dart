@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
+import 'package:wiseclient/src/error_screens/messages.dart';
 import 'package:wiseclient/src/secure_token_storage/fresh_secure_token_storage.dart';
 import 'package:wiseclient/src/secure_token_storage/map_from_token_extension.dart';
 import 'package:wiseclient/src/secure_token_storage/token_from_string_extension.dart';
@@ -217,8 +218,7 @@ void main() {
     });
 
     test('Token from string', () async {
-      const tokenString =
-          '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope"}';
+      const tokenString = '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope"}';
       final token = tokenString.toOAuthToken;
       expect(token, isA<OAuthToken>());
       expect(token.accessToken, 'token');
@@ -237,6 +237,61 @@ void main() {
 
       await awesome.fresh.clearToken();
       expect(await awesome.fresh.token, isNull);
+    });
+  });
+
+  group('Error Messages Tests', () {
+    test('getServerErrorTitle returns correct message', () {
+      expect(getServerErrorTitle('nl'), 'Serverfout');
+      expect(getServerErrorTitle('es'), 'Error del servidor');
+      expect(getServerErrorTitle('de'), 'Serverfehler');
+      expect(getServerErrorTitle('fr'), 'Erreur de serveur');
+      expect(getServerErrorTitle('ar'), 'خطأ في الخادم');
+      expect(getServerErrorTitle('ja'), 'サーバーエラー');
+      expect(getServerErrorTitle('unknown'), 'Client error');
+    });
+
+    test('getClientErrorTitle returns correct message', () {
+      expect(getClientErrorTitle('nl'), 'Clientfout');
+      expect(getClientErrorTitle('es'), 'Error del cliente');
+      expect(getClientErrorTitle('de'), 'Clientfehler');
+      expect(getClientErrorTitle('fr'), 'Erreur client');
+      expect(getClientErrorTitle('ar'), 'خطأ في العميل');
+      expect(getClientErrorTitle('ja'), 'クライアントエラー');
+      expect(getClientErrorTitle('unknown'), 'Client error');
+    });
+
+    test('getDetailedClientErrorMessage returns correct message', () {
+      expect(getDetailedClientErrorMessage('en'), 'A client error occurred, please try again later');
+      expect(getDetailedClientErrorMessage('nl'), 'Er is een fout opgetreden bij de client, probeer het later opnieuw');
+      expect(getDetailedClientErrorMessage('es'), 'Se produjo un error del cliente, por favor inténtelo de nuevo más tarde');
+      expect(getDetailedClientErrorMessage('de'), 'Es ist ein Clientfehler aufgetreten, bitte versuchen Sie es später erneut');
+      expect(getDetailedClientErrorMessage('fr'), "Une erreur client s'est produite, veuillez réessayer plus tard");
+      expect(getDetailedClientErrorMessage('ar'), 'حدث خطأ في العميل، يرجى المحاولة مرة أخرى لاحقًا');
+      expect(getDetailedClientErrorMessage('ja'), 'クライアントエラーが発生しました。後でもう一度お試しください');
+      expect(getDetailedClientErrorMessage('unknown'), 'A client error occurred, please try again later');
+    });
+
+    test('getDetailedServerErrorMesssage returns correct message', () {
+      expect(getDetailedServerErrorMesssage('en'), 'A server error occurred, please try again later');
+      expect(getDetailedServerErrorMesssage('nl'), 'Er is een serverfout opgetreden, probeer het later opnieuw');
+      expect(getDetailedServerErrorMesssage('es'), 'Se produjo un error del servidor, por favor inténtelo de nuevo más tarde');
+      expect(getDetailedServerErrorMesssage('de'), 'Es ist ein Serverfehler aufgetreten, bitte versuchen Sie es später erneut');
+      expect(getDetailedServerErrorMesssage('fr'), "Une erreur de serveur s'est produite, veuillez réessayer plus tard");
+      expect(getDetailedServerErrorMesssage('ar'), 'حدث خطأ في الخادم، يرجى المحاولة مرة أخرى لاحقًا');
+      expect(getDetailedServerErrorMesssage('ja'), 'サーバーエラーが発生しました。後でもう一度お試しください');
+      expect(getDetailedServerErrorMesssage('unknown'), 'A server error occurred, please try again later');
+    });
+
+    test('getViewFullMessage returns correct message', () {
+      expect(getViewFullMessage('en'), 'View full message');
+      expect(getViewFullMessage('nl'), 'Bekijk volledig bericht');
+      expect(getViewFullMessage('es'), 'Ver mensaje completo');
+      expect(getViewFullMessage('de'), 'Vollständige Nachricht anzeigen');
+      expect(getViewFullMessage('fr'), 'Voir le message complet');
+      expect(getViewFullMessage('ar'), 'عرض الرسالة بالكامل');
+      expect(getViewFullMessage('ja'), '全文を表示');
+      expect(getViewFullMessage('unknown'), 'View full message');
     });
   });
 }
