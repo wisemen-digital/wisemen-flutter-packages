@@ -10,6 +10,9 @@ inputs:
     required: false
     default: "80"
     description: The minimum coverage percentage value
+  github_token:
+    required: true
+    description: The GitHub token to use for reporting coverage
 
 runs:
   using: "composite"
@@ -50,7 +53,7 @@ runs:
       with:
         coverage-files: ${{ inputs.working_directory }}/coverage/lcov.info
         minimum-coverage: ${{ inputs.min_coverage }}
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.github_token }}
         working-directory: ${{ inputs.working_directory }}
         artifact-name: ${{ inputs.working_directory }}-coverage
 
