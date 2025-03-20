@@ -63,7 +63,7 @@ void main() {
       expect(nullString.toTimeOfDay(), const TimeOfDay(hour: 0, minute: 0));
 
       const invalidString = 'invalid';
-      expect(invalidString.toTimeOfDay(), const TimeOfDay(hour: 0, minute: 0));
+      expect(() => invalidString.toTimeOfDay(), throwsFormatException);
     });
   });
 }
