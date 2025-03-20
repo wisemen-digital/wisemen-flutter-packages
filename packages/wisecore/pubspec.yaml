@@ -31,4 +31,11 @@ dev_dependencies:
   flutter_lints: ^5.0.0
   custom_lint: ^0.7.0
   dependency_validator: ^4.1.2
-  
+
+  # Testing
+  test: ^1.25.15
+
+  # Mocking
+  mockito: ^5.4.0
+  flutter_test:
+    sdk: flutter
