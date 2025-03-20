@@ -195,26 +195,3 @@ void main() {
     expect(find.text('Test'), findsOneWidget);
   });
 }
-
-// class FakeScrollMetrics implements ScrollMetrics {
-//   @override
-//   AxisDirection get axisDirection => AxisDirection.right;
-//
-//   @override
-//   double get minScrollExtent => 0;
-//
-//   @override
-//   double get maxScrollExtent => 100;
-//
-//   @override
-//   double get pixels => _pixels;
-//   final double _pixels;
-//
-//   @override
-//   double get viewportDimension => 100;
-//
-//   @override
-//   bool get outOfRange => false;
-//
-//   FakeScrollMetrics(this._pixels);
-// }
