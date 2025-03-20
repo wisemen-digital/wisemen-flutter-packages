@@ -31,7 +31,7 @@ void main() {
           home: Builder(
             builder: (context) {
               final formattedTime = time.customFormat(context: context);
-              expect(formattedTime, '10:30 AM'); // Adjust based on locale
+              expect(formattedTime, '10:30 AM');
               return Container();
             },
           ),
