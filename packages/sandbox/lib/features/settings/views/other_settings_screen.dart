@@ -13,8 +13,8 @@ class OtherSettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return BasePlatformScaffold(
-      navBar: BaseWiseNavBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         backgroundColor: Theme.of(context).secondaryHeaderColor,
       ),
       body: SingleChildScrollView(

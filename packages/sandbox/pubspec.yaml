@@ -21,8 +21,6 @@ dependencies:
     path: ../wisewidgetslibrary
   wise_nav_bar:
     path: ../wise_nav_bar
-  device_insets:
-    path: ../../../flutter-tests/device_insets
   
   # Networking
   wiseclient: 
