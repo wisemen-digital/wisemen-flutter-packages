@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wisecore/src/dialogs/platform_alert_service.dart';
 
 import '../extensions/extensions.dart';
 
@@ -12,6 +13,7 @@ class ErrorDialog {
   ErrorDialog({
     required this.networkErrorString,
     required this.appName,
+    required this.alertService
   });
 
   /// Fall back error message
@@ -20,24 +22,28 @@ class ErrorDialog {
   /// Application name used as dialog title
   String appName;
 
+  /// Platform alert service
+  final PlatformAlertService alertService;
+
   /// Shows error dialog
   Future<void> showErrorDialog<T>(
     BuildContext context,
     AsyncValue<T> asyncValue, {
     String? customErrorMessage,
   }) async {
-    final message = _getErrorMessage(value: asyncValue);
+    final message = getErrorMessage(value: asyncValue);
 
     if (message != null || customErrorMessage != null) {
-      await FlutterPlatformAlert.showAlert(
-        windowTitle: appName,
-        text: customErrorMessage ?? message!,
+      await alertService.showAlert(
+        title: appName,
+        message: customErrorMessage ?? message!,
         iconStyle: IconStyle.error,
       );
     }
   }
 
-  String? _getErrorMessage({required AsyncValue<dynamic> value}) {
+  /// Returns error message from [AsyncValue]
+  String? getErrorMessage({required AsyncValue<dynamic> value}) {
     if (!value.hasError || value.isLoading) {
       return null;
     }
