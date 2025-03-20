@@ -60,10 +60,13 @@ void main() {
 
     test('toTimeOfDay should handle null or invalid string correctly', () {
       const String? nullString = null;
-      expect(nullString.toTimeOfDay(), const TimeOfDay(hour: 0, minute: 0));
+      expect(() => nullString.toTimeOfDay(), throwsFormatException);
 
       const invalidString = 'invalid';
       expect(() => invalidString.toTimeOfDay(), throwsFormatException);
+
+      const shortInvalidString = '10';
+      expect(() => shortInvalidString.toTimeOfDay(), throwsFormatException);
     });
   });
 }

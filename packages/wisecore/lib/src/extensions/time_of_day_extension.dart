@@ -67,6 +67,6 @@ extension StringToTimeOfDay on String? {
         minute: int.parse(this?.substring(3, 5) ?? '0'),
       );
     }
-    return const TimeOfDay(hour: 0, minute: 0);
+    throw FormatException('Invalid time format: $this');
   }
 }
