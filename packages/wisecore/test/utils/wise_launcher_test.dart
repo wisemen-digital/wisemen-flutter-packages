@@ -76,9 +76,7 @@ void main() {
         body: 'Test Body',
       );
 
-      // Capture the arguments
-      final captured = verify(() => mockUrlLauncher.launchUrl(captureAny(), any()))
-          .captured;
+      final captured = verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
 
       final uri = captured.first as String;
 

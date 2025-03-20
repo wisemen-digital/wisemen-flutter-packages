@@ -44,7 +44,7 @@ void main() {
       var count = 0;
       final timer = makePeriodicTimer(
         const Duration(milliseconds: 50),
-            (_) => count++,
+        (_) => count++,
       );
 
       await Future<Void?>.delayed(const Duration(milliseconds: 120));
@@ -56,7 +56,7 @@ void main() {
       var count = 0;
       final timer = makePeriodicTimer(
         const Duration(seconds: 1),
-            (_) => count++,
+        (_) => count++,
         fireNow: true,
       );
       timer.cancel();
@@ -84,7 +84,8 @@ void main() {
     });
 
     test('should allow scrolling when unlocked', () {
-      final physics = CustomLockScrollPhysics(lockLeft: false, lockRight: false);
+      final physics =
+          CustomLockScrollPhysics(lockLeft: false, lockRight: false);
       final offset = physics.applyPhysicsToUserOffset(
         fakeMetrics,
         10,
@@ -137,7 +138,6 @@ void main() {
 
       group('top edge', () {
         test('should return correct value when hitting top edge', () {
-          // Case: hit top edge
           final topEdgeMetrics = metrics;
           expect(
             physics.applyBoundaryConditions(topEdgeMetrics, -10),
@@ -148,11 +148,10 @@ void main() {
 
       group('bottom edge', () {
         test('should return correct value when hitting bottom edge', () {
-          // Case: hit bottom edge
           final bottomEdgeMetrics = metrics;
           expect(
             physics.applyBoundaryConditions(bottomEdgeMetrics, 110),
-            equals(60), // 110 - 50
+            equals(60),
           );
         });
       });
@@ -161,7 +160,7 @@ void main() {
 
   group('platform', () {
     test('isWeb returns correct value', () {
-      expect(isWeb, equals(false)); // Assuming running locally, adjust if web
+      expect(isWeb, equals(false));
     });
 
     test('isIos returns correct value', () {
@@ -180,7 +179,8 @@ void main() {
           builder: (context) {
             return Scaffold(
               body: ElevatedButton(
-                onPressed: () => showSnackBar(context: context, message: 'Test'),
+                onPressed: () =>
+                    showSnackBar(context: context, message: 'Test'),
                 child: Text('Show'),
               ),
             );
