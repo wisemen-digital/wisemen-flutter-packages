@@ -2,7 +2,8 @@
 extension StringExtensions on String {
   /// Returns TextOverflow corrected symbols. This is used to prevent overflow ellipsis from breaking the text.
   String get correctEllipsis {
-    return replaceAll('', '\u200B');
+    if (isEmpty) return this;
+    return split('').join('\u200B');
   }
 
   /// Returns a capitalized version of the string.
