@@ -241,6 +241,18 @@ void main() {
     });
   });
 
+  group('Exception throwing tests', () {
+    test('LogoutException throws a', () {
+      expect(() => throw LogoutException(), throwsA(isA<LogoutException>()));
+    });
+
+    test('UnknownException throws a', () {
+      final exception = UnknownException('Test message');
+      expect(exception.message, equals('Test message'));
+      expect(() => throw exception, throwsA(isA<UnknownException>()));
+    });
+  });
+
   group('Error Messages Tests', () {
     test('getServerErrorTitle returns correct message', () {
       expect(getServerErrorTitle('nl'), 'Serverfout');
