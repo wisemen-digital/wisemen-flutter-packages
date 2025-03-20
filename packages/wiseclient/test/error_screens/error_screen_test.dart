@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:dio/dio.dart';
-import 'package:mockito/mockito.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
 import 'package:wiseclient/src/error_screens/base_client_error.dart';
 import 'package:wiseclient/src/error_screens/base_server_error.dart';
 import 'package:wiseclient/src/error_screens/error_screens.dart';
@@ -106,20 +108,23 @@ void main() {
     testApp = MaterialApp(
       navigatorObservers: [mockObserver],
       navigatorKey: navigatorKey,
-      home: Container()
+      home: Container(),
     );
   });
 
   DioException createDioException(int statusCode) {
     return DioException(
-      requestOptions: RequestOptions(path: ''),
+      requestOptions: RequestOptions(),
       response: Response(
-          statusCode: statusCode, requestOptions: RequestOptions(path: '')),
+        statusCode: statusCode,
+        requestOptions: RequestOptions(),
+      ),
     );
   }
 
   group('WiseErrorHandler', () {
-    testWidgets('pushes custom widget for 404 error', (WidgetTester tester) async {
+    testWidgets('pushes custom widget for 404 error',
+        (WidgetTester tester) async {
       final handler = WiseErrorHandler(
         navigatorKey: navigatorKey,
         notFound: const Text('404 - Not Found'),
@@ -128,11 +133,8 @@ void main() {
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(404);
-      await handler.pushErrorDetail(exception: exception);
-
-      await tester.pump(Duration(seconds: 1));
-
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      unawaited(handler.pushErrorDetail(exception: exception));
+      await tester.pumpAndSettle();
 
       expect(find.text('404 - Not Found'), findsOneWidget);
     });
@@ -146,7 +148,7 @@ void main() {
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(500);
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
       await tester.pumpAndSettle();
 
       expect(find.text('500 - Server Error'), findsOneWidget);
@@ -154,12 +156,15 @@ void main() {
 
     testWidgets('pushes BaseClientError if no custom widget for 400',
         (tester) async {
-      final handler = WiseErrorHandler(navigatorKey: navigatorKey);
+      final handler = WiseErrorHandler(
+        navigatorKey: navigatorKey,
+        showAllErrors: true,
+      );
 
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(400);
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
       await tester.pumpAndSettle();
 
       expect(find.byType(BaseClientError), findsOneWidget);
@@ -172,7 +177,7 @@ void main() {
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(500);
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
       await tester.pumpAndSettle();
 
       expect(find.byType(BaseServerError), findsOneWidget);
@@ -182,12 +187,13 @@ void main() {
       final handler = WiseErrorHandler(
         navigatorKey: navigatorKey,
         otherClientError: const Text('Other Client Error'),
+        showAllErrors: true,
       );
 
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(400);
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
       await tester.pumpAndSettle();
 
       expect(find.text('Other Client Error'), findsOneWidget);
@@ -202,7 +208,7 @@ void main() {
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(505);
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
       await tester.pumpAndSettle();
 
       expect(find.text('Other Server Error'), findsOneWidget);
@@ -219,7 +225,7 @@ void main() {
       await tester.pumpWidget(testApp);
 
       final exception = createDioException(999);
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
       await tester.pumpAndSettle();
 
       expect(find.text('Unhandled Error'), findsOneWidget);
@@ -233,7 +239,7 @@ void main() {
       final exception = createDioException(404);
 
       // Should not throw
-      await handler.pushErrorDetail(exception: exception);
+      unawaited(handler.pushErrorDetail(exception: exception));
     });
   });
 }
