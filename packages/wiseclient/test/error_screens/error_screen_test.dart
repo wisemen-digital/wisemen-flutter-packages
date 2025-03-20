@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:wiseclient/src/error_screens/base_client_error.dart';
 import 'package:wiseclient/src/error_screens/base_server_error.dart';
 import 'package:wiseclient/src/error_screens/error_screens.dart';
@@ -99,14 +98,11 @@ void main() {
   });
 
   late GlobalKey<NavigatorState> navigatorKey;
-  late NavigatorObserver mockObserver;
   late Widget testApp;
 
   setUp(() {
-    mockObserver = MockNavigatorObserver();
     navigatorKey = GlobalKey<NavigatorState>();
     testApp = MaterialApp(
-      navigatorObservers: [mockObserver],
       navigatorKey: navigatorKey,
       home: Container(),
     );
@@ -243,5 +239,3 @@ void main() {
     });
   });
 }
-
-class MockNavigatorObserver extends Mock implements NavigatorObserver {}
