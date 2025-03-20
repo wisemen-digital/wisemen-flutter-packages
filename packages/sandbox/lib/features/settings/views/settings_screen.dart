@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:device_insets/device_insets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +6,7 @@ import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
+import 'package:wise_nav_bar/wise_nav_bar.dart';
 
 import '../settings.dart';
 
@@ -16,8 +16,8 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return BasePlatformScaffold(
-      navBar: BaseWiseNavBar(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
         backgroundColor: Theme.of(context).primaryColorLight,
         actions: [
           CupertinoButton(
@@ -78,14 +78,7 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: ref.read(switchValueProvider.notifier).changeValue,
               ),
               PlatformAnimatedButton(
-                onPressed: () async {
-                  try {
-                    final insets = await DeviceInsets().getDeviceInsets();
-                    print(insets);
-                  } on Exception catch (e) {
-                    print(e);
-                  }
-                },
+                onPressed: () async {},
                 child: Text(
                   'Other settings',
                   style: Theme.of(context).textTheme.labelLarge,
