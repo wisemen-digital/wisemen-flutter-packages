@@ -46,7 +46,9 @@ void main() {
     expect(message, 'Dio error occurred');
   });
 
-  test('getErrorMessage returns networkErrorString if no message in DioException', () {
+  test(
+      'getErrorMessage returns networkErrorString if no message in DioException',
+      () {
     final dioError = DioException(
       requestOptions: RequestOptions(path: ''),
     );
@@ -62,27 +64,30 @@ void main() {
     expect(message, 'General error occurred');
   });
 
-  testWidgets('showErrorDialog calls alert with custom error message', (tester) async {
+  testWidgets('showErrorDialog calls alert with custom error message',
+      (tester) async {
     final mockAlertService = MockPlatformAlertService();
     final dialog = ErrorDialog(
       networkErrorString: 'Network Error',
       appName: 'TestApp',
       alertService: mockAlertService,
     );
-    final asyncValue = AsyncValue<int>.error(Exception('Error'), StackTrace.current);
+    final asyncValue =
+        AsyncValue<int>.error(Exception('Error'), StackTrace.current);
 
     // Stub the alert
     when(() => mockAlertService.showAlert(
-      title: any(named: 'title'),
-      message: any(named: 'message'),
-      iconStyle: any(named: 'iconStyle'),
-    )).thenAnswer((_) async {});
+          title: any(named: 'title'),
+          message: any(named: 'message'),
+          iconStyle: any(named: 'iconStyle'),
+        )).thenAnswer((_) async {});
 
     await tester.pumpWidget(
       MaterialApp(
         home: Builder(
           builder: (context) {
-            dialog.showErrorDialog(context, asyncValue, customErrorMessage: 'Custom error');
+            dialog.showErrorDialog(context, asyncValue,
+                customErrorMessage: 'Custom error');
             return Container();
           },
         ),
@@ -92,26 +97,28 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => mockAlertService.showAlert(
-      title: 'TestApp',
-      message: 'Custom error',
-      iconStyle: IconStyle.error,
-    )).called(1);
+          title: 'TestApp',
+          message: 'Custom error',
+          iconStyle: IconStyle.error,
+        )).called(1);
   });
 
-  testWidgets('showErrorDialog shows dialog with error message from AsyncValue', (WidgetTester tester) async {
+  testWidgets('showErrorDialog shows dialog with error message from AsyncValue',
+      (WidgetTester tester) async {
     final mockAlertService = MockPlatformAlertService();
     final dialog = ErrorDialog(
       networkErrorString: 'Network Error',
       appName: 'TestApp',
       alertService: mockAlertService,
     );
-    final asyncValue = AsyncValue<int>.error(Exception('Error'), StackTrace.current);
+    final asyncValue =
+        AsyncValue<int>.error(Exception('Error'), StackTrace.current);
 
     when(() => mockAlertService.showAlert(
-      title: any(named: 'title'),
-      message: any(named: 'message'),
-      iconStyle: any(named: 'iconStyle'),
-    )).thenAnswer((_) async {});
+          title: any(named: 'title'),
+          message: any(named: 'message'),
+          iconStyle: any(named: 'iconStyle'),
+        )).thenAnswer((_) async {});
 
     await tester.pumpWidget(
       MaterialApp(
@@ -127,13 +134,14 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => mockAlertService.showAlert(
-      title: 'TestApp',
-      message: 'Error',
-      iconStyle: IconStyle.error,
-    )).called(1);
+          title: 'TestApp',
+          message: 'Error',
+          iconStyle: IconStyle.error,
+        )).called(1);
   });
 
-  testWidgets('showErrorDialog does not call alert if no error', (tester) async {
+  testWidgets('showErrorDialog does not call alert if no error',
+      (tester) async {
     final mockAlertService = MockPlatformAlertService();
     final dialog = ErrorDialog(
       networkErrorString: 'Network Error',
@@ -156,10 +164,10 @@ void main() {
     await tester.pumpAndSettle();
 
     verifyNever(() => mockAlertService.showAlert(
-      title: any(named: 'title'),
-      message: any(named: 'message'),
-      iconStyle: any(named: 'iconStyle'),
-    ));
+          title: any(named: 'title'),
+          message: any(named: 'message'),
+          iconStyle: any(named: 'iconStyle'),
+        ));
   });
 
   test('getErrorMessage returns message from DioException List<dynamic>', () {
@@ -184,20 +192,23 @@ void main() {
     expect(message, networkErrorString);
   });
 
-  testWidgets('AsyncValueExtensions.showErrorDialog calls ErrorDialog.showErrorDialog', (tester) async {
+  testWidgets(
+      'AsyncValueExtensions.showErrorDialog calls ErrorDialog.showErrorDialog',
+      (tester) async {
     final mockAlertService = MockPlatformAlertService();
     final dialog = ErrorDialog(
       networkErrorString: 'Network Error',
       appName: 'TestApp',
       alertService: mockAlertService,
     );
-    final asyncError = AsyncError<Object>(Exception('AsyncError!'), StackTrace.current);
+    final asyncError =
+        AsyncError<Object>(Exception('AsyncError!'), StackTrace.current);
 
     when(() => mockAlertService.showAlert(
-      title: any(named: 'title'),
-      message: any(named: 'message'),
-      iconStyle: any(named: 'iconStyle'),
-    )).thenAnswer((_) async {});
+          title: any(named: 'title'),
+          message: any(named: 'message'),
+          iconStyle: any(named: 'iconStyle'),
+        )).thenAnswer((_) async {});
 
     await tester.pumpWidget(
       MaterialApp(
@@ -213,9 +224,9 @@ void main() {
     await tester.pumpAndSettle();
 
     verify(() => mockAlertService.showAlert(
-      title: 'TestApp',
-      message: 'AsyncError!',
-      iconStyle: IconStyle.error,
-    )).called(1);
+          title: 'TestApp',
+          message: 'AsyncError!',
+          iconStyle: IconStyle.error,
+        )).called(1);
   });
 }

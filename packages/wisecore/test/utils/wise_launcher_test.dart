@@ -4,8 +4,10 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 import 'package:wisecore/src/utils/wise_launcher.dart';
 
+class MockUrlLauncherPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements UrlLauncherPlatform {}
 
-class MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
 class FakeLaunchOptions extends Fake implements LaunchOptions {}
 
 void main() {
@@ -28,9 +30,9 @@ void main() {
       final testUri = Uri.parse('https://example.com');
       when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnTrue);
       when(() => mockUrlLauncher.launchUrl(
-        testUri.toString(),
-        any(),
-      )).thenAnswer(returnTrue);
+            testUri.toString(),
+            any(),
+          )).thenAnswer(returnTrue);
 
       var callbackCalled = false;
 
@@ -44,12 +46,13 @@ void main() {
       expect(callbackCalled, false);
       verify(() => mockUrlLauncher.canLaunch(testUri.toString())).called(1);
       verify(() => mockUrlLauncher.launchUrl(
-        testUri.toString(),
-        any(),
-      )).called(1);
+            testUri.toString(),
+            any(),
+          )).called(1);
     });
 
-    test('launchUrl calls onCannotLaunchUrl when canLaunchUrl is false', () async {
+    test('launchUrl calls onCannotLaunchUrl when canLaunchUrl is false',
+        () async {
       final testUri = Uri.parse('https://example.com');
       when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnFalse);
 
@@ -77,7 +80,8 @@ void main() {
         body: 'Test Body',
       );
 
-      final captured = verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
+      final captured =
+          verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
 
       final uri = captured.first as String;
 
@@ -91,9 +95,9 @@ void main() {
       await WiseLauncher.launchPhone(phoneNr: '123456');
 
       verify(() => mockUrlLauncher.launchUrl(
-        'tel:123456',
-        any(),
-      )).called(1);
+            'tel:123456',
+            any(),
+          )).called(1);
     });
 
     test('launchMap calls launchUrl', () async {
@@ -103,9 +107,9 @@ void main() {
       await WiseLauncher.launchMap(name: 'Test Place');
 
       verify(() => mockUrlLauncher.launchUrl(
-        any(that: contains('query=Test+Place')),
-        any(),
-      )).called(1);
+            any(that: contains('query=Test+Place')),
+            any(),
+          )).called(1);
     });
   });
 }
