@@ -23,7 +23,7 @@ void main() {
       );
 
       unawaited(
-          controller.scrollToBottom(duration: const Duration(seconds: 1)));
+          controller.scrollToBottom(duration: const Duration(seconds: 1)),);
       await tester.pumpAndSettle();
 
       expect(controller.offset, controller.position.maxScrollExtent);
@@ -46,7 +46,7 @@ void main() {
       );
 
       unawaited(
-          controller.scrollToBottom(duration: const Duration(seconds: 1)));
+          controller.scrollToBottom(duration: const Duration(seconds: 1)),);
       await tester.pumpAndSettle();
 
       unawaited(controller.scrollToTop(duration: const Duration(seconds: 1)));
