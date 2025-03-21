@@ -26,6 +26,10 @@ dependencies:
   url_launcher: ">=6.0.0 <7.0.0"
   flutter_platform_alert: ^0.5.3
 
+  # platform interfaces
+  plugin_platform_interface: any
+  url_launcher_platform_interface: any
+
 dev_dependencies:
   # Static analysis & linting
   flutter_lints: ^5.0.0
@@ -36,6 +40,6 @@ dev_dependencies:
   test: ^1.25.15
 
   # Mocking
-  mockito: ^5.4.0
+  mocktail: ^1.0.4
   flutter_test:
     sdk: flutter

@@ -10,10 +10,11 @@ import '../extensions/extensions.dart';
 /// Helper class to show error dialog
 class ErrorDialog {
   /// Constructor [ErrorDialog]
-  ErrorDialog(
-      {required this.networkErrorString,
-      required this.appName,
-      required this.alertService});
+  ErrorDialog({
+    required this.networkErrorString,
+    required this.appName,
+    required this.alertService,
+  });
 
   /// Fall back error message
   String networkErrorString;

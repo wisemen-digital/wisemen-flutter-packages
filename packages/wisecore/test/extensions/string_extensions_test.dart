@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wisecore/src/extensions/extensions.dart';
-import 'package:wisecore/src/extensions/string_correct_overflow.dart';
 
 void main() {
   group('StringExtensions', () {
@@ -16,7 +15,7 @@ void main() {
       expect(original.capitalized, expected);
     });
 
-    test('enableSlashN should replace \\n with newlines', () {
+    test(r'enableSlashN should replace \n with newlines', () {
       const original = r'Line1\nLine2';
       const expected = 'Line1\nLine2';
       expect(original.enableSlashN, expected);
@@ -25,10 +24,10 @@ void main() {
 
   group('NullableStringExtension', () {
     test('orNull should return the string if it is not null or empty', () {
-      const String? nonEmptyString = 'Hello';
+      const nonEmptyString = 'Hello';
       expect(nonEmptyString.orNull, 'Hello');
 
-      const String? emptyString = '';
+      const emptyString = '';
       expect(emptyString.orNull, null);
 
       const String? nullString = null;
@@ -36,10 +35,10 @@ void main() {
     });
 
     test('isNullOrEmpty should return true if the string is null or empty', () {
-      const String? nonEmptyString = 'Hello';
+      const nonEmptyString = 'Hello';
       expect(nonEmptyString.isNullOrEmpty, false);
 
-      const String? emptyString = '';
+      const emptyString = '';
       expect(emptyString.isNullOrEmpty, true);
 
       const String? nullString = null;
