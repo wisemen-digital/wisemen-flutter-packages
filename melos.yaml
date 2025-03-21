@@ -17,6 +17,6 @@ scripts:
       melos run unit_test
       melos exec -c 1 --file-exists=coverage/lcov.info -- coverde filter --input ./coverage/lcov.info --output ./coverage/filtered.lcov.info --filters \.g\.dart
       mkdir -p coverage
-      ./fix_coverage_paths.sh
+      ./scripts/fix_coverage_paths.sh
       coverde value -i coverage/final_coverage.lcov.info > coverage/result.txt
       genhtml coverage/final_coverage.lcov.info -o coverage/html
