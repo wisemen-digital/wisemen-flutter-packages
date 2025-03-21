@@ -1,10 +1,9 @@
-import 'dart:async';
 import 'dart:ffi';
 import 'dart:io';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:wisecore/src/utils/wise_utils.dart';
 
 class MockScrollMetrics extends Mock implements ScrollMetrics {}
@@ -12,7 +11,7 @@ class MockScrollMetrics extends Mock implements ScrollMetrics {}
 void main() {
   group('Optional', () {
     test('should hold value', () {
-      final optional = Optional.value(42);
+      const optional = Optional.value(42);
       expect(optional.value, 42);
     });
   });
@@ -29,11 +28,12 @@ void main() {
 
   group('Debouncer', () {
     test('should debounce function calls', () async {
-      final debouncer = Debouncer(duration: Duration(milliseconds: 100));
+      final debouncer = Debouncer(duration: const Duration(milliseconds: 100));
       var counter = 0;
 
-      debouncer.run(() => counter++);
-      debouncer.run(() => counter++);
+      debouncer
+        ..run(() => counter++)
+        ..run(() => counter++);
       await Future<Void?>.delayed(const Duration(milliseconds: 150));
       expect(counter, 1);
     });
@@ -54,12 +54,12 @@ void main() {
 
     test('should fire immediately if fireNow is true', () {
       var count = 0;
-      final timer = makePeriodicTimer(
+      makePeriodicTimer(
         const Duration(seconds: 1),
         (_) => count++,
         fireNow: true,
-      );
-      timer.cancel();
+      ).cancel();
+
       expect(count, 1);
     });
   });
@@ -75,7 +75,7 @@ void main() {
     );
 
     test('should lock scrolling when configured', () {
-      final physics = CustomLockScrollPhysics(lockLeft: true, lockRight: false);
+      final physics = CustomLockScrollPhysics(lockLeft: true);
       final offset = physics.applyPhysicsToUserOffset(
         fakeMetrics,
         10,
@@ -84,8 +84,7 @@ void main() {
     });
 
     test('should allow scrolling when unlocked', () {
-      final physics =
-          CustomLockScrollPhysics(lockLeft: false, lockRight: false);
+      final physics = CustomLockScrollPhysics();
       final offset = physics.applyPhysicsToUserOffset(
         fakeMetrics,
         10,
@@ -94,14 +93,14 @@ void main() {
     });
 
     test('applyTo returns new instance with same lock flags', () {
-      final physics = CustomLockScrollPhysics(lockLeft: true, lockRight: false);
+      final physics = CustomLockScrollPhysics(lockLeft: true);
       final applied = physics.applyTo(null);
       expect(applied.lockLeft, isTrue);
       expect(applied.lockRight, isFalse);
     });
 
     group('applyBoundaryConditions tests', () {
-      final physics = CustomLockScrollPhysics(lockLeft: true, lockRight: false);
+      final physics = CustomLockScrollPhysics(lockLeft: true);
       final metrics = MockScrollMetrics();
 
       setUp(() {
@@ -181,7 +180,7 @@ void main() {
               body: ElevatedButton(
                 onPressed: () =>
                     showSnackBar(context: context, message: 'Test'),
-                child: Text('Show'),
+                child: const Text('Show'),
               ),
             );
           },

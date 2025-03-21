@@ -26,7 +26,7 @@ void main() {
       final container = ProviderContainer();
 
       expect(
-            () => container.read(sharedPreferencesProvider),
+        () => container.read(sharedPreferencesProvider),
         throwsA(isA<UnimplementedError>()),
       );
     });

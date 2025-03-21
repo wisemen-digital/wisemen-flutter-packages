@@ -13,7 +13,7 @@ class ErrorDialog {
   ErrorDialog({
     required this.networkErrorString,
     required this.appName,
-    required this.alertService
+    required this.alertService,
   });
 
   /// Fall back error message
