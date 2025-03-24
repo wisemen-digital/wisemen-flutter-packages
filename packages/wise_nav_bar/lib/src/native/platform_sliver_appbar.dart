@@ -63,8 +63,8 @@ class PlatformSliverAppBar extends PlatformWidget {
           title,
           androidLargeTitlePadding,
           androidLargeTitleStyle,
-          bottom
-        ,);
+          bottom,
+        );
 
   /// Title widget of the navigation bar.
   /// Usually a [Text] widget that describes the content on the screen.

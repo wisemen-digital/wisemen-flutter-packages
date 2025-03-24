@@ -39,7 +39,8 @@ void main() {
     expect(find.byType(Material), findsOneWidget);
   });
 
-  testWidgets('returns Material Widget for Android', (WidgetTester tester) async {
+  testWidgets('returns Material Widget for Android',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate Android
     when(() => mockPlatformService.isAndroid).thenReturn(true);
     final widget = PlatformWidgetMock(platformService: mockPlatformService);
@@ -51,7 +52,8 @@ void main() {
     expect(find.byType(Material), findsOneWidget);
   });
 
-  testWidgets('returns Material Widget for Fuchsia', (WidgetTester tester) async {
+  testWidgets('returns Material Widget for Fuchsia',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate Android
     when(() => mockPlatformService.isFuchsia).thenReturn(true);
     final widget = PlatformWidgetMock(platformService: mockPlatformService);
@@ -63,7 +65,8 @@ void main() {
     expect(find.byType(Material), findsOneWidget);
   });
 
-  testWidgets('returns Material Widget for Windows', (WidgetTester tester) async {
+  testWidgets('returns Material Widget for Windows',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate Android
     when(() => mockPlatformService.isWindows).thenReturn(true);
     final widget = PlatformWidgetMock(platformService: mockPlatformService);
@@ -75,7 +78,8 @@ void main() {
     expect(find.byType(Material), findsOneWidget);
   });
 
-  testWidgets('returns Cupertino Widget for iOS, macOS, or Linux', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget for iOS, macOS, or Linux',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate iOS
     when(() => mockPlatformService.isIOS).thenReturn(true);
     final widget = PlatformWidgetMock(platformService: mockPlatformService);
@@ -87,7 +91,8 @@ void main() {
     expect(find.byType(CupertinoPageScaffold), findsOneWidget);
   });
 
-  testWidgets('returns Cupertino Widget for macOS', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget for macOS',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate iOS
     when(() => mockPlatformService.isMacOS).thenReturn(true);
     final widget = PlatformWidgetMock(platformService: mockPlatformService);
@@ -99,7 +104,8 @@ void main() {
     expect(find.byType(CupertinoPageScaffold), findsOneWidget);
   });
 
-  testWidgets('returns Cupertino Widget for Linux', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget for Linux',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate iOS
     when(() => mockPlatformService.isLinux).thenReturn(true);
     final widget = PlatformWidgetMock(platformService: mockPlatformService);
@@ -111,7 +117,8 @@ void main() {
     expect(find.byType(CupertinoPageScaffold), findsOneWidget);
   });
 
-  testWidgets('returns Material Widget with AppBar', (WidgetTester tester) async {
+  testWidgets('returns Material Widget with AppBar',
+      (WidgetTester tester) async {
     when(() => mockPlatformService.isAndroid).thenReturn(true);
     final widget = PlatformScaffold(
       platformService: mockPlatformService,
@@ -126,7 +133,8 @@ void main() {
     expect(find.byType(AppBar), findsOneWidget);
   });
 
-  testWidgets('returns Cupertino Widget with AppBar', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget with AppBar',
+      (WidgetTester tester) async {
     when(() => mockPlatformService.isIOS).thenReturn(true);
     final widget = PlatformScaffold(
       platformService: mockPlatformService,
@@ -141,7 +149,8 @@ void main() {
     expect(find.byType(CupertinoNavigationBar), findsOneWidget);
   });
 
-  testWidgets('returns Material Widget with backgroundColor', (WidgetTester tester) async {
+  testWidgets('returns Material Widget with backgroundColor',
+      (WidgetTester tester) async {
     when(() => mockPlatformService.isAndroid).thenReturn(true);
     final widget = PlatformScaffold(
       platformService: mockPlatformService,
@@ -154,7 +163,8 @@ void main() {
     expect(scaffold.backgroundColor, Colors.red);
   });
 
-  testWidgets('returns Cupertino Widget with backgroundColor', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget with backgroundColor',
+      (WidgetTester tester) async {
     when(() => mockPlatformService.isIOS).thenReturn(true);
     final widget = PlatformScaffold(
       platformService: mockPlatformService,
@@ -163,11 +173,13 @@ void main() {
     );
 
     await tester.pumpWidget(CupertinoApp(home: widget));
-    final scaffold = tester.widget<CupertinoPageScaffold>(find.byType(CupertinoPageScaffold));
+    final scaffold = tester
+        .widget<CupertinoPageScaffold>(find.byType(CupertinoPageScaffold));
     expect(scaffold.backgroundColor, Colors.red);
   });
 
-  testWidgets('returns empty widget for unsupported platform', (WidgetTester tester) async {
+  testWidgets('returns empty widget for unsupported platform',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate an unsupported platform
     when(() => mockPlatformService.isAndroid).thenReturn(false);
     when(() => mockPlatformService.isIOS).thenReturn(false);
@@ -231,7 +243,8 @@ void main() {
 }
 
 // Mock platform widget implementation for testing
-class PlatformWidgetMock extends PlatformWidget<CupertinoPageScaffold, Material> {
+class PlatformWidgetMock
+    extends PlatformWidget<CupertinoPageScaffold, Material> {
   const PlatformWidgetMock({required super.platformService, super.key});
 
   @override
