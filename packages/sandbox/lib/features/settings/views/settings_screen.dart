@@ -7,6 +7,7 @@ import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
+import 'package:wise_nav_bar/src/utils/platform_widget_helper.dart';
 
 import '../settings.dart';
 
@@ -17,7 +18,9 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PlatformScaffold(
+      platformService: DefaultPlatformService(),
       appBar: PlatformAppBar(
+        platformService: DefaultPlatformService(),
         backgroundColor: Theme.of(context).primaryColorLight,
         actions: [
           CupertinoButton(

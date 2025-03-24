@@ -9,6 +9,7 @@ final class PlatformScaffold extends PlatformWidget {
   /// Constructor [PlatformScaffold]
   const PlatformScaffold({
     required this.body,
+    required super.platformService,
     this.appBar,
     this.backgroundColor,
     super.key,
