@@ -163,7 +163,7 @@ void main() {
               platformService: TestPlatformService(android: true),
               title: const Text('Title'),
               actions: [
-                IconButton(icon: const Icon(Icons.add), onPressed: () {})
+                IconButton(icon: const Icon(Icons.add), onPressed: () {}),
               ],
             ),
           ),
@@ -181,7 +181,7 @@ void main() {
               platformService: TestPlatformService(ios: true),
               title: const Text('Title'),
               actions: [
-                CupertinoButton(child: const Text('Action'), onPressed: () {})
+                CupertinoButton(child: const Text('Action'), onPressed: () {}),
               ],
             ),
             child: Container(),
