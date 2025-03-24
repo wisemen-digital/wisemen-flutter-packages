@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Platform widget with Material and Cupertino
-abstract class PlatformWidget<I extends Widget, A extends Widget> extends StatelessWidget {
+abstract class PlatformWidget<I extends Widget, A extends Widget>
+    extends StatelessWidget {
   /// Constructor [PlatformWidget]
   const PlatformWidget({
     super.key,
