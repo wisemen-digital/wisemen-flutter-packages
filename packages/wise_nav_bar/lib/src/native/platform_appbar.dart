@@ -15,7 +15,6 @@ class PlatformAppBar extends PlatformWidget
     implements ObstructingPreferredSizeWidget {
   /// Constructor [PlatformAppBar]
   const PlatformAppBar({
-    required super.platformService,
     super.key,
     this.leading,
     this.previousPageTitle,
@@ -35,7 +34,6 @@ class PlatformAppBar extends PlatformWidget
   /// Constructor [PlatformAppBar.text]
   PlatformAppBar.text({
     required String title,
-    required super.platformService,
     super.key,
     this.leading,
     this.previousPageTitle,

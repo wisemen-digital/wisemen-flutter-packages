@@ -14,7 +14,6 @@ import '../utils/utils.dart';
 class PlatformSliverAppBar extends PlatformWidget {
   /// Constructor [PlatformSliverAppBar]
   const PlatformSliverAppBar({
-    required super.platformService,
     super.key,
     this.leading,
     this.previousPageTitle,
@@ -36,7 +35,6 @@ class PlatformSliverAppBar extends PlatformWidget {
   /// Constructor [PlatformSliverAppBar.text]
   PlatformSliverAppBar.text({
     required String title,
-    required super.platformService,
     EdgeInsetsDirectional androidLargeTitlePadding =
         const EdgeInsetsDirectional.all(16),
     TextStyle androidLargeTitleStyle = const TextStyle(fontSize: 24),
