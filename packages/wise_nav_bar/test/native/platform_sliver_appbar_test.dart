@@ -243,7 +243,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.backgroundColor, Colors.red);
     });
 
@@ -264,8 +265,10 @@ void main() {
       );
       final sliverAppBar =
           tester.widget<SliverAppBar>(find.byType(SliverAppBar));
-      expect(sliverAppBar.systemOverlayStyle?.statusBarBrightness,
-          Brightness.dark,);
+      expect(
+        sliverAppBar.systemOverlayStyle?.statusBarBrightness,
+        Brightness.dark,
+      );
     });
 
     testWidgets('creates CupertinoSliverNavigationBar with brightness',
@@ -285,7 +288,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.brightness, Brightness.dark);
     });
 
@@ -332,7 +336,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.bottom?.preferredSize.height, 50.0);
     });
 
@@ -373,7 +378,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.border, const Border(bottom: BorderSide()));
     });
 
@@ -395,7 +401,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.automaticBackgroundVisibility, false);
     });
 
@@ -417,7 +424,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.enableBackgroundFilterBlur, false);
     });
 
@@ -439,7 +447,8 @@ void main() {
         ),
       );
       final navBar = tester.widget<CupertinoSliverNavigationBar>(
-          find.byType(CupertinoSliverNavigationBar),);
+        find.byType(CupertinoSliverNavigationBar),
+      );
       expect(navBar.transitionBetweenRoutes, false);
     });
   });
