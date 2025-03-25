@@ -61,7 +61,7 @@ class PlatformSearchBar extends PlatformWidget {
   }
 }
 
-/// [PlatformSearchBar] Cupertino implimentation
+/// [PlatformSearchBar] Cupertino implementation
 class _CupertinoSearchBar extends StatefulWidget {
   /// Constructor [_CupertinoSearchBar]
   const _CupertinoSearchBar({
@@ -194,8 +194,8 @@ class _MaterialSearchBarState extends State<_MaterialSearchBar> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(
-        top: Sizes.p8,
-        right: Sizes.p16,
+        top: Sizes.s,
+        right: Sizes.m,
       ),
       child: SearchBar(
         elevation: const WidgetStatePropertyAll(0),
