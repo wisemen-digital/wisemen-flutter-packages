@@ -38,6 +38,69 @@ void main() {
     expect(find.byType(Material), findsOneWidget);
     debugDefaultTargetPlatformOverride = null;
   });
+
+  testWidgets('returns Cupertino Widget for iOS', (WidgetTester tester) async {
+    // Mock the platform service to simulate iOS
+    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+    const widget = PlatformWidgetMock();
+
+    // Build the widget
+    await tester.pumpWidget(const MaterialApp(home: widget));
+
+    // Verify that the createCupertinoWidget method is called
+    expect(find.byType(CupertinoPageScaffold), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('returns Cupertino Widget for macOS', (WidgetTester tester) async {
+    // Mock the platform service to simulate macOS
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    const widget = PlatformWidgetMock();
+
+    // Build the widget
+    await tester.pumpWidget(const MaterialApp(home: widget));
+
+    // Verify that the createCupertinoWidget method is called
+    expect(find.byType(CupertinoPageScaffold), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('returns Cupertino Widget for Linux', (WidgetTester tester) async {
+    // Mock the platform service to simulate Linux
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+    const widget = PlatformWidgetMock();
+
+    // Build the widget
+    await tester.pumpWidget(const MaterialApp(home: widget));
+
+    // Verify that the createCupertinoWidget method is called
+    expect(find.byType(CupertinoPageScaffold), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('returns Material Widget for Windows', (WidgetTester tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.windows;
+    const widget = PlatformWidgetMock();
+
+    // Build the widget
+    await tester.pumpWidget(const MaterialApp(home: widget));
+
+    // Verify that the createCupertinoWidget method is called
+    expect(find.byType(Material), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
+
+  testWidgets('returns Material Widget for Fuchsia', (WidgetTester tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+    const widget = PlatformWidgetMock();
+
+    // Build the widget
+    await tester.pumpWidget(const MaterialApp(home: widget));
+
+    // Verify that the createCupertinoWidget method is called
+    expect(find.byType(Material), findsOneWidget);
+    debugDefaultTargetPlatformOverride = null;
+  });
 }
 
 // Mock platform widget implementation for testing
