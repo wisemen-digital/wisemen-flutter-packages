@@ -52,7 +52,8 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('returns Cupertino Widget for macOS', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget for macOS',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate macOS
     debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
     const widget = PlatformWidgetMock();
@@ -65,7 +66,8 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('returns Cupertino Widget for Linux', (WidgetTester tester) async {
+  testWidgets('returns Cupertino Widget for Linux',
+      (WidgetTester tester) async {
     // Mock the platform service to simulate Linux
     debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     const widget = PlatformWidgetMock();
@@ -78,7 +80,8 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('returns Material Widget for Windows', (WidgetTester tester) async {
+  testWidgets('returns Material Widget for Windows',
+      (WidgetTester tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.windows;
     const widget = PlatformWidgetMock();
 
@@ -90,7 +93,8 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('returns Material Widget for Fuchsia', (WidgetTester tester) async {
+  testWidgets('returns Material Widget for Fuchsia',
+      (WidgetTester tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
     const widget = PlatformWidgetMock();
 
