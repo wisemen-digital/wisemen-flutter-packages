@@ -12,11 +12,11 @@ void main() {
   });
 
   test('Gap constants', () {
-    expect(gapXS.width, Sizes.xs);
-    expect(gapS.width, Sizes.s);
-    expect(gapM.width, Sizes.m);
-    expect(gapL.width, Sizes.l);
-    expect(gapXL.width, Sizes.xl);
+    expect(gapWXS.width, Sizes.xs);
+    expect(gapWS.width, Sizes.s);
+    expect(gapWM.width, Sizes.m);
+    expect(gapWL.width, Sizes.l);
+    expect(gapWXL.width, Sizes.xl);
 
     expect(gapHXs.height, Sizes.xs);
     expect(gapHS.height, Sizes.s);
