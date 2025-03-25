@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -7,21 +5,29 @@ import 'package:flutter/material.dart';
 abstract class PlatformWidget<I extends Widget, A extends Widget>
     extends StatelessWidget {
   /// Constructor [PlatformWidget]
-  const PlatformWidget({super.key});
+  const PlatformWidget({
+    super.key,
+    IsWebService? isWebService,
+  }) : _isWebService = isWebService ?? const _IsWebServiceImpl();
+
+  final IsWebService _isWebService;
 
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
+    if (_isWebService.getIsWeb()) {
       return createMaterialWidget(context);
     }
-    if (Platform.isAndroid || Platform.isFuchsia || Platform.isWindows) {
-      return createMaterialWidget(context);
-    } else if (Platform.isIOS || Platform.isMacOS || Platform.isLinux) {
-      return createCupertinoWidget(context);
+    final platform = Theme.of(context).platform;
+    switch (platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.windows:
+        return createMaterialWidget(context);
+      case TargetPlatform.iOS:
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+        return createCupertinoWidget(context);
     }
-
-    // Platform not supported returns an empty widget
-    return const SizedBox.shrink();
   }
 
   /// Create Cupertino widget
@@ -29,4 +35,17 @@ abstract class PlatformWidget<I extends Widget, A extends Widget>
 
   /// Create Material widget
   A createMaterialWidget(BuildContext context);
+}
+
+/// Platform service interface to abstract platform checks (for tests)
+// ignore: one_member_abstracts
+abstract interface class IsWebService {
+  /// Check if the platform is Web
+  bool getIsWeb();
+}
+
+class _IsWebServiceImpl implements IsWebService {
+  const _IsWebServiceImpl();
+  @override
+  bool getIsWeb() => kIsWeb;
 }
