@@ -105,14 +105,14 @@ class PlatformDropdownPicker<T extends DropdownModel> extends PlatformWidget {
                       ),
                     ),
                   ),
-                  gapW8,
+                  gapWS,
                   Expanded(
                     child: Text(
                       e.getString(context),
                       style: textStyle,
                     ),
                   ),
-                  gapW8,
+                  gapWS,
                   if (e.icon != null) e.icon!,
                 ],
               ),
