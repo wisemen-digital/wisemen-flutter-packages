@@ -12,11 +12,11 @@ class Sizes {
 }
 
 /// Constant gap widths
-const gapXS = SizedBox(width: Sizes.xs);
-const gapS = SizedBox(width: Sizes.s);
-const gapM = SizedBox(width: Sizes.m);
-const gapL = SizedBox(width: Sizes.l);
-const gapXL = SizedBox(width: Sizes.xl);
+const gapWXS = SizedBox(width: Sizes.xs);
+const gapWS = SizedBox(width: Sizes.s);
+const gapWM = SizedBox(width: Sizes.m);
+const gapWL = SizedBox(width: Sizes.l);
+const gapWXL = SizedBox(width: Sizes.xl);
 
 /// Constant gap heights
 const gapHXs = SizedBox(height: Sizes.xs);
