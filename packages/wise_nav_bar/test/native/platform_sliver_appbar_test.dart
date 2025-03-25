@@ -1,181 +1,44 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_nav_bar/src/native/platform_sliver_appbar.dart';
-import 'package:wise_nav_bar/src/utils/platform_widget_helper.dart';
-
-class TestPlatformService implements PlatformService {
-  TestPlatformService({
-    this.android = false,
-    this.ios = false,
-    this.web = false,
-    this.macos = false,
-    this.linux = false,
-    this.fuchsia = false,
-    this.windows = false,
-  });
-  final bool android;
-  final bool ios;
-  final bool web;
-  final bool macos;
-  final bool linux;
-  final bool fuchsia;
-  final bool windows;
-
-  @override
-  bool get isAndroid => android;
-
-  @override
-  bool get isIOS => ios;
-
-  @override
-  bool get isWeb => web;
-
-  @override
-  bool get isMacOS => macos;
-
-  @override
-  bool get isLinux => linux;
-
-  @override
-  bool get isFuchsia => fuchsia;
-
-  @override
-  bool get isWindows => windows;
-}
 
 void main() {
   group('PlatformSliverAppBar', () {
-    testWidgets('creates Material SliverAppBar on Android',
+    testWidgets('createMaterialWidget returns SliverAppBar',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(android: true),
-                title: const Text('Title'),
-              ),
-            ],
-          ),
-        ),
+      const platformSliverAppBar = PlatformSliverAppBar(
+        title: Text('Title'),
       );
-      expect(find.byType(SliverAppBar), findsOneWidget);
+
+      final materialWidget = platformSliverAppBar
+          .createMaterialWidget(tester.element(find.byType(Container)));
+
+      expect(materialWidget, isA<SliverAppBar>());
     });
 
-    testWidgets('creates CupertinoSliverNavigationBar on iOS',
+    testWidgets('createCupertinoWidget returns CupertinoSliverNavigationBar',
         (WidgetTester tester) async {
-      await tester.pumpWidget(
-        CupertinoApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
-              ),
-            ],
-          ),
-        ),
+      const platformSliverAppBar = PlatformSliverAppBar(
+        title: Text('Title'),
       );
-      expect(find.byType(CupertinoSliverNavigationBar), findsOneWidget);
-    });
 
-    testWidgets('creates Material SliverAppBar on Web',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(web: true),
-                title: const Text('Title'),
-              ),
-            ],
-          ),
-        ),
-      );
-      expect(find.byType(SliverAppBar), findsOneWidget);
-    });
+      final cupertinoWidget = platformSliverAppBar
+          .createCupertinoWidget(tester.element(find.byType(Container)));
 
-    testWidgets('creates CupertinoSliverNavigationBar on macOS',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        CupertinoApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(macos: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
-              ),
-            ],
-          ),
-        ),
-      );
-      expect(find.byType(CupertinoSliverNavigationBar), findsOneWidget);
-    });
-
-    testWidgets('creates CupertinoSliverNavigationBar on Linux',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        CupertinoApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(linux: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
-              ),
-            ],
-          ),
-        ),
-      );
-      expect(find.byType(CupertinoSliverNavigationBar), findsOneWidget);
-    });
-
-    testWidgets('creates Material SliverAppBar on Fuchsia',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(fuchsia: true),
-                title: const Text('Title'),
-              ),
-            ],
-          ),
-        ),
-      );
-      expect(find.byType(SliverAppBar), findsOneWidget);
-    });
-
-    testWidgets('creates Material SliverAppBar on Windows',
-        (WidgetTester tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: CustomScrollView(
-            slivers: [
-              PlatformSliverAppBar(
-                platformService: TestPlatformService(windows: true),
-                title: const Text('Title'),
-              ),
-            ],
-          ),
-        ),
-      );
-      expect(find.byType(SliverAppBar), findsOneWidget);
+      expect(cupertinoWidget, isA<CupertinoSliverNavigationBar>());
     });
 
     testWidgets('creates Material SliverAppBar with actions',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
       await tester.pumpWidget(
         MaterialApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(android: true),
                 title: const Text('Title'),
                 actions: [
                   IconButton(icon: const Icon(Icons.add), onPressed: () {}),
@@ -186,35 +49,39 @@ void main() {
         ),
       );
       expect(find.byType(IconButton), findsOneWidget);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('creates CupertinoSliverNavigationBar on iOS',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
               ),
             ],
           ),
         ),
       );
       expect(find.byType(CupertinoSliverNavigationBar), findsOneWidget);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('creates Material SliverAppBar with backgroundColor',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(android: true),
-                title: const Text('Title'),
+                title: Text('Title'),
                 backgroundColor: Colors.red,
               ),
             ],
@@ -228,14 +95,15 @@ void main() {
 
     testWidgets('creates CupertinoSliverNavigationBar with backgroundColor',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
                 backgroundColor: Colors.red,
               ),
             ],
@@ -246,17 +114,18 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.backgroundColor, Colors.red);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('creates Material SliverAppBar with brightness',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(android: true),
-                title: const Text('Title'),
+                title: Text('Title'),
                 brightness: Brightness.dark,
               ),
             ],
@@ -273,14 +142,15 @@ void main() {
 
     testWidgets('creates CupertinoSliverNavigationBar with brightness',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
                 brightness: Brightness.dark,
               ),
             ],
@@ -291,6 +161,8 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.brightness, Brightness.dark);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('creates Material SliverAppBar with bottom widget',
@@ -300,7 +172,6 @@ void main() {
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(android: true),
                 title: const Text('Title'),
                 bottom: PreferredSize(
                   preferredSize: const Size.fromHeight(50),
@@ -318,12 +189,13 @@ void main() {
 
     testWidgets('creates CupertinoSliverNavigationBar with bottom widget',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
         CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
                 title: const Text('Title'),
                 largeTitle: const Text('Large Title'),
                 bottom: PreferredSize(
@@ -339,18 +211,19 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.bottom?.preferredSize.height, 50.0);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets('creates Material SliverAppBar with border',
         (WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(android: true),
-                title: const Text('Title'),
-                border: const Border(bottom: BorderSide()),
+                title: Text('Title'),
+                border: Border(bottom: BorderSide()),
               ),
             ],
           ),
@@ -363,15 +236,16 @@ void main() {
 
     testWidgets('creates CupertinoSliverNavigationBar with border',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
-                border: const Border(bottom: BorderSide()),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
+                border: Border(bottom: BorderSide()),
               ),
             ],
           ),
@@ -381,19 +255,22 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.border, const Border(bottom: BorderSide()));
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets(
         'creates CupertinoSliverNavigationBar with automaticBackgroundVisibility',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
                 automaticBackgroundVisibility: false,
               ),
             ],
@@ -404,19 +281,22 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.automaticBackgroundVisibility, false);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets(
         'creates CupertinoSliverNavigationBar with enableBackgroundFilterBlur',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
                 enableBackgroundFilterBlur: false,
               ),
             ],
@@ -427,19 +307,21 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.enableBackgroundFilterBlur, false);
+
+      debugDefaultTargetPlatformOverride = null;
     });
 
     testWidgets(
         'creates CupertinoSliverNavigationBar with transitionBetweenRoutes',
         (WidgetTester tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
       await tester.pumpWidget(
-        CupertinoApp(
+        const CupertinoApp(
           home: CustomScrollView(
             slivers: [
               PlatformSliverAppBar(
-                platformService: TestPlatformService(ios: true),
-                title: const Text('Title'),
-                largeTitle: const Text('Large Title'),
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
                 transitionBetweenRoutes: false,
               ),
             ],
@@ -450,6 +332,26 @@ void main() {
         find.byType(CupertinoSliverNavigationBar),
       );
       expect(navBar.transitionBetweenRoutes, false);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets(
+        'PlatformSliverAppBar.text constructor returns the correct text',
+        (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CustomScrollView(
+            slivers: [
+              PlatformSliverAppBar.text(
+                title: 'Large Title',
+              ),
+            ],
+          ),
+        ),
+      );
+
+      expect(find.text('Large Title'), findsAtLeast(1));
     });
   });
 }
