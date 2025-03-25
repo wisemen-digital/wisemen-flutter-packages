@@ -15,9 +15,7 @@ class OtherSettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PlatformScaffold(
-      platformService: DefaultPlatformService(),
       appBar: PlatformAppBar(
-        platformService: DefaultPlatformService(),
         backgroundColor: Theme.of(context).secondaryHeaderColor,
       ),
       body: SingleChildScrollView(

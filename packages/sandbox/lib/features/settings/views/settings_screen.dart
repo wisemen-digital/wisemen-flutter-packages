@@ -18,9 +18,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PlatformScaffold(
-      platformService: DefaultPlatformService(),
       appBar: PlatformAppBar(
-        platformService: DefaultPlatformService(),
         backgroundColor: Theme.of(context).primaryColorLight,
         actions: [
           CupertinoButton(
