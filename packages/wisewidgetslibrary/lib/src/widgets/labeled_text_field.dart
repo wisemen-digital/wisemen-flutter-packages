@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:conditional_wrap/conditional_wrap.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../constants/constants.dart';
 
 /// A [TextField] with a label above it.
 class LabeledTextField extends StatelessWidget {
@@ -106,7 +105,7 @@ class LabeledTextField extends StatelessWidget {
                 label!,
                 style: _labelStyle(context),
               ),
-              gapH5,
+              const SizedBox(height: 5),
               child,
             ],
           );
