@@ -5,7 +5,7 @@ import 'package:wisewidgetslibrary/src/widgets/animated_number.dart';
 void main() {
   testWidgets('AnimatedNumber animates to new value',
       (WidgetTester tester) async {
-    var animatedValue = 0;
+    var animatedValue = 0.0;
 
     await tester.pumpWidget(
       MaterialApp(
@@ -39,7 +39,7 @@ void main() {
 
   testWidgets('AnimatedNumber respects custom duration and curve',
       (WidgetTester tester) async {
-    var animatedValue = 0;
+    var animatedValue = 0.0;
 
     await tester.pumpWidget(
       MaterialApp(
@@ -81,7 +81,7 @@ void main() {
 
   testWidgets('AnimatedNumber updates widget correctly',
       (WidgetTester tester) async {
-    var animatedValue = 0;
+    var animatedValue = 0.0;
 
     await tester.pumpWidget(
       MaterialApp(
