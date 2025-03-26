@@ -37,7 +37,7 @@ void main() {
     expect(animatedValue, 20.0);
   });
 
-  testWidgets('AnimatedNumber respects custom duration and curve',
+  testWidgets('AnimatedNumber respects custom duration and easeIn curve',
       (WidgetTester tester) async {
     var animatedValue = 0.0;
 
@@ -71,13 +71,87 @@ void main() {
       ),
     );
 
-    await tester.pump(const Duration(milliseconds: 250));
+    final firstQuarter1 = animatedValue;
+    await tester.pump(const Duration(milliseconds: 100)); // Check a bit later in the animation
+    final firstQuarter2 = animatedValue;
+
+    final firstQuarterDifference = firstQuarter2 - firstQuarter1;
+
+    await tester.pump(const Duration(milliseconds: 150));
     expect(animatedValue, greaterThan(10.0));
     expect(animatedValue, lessThan(20.0));
+
+    // Check that the value is now easing in, hence should be slower at the start
+    final secondQuarter1 = animatedValue;
+    await tester.pump(const Duration(milliseconds: 100)); // Check a bit later in the animation
+    final secondQuarter2 = animatedValue;
+
+    final secondQuarterDifference = secondQuarter2 - secondQuarter1;
+
+    // At this point, the curve should show easing-in behavior, so the value at the first quarter
+    // should be less than the value at the second quarter.
+    expect(firstQuarterDifference, lessThan(secondQuarterDifference));
 
     await tester.pumpAndSettle();
     expect(animatedValue, 20.0);
   });
+
+  testWidgets('AnimatedNumber respects custom duration and easeOut curve',
+          (WidgetTester tester) async {
+        var animatedValue = 0.0;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: AnimatedNumber(
+              number: 10,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOut, // Curve under test
+              child: (value) {
+                animatedValue = value;
+                return Text(value.toString());
+              },
+            ),
+          ),
+        );
+
+        expect(animatedValue, 10.0);
+
+        await tester.pumpWidget(
+          MaterialApp(
+            home: AnimatedNumber(
+              number: 20,
+              duration: const Duration(milliseconds: 500),
+              curve: Curves.easeOut, // Curve under test
+              child: (value) {
+                animatedValue = value;
+                return Text(value.toString());
+              },
+            ),
+          ),
+        );
+
+        final firstQuarter1 = animatedValue;
+        await tester.pump(const Duration(milliseconds: 100));
+        final firstQuarter2 = animatedValue;
+
+        final firstQuarterDifference = firstQuarter2 - firstQuarter1;
+
+        await tester.pump(const Duration(milliseconds: 150));
+        expect(animatedValue, greaterThan(10.0));
+        expect(animatedValue, lessThan(20.0));
+
+        final secondQuarter1 = animatedValue;
+        await tester.pump(const Duration(milliseconds: 100));
+        final secondQuarter2 = animatedValue;
+
+        final secondQuarterDifference = secondQuarter2 - secondQuarter1;
+
+        expect(firstQuarterDifference, greaterThan(secondQuarterDifference));
+
+        await tester.pumpAndSettle();
+        expect(animatedValue, 20.0);
+      });
+
 
   testWidgets('AnimatedNumber updates widget correctly',
       (WidgetTester tester) async {
