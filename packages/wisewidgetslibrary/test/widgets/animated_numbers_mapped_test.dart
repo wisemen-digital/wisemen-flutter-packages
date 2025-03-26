@@ -45,7 +45,7 @@ void main() {
     expect(animatedValues, {'a': 30.0, 'b': 40.0});
   });
 
-  testWidgets('AnimatedNumbersMapped respects custom duration and curve',
+  testWidgets('AnimatedNumbersMapped respects custom duration',
       (WidgetTester tester) async {
     var animatedValues = <String, double>{'a': 0.0, 'b': 0.0};
 
