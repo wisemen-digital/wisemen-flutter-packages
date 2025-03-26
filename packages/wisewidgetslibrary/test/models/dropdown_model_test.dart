@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/src/models/dropdown_model.dart';
@@ -15,7 +13,8 @@ class TestDropdownModel implements DropdownModel {
 }
 
 void main() {
-  testWidgets('DropdownModel getString returns correct string', (WidgetTester tester) async {
+  testWidgets('DropdownModel getString returns correct string',
+      (WidgetTester tester) async {
     final model = TestDropdownModel();
 
     await tester.pumpWidget(
