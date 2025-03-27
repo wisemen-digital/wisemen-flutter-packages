@@ -283,22 +283,24 @@ class _CustomImageCarouselState extends State<CustomImageCarousel> {
                         color:
                             CustomImageCarousel._pageIndicatorBackgroundColor,
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${currentPage + 1}',
-                            style: widget.currentPageTextstyle,
-                          ),
-                          Text(
-                            ' / ',
-                            style: widget.pageIndicatorSeperatorTextstyle,
-                          ),
-                          Text(
-                            '${(widget.imageProviders ?? widget.imageUrls)!.length}',
-                            style: widget.totalAmountOfPagesTextstyle,
-                          ),
-                        ],
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text: '${currentPage + 1}',
+                              style: widget.currentPageTextstyle,
+                            ),
+                            TextSpan(
+                              text: ' / ',
+                              style: widget.pageIndicatorSeperatorTextstyle,
+                            ),
+                            TextSpan(
+                              text:
+                                  '${(widget.imageProviders ?? widget.imageUrls)!.length}',
+                              style: widget.totalAmountOfPagesTextstyle,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
