@@ -55,8 +55,10 @@ void main() {
     });
 
     test('isWebClient throws error when not implemented', () {
-      expect(() => FakeNativeClient().isWebClient,
-          throwsA(isA<UnimplementedError>()));
+      expect(
+        () => FakeNativeClient().isWebClient,
+        throwsA(isA<UnimplementedError>()),
+      );
     });
 
     test('Expect url not to be empty', () async {
@@ -319,8 +321,10 @@ void main() {
       when(() => mockFresh.authenticationStatus)
           .thenAnswer((_) => authStatusStream);
 
-      expect(client.authenticationStatus,
-          emitsInOrder([AuthenticationStatus.authenticated]));
+      expect(
+        client.authenticationStatus,
+        emitsInOrder([AuthenticationStatus.authenticated]),
+      );
     });
   });
 
