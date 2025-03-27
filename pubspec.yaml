@@ -10,3 +10,7 @@ workspace:
 dev_dependencies:
   melos: ^6.3.2
   coverage: ^1.11.1
+
+flutter:
+  assets:
+    - assets/flutter_logo.png
