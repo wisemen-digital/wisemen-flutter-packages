@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fresh_dio/fresh_dio.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 import 'package:wiseclient/src/error_screens/messages.dart';
@@ -14,7 +16,13 @@ class FakeSecureStorage extends Fake implements FlutterSecureStorage {}
 
 class FakeOAuthToken extends Fake implements OAuthToken {}
 
+class FakeClient extends Fake implements WiseClient {}
+
 class MockClient extends Mock implements WiseClient {}
+
+class MockDio extends Mock implements Dio {}
+
+class MockFresh extends Mock implements Fresh<OAuth2Token> {}
 
 extension VoidAnswer on When<Future<void>> {
   void thenAnswerWithVoid() => thenAnswer((_) async {});
@@ -23,10 +31,12 @@ extension VoidAnswer on When<Future<void>> {
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterSecureStorage.setMockInitialValues({});
+
   setUpAll(() {
     registerFallbackValue(FakeSecureStorage());
     registerFallbackValue(FakeOAuthToken());
   });
+
   group('A group of basic tests to test functionality', () {
     final wiseOptions = WiseOptions.baseWithLocale(
       url: 'https://jsonplaceholder.typicode.com/',
@@ -42,6 +52,13 @@ void main() {
 
     test('Client is native', () {
       expect(awesome.isWebClient, isFalse);
+    });
+
+    test('isWebClient throws error when not implemented', () {
+      expect(
+        () => FakeClient().isWebClient,
+        throwsA(isA<UnimplementedError>()),
+      );
     });
 
     test('Expect url not to be empty', () async {
@@ -62,6 +79,22 @@ void main() {
         'userId': 1,
       };
       final something = await awesome.post<dynamic>(
+        path,
+        data: body,
+      );
+      expect(something.data, isMap);
+      expect((something.data as Map)['userId'], equals(1));
+    });
+
+    test('Normal dio put works', () async {
+      const path = 'posts/1';
+      const body = {
+        'id': 1,
+        'title': 'foo',
+        'body': 'bar',
+        'userId': 1,
+      };
+      final something = await awesome.put<dynamic>(
         path,
         data: body,
       );
@@ -125,6 +158,40 @@ void main() {
     test('Dio get throws dio exception on non existing path', () async {
       const path = 'todos/1/notfound';
       expect(() => awesome.get<dynamic>(path), throwsA(isA<DioException>()));
+    });
+
+    test('cancelWiseRequests method works correctly', () {
+      awesome.cancelWiseRequests();
+      expect(awesome.cancelToken.isCancelled, isTrue);
+    });
+
+    test('resetWiseCancelToken method does not result in a cancelled token ',
+        () {
+      awesome.resetWiseCancelToken();
+      expect(awesome.cancelToken.isCancelled, isFalse);
+    });
+
+    test('removeFreshToken method works correctly', () async {
+      final mockFresh = MockFresh();
+      final client = WiseClient(
+        wiseInterceptors: [],
+        options: WiseOptions(),
+      )..fresh = mockFresh;
+
+      when(() => mockFresh.setToken(null)).thenAnswer((_) async {});
+      when(mockFresh.revokeToken).thenAnswer((_) async {});
+
+      await client.removeFreshToken();
+
+      verify(() => mockFresh.setToken(null)).called(1);
+      verify(mockFresh.revokeToken).called(1);
+    });
+
+    test('addHeaders method works correctly', () {
+      final headers = {'Authorization': 'Bearer token'};
+      awesome.addHeaders(headers: headers);
+
+      expect(awesome.options.headers['Authorization'], 'Bearer token');
     });
 
     test('Cancelled token does not finish request', () async {
@@ -238,6 +305,26 @@ void main() {
 
       await awesome.fresh.clearToken();
       expect(await awesome.fresh.token, isNull);
+    });
+
+    test('authenticationStatus stream returns correct status', () {
+      final mockFresh = MockFresh();
+      final client = WiseClient(
+        wiseInterceptors: [],
+        options: WiseOptions(),
+      )..fresh = mockFresh;
+
+      final authStatusStream = Stream<AuthenticationStatus>.fromIterable(
+        [AuthenticationStatus.authenticated],
+      );
+
+      when(() => mockFresh.authenticationStatus)
+          .thenAnswer((_) => authStatusStream);
+
+      expect(
+        client.authenticationStatus,
+        emitsInOrder([AuthenticationStatus.authenticated]),
+      );
     });
   });
 

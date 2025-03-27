@@ -58,24 +58,15 @@ abstract mixin class WiseClient implements Dio {
     Object? body,
     Map<String, dynamic>? extraHeaders,
   }) async {
-    try {
-      final response = await get<dynamic>(
+    return _wrapRequest(
+      () => get<dynamic>(
         path,
         cancelToken: cancelToken,
         queryParameters: queryParameters,
         data: body,
-        options: extraHeaders != null
-            ? Options(
-                headers: extraHeaders,
-              )
-            : null,
-      );
-      return response.data;
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw UnknownException(e.toString());
-    }
+        options: _buildOptions(extraHeaders),
+      ),
+    );
   }
 
   /// [wPost] method replaces get with build in features
@@ -85,24 +76,15 @@ abstract mixin class WiseClient implements Dio {
     Object? body,
     Map<String, dynamic>? extraHeaders,
   }) async {
-    try {
-      final response = await post<dynamic>(
+    return _wrapRequest(
+      () => post<dynamic>(
         path,
         cancelToken: cancelToken,
         queryParameters: queryParameters,
         data: body,
-        options: extraHeaders != null
-            ? Options(
-                headers: extraHeaders,
-              )
-            : null,
-      );
-      return response.data;
-    } on DioException {
-      rethrow;
-    } catch (e) {
-      throw UnknownException(e.toString());
-    }
+        options: _buildOptions(extraHeaders),
+      ),
+    );
   }
 
   /// [wPut] method replaces put with build in features
@@ -112,24 +94,32 @@ abstract mixin class WiseClient implements Dio {
     Object? body,
     Map<String, dynamic>? extraHeaders,
   }) async {
-    try {
-      final response = await put<dynamic>(
+    return _wrapRequest(
+      () => put<dynamic>(
         path,
         cancelToken: cancelToken,
         queryParameters: queryParameters,
         data: body,
-        options: extraHeaders != null
-            ? Options(
-                headers: extraHeaders,
-              )
-            : null,
-      );
+        options: _buildOptions(extraHeaders),
+      ),
+    );
+  }
+
+  Future<dynamic> _wrapRequest(
+    Future<Response<dynamic>> Function() action,
+  ) async {
+    try {
+      final response = await action();
       return response.data;
     } on DioException {
       rethrow;
     } catch (e) {
       throw UnknownException(e.toString());
     }
+  }
+
+  Options? _buildOptions(Map<String, dynamic>? headers) {
+    return headers != null ? Options(headers: headers) : null;
   }
 
   /// [cancelAndReset] method cancels current requests and resets the canceltoken
