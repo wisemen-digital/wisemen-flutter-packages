@@ -16,7 +16,7 @@ class FakeSecureStorage extends Fake implements FlutterSecureStorage {}
 
 class FakeOAuthToken extends Fake implements OAuthToken {}
 
-class FakeNativeClient extends Fake implements WiseClient {}
+class FakeClient extends Fake implements WiseClient {}
 
 class MockClient extends Mock implements WiseClient {}
 
@@ -56,7 +56,7 @@ void main() {
 
     test('isWebClient throws error when not implemented', () {
       expect(
-        () => FakeNativeClient().isWebClient,
+        () => FakeClient().isWebClient,
         throwsA(isA<UnimplementedError>()),
       );
     });
