@@ -55,7 +55,8 @@ void main() {
     });
 
     test('isWebClient throws error when not implemented', () {
-      expect(() => FakeNativeClient().isWebClient, throwsA(isA<UnimplementedError>()));
+      expect(() => FakeNativeClient().isWebClient,
+          throwsA(isA<UnimplementedError>()));
     });
 
     test('Expect url not to be empty', () async {
@@ -162,7 +163,8 @@ void main() {
       expect(awesome.cancelToken.isCancelled, isTrue);
     });
 
-    test('resetWiseCancelToken method does not result in a cancelled token ', () {
+    test('resetWiseCancelToken method does not result in a cancelled token ',
+        () {
       awesome.resetWiseCancelToken();
       expect(awesome.cancelToken.isCancelled, isFalse);
     });
@@ -314,9 +316,11 @@ void main() {
         [AuthenticationStatus.authenticated],
       );
 
-      when(() => mockFresh.authenticationStatus).thenAnswer((_) => authStatusStream);
+      when(() => mockFresh.authenticationStatus)
+          .thenAnswer((_) => authStatusStream);
 
-      expect(client.authenticationStatus, emitsInOrder([AuthenticationStatus.authenticated]));
+      expect(client.authenticationStatus,
+          emitsInOrder([AuthenticationStatus.authenticated]));
     });
   });
 

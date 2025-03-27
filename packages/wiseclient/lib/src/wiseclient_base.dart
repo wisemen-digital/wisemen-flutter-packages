@@ -100,13 +100,14 @@ abstract mixin class WiseClient implements Dio {
         cancelToken: cancelToken,
         queryParameters: queryParameters,
         data: body,
-          options: _buildOptions(extraHeaders),
+        options: _buildOptions(extraHeaders),
       ),
     );
   }
 
   Future<dynamic> _wrapRequest(
-      Future<Response<dynamic>> Function() action,) async {
+    Future<Response<dynamic>> Function() action,
+  ) async {
     try {
       final response = await action();
       return response.data;
