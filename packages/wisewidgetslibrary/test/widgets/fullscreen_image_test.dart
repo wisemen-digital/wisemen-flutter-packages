@@ -11,6 +11,7 @@ class FakeRoute extends Fake implements Route<dynamic> {}
 
 void main() {
   late MockNavigatorObserver mockObserver;
+  const logoPath = '../../../../assets/flutter_logo.png';
 
   setUp(() {
     mockObserver = MockNavigatorObserver();
@@ -33,8 +34,8 @@ void main() {
     await tester.pumpWidget(
       buildTestableWidget(
         child: FullscreenImage.asset(
-          imageAsset: '../../../../assets/flutter_logo.png',
-          child: Image.asset('../../../../assets/flutter_logo.png'),
+          imageAsset: logoPath,
+          child: Image.asset(logoPath),
         ),
       ),
     );
@@ -43,7 +44,7 @@ void main() {
   });
 
   testWidgets('displays file image', (tester) async {
-    final file = File('../../../../assets/flutter_logo.png');
+    final file = File(logoPath);
     await tester.pumpWidget(
       buildTestableWidget(
         child: FullscreenImage.file(

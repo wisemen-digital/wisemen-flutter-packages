@@ -8,6 +8,7 @@ class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
 void main() {
   late MockNavigatorObserver mockObserver;
+  const logoPath = '../../../../assets/flutter_logo.png';
 
   setUp(() {
     mockObserver = MockNavigatorObserver();
@@ -27,10 +28,10 @@ void main() {
       buildTestableWidget(
         child: FullscreenImageCarousel.basic(
           imageProviders: const [
-            AssetImage('../../../../assets/flutter_logo.png'),
-            AssetImage('../../../../assets/flutter_logo.png'),
+            AssetImage(logoPath),
+            AssetImage(logoPath),
           ],
-          child: Image.asset('../../../../assets/flutter_logo.png'),
+          child: Image.asset(logoPath),
         ),
       ),
     );
