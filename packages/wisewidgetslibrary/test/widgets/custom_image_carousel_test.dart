@@ -12,6 +12,12 @@ void main() {
   late PageController controller;
   late MockNavigatorObserver mockObserver;
 
+  const fakeImageUrlList = ['https://example.com/image1.jpg'];
+  const fakeImageUrlsListWithTwoImages = [
+    'https://example.com/image1.jpg',
+    'https://example.com/image2.jpg',
+  ];
+
   setUp(() {
     controller = PageController();
     mockObserver = MockNavigatorObserver();
@@ -35,7 +41,7 @@ void main() {
       buildTestableWidget(
         child: CustomImageCarousel(
           controller: controller,
-          imageUrls: const ['https://example.com/image1.jpg'],
+          imageUrls: fakeImageUrlList,
         ),
       ),
       const Duration(milliseconds: 200),
@@ -50,7 +56,7 @@ void main() {
       buildTestableWidget(
         child: CustomImageCarousel(
           controller: controller,
-          imageUrls: const ['https://example.com/image1.jpg'],
+          imageUrls: fakeImageUrlList,
         ),
       ),
       const Duration(milliseconds: 200),
@@ -64,7 +70,7 @@ void main() {
       buildTestableWidget(
         child: CustomImageCarousel(
           controller: controller,
-          imageUrls: const ['https://example.com/image1.jpg'],
+          imageUrls: fakeImageUrlList,
         ),
       ),
       const Duration(milliseconds: 200),
@@ -83,10 +89,7 @@ void main() {
         child: CustomImageCarousel(
           controller: controller,
           showPageIndicator: true,
-          imageUrls: const [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-          ],
+          imageUrls: fakeImageUrlsListWithTwoImages,
         ),
       ),
       const Duration(milliseconds: 200),
@@ -103,10 +106,7 @@ void main() {
         child: CustomImageCarousel(
           controller: controller,
           showPageIndicator: true,
-          imageUrls: const [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-          ],
+          imageUrls: fakeImageUrlsListWithTwoImages,
         ),
       ),
       const Duration(milliseconds: 200),
@@ -124,7 +124,7 @@ void main() {
       buildTestableWidget(
         child: CustomImageCarousel(
           controller: controller,
-          imageUrls: const ['https://example.com/image1.jpg'],
+          imageUrls: fakeImageUrlList,
           extraChildren: const [Text('Extra Child')],
         ),
       ),
