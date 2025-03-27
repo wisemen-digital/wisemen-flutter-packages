@@ -83,7 +83,7 @@ void main() {
   });
 
   testWidgets('handles onEditingComplete callback', (tester) async {
-    bool editingComplete = false;
+    var editingComplete = false;
     await tester.pumpWidget(
       buildTestableWidget(
         child: LabeledTextField(

@@ -32,7 +32,8 @@ void main() {
     });
 
     test('updates handle correctly', () {
-      final renderObject = RenderSliverPinnedOverlapInjector(handle: mockHandle);
+      final renderObject =
+          RenderSliverPinnedOverlapInjector(handle: mockHandle);
       final newHandle = MockSliverOverlapAbsorberHandle();
 
       expect(renderObject.handle, equals(mockHandle));
@@ -42,18 +43,22 @@ void main() {
     });
 
     test('attach and detach handle listeners', () {
-      final renderObject = RenderSliverPinnedOverlapInjector(handle: mockHandle);
+      final renderObject =
+          RenderSliverPinnedOverlapInjector(handle: mockHandle);
       final pipelineOwner = PipelineOwner();
 
       renderObject.attach(pipelineOwner);
-      verify(() => mockHandle.addListener(renderObject.markNeedsLayout)).called(1);
+      verify(() => mockHandle.addListener(renderObject.markNeedsLayout))
+          .called(1);
 
       renderObject.detach();
-      verify(() => mockHandle.removeListener(renderObject.markNeedsLayout)).called(1);
+      verify(() => mockHandle.removeListener(renderObject.markNeedsLayout))
+          .called(1);
     });
 
     test('performLayout sets correct SliverGeometry', () {
-      final renderObject = RenderSliverPinnedOverlapInjector(handle: mockHandle);
+      final renderObject =
+          RenderSliverPinnedOverlapInjector(handle: mockHandle);
       const double layoutExtent = 50;
 
       when(() => mockHandle.layoutExtent).thenReturn(layoutExtent);
@@ -77,7 +82,8 @@ void main() {
 
       expect(renderObject.geometry!.paintExtent, equals(layoutExtent));
       expect(renderObject.geometry!.maxPaintExtent, equals(layoutExtent));
-      expect(renderObject.geometry!.maxScrollObstructionExtent, equals(layoutExtent));
+      expect(renderObject.geometry!.maxScrollObstructionExtent,
+          equals(layoutExtent));
       expect(renderObject.geometry!.layoutExtent, equals(layoutExtent));
     });
   });

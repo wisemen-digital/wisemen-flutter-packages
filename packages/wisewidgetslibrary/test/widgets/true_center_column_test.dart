@@ -46,7 +46,6 @@ void main() {
           body: TrueCenterColumn(
             firstChild: Container(height: 100, color: Colors.red),
             secondChild: Container(height: 200, color: Colors.blue),
-            lockedTop: false,
           ),
         ),
       ),
