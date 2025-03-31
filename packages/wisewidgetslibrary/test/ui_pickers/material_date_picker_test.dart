@@ -32,7 +32,8 @@ void main() {
       ),
     );
 
-    final picker = tester.widget(find.byType(MaterialDatePicker)) as MaterialDatePicker;
+    final picker =
+        tester.widget(find.byType(MaterialDatePicker)) as MaterialDatePicker;
 
     expect(picker.initialDate, initialDate);
     expect(picker.firstDate, firstDate);

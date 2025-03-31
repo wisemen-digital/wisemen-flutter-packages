@@ -31,7 +31,8 @@ void main() {
       ),
     );
 
-    final picker = tester.widget(find.byType(AdaptiveDatePicker)) as AdaptiveDatePicker;
+    final picker =
+        tester.widget(find.byType(AdaptiveDatePicker)) as AdaptiveDatePicker;
 
     expect(picker.initialDate, initialDate);
     expect(picker.firstDate, firstDate);
