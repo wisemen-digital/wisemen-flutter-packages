@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -10,15 +9,18 @@ Route<T> platformRoute<T>({
   Widget? currentRoute,
   RouteSettings? settings,
   bool fullscreenDialog = false,
+  bool isWeb = kIsWeb,
 }) {
-  if (kIsWeb) {
+  if (isWeb) {
     return MaterialPageRoute<T>(
       builder: (_) => route,
       fullscreenDialog: fullscreenDialog,
       settings: settings,
     );
-  } else {
-    if (Platform.isAndroid) {
+  }
+
+  switch (defaultTargetPlatform) {
+    case TargetPlatform.android:
       return PageTransition(
         child: route,
         childCurrent: currentRoute,
@@ -30,18 +32,17 @@ Route<T> platformRoute<T>({
         duration: const Duration(milliseconds: 250),
         reverseDuration: const Duration(milliseconds: 250),
       );
-    } else if (Platform.isIOS) {
+    case TargetPlatform.iOS:
       return CupertinoPageRoute<T>(
         builder: (_) => route,
         fullscreenDialog: fullscreenDialog,
         settings: settings,
       );
-    } else {
+    default:
       return MaterialPageRoute<T>(
         builder: (_) => route,
         fullscreenDialog: fullscreenDialog,
         settings: settings,
       );
-    }
   }
 }
