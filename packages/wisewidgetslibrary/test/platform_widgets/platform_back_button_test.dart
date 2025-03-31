@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 void main() {
-  testWidgets('createCupertinoWidget creates CupertinoNavigationBarBackButton', (WidgetTester tester) async {
+  testWidgets('createCupertinoWidget creates CupertinoNavigationBarBackButton',
+      (WidgetTester tester) async {
     const backButton = PlatformBackButton(
       previousPageTitle: 'Custom',
       color: Colors.red,
@@ -22,12 +23,15 @@ void main() {
       ),
     );
 
-    final cupertinoWidget = tester.widget<CupertinoNavigationBarBackButton>(find.byType(CupertinoNavigationBarBackButton));
+    final cupertinoWidget = tester.widget<CupertinoNavigationBarBackButton>(
+      find.byType(CupertinoNavigationBarBackButton),
+    );
     expect(cupertinoWidget.previousPageTitle, 'Custom');
     expect(cupertinoWidget.color, Colors.red);
   });
 
-  testWidgets('createMaterialWidget creates correct IconButton', (WidgetTester tester) async {
+  testWidgets('createMaterialWidget creates correct IconButton',
+      (WidgetTester tester) async {
     const backButton = PlatformBackButton(
       color: Colors.red,
       iconSize: 30,
@@ -56,7 +60,8 @@ void main() {
     expect(icon.size, 30);
   });
 
-  testWidgets('PlatformBackButton calls onPressed when tapped', (WidgetTester tester) async {
+  testWidgets('PlatformBackButton calls onPressed when tapped',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -74,7 +79,8 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('PlatformBackButton uses default onPressed when not provided', (WidgetTester tester) async {
+  testWidgets('PlatformBackButton uses default onPressed when not provided',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(

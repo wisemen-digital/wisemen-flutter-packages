@@ -25,14 +25,20 @@ void main() {
   setUp(() {
     mockBottomBar = MockPlatformBottomBar();
     when(() => mockBottomBar.createCupertinoWidget(any())).thenReturn(
-      CupertinoTabBar(items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
-      ]),
+      CupertinoTabBar(
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
+      ),
     );
   });
 
-  testWidgets('createCupertinoWidget returns CupertinoTabScaffold', (tester) async {
+  testWidgets('createCupertinoWidget returns CupertinoTabScaffold',
+      (tester) async {
     final widget = PlatformTabScaffold(
       index: 0,
       body: const Text('Body'),

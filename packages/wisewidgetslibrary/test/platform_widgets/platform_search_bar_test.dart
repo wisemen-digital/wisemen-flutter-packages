@@ -57,7 +57,8 @@ void main() {
     expect(find.byType(SearchBar), findsOneWidget);
   });
 
-  testWidgets('calls onSearchChanged callback when text changes (Cupertino)', (tester) async {
+  testWidgets('calls onSearchChanged callback when text changes (Cupertino)',
+      (tester) async {
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(
@@ -78,7 +79,9 @@ void main() {
     verify(() => mockOnSearchChanged('test')).called(1);
   });
 
-  testWidgets('calls onSearchChanged callback with empty string when canceled (Cupertino)', (tester) async {
+  testWidgets(
+      'calls onSearchChanged callback with empty string when canceled (Cupertino)',
+      (tester) async {
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(
@@ -102,7 +105,8 @@ void main() {
     verify(() => mockOnSearchChanged('')).called(1);
   });
 
-  testWidgets('calls onSearchChanged callback when text changes (Material)', (tester) async {
+  testWidgets('calls onSearchChanged callback when text changes (Material)',
+      (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -123,7 +127,9 @@ void main() {
     verify(() => mockOnSearchChanged('test')).called(1);
   });
 
-  testWidgets('calls onSearchChanged callback with empty string when cancel is clicked (Material)', (tester) async {
+  testWidgets(
+      'calls onSearchChanged callback with empty string when cancel is clicked (Material)',
+      (tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(

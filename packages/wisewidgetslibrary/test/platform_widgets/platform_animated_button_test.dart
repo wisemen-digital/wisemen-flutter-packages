@@ -5,7 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 void main() {
-  testWidgets('PlatformAnimatedButton shows child when not loading', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton shows child when not loading',
+      (WidgetTester tester) async {
     const child = Text('Button');
     await tester.pumpWidget(
       const MaterialApp(
@@ -21,7 +22,8 @@ void main() {
     expect(find.text('Button'), findsOneWidget);
   });
 
-  testWidgets('PlatformAnimatedButton shows loading indicator when loading', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton shows loading indicator when loading',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
@@ -35,7 +37,8 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('PlatformAnimatedButton is disabled when isDisabled is true', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton is disabled when isDisabled is true',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -54,7 +57,8 @@ void main() {
     expect(pressed, isFalse);
   });
 
-  testWidgets('PlatformAnimatedButton calls onPressed when tapped', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton calls onPressed when tapped',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -75,22 +79,24 @@ void main() {
     });
   });
 
-  testWidgets('PlatformAnimatedButton expands to full width when expand is true', (WidgetTester tester) async {
+  testWidgets(
+      'PlatformAnimatedButton expands to full width when expand is true',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
-          body: PlatformAnimatedButton(
-            expand: true,
-          ),
+          body: PlatformAnimatedButton(),
         ),
       ),
     );
 
-    final button = tester.widget<PlatformAnimatedButton>(find.byType(PlatformAnimatedButton));
+    final button = tester
+        .widget<PlatformAnimatedButton>(find.byType(PlatformAnimatedButton));
     expect(button.expand, isTrue);
   });
 
-  testWidgets('PlatformAnimatedButton shows child when not loading (Cupertino)', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton shows child when not loading (Cupertino)',
+      (WidgetTester tester) async {
     const child = Text('Button');
     await tester.pumpWidget(
       const CupertinoApp(
@@ -106,7 +112,9 @@ void main() {
     expect(find.text('Button'), findsOneWidget);
   });
 
-  testWidgets('PlatformAnimatedButton is disabled when isDisabled is true (Cupertino)', (WidgetTester tester) async {
+  testWidgets(
+      'PlatformAnimatedButton is disabled when isDisabled is true (Cupertino)',
+      (WidgetTester tester) async {
     var pressed = false;
     final animatedButton = PlatformAnimatedButton(
       isDisabled: true,
@@ -128,7 +136,8 @@ void main() {
     expect(pressed, isFalse);
   });
 
-  testWidgets('PlatformAnimatedButton calls onPressed when tapped (Cupertino)', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton calls onPressed when tapped (Cupertino)',
+      (WidgetTester tester) async {
     var pressed = false;
     final animatedButton = PlatformAnimatedButton(
       onPressed: () {
@@ -136,13 +145,15 @@ void main() {
       },
     );
 
-    await tester.pumpWidget(CupertinoApp(
-      home: Scaffold(
-        body: Builder(
-          builder: animatedButton.createCupertinoWidget,
+    await tester.pumpWidget(
+      CupertinoApp(
+        home: Scaffold(
+          body: Builder(
+            builder: animatedButton.createCupertinoWidget,
+          ),
         ),
       ),
-    ));
+    );
 
     fakeAsync((async) {
       tester.tap(find.byType(CupertinoButton));
@@ -151,38 +162,47 @@ void main() {
     });
   });
 
-  testWidgets('PlatformAnimatedButton displays loading indicator when loading (cupertino)', (WidgetTester tester) async {
+  testWidgets(
+      'PlatformAnimatedButton displays loading indicator when loading (cupertino)',
+      (WidgetTester tester) async {
     const animatedButton = PlatformAnimatedButton(isLoading: true);
 
-    await tester.pumpWidget(CupertinoApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (BuildContext context) {
-            return animatedButton.createCupertinoWidget(context);
-          },
+    await tester.pumpWidget(
+      CupertinoApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (BuildContext context) {
+              return animatedButton.createCupertinoWidget(context);
+            },
+          ),
         ),
       ),
-    ));
+    );
 
-    final cupertinoWidget = tester.widget<CupertinoButton>(find.byType(CupertinoButton));
+    final cupertinoWidget =
+        tester.widget<CupertinoButton>(find.byType(CupertinoButton));
     expect(cupertinoWidget, isA<CupertinoButton>());
     expect(find.byType(PlatformLoadingIndicator), findsOneWidget);
   });
 
-  testWidgets('PlatformAnimatedButton calls onpressed (cupertino)', (WidgetTester tester) async {
+  testWidgets('PlatformAnimatedButton calls onpressed (cupertino)',
+      (WidgetTester tester) async {
     const animatedButton = PlatformAnimatedButton(isLoading: true);
 
-    await tester.pumpWidget(CupertinoApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (BuildContext context) {
-            return animatedButton.createCupertinoWidget(context);
-          },
+    await tester.pumpWidget(
+      CupertinoApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (BuildContext context) {
+              return animatedButton.createCupertinoWidget(context);
+            },
+          ),
         ),
       ),
-    ));
+    );
 
-    final cupertinoWidget = tester.widget<CupertinoButton>(find.byType(CupertinoButton));
+    final cupertinoWidget =
+        tester.widget<CupertinoButton>(find.byType(CupertinoButton));
     expect(cupertinoWidget, isA<CupertinoButton>());
     expect(find.byType(PlatformLoadingIndicator), findsOneWidget);
   });

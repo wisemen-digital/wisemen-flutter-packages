@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 void main() {
-  testWidgets('createCupertinoWidget creates CupertinoTabBar', (WidgetTester tester) async {
+  testWidgets('createCupertinoWidget creates CupertinoTabBar',
+      (WidgetTester tester) async {
     const items = [
       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
@@ -25,13 +26,15 @@ void main() {
       ),
     );
 
-    final cupertinoTabBar = tester.widget<CupertinoTabBar>(find.byType(CupertinoTabBar));
+    final cupertinoTabBar =
+        tester.widget<CupertinoTabBar>(find.byType(CupertinoTabBar));
     expect(cupertinoTabBar.items.length, 2);
     expect(cupertinoTabBar.currentIndex, 0);
     expect(cupertinoTabBar.inactiveColor, CupertinoColors.inactiveGray);
   });
 
-  testWidgets('createMaterialWidget creates BottomNavigationBar', (WidgetTester tester) async {
+  testWidgets('createMaterialWidget creates BottomNavigationBar',
+      (WidgetTester tester) async {
     const items = [
       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
@@ -48,9 +51,6 @@ void main() {
                 currentIndex: 0,
                 inActiveColor: Colors.grey,
                 activeColor: Colors.blue,
-                selectedFontSize: 14.0,
-                unselectedFontSize: 12.0,
-                backgroundColor: Colors.white,
               ).createMaterialWidget(context);
             },
           ),
@@ -58,7 +58,8 @@ void main() {
       ),
     );
 
-    final bottomNavigationBar = tester.widget<BottomNavigationBar>(find.byType(BottomNavigationBar));
+    final bottomNavigationBar =
+        tester.widget<BottomNavigationBar>(find.byType(BottomNavigationBar));
     expect(bottomNavigationBar.items.length, 2);
     expect(bottomNavigationBar.currentIndex, 0);
     expect(bottomNavigationBar.unselectedItemColor, Colors.grey);
@@ -68,7 +69,8 @@ void main() {
     expect(bottomNavigationBar.backgroundColor, Colors.white);
   });
 
-  testWidgets('PlatformBottomBar calls onTap when tapped', (WidgetTester tester) async {
+  testWidgets('PlatformBottomBar calls onTap when tapped',
+      (WidgetTester tester) async {
     var tappedIndex = -1;
     const items = [
       BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),

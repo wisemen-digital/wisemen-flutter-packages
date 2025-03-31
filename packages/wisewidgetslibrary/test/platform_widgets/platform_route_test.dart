@@ -20,7 +20,8 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageTransition on Android without currentRoute', (tester) async {
+  testWidgets('Returns PageTransition on Android without currentRoute',
+      (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
     final route = platformRoute<dynamic>(route: testWidget);
@@ -30,12 +31,17 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageTransition on Android with currentRoute', (tester) async {
+  testWidgets('Returns PageTransition on Android with currentRoute',
+      (tester) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
-    final route = platformRoute<dynamic>(route: testWidget, currentRoute: currentWidget);
+    final route =
+        platformRoute<dynamic>(route: testWidget, currentRoute: currentWidget);
     expect(route, isA<PageTransition<dynamic>>());
-    expect((route as PageTransition).type, PageTransitionType.rightToLeftJoined);
+    expect(
+      (route as PageTransition).type,
+      PageTransitionType.rightToLeftJoined,
+    );
 
     debugDefaultTargetPlatformOverride = null;
   });
@@ -50,7 +56,8 @@ void main() {
   });
 
   testWidgets('Returns MaterialPageRoute for other platforms', (tester) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia; // Simulating an unknown platform
+    debugDefaultTargetPlatformOverride =
+        TargetPlatform.fuchsia; // Simulating an unknown platform
 
     final route = platformRoute<dynamic>(route: testWidget);
     expect(route, isA<MaterialPageRoute<dynamic>>());

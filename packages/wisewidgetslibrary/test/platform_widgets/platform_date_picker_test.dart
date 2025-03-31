@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 import 'package:wisecore/src/extensions/date_extensions.dart';
+import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 class TestNavigatorObserver extends NavigatorObserver {
   List<Route<dynamic>> pushedRoutes = [];
@@ -22,14 +22,15 @@ class TestNavigatorObserver extends NavigatorObserver {
 }
 
 void main() {
-  testWidgets('PlatformDatePicker displays CupertinoDatePicker on iOS', (WidgetTester tester) async {
+  testWidgets('PlatformDatePicker displays CupertinoDatePicker on iOS',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(
           body: Builder(
             builder: (BuildContext context) {
               return PlatformDatePicker(
-                date: DateTime(2023, 1, 1),
+                date: DateTime(2023),
               ).createCupertinoWidget(context);
             },
           ),
@@ -42,13 +43,15 @@ void main() {
     expect(find.text('Cancel'), findsOneWidget);
   });
 
-  testWidgets('PlatformDatePicker displays DatePickerDialog on Android', (WidgetTester tester) async {
+  testWidgets('PlatformDatePicker displays DatePickerDialog on Android',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: Builder(
             builder: (BuildContext context) {
-              return PlatformDatePicker(date: DateTime.now()).createMaterialWidget(context);
+              return PlatformDatePicker(date: DateTime.now())
+                  .createMaterialWidget(context);
             },
           ),
         ),
@@ -60,7 +63,8 @@ void main() {
     expect(find.text('Cancel'), findsOneWidget);
   });
 
-  testWidgets('PlatformDatePicker returns selected date on iOS', (WidgetTester tester) async {
+  testWidgets('PlatformDatePicker returns selected date on iOS',
+      (WidgetTester tester) async {
     final selectedDate = DateTime(2025, 3, 16);
 
     await tester.pumpWidget(
@@ -83,7 +87,8 @@ void main() {
     expect(selectedDate, DateTime(2025, 3, 16));
   });
 
-  testWidgets('Material DatePickerDialog returns selected date on Save', (tester) async {
+  testWidgets('Material DatePickerDialog returns selected date on Save',
+      (tester) async {
     final date = DateTime.now();
 
     DateTime? pickedDate;
@@ -118,7 +123,8 @@ void main() {
     expect(pickedDate?.isSameDate(date), true);
   });
 
-  testWidgets('PlatformDatePicker cancels selection on Android', (WidgetTester tester) async {
+  testWidgets('PlatformDatePicker cancels selection on Android',
+      (WidgetTester tester) async {
     DateTime? selectedDate;
 
     await tester.pumpWidget(

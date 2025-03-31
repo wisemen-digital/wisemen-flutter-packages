@@ -4,7 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/src/platform_widgets/platform_indicator.dart';
 
 void main() {
-  testWidgets('createCupertinoWidget creates CupertinoActivityIndicator with correct properties', (tester) async {
+  testWidgets(
+      'createCupertinoWidget creates CupertinoActivityIndicator with correct properties',
+      (tester) async {
     const radius = 15.0;
     const color = CupertinoColors.activeBlue;
 
@@ -25,15 +27,20 @@ void main() {
             },
           ),
         ),
-      )
+      ),
     );
 
-    final cupertinoActivityIndicator = tester.widget<CupertinoActivityIndicator>(find.byType(CupertinoActivityIndicator));
+    final cupertinoActivityIndicator =
+        tester.widget<CupertinoActivityIndicator>(
+      find.byType(CupertinoActivityIndicator),
+    );
     expect(cupertinoActivityIndicator.radius, equals(radius));
     expect(cupertinoActivityIndicator.color, equals(color));
   });
 
-  testWidgets('createMaterialWidget creates CircularProgressIndicator with correct properties', (tester) async {
+  testWidgets(
+      'createMaterialWidget creates CircularProgressIndicator with correct properties',
+      (tester) async {
     const radius = 15.0;
     const color = Colors.blue;
 
@@ -49,10 +56,12 @@ void main() {
             },
           ),
         ),
-      )
+      ),
     );
 
-    final circularProgressIndicator = tester.widget<CircularProgressIndicator>(find.byType(CircularProgressIndicator));
+    final circularProgressIndicator = tester.widget<CircularProgressIndicator>(
+      find.byType(CircularProgressIndicator),
+    );
     expect(circularProgressIndicator.value, isNull);
     expect(circularProgressIndicator.strokeWidth, equals(radius / 4));
     expect(circularProgressIndicator.valueColor?.value, equals(color));

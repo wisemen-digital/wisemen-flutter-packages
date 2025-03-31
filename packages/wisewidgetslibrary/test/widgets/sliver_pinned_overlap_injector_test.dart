@@ -82,8 +82,10 @@ void main() {
 
       expect(renderObject.geometry!.paintExtent, equals(layoutExtent));
       expect(renderObject.geometry!.maxPaintExtent, equals(layoutExtent));
-      expect(renderObject.geometry!.maxScrollObstructionExtent,
-          equals(layoutExtent));
+      expect(
+        renderObject.geometry!.maxScrollObstructionExtent,
+        equals(layoutExtent),
+      );
       expect(renderObject.geometry!.layoutExtent, equals(layoutExtent));
     });
   });

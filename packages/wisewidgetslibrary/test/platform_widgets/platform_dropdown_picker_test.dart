@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:wisewidgetslibrary/src/platform_widgets/platform_dropdown_picker.dart';
 import 'package:wisewidgetslibrary/src/models/dropdown_model.dart';
+import 'package:wisewidgetslibrary/src/platform_widgets/platform_dropdown_picker.dart';
 
 class MockDropdownModel extends Mock implements DropdownModel {
   @override
@@ -84,7 +84,8 @@ void main() {
     expect(find.text('Option'), findsNWidgets(2));
   });
 
-  testWidgets('calls onChanged callback when an option is selected', (tester) async {
+  testWidgets('calls onChanged callback when an option is selected',
+      (tester) async {
     DropdownModel? selectedOption;
     await tester.pumpWidget(
       buildTestableWidget(
@@ -106,19 +107,21 @@ void main() {
   });
 
   testWidgets('cupertinoWidget displays child widget', (tester) async {
-    await tester.pumpWidget(CupertinoApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) {
-            return buildTestablePlatformDropdownPicker(
-              child: const Text('Open Dropdown'),
-              options: [option1, option2],
-              onChanged: (_) {},
-            ).createCupertinoWidget(context);
-          },
+    await tester.pumpWidget(
+      CupertinoApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              return buildTestablePlatformDropdownPicker(
+                child: const Text('Open Dropdown'),
+                options: [option1, option2],
+                onChanged: (_) {},
+              ).createCupertinoWidget(context);
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     expect(find.text('Open Dropdown'), findsOneWidget);
   });
@@ -146,7 +149,8 @@ void main() {
     expect(find.text('Option'), findsNWidgets(2));
   });
 
-  testWidgets('(cupertino) calls onChanged callback when an option is selected', (tester) async {
+  testWidgets('(cupertino) calls onChanged callback when an option is selected',
+      (tester) async {
     DropdownModel? selectedOption;
 
     await tester.pumpWidget(

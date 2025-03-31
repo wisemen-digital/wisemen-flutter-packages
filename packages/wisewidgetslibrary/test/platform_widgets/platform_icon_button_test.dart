@@ -12,7 +12,7 @@ void main() {
   late VoidCallback onPressed;
 
   setUp(() {
-    onPressed = MockCallback();
+    onPressed = MockCallback().call;
   });
 
   Widget buildTestableWidget({
@@ -81,23 +81,26 @@ void main() {
   });
 
   testWidgets('cupertinoWidget displays icon widget', (tester) async {
-    await tester.pumpWidget(CupertinoApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (context) {
-            return buildTestablePlatformIconButton(
-              icon: const Icon(Icons.add),
-              onPressed: onPressed,
-            ).createCupertinoWidget(context);
-          },
+    await tester.pumpWidget(
+      CupertinoApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (context) {
+              return buildTestablePlatformIconButton(
+                icon: const Icon(Icons.add),
+                onPressed: onPressed,
+              ).createCupertinoWidget(context);
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     expect(find.byIcon(Icons.add), findsOneWidget);
   });
 
-  testWidgets('(cupertino) calls onPressed callback when tapped', (tester) async {
+  testWidgets('(cupertino) calls onPressed callback when tapped',
+      (tester) async {
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(

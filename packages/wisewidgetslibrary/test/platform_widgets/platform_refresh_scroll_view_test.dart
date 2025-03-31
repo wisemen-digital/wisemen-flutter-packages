@@ -4,11 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/src/platform_widgets/platform_refresh_scroll_view.dart';
 
 void main() {
-  testWidgets('createMaterialWidget creates MaterialRefreshIndicator with correct properties', (tester) async {
+  testWidgets(
+      'createMaterialWidget creates MaterialRefreshIndicator with correct properties',
+      (tester) async {
     final refreshIndicator = PlatformCustomScrollRefreshIndicator(
       onRefresh: () async {},
       slivers: const [
-        SliverToBoxAdapter(child: SizedBox(height: 100)), // Example sliver content
+        SliverToBoxAdapter(
+          child: SizedBox(height: 100),
+        ), // Example sliver content
       ],
     );
 
@@ -18,7 +22,8 @@ void main() {
           body: NestedScrollView(
             headerSliverBuilder: (context, innerBoxIsScrolled) => [
               SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: const CupertinoSliverNavigationBar(
                   largeTitle: Text('test'),
                 ),
@@ -32,11 +37,14 @@ void main() {
       ),
     );
 
-    final materialRefreshIndicator = tester.widget<RefreshIndicator>(find.byType(RefreshIndicator));
+    final materialRefreshIndicator =
+        tester.widget<RefreshIndicator>(find.byType(RefreshIndicator));
     expect(materialRefreshIndicator.onRefresh, isNotNull);
   });
 
-  testWidgets('createCupertinoWidget correctly builds CupertinoSliverRefreshControl with builder function', (tester) async {
+  testWidgets(
+      'createCupertinoWidget correctly builds CupertinoSliverRefreshControl with builder function',
+      (tester) async {
     final refreshIndicator = PlatformCustomScrollRefreshIndicator(
       onRefresh: () async {},
       slivers: const [
@@ -48,10 +56,10 @@ void main() {
       CupertinoApp(
         home: Scaffold(
           body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) =>
-            [
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
               SliverOverlapAbsorber(
-                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                handle:
+                    NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: const CupertinoSliverNavigationBar(
                   largeTitle: Text('test'),
                 ),
@@ -67,7 +75,8 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    final customScrollView = tester.widget<CustomScrollView>(find.byType(CustomScrollView));
+    final customScrollView =
+        tester.widget<CustomScrollView>(find.byType(CustomScrollView));
 
     final cupertinoRefreshControl = customScrollView.slivers
         .whereType<CupertinoSliverRefreshControl>()
@@ -81,7 +90,8 @@ void main() {
     await gesture.moveBy(const Offset(0, 200));
     await tester.pump();
 
-    final cupertinoActivityIndicator = tester.widget<CupertinoActivityIndicator>(
+    final cupertinoActivityIndicator =
+        tester.widget<CupertinoActivityIndicator>(
       find.byType(CupertinoActivityIndicator),
     );
 
