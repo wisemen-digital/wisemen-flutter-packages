@@ -10,7 +10,6 @@ void main() {
       slivers: const [
         SliverToBoxAdapter(child: SizedBox(height: 100)), // Example sliver content
       ],
-      injectOverlap: true, // Ensure this matches your widget logic
     );
 
     await tester.pumpWidget(
@@ -37,18 +36,20 @@ void main() {
     expect(materialRefreshIndicator.onRefresh, isNotNull);
   });
 
-  testWidgets('create cupertino widget creates CupertinoRefreshControl with correct properties', (tester) async {
+  testWidgets('createCupertinoWidget correctly builds CupertinoSliverRefreshControl with builder function', (tester) async {
     final refreshIndicator = PlatformCustomScrollRefreshIndicator(
       onRefresh: () async {},
-      slivers: [],
-      injectOverlap: true, // Ensure this matches your widget logic
+      slivers: const [
+        SliverToBoxAdapter(child: SizedBox(height: 1000)),
+      ],
     );
 
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(
           body: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            headerSliverBuilder: (context, innerBoxIsScrolled) =>
+            [
               SliverOverlapAbsorber(
                 handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                 sliver: const CupertinoSliverNavigationBar(
@@ -66,11 +67,28 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    final customScrollView = tester.widgetList(find.byType(CustomScrollView)).toList();
-    final widget = customScrollView.first as CustomScrollView;
-    final cupertinoRefreshControl = widget.slivers.whereType<CupertinoSliverRefreshControl>();
+    final customScrollView = tester.widget<CustomScrollView>(find.byType(CustomScrollView));
 
-    expect(cupertinoRefreshControl, isNotEmpty);
-    expect(cupertinoRefreshControl.first.onRefresh, isNotNull);
+    final cupertinoRefreshControl = customScrollView.slivers
+        .whereType<CupertinoSliverRefreshControl>()
+        .first;
+
+    expect(cupertinoRefreshControl, isNotNull);
+    expect(cupertinoRefreshControl.onRefresh, isNotNull);
+
+    // Trigger the builder function by simulating a pull-to-refresh gesture**
+    final gesture = await tester.startGesture(const Offset(100, 200));
+    await gesture.moveBy(const Offset(0, 200));
+    await tester.pump();
+
+    final cupertinoActivityIndicator = tester.widget<CupertinoActivityIndicator>(
+      find.byType(CupertinoActivityIndicator),
+    );
+
+    expect(cupertinoActivityIndicator, isNotNull);
+
+    // Complete the refresh action
+    await gesture.up();
+    await tester.pumpAndSettle();
   });
 }
