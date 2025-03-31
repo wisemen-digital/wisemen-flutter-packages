@@ -32,12 +32,14 @@ Route<T> platformRoute<T>({
         duration: const Duration(milliseconds: 250),
         reverseDuration: const Duration(milliseconds: 250),
       );
+
     case TargetPlatform.iOS:
       return CupertinoPageRoute<T>(
         builder: (_) => route,
         fullscreenDialog: fullscreenDialog,
         settings: settings,
       );
+
     default:
       return MaterialPageRoute<T>(
         builder: (_) => route,
