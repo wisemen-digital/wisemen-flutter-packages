@@ -34,15 +34,15 @@ Route<T> platformRoute<T>({
       );
 
     case TargetPlatform.iOS:
+    case TargetPlatform.macOS:
+    case TargetPlatform.linux:
       return CupertinoPageRoute<T>(
         builder: (_) => route,
         fullscreenDialog: fullscreenDialog,
         settings: settings,
       );
 
-    case TargetPlatform.macOS:
     case TargetPlatform.windows:
-    case TargetPlatform.linux:
     case TargetPlatform.fuchsia:
       return MaterialPageRoute<T>(
         builder: (_) => route,
