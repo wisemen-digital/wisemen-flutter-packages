@@ -40,7 +40,10 @@ Route<T> platformRoute<T>({
         settings: settings,
       );
 
-    default:
+    case TargetPlatform.macOS:
+    case TargetPlatform.windows:
+    case TargetPlatform.linux:
+    case TargetPlatform.fuchsia:
       return MaterialPageRoute<T>(
         builder: (_) => route,
         fullscreenDialog: fullscreenDialog,
