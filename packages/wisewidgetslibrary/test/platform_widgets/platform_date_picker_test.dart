@@ -114,13 +114,12 @@ void main() {
     await tester.tap(find.text('Open'));
     await tester.pumpAndSettle();
 
-    // Simulate clicking Save on Material dialog
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
 
-    // Should close the dialog and pickedDate should remain null, because DatePickerDialog doesn't select automatically.
-    // You may need additional setup here depending on how you expect the dialog to behave.
-    expect(pickedDate?.isSameDate(date), true);
+    expect(pickedDate?.day, date.day);
+    expect(pickedDate?.year, date.year);
+    expect(pickedDate?.month, date.month);
   });
 
   testWidgets('PlatformDatePicker cancels selection on Android',
