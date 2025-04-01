@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
-import 'package:wise_nav_bar/src/utils/platform_widget_helper.dart';
 
 import '../settings.dart';
 
@@ -20,7 +19,7 @@ class OtherSettingsScreen extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: pad16,
+          padding: padL,
           child: Column(
             spacing: 8,
             children: [
@@ -45,7 +44,7 @@ class OtherSettingsScreen extends ConsumerWidget {
                       color: Theme.of(context).dividerColor,
                     ),
                   ),
-                  padding: pad12,
+                  padding: padM,
                   child: Row(
                     children: [
                       Text(

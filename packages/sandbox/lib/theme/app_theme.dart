@@ -73,7 +73,6 @@ class AppTheme {
       tertiary: Color(0xffe4a9ef),
       tertiaryContainer: Color(0xffe4a9ef),
     ),
-    dialogBackgroundColor: const Color(0xff121313),
     disabledColor: const Color(0x62ffffff),
     dividerColor: const Color(0x1fffffff),
     focusColor: const Color(0x1fffffff),
@@ -360,6 +359,7 @@ class AppTheme {
         ),
       ),
     ),
+    dialogTheme: const DialogThemeData(backgroundColor: Color(0xff121313)),
   );
 
   //light theme
@@ -424,7 +424,6 @@ class AppTheme {
       tertiary: Color(0xff21561b),
       tertiaryContainer: Color(0xff21561b),
     ),
-    dialogBackgroundColor: const Color(0xffe2e5ed),
     disabledColor: const Color(0x61000000),
     dividerColor: const Color(0x1f000000),
     focusColor: const Color(0x1f000000),
@@ -711,5 +710,6 @@ class AppTheme {
         ),
       ),
     ),
+    dialogTheme: const DialogThemeData(backgroundColor: Color(0xffe2e5ed)),
   );
 }

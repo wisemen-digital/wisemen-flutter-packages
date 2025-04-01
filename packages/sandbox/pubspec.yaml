@@ -72,6 +72,7 @@ dev_dependencies:
   
   # Linting
   riverpod_lint: ^2.6.3
+  custom_lint: ^0.7.5
 
 # flavors
 flavorizr:
@@ -79,7 +80,7 @@ flavorizr:
     # dev
     development:
       app:
-        name: "Sanbox"
+        name: "Sandbox"
       android:
         applicationId: "com.wisemen.app.development"
       ios:
@@ -87,7 +88,7 @@ flavorizr:
     # staging
     staging:
       app:
-        name: "Sanbox"
+        name: "Sandbox"
       android:
         applicationId: "com.wisemen.app.staging"
       ios:
@@ -95,7 +96,7 @@ flavorizr:
     # test
     qa:
       app:
-        name: "Sanbox"
+        name: "Sandbox"
       android:
         applicationId: "com.wisemen.app.qa"
       ios:
@@ -103,7 +104,7 @@ flavorizr:
     # production
     production:
       app:
-        name: "Sanbox"
+        name: "Sandbox"
       android:
         applicationId: "com.wisemen.app"
       ios:

@@ -2,12 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sandbox/features/shared/shared.dart';
 import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
-import 'package:wise_nav_bar/wise_nav_bar.dart';
-import 'package:wise_nav_bar/src/utils/platform_widget_helper.dart';
 
 import '../settings.dart';
 
@@ -32,7 +31,7 @@ class SettingsScreen extends ConsumerWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: pad16,
+          padding: padL,
           child: Column(
             spacing: 8,
             children: [
@@ -57,7 +56,7 @@ class SettingsScreen extends ConsumerWidget {
                       color: Theme.of(context).dividerColor,
                     ),
                   ),
-                  padding: pad12,
+                  padding: padM,
                   child: Row(
                     children: [
                       Text(
@@ -79,7 +78,9 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: ref.read(switchValueProvider.notifier).changeValue,
               ),
               PlatformAnimatedButton(
-                onPressed: () async {},
+                onPressed: () async {
+                  await AlertUtils.confirmAction('message');
+                },
                 child: Text(
                   'Other settings',
                   style: Theme.of(context).textTheme.labelLarge,
