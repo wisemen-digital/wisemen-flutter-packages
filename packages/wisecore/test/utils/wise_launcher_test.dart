@@ -74,6 +74,24 @@ void main() {
       verifyNever(() => mockUrlLauncher.launchUrl(any(), any()));
     });
 
+    test('launchUrl calls onCannotLaunchUrl when URI is null', () async {
+      const testUri = '::Not valid URI::';
+      when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnFalse);
+
+      var callbackCalled = false;
+
+      await WiseLauncher.launchUrl(
+        url: testUri,
+        onCannotLaunchUrl: () {
+          callbackCalled = true;
+        },
+      );
+
+      expect(callbackCalled, true);
+      verifyNever(() => mockUrlLauncher.canLaunch(testUri));
+      verifyNever(() => mockUrlLauncher.launchUrl(any(), any()));
+    });
+
     test('launchEmail calls launchUrl', () async {
       when(() => mockUrlLauncher.launchUrl(any(), any()))
           .thenAnswer(returnTrue);
