@@ -74,7 +74,7 @@ void main() {
       verifyNever(() => mockUrlLauncher.launchUrl(any(), any()));
     });
 
-    test('launchUrl calls onCannotLaunchUrl when URI is null', () async {
+    test('launchUrl calls onCannotLaunchUrl when URI is invalid', () async {
       const testUri = '::Not valid URI::';
       when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnFalse);
 
