@@ -1,3 +1,7 @@
+## 2.1.0
+
+- Changed alert/error dialogs
+
 ## 2.0.2
 
 - Removed classes and functions that weren't being used
