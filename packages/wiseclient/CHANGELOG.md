@@ -1,3 +1,7 @@
+## 1.1.2
+
+- Updated Flutter Secure storage
+
 ## 1.1.1
 
 - Bugfix: workaround for BrowserHttpAdapter issue
