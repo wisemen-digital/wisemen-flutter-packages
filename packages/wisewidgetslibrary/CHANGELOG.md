@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Dependency update
+
 ## 2.0.1
 
 * Bugfix in `FullscreenImageCarousel`

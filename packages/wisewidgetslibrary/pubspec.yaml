@@ -1,6 +1,6 @@
 name: wisewidgetslibrary
 description: Wisemen widgets library containing platform specific widgets and other commonly useful widgets.
-version: 2.0.1
+version: 2.0.2
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisewidgetslibrary
 repository: https://github.com/wisemen-digital/flutter-widgets-library/packages/wisewidgetslibrary
 
@@ -31,7 +31,7 @@ dependencies:
 
   # Image carousel
   dismissible_page: ^1.0.2
-  flutter_hooks: ^0.20.5
+  flutter_hooks: ^0.21.2
 
 dev_dependencies:
   # Static analysis & linting
