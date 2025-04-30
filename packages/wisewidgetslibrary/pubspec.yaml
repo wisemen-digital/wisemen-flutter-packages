@@ -31,7 +31,6 @@ dependencies:
 
   # Image carousel
   dismissible_page: ^1.0.2
-  flutter_hooks: ^0.21.2
 
 dev_dependencies:
   # Static analysis & linting
