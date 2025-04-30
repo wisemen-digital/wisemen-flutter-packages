@@ -12,11 +12,7 @@ class FreshSecureTokenStorage implements TokenStorage<OAuthToken> {
   OAuthToken? _token;
 
   /// [FlutterSecureStorage] to save token on device
-  final storage = const FlutterSecureStorage(
-    aOptions: AndroidOptions(
-      encryptedSharedPreferences: true,
-    ),
-  );
+  final storage = const FlutterSecureStorage();
 
   /// String to save to [FlutterSecureStorage]
   final storageIdentifier = 'OAUTH_TOKEN';
