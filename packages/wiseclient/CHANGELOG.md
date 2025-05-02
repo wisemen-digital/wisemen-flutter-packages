@@ -1,4 +1,4 @@
-## 1.1.2
+## 1.1.2-prerelease.0
 
 - Updated Flutter Secure storage
 
