@@ -1,3 +1,7 @@
+## 2.0.3
+
+* Added `PlatformSliverRefreshControl`
+
 ## 2.0.2
 
 * Dependency update
@@ -40,7 +44,7 @@
 
 ## 1.0.21
 
-* Updated basic child to accept and us intialPage if provided for `FullscreenImageCarousel`
+* Updated basic child to accept and us initialPage if provided for `FullscreenImageCarousel`
 
 ## 1.0.20
 
@@ -78,7 +82,7 @@
 
 ## 1.0.12
 
-* fixed password toggle misalign when error message is shown beneath `ValidatedTextFormField`
+* fixed password toggle misaligned when error message is shown beneath `ValidatedTextFormField`
 * set TextCapitalization to none when `isEmail` or `isPassword` in `ValidatedTextFormField`
 
 ## 1.0.11
@@ -105,7 +109,7 @@
 
 ## 1.0.6
 
-* added fontsize option to bottom nav bar
+* added font size option to bottom nav bar
 
 ## 1.0.5
 
