@@ -49,7 +49,6 @@ void main() {
     const testColor = Colors.blue;
     const testBackgroundColor = Colors.grey;
 
-    // Helper function to pump the builder with specific state
     Future<void> pumpBuilder(
       RefreshIndicatorMode state,
       double extent,
@@ -67,31 +66,29 @@ void main() {
       );
     }
 
-    // --- Test Case 1: Inactive State ---
     await pumpBuilder(RefreshIndicatorMode.inactive, 0);
 
-    // Find the indicator
     final indicatorFinder = find.byType(CustomMaterialRefreshProgressIndicator);
     expect(indicatorFinder, findsOneWidget);
 
     // ignore: omit_local_variable_types
     CustomMaterialRefreshProgressIndicator indicator =
         tester.widget(indicatorFinder);
-    expect(indicator.value, 0.0); // Should be determinate 0.0
+    expect(indicator.value, 0.0);
     expect(indicator.color, testColor);
     expect(indicator.backgroundColor, testBackgroundColor);
     expect(find.byType(Row), findsOneWidget);
     expect(find.byType(Spacer), findsNWidgets(2));
 
     // Dragging State
-    await pumpBuilder(RefreshIndicatorMode.drag, 50); // Pulled 50%
+    await pumpBuilder(RefreshIndicatorMode.drag, 50);
     indicator = tester.widget(indicatorFinder);
     expect(indicator.value, equals(0.5));
 
     // Test clamping
     await pumpBuilder(RefreshIndicatorMode.drag, 150);
     indicator = tester.widget(indicatorFinder);
-    expect(indicator.value, equals(1.0)); // Clamped to 1.0
+    expect(indicator.value, equals(1.0));
 
     // Armed State
     await pumpBuilder(RefreshIndicatorMode.armed, 100);
