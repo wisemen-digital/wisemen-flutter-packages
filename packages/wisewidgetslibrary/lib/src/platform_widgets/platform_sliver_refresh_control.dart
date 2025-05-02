@@ -40,8 +40,13 @@ class PlatformSliverRefreshControl extends PlatformWidget {
   Widget createMaterialWidget(BuildContext context) {
     return CupertinoSliverRefreshControl(
       onRefresh: onRefresh,
-      builder: (context, refreshState, pulledExtent, refreshTriggerPullDistance,
-          refreshIndicatorExtent) {
+      builder: (
+        context,
+        refreshState,
+        pulledExtent,
+        refreshTriggerPullDistance,
+        refreshIndicatorExtent,
+      ) {
         return buildRefreshIndicator(refreshState, pulledExtent);
       },
     );
@@ -49,7 +54,9 @@ class PlatformSliverRefreshControl extends PlatformWidget {
 
   /// Builds the Material refresh indicator
   Widget buildRefreshIndicator(
-      RefreshIndicatorMode refreshState, double pulledExtent) {
+    RefreshIndicatorMode refreshState,
+    double pulledExtent,
+  ) {
     return Row(
       children: [
         const Spacer(),
@@ -68,7 +75,8 @@ class PlatformSliverRefreshControl extends PlatformWidget {
   }
 }
 
-//! This is a copy of the ProgressIndicator implementation in Flutter SDK. Changed to fit a CupertinoSliverRefreshControl
+//! This is a copy of the ProgressIndicator implementation in Flutter SDK.
+//! Changed to fit a CupertinoSliverRefreshControl
 const int _kIndeterminateCircularDuration = 1333 * 2222;
 
 class _CircularProgressIndicatorPainter extends CustomPainter {
@@ -92,7 +100,8 @@ class _CircularProgressIndicatorPainter extends CustomPainter {
             ? clampDouble(value, 0, 1) * _sweep
             : math.max(
                 headValue * 3 / 2 * math.pi - tailValue * 3 / 2 * math.pi,
-                _epsilon);
+                _epsilon,
+              );
 
   final Color valueColor;
   final double? value;
@@ -133,7 +142,12 @@ class _CircularProgressIndicatorPainter extends CustomPainter {
     }
 
     canvas.drawArc(
-        arcBaseOffset & arcActualSize, arcStart, arcSweep, false, paint);
+      arcBaseOffset & arcActualSize,
+      arcStart,
+      arcSweep,
+      false,
+      paint,
+    );
   }
 
   @override
@@ -222,14 +236,19 @@ class _CircularProgressIndicator extends ProgressIndicator {
         Theme.of(context).colorScheme.primary;
   }
 
-  Widget _buildSemanticsWrapper(
-      {required BuildContext context, required Widget child}) {
+  Widget _buildSemanticsWrapper({
+    required BuildContext context,
+    required Widget child,
+  }) {
     var expandedSemanticsValue = semanticsValue;
     if (value != null) {
       expandedSemanticsValue ??= '${(value! * 100).round()}%';
     }
     return Semantics(
-        label: semanticsLabel, value: expandedSemanticsValue, child: child);
+      label: semanticsLabel,
+      value: expandedSemanticsValue,
+      child: child,
+    );
   }
 }
 
@@ -380,8 +399,10 @@ class _RefreshProgressIndicatorPainter
     final arcEnd = arcStart + arcSweep;
     final ux = math.cos(arcEnd);
     final uy = math.sin(arcEnd);
-    assert(size.width == size.height,
-        'Arrowhead only works on square progress indicators');
+    assert(
+      size.width == size.height,
+      'Arrowhead only works on square progress indicators',
+    );
     final radius = size.width / 2.0;
     final arrowheadPointX =
         radius + ux * radius + -uy * strokeWidth * 2.0 * arrowheadScale;
@@ -579,8 +600,10 @@ class _RefreshProgressIndicatorState extends _CircularProgressIndicatorState {
     valueColor = valueColor.withValues(alpha: 1);
 
     final ProgressIndicatorThemeData defaults =
-        _CircularProgressIndicatorDefaultsM3Year2023(context,
-            indeterminate: value == null);
+        _CircularProgressIndicatorDefaultsM3Year2023(
+      context,
+      indeterminate: value == null,
+    );
     final indicatorTheme = ProgressIndicatorTheme.of(context);
     final backgroundColor = widget.backgroundColor ??
         indicatorTheme.refreshBackgroundColor ??
@@ -633,8 +656,10 @@ class _RefreshProgressIndicatorState extends _CircularProgressIndicatorState {
 
 class _CircularProgressIndicatorDefaultsM3Year2023
     extends ProgressIndicatorThemeData {
-  _CircularProgressIndicatorDefaultsM3Year2023(this.context,
-      {required this.indeterminate});
+  _CircularProgressIndicatorDefaultsM3Year2023(
+    this.context, {
+    required this.indeterminate,
+  });
 
   final BuildContext context;
   late final ColorScheme _colors = Theme.of(context).colorScheme;
