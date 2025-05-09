@@ -2,6 +2,7 @@ export 'platform_animated_button.dart';
 export 'platform_back_button.dart';
 export 'platform_bottom_bar.dart';
 export 'platform_button.dart';
+export 'platform_button_old.dart';
 export 'platform_close_button.dart';
 export 'platform_date_picker.dart';
 export 'platform_dropdown_picker.dart';

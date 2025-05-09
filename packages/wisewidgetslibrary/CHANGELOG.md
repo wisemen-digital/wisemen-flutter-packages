@@ -1,3 +1,7 @@
+## 2.0.4
+
+* Added `PlatformButton2` (with the intention of removing current `PlatformButton`)
+
 ## 2.0.3
 
 * Added `PlatformSliverRefreshControl`

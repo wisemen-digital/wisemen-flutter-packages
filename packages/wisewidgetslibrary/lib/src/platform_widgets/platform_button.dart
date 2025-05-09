@@ -1,149 +1,144 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'platform_widgets.dart';
 
-/// [PlatformButton] with text or child
-class PlatformButton extends StatelessWidget {
-  /// Constructor [PlatformButton]
-  PlatformButton({
+/// [PlatformButton2] which returns a [CupertinoButton] or [MaterialButton]. To use the old platform button widget, use [PlatformButton].
+class PlatformButton2 extends PlatformWidget {
+  /// Constructor for [PlatformButton2]
+  const PlatformButton2({
+    required this.child,
+    required this.onPressed,
+    required this.color,
+    required this.foregroundColor,
     super.key,
-    this.text,
-    this.child,
-    this.textStyle = const TextStyle(color: Colors.black),
-    this.onPressed,
+    this.loadingChild,
     this.isDisabled = false,
     this.isLoading = false,
-    this.borderRadius,
-    this.color = Colors.white,
-    this.border,
-    this.maxLines,
-    this.loadingIndicatorColor,
-    this.expand = true,
-    this.margin = EdgeInsets.zero,
-    this.padding = EdgeInsets.zero,
     this.disabledColor,
-    this.boxShadow,
-    this.height,
-    this.width,
-    this.textAlign = TextAlign.center,
-    this.duration = Durations.medium2,
-    this.gradient,
-  }) {
-    if (text != null && child != null) {
-      throw ArgumentError(
-        'Either the param text or content can be passed at a time.',
-      );
-    }
-  }
+    this.size = const Size.fromHeight(48),
+    this.borderRadius = const BorderRadius.all(
+      Radius.circular(10),
+    ),
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 8,
+    ),
+    this.borderSide,
+  });
 
-  /// Child centered with padding
-  final Widget? child;
+  /// Constructor for [PlatformButton2] with text
+  PlatformButton2.text({
+    required String text,
+    required TextStyle textStyle,
+    required this.onPressed,
+    required this.color,
+    required this.foregroundColor,
+    super.key,
+    this.loadingChild,
+    this.isDisabled = false,
+    this.isLoading = false,
+    this.disabledColor,
+    this.size = const Size.fromHeight(48),
+    this.borderRadius = const BorderRadius.all(
+      Radius.circular(10),
+    ),
+    this.padding = const EdgeInsets.symmetric(
+      horizontal: 8,
+    ),
+    this.borderSide,
+  }) : child = Text(
+          text,
+          style: textStyle,
+        );
 
-  /// Button with only text (alternative to child)
-  final String? text;
+  /// Button size
+  final Size size;
 
-  /// Text style (only used when text != null)
-  final TextStyle? textStyle;
+  /// Button child
+  final Widget child;
 
-  /// Text align (only used when text != null)
-  final TextAlign? textAlign;
+  /// Optional loading child
+  final Widget? loadingChild;
 
-  /// Max lines (only used when text != null)
-  final int? maxLines;
-
-  /// Void callback onPressed
+  /// Button press callback
   final VoidCallback? onPressed;
 
-  /// Is button disabled (show disabled state)
+  /// Button disabled state
   final bool isDisabled;
 
-  /// Is button loading (show loading indicator)
+  /// Button loading state
   final bool isLoading;
 
-  /// BorderRadius (defaults to 8)
-  final BorderRadius? borderRadius;
-
-  /// Background color
+  /// Button Color
   final Color color;
 
-  /// Button border
-  final BoxBorder? border;
+  /// Button foreground color
+  final Color foregroundColor;
 
-  /// Optional loading indicator color (default from [ThemeData])
-  final Color? loadingIndicatorColor;
-
-  /// Expand button width to [double.infinity]
-  final bool expand;
-
-  /// Child padding (default 15)
-  final EdgeInsetsGeometry padding;
-
-  /// Disabled color (default color with opacity .4)
+  /// Button padding
   final Color? disabledColor;
 
-  /// Animation duration (default 300ms)
-  final Duration duration;
+  /// Button border radius
+  final BorderRadius borderRadius;
 
-  /// Optional height
-  final double? height;
+  /// Button border, [MaterialButton] only
+  final BorderSide? borderSide;
 
-  /// Optional width
-  final double? width;
+  /// Button padding
+  final EdgeInsetsGeometry padding;
 
-  /// Child margin
-  final EdgeInsetsGeometry margin;
-
-  /// Optional boxShadow
-  final List<BoxShadow>? boxShadow;
-
-  /// Optional gradient
-  final Gradient? gradient;
+  /// Checks if button can be pressed
+  bool get canBePressed => !isDisabled && !isLoading;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: margin,
-      child: Material(
-        type: MaterialType.transparency,
-        child: InkWell(
-          onTap: !isDisabled && !isLoading ? onPressed : null,
+  Widget createCupertinoWidget(BuildContext context) {
+    return SizedBox.fromSize(
+      size: size,
+      child: CupertinoButton(
+        padding: padding,
+        onPressed: canBePressed ? onPressed : null,
+        disabledColor: disabledColor ?? color.withValues(alpha: .4),
+        color: color,
+        borderRadius: borderRadius,
+        child: Center(
+          child: AnimatedSwitcher(
+            duration: Durations.short1,
+            child: isLoading
+                ? loadingChild ??
+                    CupertinoActivityIndicator(
+                      color: foregroundColor,
+                    )
+                : child,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget createMaterialWidget(BuildContext context) {
+    return SizedBox.fromSize(
+      size: size,
+      child: MaterialButton(
+        height: size.height,
+        onPressed: canBePressed ? onPressed : null,
+        disabledColor: disabledColor,
+        color: color,
+        padding: padding,
+        shape: RoundedRectangleBorder(
           borderRadius: borderRadius,
-          child: Ink(
-            height: height,
-            padding: padding,
-            width: expand ? double.infinity : width,
-            decoration: BoxDecoration(
-              border: border,
-              gradient: gradient,
-              color: !isDisabled && !isLoading && onPressed != null
-                  ? color
-                  : (disabledColor ?? color.withValues(alpha: .4)),
-              borderRadius: borderRadius,
-              boxShadow: boxShadow,
-            ),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                AnimatedOpacity(
-                  duration: duration,
-                  opacity: isLoading ? 0 : 1,
-                  child: child ??
-                      Text(
-                        text ?? '',
-                        style: textStyle,
-                        maxLines: maxLines,
-                        textAlign: textAlign,
-                      ),
-                ),
-                AnimatedOpacity(
-                  opacity: isLoading ? 1 : 0,
-                  duration: duration,
-                  child: PlatformLoadingIndicator(
-                    color: loadingIndicatorColor ?? textStyle?.color,
-                  ),
-                ),
-              ],
-            ),
+          side: borderSide ?? BorderSide.none,
+        ),
+        elevation: 0,
+        child: Center(
+          child: AnimatedSwitcher(
+            duration: Durations.short1,
+            child: isLoading
+                ? loadingChild ??
+                    CircularProgressIndicator(
+                      color: foregroundColor,
+                    )
+                : child,
           ),
         ),
       ),
