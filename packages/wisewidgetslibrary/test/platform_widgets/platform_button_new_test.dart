@@ -23,7 +23,8 @@ void main() {
     expect(find.text('Press Me'), findsOneWidget);
   });
 
-  testWidgets('PlatformButton2 calls onPressed when tapped', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 calls onPressed when tapped',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -45,7 +46,8 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('PlatformButton2 is disabled when isDisabled is true', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 is disabled when isDisabled is true',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -65,7 +67,8 @@ void main() {
     expect(button.isDisabled, isTrue);
   });
 
-  testWidgets('PlatformButton2 shows loading indicator when isLoading is true', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 shows loading indicator when isLoading is true',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -84,7 +87,8 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  testWidgets('PlatformButton2 does not call onPressed when disabled', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 does not call onPressed when disabled',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -108,7 +112,8 @@ void main() {
   });
 
   //* Cupertino
-  testWidgets('PlatformButton2 displays text on ios', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 displays text on ios',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -130,7 +135,8 @@ void main() {
     expect(find.text('Press Me'), findsOneWidget);
   });
 
-  testWidgets('PlatformButton2 calls onPressed when tapped on ios', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 calls onPressed when tapped on ios',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -155,7 +161,8 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('PlatformButton2 is disabled when isDisabled is true on ios', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 is disabled when isDisabled is true on ios',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -179,7 +186,9 @@ void main() {
     expect(button.onPressed, isNull);
   });
 
-  testWidgets('PlatformButton2 shows loading indicator when isLoading is true on ios', (WidgetTester tester) async {
+  testWidgets(
+      'PlatformButton2 shows loading indicator when isLoading is true on ios',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -202,7 +211,8 @@ void main() {
     expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
   });
 
-  testWidgets('PlatformButton2 does not call onPressed when disabled on ios', (WidgetTester tester) async {
+  testWidgets('PlatformButton2 does not call onPressed when disabled on ios',
+      (WidgetTester tester) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(

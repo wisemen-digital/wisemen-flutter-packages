@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'platform_widgets.dart';
 
-const _deprecatedText = 'This version of PlatformButton is deprecated. Use PlatformButton2 instead (will be renamed to PlatformButton soon).';
+const _deprecatedText =
+    'This version of PlatformButton is deprecated. Use PlatformButton2 instead (will be renamed to PlatformButton soon).';
 
 /// [PlatformButton] with text or child
 @Deprecated(_deprecatedText)
@@ -119,7 +120,9 @@ class PlatformButton extends StatelessWidget {
             decoration: BoxDecoration(
               border: border,
               gradient: gradient,
-              color: !isDisabled && !isLoading && onPressed != null ? color : (disabledColor ?? color.withValues(alpha: .4)),
+              color: !isDisabled && !isLoading && onPressed != null
+                  ? color
+                  : (disabledColor ?? color.withValues(alpha: .4)),
               borderRadius: borderRadius,
               boxShadow: boxShadow,
             ),
