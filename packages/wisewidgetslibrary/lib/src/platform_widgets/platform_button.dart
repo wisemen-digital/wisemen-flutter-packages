@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'platform_widgets.dart';
 
+// ignore: deprecated_member_use_from_same_package
 /// [PlatformButton2] which returns a [CupertinoButton] or [MaterialButton]. To use the old platform button widget, use [PlatformButton].
 class PlatformButton2 extends PlatformWidget {
   /// Constructor for [PlatformButton2]
