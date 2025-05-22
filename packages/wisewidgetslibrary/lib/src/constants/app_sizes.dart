@@ -19,7 +19,7 @@ const gapWL = SizedBox(width: Sizes.l);
 const gapWXL = SizedBox(width: Sizes.xl);
 
 /// Constant gap heights
-const gapHXs = SizedBox(height: Sizes.xs);
+const gapHXS = SizedBox(height: Sizes.xs);
 const gapHS = SizedBox(height: Sizes.s);
 const gapHM = SizedBox(height: Sizes.m);
 const gapHL = SizedBox(height: Sizes.l);

@@ -18,7 +18,7 @@ void main() {
     expect(gapWL.width, Sizes.l);
     expect(gapWXL.width, Sizes.xl);
 
-    expect(gapHXs.height, Sizes.xs);
+    expect(gapHXS.height, Sizes.xs);
     expect(gapHS.height, Sizes.s);
     expect(gapHM.height, Sizes.m);
     expect(gapHL.height, Sizes.l);

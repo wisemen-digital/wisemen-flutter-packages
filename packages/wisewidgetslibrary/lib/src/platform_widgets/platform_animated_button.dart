@@ -91,7 +91,7 @@ class PlatformAnimatedButton extends PlatformWidget<Widget, Widget> {
                 }
               : null,
           color: Colors.transparent,
-          minSize: 0,
+          minimumSize: Size.zero,
           disabledColor: disabledColor ?? color.withValues(alpha: .4),
           pressedOpacity: .8,
           child: isLoading

@@ -40,7 +40,7 @@ class PlatformIconButton extends PlatformWidget<CupertinoButton, Material> {
         onPressed: onPressed,
         color: backgroundColor,
         padding: EdgeInsets.zero,
-        minSize: minSize,
+        minimumSize: Size(minSize, minSize),
         child: icon,
       );
 
