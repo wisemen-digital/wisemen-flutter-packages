@@ -8,7 +8,7 @@ import 'types/zitadel_login_type.dart';
 class WiseZitadelOptions {
   /// [WiseZitadelOptions] constructor
   const WiseZitadelOptions({
-    required this.baseUrl,
+    required this.zitadelBaseUrl,
     required this.bundleId,
     required this.applicationId,
     required this.organizationId,
@@ -18,7 +18,7 @@ class WiseZitadelOptions {
   });
 
   /// The base api URL for the application
-  final String baseUrl;
+  final String zitadelBaseUrl;
 
   /// The app's bundle id
   final String bundleId;

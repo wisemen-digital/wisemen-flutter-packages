@@ -16,7 +16,7 @@ void main() {
       iconSvgString: '',
     );
     final options = WiseZitadelOptions(
-      baseUrl: 'https://example.com',
+      zitadelBaseUrl: 'https://example.com',
       bundleId: 'com.example.app',
       applicationId: 'app_id',
       organizationId: 'org_id',

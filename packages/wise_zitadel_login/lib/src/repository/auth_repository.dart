@@ -16,7 +16,7 @@ class AuthenticationRepository {
   }) async {
     try {
       final discoveryDocumentUri = Uri.parse(
-        '${options.baseUrl}/.well-known/openid-configuration',
+        '${options.zitadelBaseUrl}/.well-known/openid-configuration',
       );
 
       /// This will be the current url of the page + /auth.html added to it.

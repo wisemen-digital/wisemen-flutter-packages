@@ -18,7 +18,7 @@ class FakeRef extends Fake implements Ref {
     if (provider == wiseZitadelOptionsProvider) {
       return WiseZitadelOptions(
         applicationId: '',
-        baseUrl: '',
+        zitadelBaseUrl: '',
         bundleId: '',
         organizationId: '',
         supportedTypes: [type],
@@ -42,7 +42,7 @@ class FakeRef extends Fake implements Ref {
     if (provider == wiseZitadelOptionsProvider) {
       return WiseZitadelOptions(
         applicationId: '',
-        baseUrl: '',
+        zitadelBaseUrl: '',
         bundleId: '',
         organizationId: '',
         supportedTypes: [type],
