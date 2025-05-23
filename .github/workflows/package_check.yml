@@ -1,0 +1,48 @@
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Run linter and analyze
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  generate-matrix:
+    name: Generate job matrices
+    runs-on: ubuntu-latest
+    outputs:
+      deployments: ${{ steps.changed-paths-filter.outputs.matrix }}
+    steps:
+      - name: Generate Matrix
+        id: changed-paths-filter
+        uses: wisemen-digital/devops-ga-changed-paths-filter@main
+        with:
+          filter-file: .github/package-filters.yaml
+
+  test:
+    needs: [generate-matrix]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        deployment: ${{ fromJson(needs.generate-matrix.outputs.deployments) }}
+    if: ${{ needs.generate-matrix.outputs.deployments != '[]' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Run flutter pub get
+        run: flutter pub get      
+      - name: Test ${{ matrix.deployment.environment }}
+        uses: ./.github/actions/test_package
+        with:
+          package_name: ${{ matrix.deployment.environment }}
+          working_directory: ${{ matrix.deployment.path }}
+          min_coverage: 80
+          github_token: ${{ secrets.GITHUB_TOKEN }}

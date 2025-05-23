@@ -1,0 +1,18 @@
+# Filters used for triggering package tests
+
+# Packages
+wise_nav_bar:
+  - '.github/**' 
+  - 'packages/wise_nav_bar/**'
+wise_zitadel_login:
+  - '.github/**'
+  - 'packages/wise_zitadel_login/**'
+wiseclient:
+  - '.github/**'
+  - 'packages/wiseclient/**'
+wisecore:
+  - '.github/**'
+  - 'packages/wisecore/**'
+wisewidgetslibrary:
+  - '.github/**'
+  - 'packages/wisewidgetslibrary/**'
