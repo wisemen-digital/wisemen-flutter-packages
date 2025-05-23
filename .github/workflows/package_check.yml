@@ -36,6 +36,6 @@ jobs:
         uses: ./.github/actions/package
         with:
           package_name: ${{ matrix.deployment.environment }}
-          working_directory: ${{ matrix.deployment.path }}
+          working_directory: packages/${{ matrix.deployment.path }}
           min_coverage: 80
           github_token: ${{ secrets.GITHUB_TOKEN }}
