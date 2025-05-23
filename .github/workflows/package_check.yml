@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test ${{ matrix.deployment.environment }}
-        uses: ./.github/actions/test_package
+        uses: ./.github/actions/package
         with:
           package_name: ${{ matrix.deployment.environment }}
           working_directory: ${{ matrix.deployment.path }}
