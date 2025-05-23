@@ -32,13 +32,6 @@ jobs:
     if: ${{ needs.generate-matrix.outputs.deployments != '[]' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-      - name: Run flutter pub get
-        run: flutter pub get      
       - name: Test ${{ matrix.deployment.environment }}
         uses: ./.github/actions/test_package
         with:
