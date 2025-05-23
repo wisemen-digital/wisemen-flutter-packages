@@ -32,10 +32,10 @@ jobs:
     if: ${{ needs.generate-matrix.outputs.deployments != '[]' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Test ${{ matrix.deployment.environment }}
+      - name: Test ${{ matrix.deployment.path }}
         uses: ./.github/actions/package
         with:
-          package_name: ${{ matrix.deployment.environment }}
+          package_name: ${{ matrix.deployment.path }}
           working_directory: packages/${{ matrix.deployment.path }}
           min_coverage: 80
           github_token: ${{ secrets.GITHUB_TOKEN }}
