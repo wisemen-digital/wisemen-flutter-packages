@@ -33,13 +33,19 @@ class WiseZitadelOptions {
   final List<ZitadelLoginType> supportedTypes;
 
   /// Callback function to be called on successful login
-  final void Function(StackRouter router, WidgetRef ref, OAuthToken? token) onLoginSuccess;
+  final void Function(
+    StackRouter router,
+    WidgetRef ref,
+    OAuthToken? token,
+  ) onLoginSuccess;
 
   /// Login button styling options
   final WiseZitadelButtonOptions buttonOptions;
 }
 
+/// [WiseZitadelButtonOptions] containing button styling options
 class WiseZitadelButtonOptions {
+  /// [WiseZitadelButtonOptions] constructor
   const WiseZitadelButtonOptions({
     required this.color,
     required this.buttonTextStyle,
@@ -47,8 +53,15 @@ class WiseZitadelButtonOptions {
     this.borderSide,
   });
 
+  /// The background color of the button
   final Color Function(BuildContext) color;
+
+  /// The text style of the button's text
   final TextStyle Function(BuildContext) buttonTextStyle;
+
+  /// The border radius of the button
   final BorderRadius borderRadius;
+
+  /// The optional border side of the button
   final BorderSide? borderSide;
 }

@@ -9,25 +9,32 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 import '../providers/wise_zitadel_provider.dart';
 import '../types/zitadel_login_type.dart';
 
+/// [WiseLoginScreen] with bottom aligned buttons and a builder function
 class WiseLoginScreen extends HookConsumerWidget {
+  /// Constructor for [WiseLoginScreen]
   const WiseLoginScreen({
     super.key,
     this.builder,
   });
 
+  /// The builder function used in a Scaffold
+  /// Usually a brand's logo
+  /// Placed at the bottom of the Stack
   final WidgetBuilder? builder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final options = ref.watch(wiseZitadelOptionsProvider);
+    // ignore: prefer_final_locals, omit_local_variable_types
     ValueNotifier<ZitadelLoginType?> loadingLoginType = useState(null);
 
-    Future<void> _handleLogin(
+    Future<void> handleLogin(
       ZitadelLoginType loginTypePressed,
     ) async {
       loadingLoginType.value = loginTypePressed;
       final token = await loginTypePressed.login(options);
       loadingLoginType.value = null;
+      // ignore: use_build_context_synchronously
       options.onLoginSuccess(context.router, ref, token);
     }
 
@@ -52,15 +59,18 @@ class WiseLoginScreen extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: options.supportedTypes.map(
                       (type) {
-                        bool isLoading = value == type;
+                        final isLoading = value == type;
                         return PlatformButton2(
                           color: options.buttonOptions.color(context),
-                          foregroundColor: options.buttonOptions.buttonTextStyle(context).color ?? Colors.white,
+                          foregroundColor: options.buttonOptions
+                                  .buttonTextStyle(context)
+                                  .color ??
+                              Colors.white,
                           borderRadius: options.buttonOptions.borderRadius,
                           borderSide: options.buttonOptions.borderSide,
                           isLoading: isLoading,
                           onPressed: () async {
-                            await _handleLogin(type);
+                            await handleLogin(type);
                           },
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -74,7 +84,8 @@ class WiseLoginScreen extends HookConsumerWidget {
                               Flexible(
                                 child: Text(
                                   type.buttonText,
-                                  style: options.buttonOptions.buttonTextStyle(context),
+                                  style: options.buttonOptions
+                                      .buttonTextStyle(context),
                                 ),
                               ),
                             ],

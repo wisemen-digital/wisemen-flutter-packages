@@ -5,9 +5,11 @@ import 'package:wiseclient/wiseclient.dart' show OAuthToken;
 import '../options.dart';
 import '../types/zitadel_login_type.dart';
 
+/// [AuthenticationRepository] handles the login process
 class AuthenticationRepository {
   static const FlutterAppAuth _appAuth = FlutterAppAuth();
 
+  /// Zitadel login using [FlutterAppAuth]
   static Future<OAuthToken?> login({
     required WiseZitadelOptions options,
     required ZitadelLoginType type,
@@ -22,7 +24,12 @@ class AuthenticationRepository {
 
       /// for web platforms, we use http://website-url.com/auth.html
       /// for mobile platforms, we use `com.zitadel.zitadelflutter:/`
-      final redirectUri = kIsWeb ? webCallbackUrl : Uri(scheme: options.bundleId, path: '/');
+      final redirectUri = kIsWeb
+          ? webCallbackUrl
+          : Uri(
+              scheme: options.bundleId,
+              path: '/',
+            );
 
       final response = await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(
@@ -45,7 +52,9 @@ class AuthenticationRepository {
           tokenType: response.tokenType,
           accessToken: response.accessToken!,
           refreshToken: response.refreshToken,
-          expiresIn: response.accessTokenExpirationDateTime!.difference(DateTime.now()).inSeconds,
+          expiresIn: response.accessTokenExpirationDateTime!
+              .difference(DateTime.now())
+              .inSeconds,
         );
       }
       return null;

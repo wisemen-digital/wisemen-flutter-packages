@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../screens/wise_login_screen.dart';
 
+/// Login screen route for app_router.dart usage
 class WiseLoginScreenRoute extends PageRouteInfo<WiseScreenRouteArgs> {
+  /// Constructor for [WiseLoginScreenRoute]
   WiseLoginScreenRoute({List<PageRouteInfo>? children, WidgetBuilder? builder})
       : super(
           WiseLoginScreenRoute.name,
@@ -13,8 +15,10 @@ class WiseLoginScreenRoute extends PageRouteInfo<WiseScreenRouteArgs> {
           initialChildren: children,
         );
 
+  /// Route name
   static const String name = 'WiseLoginScreenRoute';
 
+  /// Route page
   static PageInfo page = PageInfo(
     name,
     builder: (data) {
@@ -26,10 +30,15 @@ class WiseLoginScreenRoute extends PageRouteInfo<WiseScreenRouteArgs> {
   );
 }
 
+/// Arguments for [WiseLoginScreenRoute]
+/// Receives a [WidgetBuilder], usually a brand's logo
 class WiseScreenRouteArgs {
+  /// Constructor for [WiseScreenRouteArgs]
   const WiseScreenRouteArgs({
     this.builder,
   });
 
+  /// The builder function used in a Scaffold
+  /// Usually a brand's logo
   final WidgetBuilder? builder;
 }
