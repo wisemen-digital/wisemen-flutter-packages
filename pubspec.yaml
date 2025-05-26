@@ -7,6 +7,7 @@ workspace:
   - packages/wisecore
   - packages/wisewidgetslibrary
   - packages/wise_nav_bar
+  - packages/wise_zitadel_login
 dev_dependencies:
   melos: ^6.3.2
   coverage: ^1.11.1
