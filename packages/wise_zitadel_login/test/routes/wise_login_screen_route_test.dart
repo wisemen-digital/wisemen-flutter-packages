@@ -9,7 +9,7 @@ import '../utils/fake_ref.dart';
 
 Text builder(BuildContext context) => const Text('Logo');
 
-class FakeRouteData extends Fake implements RouteData {
+class FakeRouteData extends Fake implements RouteData<dynamic> {
   @override
   T argsAs<T>({T Function()? orElse}) {
     return const WiseScreenRouteArgs(builder: builder) as T;
