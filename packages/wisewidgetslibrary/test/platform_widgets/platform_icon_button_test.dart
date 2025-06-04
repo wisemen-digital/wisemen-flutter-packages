@@ -99,8 +99,9 @@ void main() {
     expect(find.byIcon(Icons.add), findsOneWidget);
   });
 
-  testWidgets('(cupertino) calls onPressed callback when tapped',
-      (tester) async {
+  testWidgets('(cupertino) calls onPressed callback when tapped', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(

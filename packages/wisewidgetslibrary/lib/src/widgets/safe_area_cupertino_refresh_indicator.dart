@@ -16,26 +16,27 @@ class SafeAreaCupertinoRefreshIndicator extends StatelessWidget {
     return CupertinoSliverRefreshControl(
       refreshIndicatorExtent: 0,
       onRefresh: onRefresh,
-      builder: (
-        context,
-        refreshState,
-        pulledExtent,
-        refreshTriggerPullDistance,
-        refreshIndicatorExtent,
-      ) {
-        return Padding(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top,
-          ),
-          child: CupertinoSliverRefreshControl.buildRefreshIndicator(
+      builder:
+          (
             context,
             refreshState,
             pulledExtent,
             refreshTriggerPullDistance,
             refreshIndicatorExtent,
-          ),
-        );
-      },
+          ) {
+            return Padding(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top,
+              ),
+              child: CupertinoSliverRefreshControl.buildRefreshIndicator(
+                context,
+                refreshState,
+                pulledExtent,
+                refreshTriggerPullDistance,
+                refreshIndicatorExtent,
+              ),
+            );
+          },
     );
   }
 }

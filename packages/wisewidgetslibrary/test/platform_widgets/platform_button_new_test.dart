@@ -23,8 +23,9 @@ void main() {
     expect(find.text('Press Me'), findsOneWidget);
   });
 
-  testWidgets('PlatformButton2 calls onPressed when tapped',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 calls onPressed when tapped', (
+    WidgetTester tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -46,8 +47,9 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('PlatformButton2 is disabled when isDisabled is true',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 is disabled when isDisabled is true', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -67,28 +69,31 @@ void main() {
     expect(button.isDisabled, isTrue);
   });
 
-  testWidgets('PlatformButton2 shows loading indicator when isLoading is true',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: PlatformButton2.text(
-            text: 'Press Me',
-            textStyle: const TextStyle(),
-            color: Colors.blue,
-            foregroundColor: Colors.white,
-            isLoading: true,
-            onPressed: () {},
+  testWidgets(
+    'PlatformButton2 shows loading indicator when isLoading is true',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: PlatformButton2.text(
+              text: 'Press Me',
+              textStyle: const TextStyle(),
+              color: Colors.blue,
+              foregroundColor: Colors.white,
+              isLoading: true,
+              onPressed: () {},
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
-  });
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    },
+  );
 
-  testWidgets('PlatformButton2 does not call onPressed when disabled',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 does not call onPressed when disabled', (
+    WidgetTester tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -112,8 +117,9 @@ void main() {
   });
 
   //* Cupertino
-  testWidgets('PlatformButton2 displays text on ios',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 displays text on ios', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -135,8 +141,9 @@ void main() {
     expect(find.text('Press Me'), findsOneWidget);
   });
 
-  testWidgets('PlatformButton2 calls onPressed when tapped on ios',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 calls onPressed when tapped on ios', (
+    WidgetTester tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -161,8 +168,9 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('PlatformButton2 is disabled when isDisabled is true on ios',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 is disabled when isDisabled is true on ios', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -187,32 +195,34 @@ void main() {
   });
 
   testWidgets(
-      'PlatformButton2 shows loading indicator when isLoading is true on ios',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              return PlatformButton2.text(
-                text: 'Press Me',
-                textStyle: const TextStyle(),
-                color: Colors.blue,
-                foregroundColor: Colors.white,
-                onPressed: () {},
-                isLoading: true,
-              ).createCupertinoWidget(context);
-            },
+    'PlatformButton2 shows loading indicator when isLoading is true on ios',
+    (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                return PlatformButton2.text(
+                  text: 'Press Me',
+                  textStyle: const TextStyle(),
+                  color: Colors.blue,
+                  foregroundColor: Colors.white,
+                  onPressed: () {},
+                  isLoading: true,
+                ).createCupertinoWidget(context);
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
-  });
+      expect(find.byType(CupertinoActivityIndicator), findsOneWidget);
+    },
+  );
 
-  testWidgets('PlatformButton2 does not call onPressed when disabled on ios',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton2 does not call onPressed when disabled on ios', (
+    WidgetTester tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(

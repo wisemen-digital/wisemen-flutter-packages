@@ -20,8 +20,9 @@ void main() {
     expect(find.text('Press Me'), findsOneWidget);
   });
 
-  testWidgets('PlatformButton calls onPressed when tapped',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton calls onPressed when tapped', (
+    WidgetTester tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(
@@ -40,8 +41,9 @@ void main() {
     expect(pressed, isTrue);
   });
 
-  testWidgets('PlatformButton is disabled when isDisabled is true',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton is disabled when isDisabled is true', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -58,8 +60,9 @@ void main() {
     expect(button.isDisabled, isTrue);
   });
 
-  testWidgets('PlatformButton shows loading indicator when isLoading is true',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton shows loading indicator when isLoading is true', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -75,8 +78,9 @@ void main() {
     expect(find.byType(PlatformLoadingIndicator), findsOneWidget);
   });
 
-  testWidgets('PlatformButton does not call onPressed when disabled',
-      (WidgetTester tester) async {
+  testWidgets('PlatformButton does not call onPressed when disabled', (
+    WidgetTester tester,
+  ) async {
     var pressed = false;
     await tester.pumpWidget(
       MaterialApp(

@@ -50,8 +50,9 @@ void main() {
     expect(find.byType(PhotoViewGallery), findsOneWidget);
   });
 
-  testWidgets('displays close button when showCloseButton is true',
-      (tester) async {
+  testWidgets('displays close button when showCloseButton is true', (
+    tester,
+  ) async {
     await tester.pumpFrames(
       buildTestableWidget(
         child: CustomImageCarousel(
@@ -82,8 +83,9 @@ void main() {
     verify(() => mockObserver.didPop(any(), any())).called(1);
   });
 
-  testWidgets('displays page indicator when showPageIndicator is true',
-      (tester) async {
+  testWidgets('displays page indicator when showPageIndicator is true', (
+    tester,
+  ) async {
     await tester.pumpFrames(
       buildTestableWidget(
         child: CustomImageCarousel(

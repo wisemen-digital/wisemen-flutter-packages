@@ -129,7 +129,8 @@ class _TrueCenterColumnState extends State<TrueCenterColumn> {
             children: [
               child1,
               SizedBox(
-                height: (constraints.maxHeight -
+                height:
+                    (constraints.maxHeight -
                         ((_itemHeight1! * 2) + _itemHeight2!)) /
                     2,
               ),

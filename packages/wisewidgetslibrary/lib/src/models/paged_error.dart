@@ -18,6 +18,6 @@ abstract class PagedError implements Exception {
 
   /// Sheet body getter to be overridden
   String get sheetBody => throw UnimplementedError(
-        'Implement sheetBody getter',
-      );
+    'Implement sheetBody getter',
+  );
 }

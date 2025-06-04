@@ -37,7 +37,7 @@ class PlatformTabScaffold
 
   @override
   Scaffold createMaterialWidget(BuildContext context) => Scaffold(
-        body: body,
-        bottomNavigationBar: bottomBar,
-      );
+    body: body,
+    bottomNavigationBar: bottomBar,
+  );
 }

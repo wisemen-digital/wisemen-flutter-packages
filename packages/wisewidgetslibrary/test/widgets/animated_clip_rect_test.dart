@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/src/widgets/animated_clip_rect.dart';
 
 void main() {
-  testWidgets('AnimatedClipRect opens and closes vertically',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedClipRect opens and closes vertically', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: AnimatedClipRect(
@@ -31,8 +32,9 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('AnimatedClipRect opens and closes horizontally',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedClipRect opens and closes horizontally', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: AnimatedClipRect(
@@ -63,8 +65,9 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('AnimatedClipRect respects alignment',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedClipRect respects alignment', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: AnimatedClipRect(
@@ -81,8 +84,9 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('AnimatedClipRect respects custom duration and curve',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedClipRect respects custom duration and curve', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: AnimatedClipRect(
@@ -100,8 +104,9 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('AnimatedClipRect respects reverse duration and reverse curve',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedClipRect respects reverse duration and reverse curve', (
+    WidgetTester tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: AnimatedClipRect(

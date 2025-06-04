@@ -12,7 +12,7 @@ enum UIDatePickerMode {
   date,
 
   /// The date picker will show a date and time picker.
-  dateAndTime;
+  dateAndTime,
 }
 
 /// A wrapper around the native iOS 14 UIDatePicker that allows

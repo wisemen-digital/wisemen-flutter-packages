@@ -63,15 +63,16 @@ class _AnimatedNumbersMappedState extends State<AnimatedNumbersMapped>
     super.didUpdateWidget(oldWidget);
     if (!mapEquals(widget.numbers, oldWidget.numbers)) {
       for (final entry in widget.numbers.entries) {
-        _animations[entry.key] = Tween<double>(
-          begin: (oldWidget.numbers[entry.key] ?? 0).toDouble(),
-          end: (entry.value ?? 0).toDouble(),
-        ).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeInOut,
-          ),
-        );
+        _animations[entry.key] =
+            Tween<double>(
+              begin: (oldWidget.numbers[entry.key] ?? 0).toDouble(),
+              end: (entry.value ?? 0).toDouble(),
+            ).animate(
+              CurvedAnimation(
+                parent: _animationController,
+                curve: Curves.easeInOut,
+              ),
+            );
       }
       _animationController
         ..reset()
@@ -90,8 +91,9 @@ class _AnimatedNumbersMappedState extends State<AnimatedNumbersMapped>
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
-        final animatedValues =
-            _animations.map((key, animation) => MapEntry(key, animation.value));
+        final animatedValues = _animations.map(
+          (key, animation) => MapEntry(key, animation.value),
+        );
         return widget.child(animatedValues);
       },
     );

@@ -12,7 +12,8 @@ analyzer:
     missing_required_param: error
     missing_return: error
     record_literal_one_positional_no_trailing_comma: error
-
+formatter:
+  trailing_commas: preserve
 linter:
   rules:
     - always_declare_return_types

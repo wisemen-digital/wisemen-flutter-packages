@@ -13,7 +13,7 @@ enum AdaptiveDatePickerType {
   material,
 
   /// Cupertino picker type (iOS)
-  cupertino;
+  cupertino,
 }
 
 /// An adaptive widget for selecting from a date or time.

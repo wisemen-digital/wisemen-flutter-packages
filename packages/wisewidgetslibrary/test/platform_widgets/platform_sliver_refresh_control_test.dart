@@ -15,37 +15,40 @@ void main() {
     registerFallbackValue(FakeBuildContext());
   });
 
-  testWidgets('createCupertinoWidget returns CupertinoSliverRefreshControl',
-      (tester) async {
+  testWidgets('createCupertinoWidget returns CupertinoSliverRefreshControl', (
+    tester,
+  ) async {
     final platformRefreshControl = PlatformSliverRefreshControl(
       onRefresh: () => Future.delayed(const Duration(seconds: 1)),
       color: Colors.black,
       backgroundColor: Colors.white,
     );
 
-    final cupertinoRefreshControl =
-        platformRefreshControl.createCupertinoWidget(FakeBuildContext());
+    final cupertinoRefreshControl = platformRefreshControl
+        .createCupertinoWidget(FakeBuildContext());
 
     expect(cupertinoRefreshControl, isA<CupertinoSliverRefreshControl>());
   });
 
   testWidgets(
-      'createMaterialWidget returns CupertinoSliverRefreshControl with CustomMaterialRefreshProgressIndicator',
-      (tester) async {
-    final platformRefreshControl = PlatformSliverRefreshControl(
-      onRefresh: () => Future.delayed(const Duration(seconds: 1)),
-      color: Colors.black,
-      backgroundColor: Colors.white,
-    );
+    'createMaterialWidget returns CupertinoSliverRefreshControl with CustomMaterialRefreshProgressIndicator',
+    (tester) async {
+      final platformRefreshControl = PlatformSliverRefreshControl(
+        onRefresh: () => Future.delayed(const Duration(seconds: 1)),
+        color: Colors.black,
+        backgroundColor: Colors.white,
+      );
 
-    final materialRefreshControl =
-        platformRefreshControl.createMaterialWidget(FakeBuildContext());
+      final materialRefreshControl = platformRefreshControl
+          .createMaterialWidget(FakeBuildContext());
 
-    expect(materialRefreshControl, isA<CupertinoSliverRefreshControl>());
-  });
+      expect(materialRefreshControl, isA<CupertinoSliverRefreshControl>());
+    },
+  );
 
-  testWidgets('Refresh indicator builder shows correct states',
-      (WidgetTester tester) async {
+  testWidgets('Refresh indicator builder shows correct states', (
+    WidgetTester tester,
+  ) async {
     const testColor = Colors.blue;
     const testBackgroundColor = Colors.grey;
 
@@ -72,8 +75,9 @@ void main() {
     expect(indicatorFinder, findsOneWidget);
 
     // ignore: omit_local_variable_types
-    CustomMaterialRefreshProgressIndicator indicator =
-        tester.widget(indicatorFinder);
+    CustomMaterialRefreshProgressIndicator indicator = tester.widget(
+      indicatorFinder,
+    );
     expect(indicator.value, 0.0);
     expect(indicator.color, testColor);
     expect(indicator.backgroundColor, testBackgroundColor);

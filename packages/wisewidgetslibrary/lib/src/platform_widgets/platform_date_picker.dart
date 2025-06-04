@@ -61,14 +61,14 @@ class PlatformDatePicker extends PlatformWidget<Widget, Widget> {
 
   @override
   Widget createMaterialWidget(BuildContext context) => Material(
-        color: Colors.transparent,
-        child: DatePickerDialog(
-          firstDate: DateTime.now()..add(const Duration(days: 10)),
-          initialDate: date,
-          lastDate: DateTime.now().add(const Duration(milliseconds: 1)),
-          currentDate: DateTime.now(),
-          cancelText: cancel,
-          confirmText: save,
-        ),
-      );
+    color: Colors.transparent,
+    child: DatePickerDialog(
+      firstDate: DateTime.now()..add(const Duration(days: 10)),
+      initialDate: date,
+      lastDate: DateTime.now().add(const Duration(milliseconds: 1)),
+      currentDate: DateTime.now(),
+      cancelText: cancel,
+      confirmText: save,
+    ),
+  );
 }

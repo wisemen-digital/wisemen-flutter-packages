@@ -4,5 +4,5 @@ enum AdaptiveDatePickerMode {
   date,
 
   /// Time picker mode.
-  time;
+  time,
 }

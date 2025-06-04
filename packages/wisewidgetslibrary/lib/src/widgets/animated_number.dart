@@ -35,8 +35,10 @@ class _AnimatedNumberState extends State<AnimatedNumber>
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: widget.duration);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
     _animation = Tween<double>(
       begin: widget.number,
       end: widget.number,
@@ -47,10 +49,10 @@ class _AnimatedNumberState extends State<AnimatedNumber>
   void didUpdateWidget(AnimatedNumber oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.number != oldWidget.number) {
-      _animation =
-          Tween<double>(begin: oldWidget.number, end: widget.number).animate(
-        CurvedAnimation(parent: _animationController, curve: widget.curve),
-      );
+      _animation = Tween<double>(begin: oldWidget.number, end: widget.number)
+          .animate(
+            CurvedAnimation(parent: _animationController, curve: widget.curve),
+          );
       _animationController
         ..reset()
         ..forward();

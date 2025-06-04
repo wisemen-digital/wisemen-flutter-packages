@@ -84,8 +84,9 @@ void main() {
     expect(find.text('Option'), findsNWidgets(2));
   });
 
-  testWidgets('calls onChanged callback when an option is selected',
-      (tester) async {
+  testWidgets('calls onChanged callback when an option is selected', (
+    tester,
+  ) async {
     DropdownModel? selectedOption;
     await tester.pumpWidget(
       buildTestableWidget(
@@ -149,34 +150,36 @@ void main() {
     expect(find.text('Option'), findsNWidgets(2));
   });
 
-  testWidgets('(cupertino) calls onChanged callback when an option is selected',
-      (tester) async {
-    DropdownModel? selectedOption;
+  testWidgets(
+    '(cupertino) calls onChanged callback when an option is selected',
+    (tester) async {
+      DropdownModel? selectedOption;
 
-    await tester.pumpWidget(
-      CupertinoApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) {
-              return buildTestablePlatformDropdownPicker(
-                child: const Text('Open Dropdown'),
-                options: [option1, option2],
-                onChanged: (option) {
-                  selectedOption = option;
-                },
-              ).createCupertinoWidget(context);
-            },
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                return buildTestablePlatformDropdownPicker(
+                  child: const Text('Open Dropdown'),
+                  options: [option1, option2],
+                  onChanged: (option) {
+                    selectedOption = option;
+                  },
+                ).createCupertinoWidget(context);
+              },
+            ),
           ),
         ),
-      ),
-    );
+      );
 
-    await tester.tap(find.text('Open Dropdown'));
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Open Dropdown'));
+      await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Option').first);
-    await tester.pumpAndSettle();
+      await tester.tap(find.text('Option').first);
+      await tester.pumpAndSettle();
 
-    expect(selectedOption, equals(option1));
-  });
+      expect(selectedOption, equals(option1));
+    },
+  );
 }

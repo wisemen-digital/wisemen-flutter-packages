@@ -38,8 +38,8 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
-  })  : complexChild = null,
-        imageUrls = null;
+  }) : complexChild = null,
+       imageUrls = null;
 
   /// Complex constructor
   const FullscreenImageCarousel.complex({
@@ -75,8 +75,8 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
-  })  : child = null,
-        imageUrls = null;
+  }) : child = null,
+       imageUrls = null;
 
   /// Basic constructor with urls
   const FullscreenImageCarousel.basicWithUrls({
@@ -112,8 +112,8 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
-  })  : complexChild = null,
-        imageProviders = null;
+  }) : complexChild = null,
+       imageProviders = null;
 
   /// Complex constructor with urls
   const FullscreenImageCarousel.complexWithUrls({
@@ -149,8 +149,8 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
-  })  : child = null,
-        imageProviders = null;
+  }) : child = null,
+       imageProviders = null;
 
   /// Image providers
   final List<ImageProvider<Object>>? imageProviders;
@@ -163,7 +163,7 @@ class FullscreenImageCarousel extends StatefulWidget {
 
   /// Complex child widget
   final Widget Function(void Function(int initialPage) openCarousel)?
-      complexChild;
+  complexChild;
 
   /// Error widget
   final Widget? errorWidget;

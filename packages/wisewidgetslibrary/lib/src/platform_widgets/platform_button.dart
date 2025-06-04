@@ -48,9 +48,9 @@ class PlatformButton2 extends PlatformWidget {
     ),
     this.borderSide,
   }) : child = Text(
-          text,
-          style: textStyle,
-        );
+         text,
+         style: textStyle,
+       );
 
   /// Button size
   final Size size;
@@ -106,9 +106,9 @@ class PlatformButton2 extends PlatformWidget {
             duration: Durations.short1,
             child: isLoading
                 ? loadingChild ??
-                    CupertinoActivityIndicator(
-                      color: foregroundColor,
-                    )
+                      CupertinoActivityIndicator(
+                        color: foregroundColor,
+                      )
                 : child,
           ),
         ),
@@ -136,9 +136,9 @@ class PlatformButton2 extends PlatformWidget {
             duration: Durations.short1,
             child: isLoading
                 ? loadingChild ??
-                    CircularProgressIndicator(
-                      color: foregroundColor,
-                    )
+                      CircularProgressIndicator(
+                        color: foregroundColor,
+                      )
                 : child,
           ),
         ),
