@@ -132,7 +132,8 @@ class PlatformButton extends StatelessWidget {
                 AnimatedOpacity(
                   duration: duration,
                   opacity: isLoading ? 0 : 1,
-                  child: child ??
+                  child:
+                      child ??
                       Text(
                         text ?? '',
                         style: textStyle,

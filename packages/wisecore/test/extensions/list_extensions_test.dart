@@ -48,4 +48,21 @@ void main() {
       expect(updatedList, [1]);
     });
   });
+
+  group('nullable list extensions', () {
+    test('isNullOrEmpty should return true for null list', () {
+      List<int>? list;
+      expect(list.isNullOrEmpty, isTrue);
+    });
+
+    test('isNullOrEmpty should return true for empty list', () {
+      final list = <int>[];
+      expect(list.isNullOrEmpty, isTrue);
+    });
+
+    test('isNullOrEmpty should return false for non-empty list', () {
+      final list = [1, 2, 3];
+      expect(list.isNullOrEmpty, isFalse);
+    });
+  });
 }

@@ -12,7 +12,7 @@ enum AdaptivePickerType {
   material,
 
   /// Cupertino picker type (iOS)
-  cupertino;
+  cupertino,
 }
 
 /// An adaptive widget for selecting from a list of string items.

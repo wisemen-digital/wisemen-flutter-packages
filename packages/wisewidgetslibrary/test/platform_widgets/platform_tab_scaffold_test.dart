@@ -37,8 +37,9 @@ void main() {
     );
   });
 
-  testWidgets('createCupertinoWidget returns CupertinoTabScaffold',
-      (tester) async {
+  testWidgets('createCupertinoWidget returns CupertinoTabScaffold', (
+    tester,
+  ) async {
     final widget = PlatformTabScaffold(
       index: 0,
       body: const Text('Body'),

@@ -41,3 +41,9 @@ extension CustomListExtensions<T, I> on List<T>? {
     }
   }
 }
+
+/// Extensions on nullable [Iterable] of any type
+extension NullableListExtension<T> on Iterable<T>? {
+  /// Checks if the iterable is null or empty
+  bool get isNullOrEmpty => this == null || this!.isEmpty;
+}

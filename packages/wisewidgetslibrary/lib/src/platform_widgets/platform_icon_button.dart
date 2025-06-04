@@ -46,12 +46,12 @@ class PlatformIconButton extends PlatformWidget<CupertinoButton, Material> {
 
   @override
   Material createMaterialWidget(BuildContext context) => Material(
-        color: backgroundColor,
-        child: IconButton(
-          icon: icon,
-          splashColor: splashColor,
-          splashRadius: splashRadius,
-          onPressed: onPressed,
-        ),
-      );
+    color: backgroundColor,
+    child: IconButton(
+      icon: icon,
+      splashColor: splashColor,
+      splashRadius: splashRadius,
+      onPressed: onPressed,
+    ),
+  );
 }

@@ -101,8 +101,13 @@ class _MaterialDatePickerState extends State<MaterialDatePicker> {
             );
             if (t != null && widget.onChanged != null) {
               setState(() {
-                date =
-                    DateTime(date.year, date.month, date.day, t.hour, t.minute);
+                date = DateTime(
+                  date.year,
+                  date.month,
+                  date.day,
+                  t.hour,
+                  t.minute,
+                );
                 widget.onChanged!(date);
               });
             }

@@ -40,15 +40,16 @@ class PlatformSliverRefreshControl extends PlatformWidget {
   Widget createMaterialWidget(BuildContext context) {
     return CupertinoSliverRefreshControl(
       onRefresh: onRefresh,
-      builder: (
-        context,
-        refreshState,
-        pulledExtent,
-        refreshTriggerPullDistance,
-        refreshIndicatorExtent,
-      ) {
-        return buildRefreshIndicator(refreshState, pulledExtent);
-      },
+      builder:
+          (
+            context,
+            refreshState,
+            pulledExtent,
+            refreshTriggerPullDistance,
+            refreshIndicatorExtent,
+          ) {
+            return buildRefreshIndicator(refreshState, pulledExtent);
+          },
     );
   }
 
@@ -90,18 +91,18 @@ class _CircularProgressIndicatorPainter extends CustomPainter {
     required this.strokeWidth,
     required this.strokeAlign,
     this.strokeCap,
-  })  : arcStart = value != null
-            ? _startAngle
-            : _startAngle +
-                tailValue * 3 / 2 * math.pi +
-                rotationValue * math.pi * 2.0 +
-                offsetValue * 0.5 * math.pi,
-        arcSweep = value != null
-            ? clampDouble(value, 0, 1) * _sweep
-            : math.max(
-                headValue * 3 / 2 * math.pi - tailValue * 3 / 2 * math.pi,
-                _epsilon,
-              );
+  }) : arcStart = value != null
+           ? _startAngle
+           : _startAngle +
+                 tailValue * 3 / 2 * math.pi +
+                 rotationValue * math.pi * 2.0 +
+                 offsetValue * 0.5 * math.pi,
+       arcSweep = value != null
+           ? clampDouble(value, 0, 1) * _sweep
+           : math.max(
+               headValue * 3 / 2 * math.pi - tailValue * 3 / 2 * math.pi,
+               _epsilon,
+             );
 
   final Color valueColor;
   final double? value;
@@ -133,8 +134,10 @@ class _CircularProgressIndicatorPainter extends CustomPainter {
 
     final strokeOffset = strokeWidth / 2 * -strokeAlign;
     final arcBaseOffset = Offset(strokeOffset, strokeOffset);
-    final arcActualSize =
-        Size(size.height - strokeOffset * 2, size.height - strokeOffset * 2);
+    final arcActualSize = Size(
+      size.height - strokeOffset * 2,
+      size.height - strokeOffset * 2,
+    );
 
     if (value == null && strokeCap == null) {
       // Indeterminate
@@ -263,8 +266,9 @@ class _CircularProgressIndicatorState extends State<_CircularProgressIndicator>
   static final Animatable<double> _strokeTailTween = CurveTween(
     curve: const Interval(0.5, 1, curve: Curves.fastOutSlowIn),
   ).chain(CurveTween(curve: const SawTooth(_pathCount)));
-  static final Animatable<double> _offsetTween =
-      CurveTween(curve: const SawTooth(_pathCount));
+  static final Animatable<double> _offsetTween = CurveTween(
+    curve: const SawTooth(_pathCount),
+  );
   static final Animatable<double> _rotationTween = CurveTween(
     curve: const SawTooth(_rotationCount),
   );
@@ -309,14 +313,16 @@ class _CircularProgressIndicatorState extends State<_CircularProgressIndicator>
     final indicatorTheme = ProgressIndicatorTheme.of(context);
     final ProgressIndicatorThemeData defaults =
         _CircularProgressIndicatorDefaultsM3Year2023(
-      context,
-      indeterminate: widget.value == null,
-    );
+          context,
+          indeterminate: widget.value == null,
+        );
 
-    final strokeWidth = widget.strokeWidth ??
+    final strokeWidth =
+        widget.strokeWidth ??
         indicatorTheme.strokeWidth ??
         defaults.strokeWidth!;
-    final strokeAlign = widget.strokeAlign ??
+    final strokeAlign =
+        widget.strokeAlign ??
         indicatorTheme.strokeAlign ??
         defaults.strokeAlign!;
     final strokeCap = widget.strokeCap ?? indicatorTheme.strokeCap;
@@ -329,8 +335,10 @@ class _CircularProgressIndicatorState extends State<_CircularProgressIndicator>
       child: Center(
         child: CustomPaint(
           painter: _CircularProgressIndicatorPainter(
-            valueColor:
-                widget._getValueColor(context, defaultColor: defaults.color),
+            valueColor: widget._getValueColor(
+              context,
+              defaultColor: defaults.color,
+            ),
             value: widget.value, // may be null
             headValue:
                 headValue, // remaining arguments are ignored if widget.value is not null
@@ -514,8 +522,8 @@ class _RefreshProgressIndicatorState extends _CircularProgressIndicatorState {
     curve: const Interval(0.1, _strokeHeadInterval),
   );
 
-  late final Animatable<double> _additionalRotationTween =
-      TweenSequence<double>(
+  late final Animatable<double>
+  _additionalRotationTween = TweenSequence<double>(
     <TweenSequenceItem<double>>[
       // Makes arrow to expand a little bit earlier, to match the Android look.
       TweenSequenceItem<double>(
@@ -549,7 +557,8 @@ class _RefreshProgressIndicatorState extends _CircularProgressIndicatorState {
     final value = widget.value;
     if (value != null) {
       _lastValue = value;
-      _controller.value = _convertTween.transform(value) *
+      _controller.value =
+          _convertTween.transform(value) *
           (1333 / 2 / _kIndeterminateCircularDuration);
     }
     return _buildAnimation();
@@ -564,10 +573,12 @@ class _RefreshProgressIndicatorState extends _CircularProgressIndicatorState {
           context,
           // Lengthen the arc a little
           1.05 *
-              _CircularProgressIndicatorState._strokeHeadTween
-                  .evaluate(_controller),
-          _CircularProgressIndicatorState._strokeTailTween
-              .evaluate(_controller),
+              _CircularProgressIndicatorState._strokeHeadTween.evaluate(
+                _controller,
+              ),
+          _CircularProgressIndicatorState._strokeTailTween.evaluate(
+            _controller,
+          ),
           _CircularProgressIndicatorState._offsetTween.evaluate(_controller),
           _CircularProgressIndicatorState._rotationTween.evaluate(_controller),
         );
@@ -601,17 +612,20 @@ class _RefreshProgressIndicatorState extends _CircularProgressIndicatorState {
 
     final ProgressIndicatorThemeData defaults =
         _CircularProgressIndicatorDefaultsM3Year2023(
-      context,
-      indeterminate: value == null,
-    );
+          context,
+          indeterminate: value == null,
+        );
     final indicatorTheme = ProgressIndicatorTheme.of(context);
-    final backgroundColor = widget.backgroundColor ??
+    final backgroundColor =
+        widget.backgroundColor ??
         indicatorTheme.refreshBackgroundColor ??
         Theme.of(context).canvasColor;
-    final strokeWidth = widget.strokeWidth ??
+    final strokeWidth =
+        widget.strokeWidth ??
         indicatorTheme.strokeWidth ??
         defaults.strokeWidth!;
-    final strokeAlign = widget.strokeAlign ??
+    final strokeAlign =
+        widget.strokeAlign ??
         indicatorTheme.strokeAlign ??
         defaults.strokeAlign!;
     final strokeCap = widget.strokeCap ?? indicatorTheme.strokeCap;

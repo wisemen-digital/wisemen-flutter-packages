@@ -97,17 +97,21 @@ class CustomImageCarousel extends StatefulWidget {
   static const double _closeIconSize = 24;
   static const Color _closeIconColor = Colors.white;
   static const Color _closeIconBackgroundColor = Colors.black;
-  static const Duration _closeIconAnimationDuration =
-      Duration(milliseconds: 100);
+  static const Duration _closeIconAnimationDuration = Duration(
+    milliseconds: 100,
+  );
   static const Offset _closeIconSlideOffset = Offset(0, -.5);
   static const double _closeIconSidePadding = 24;
-  static const Duration _pageIndiatorAnimationDuration =
-      Duration(milliseconds: 100);
+  static const Duration _pageIndiatorAnimationDuration = Duration(
+    milliseconds: 100,
+  );
   static const Offset _pageIndicatorSlideOffset = Offset(0, .5);
-  static final BorderRadius _pageIndicatorBorderRadius =
-      BorderRadius.circular(12);
-  static const EdgeInsets _pageIndicatorPadding =
-      EdgeInsets.symmetric(horizontal: 6);
+  static final BorderRadius _pageIndicatorBorderRadius = BorderRadius.circular(
+    12,
+  );
+  static const EdgeInsets _pageIndicatorPadding = EdgeInsets.symmetric(
+    horizontal: 6,
+  );
   static const Color _pageIndicatorBackgroundColor = Colors.black;
 
   @override
@@ -147,9 +151,11 @@ class _CustomImageCarouselState extends State<CustomImageCarousel> {
                 }
               });
             },
-            direction: widget.dismissDirection ??
+            direction:
+                widget.dismissDirection ??
                 DismissiblePageDismissDirection.multi,
-            dismissThresholds: widget.dismissThresholds ??
+            dismissThresholds:
+                widget.dismissThresholds ??
                 {
                   DismissiblePageDismissDirection.multi: .2,
                 },
@@ -179,7 +185,8 @@ class _CustomImageCarouselState extends State<CustomImageCarousel> {
                 color: widget.photoViewBackgroundColor ?? Colors.transparent,
               ),
               builder: (context, index) => PhotoViewGalleryPageOptions(
-                imageProvider: widget.imageProviders?[index] ??
+                imageProvider:
+                    widget.imageProviders?[index] ??
                     CachedNetworkImageProvider(
                       widget.imageUrls![index],
                     ),
@@ -187,7 +194,8 @@ class _CustomImageCarouselState extends State<CustomImageCarousel> {
                 maxScale:
                     PhotoViewComputedScale.covered * (widget.maxScale ?? 2.0),
                 heroAttributes: PhotoViewHeroAttributes(
-                  tag: widget.heroTag ??
+                  tag:
+                      widget.heroTag ??
                       (widget.imageProviders ?? widget.imageUrls)![index]
                           .hashCode,
                 ),
@@ -207,7 +215,8 @@ class _CustomImageCarouselState extends State<CustomImageCarousel> {
                 },
                 errorBuilder: (context, error, stackTrace) => GestureDetector(
                   onTap: () => Navigator.of(context).pop(),
-                  child: widget.errorWidget ??
+                  child:
+                      widget.errorWidget ??
                       const Center(
                         child: Material(
                           type: MaterialType.transparency,
@@ -264,8 +273,9 @@ class _CustomImageCarouselState extends State<CustomImageCarousel> {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding:
-                    const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+                padding: const EdgeInsets.only(
+                  bottom: kBottomNavigationBarHeight,
+                ),
                 child: AnimatedSlide(
                   duration: CustomImageCarousel._pageIndiatorAnimationDuration,
                   offset: isDragging || isZoomed

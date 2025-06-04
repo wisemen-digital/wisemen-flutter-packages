@@ -12,7 +12,7 @@ enum PickerTextAlignment {
   left,
 
   /// Align the text to the right.
-  right;
+  right,
 }
 
 /// A wrapper around the native iOS Picker that uses UIMenu and UIButton

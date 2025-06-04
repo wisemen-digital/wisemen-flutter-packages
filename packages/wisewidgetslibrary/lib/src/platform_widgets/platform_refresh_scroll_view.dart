@@ -42,31 +42,33 @@ class PlatformCustomScrollRefreshIndicator extends PlatformWidget {
       slivers: [
         CupertinoSliverRefreshControl(
           onRefresh: onRefresh,
-          builder: (
-            context,
-            refreshState,
-            pulledExtent,
-            refreshTriggerPullDistance,
-            refreshIndicatorExtent,
-          ) {
-            return Padding(
-              padding: injectOverlap
-                  ? EdgeInsets.only(
-                      top: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context,
-                          ).layoutExtent ??
-                          0,
-                    )
-                  : EdgeInsets.zero,
-              child: CupertinoSliverRefreshControl.buildRefreshIndicator(
+          builder:
+              (
                 context,
                 refreshState,
                 pulledExtent,
                 refreshTriggerPullDistance,
                 refreshIndicatorExtent,
-              ),
-            );
-          },
+              ) {
+                return Padding(
+                  padding: injectOverlap
+                      ? EdgeInsets.only(
+                          top:
+                              NestedScrollView.sliverOverlapAbsorberHandleFor(
+                                context,
+                              ).layoutExtent ??
+                              0,
+                        )
+                      : EdgeInsets.zero,
+                  child: CupertinoSliverRefreshControl.buildRefreshIndicator(
+                    context,
+                    refreshState,
+                    pulledExtent,
+                    refreshTriggerPullDistance,
+                    refreshIndicatorExtent,
+                  ),
+                );
+              },
         ),
         if (injectOverlap)
           SliverPinnedOverlapInjector(
@@ -82,10 +84,10 @@ class PlatformCustomScrollRefreshIndicator extends PlatformWidget {
     return RefreshIndicator(
       displacement: injectOverlap
           ? (NestedScrollView.sliverOverlapAbsorberHandleFor(
-                    context,
-                  ).layoutExtent ??
-                  0) +
-              40
+                      context,
+                    ).layoutExtent ??
+                    0) +
+                40
           : 40, //* standard displacement is 40
       color: indicatorColor,
       backgroundColor: indicatorBackgroundColor,

@@ -28,8 +28,9 @@ void main() {
       activeColor: CupertinoColors.activeBlue,
     );
 
-    final cupertinoSwitch =
-        platformSwitch.createCupertinoWidget(FakeBuildContext());
+    final cupertinoSwitch = platformSwitch.createCupertinoWidget(
+      FakeBuildContext(),
+    );
 
     expect(cupertinoSwitch, isA<CupertinoSwitch>());
     expect(cupertinoSwitch.value, true);
@@ -44,8 +45,9 @@ void main() {
       inactiveColor: Colors.grey,
     );
 
-    final materialSwitch =
-        platformSwitch.createMaterialWidget(FakeBuildContext());
+    final materialSwitch = platformSwitch.createMaterialWidget(
+      FakeBuildContext(),
+    );
 
     expect(materialSwitch, isA<Switch>());
     expect(materialSwitch.value, false);
@@ -53,8 +55,9 @@ void main() {
     expect(materialSwitch.inactiveThumbColor, Colors.grey);
   });
 
-  testWidgets('calls onChanged callback when toggled (Material)',
-      (tester) async {
+  testWidgets('calls onChanged callback when toggled (Material)', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
@@ -72,8 +75,9 @@ void main() {
     verify(() => mockOnChanged.call(value: true)).called(1);
   });
 
-  testWidgets('calls onChanged callback when toggled (Cupertino)',
-      (tester) async {
+  testWidgets('calls onChanged callback when toggled (Cupertino)', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       CupertinoApp(
         home: Scaffold(

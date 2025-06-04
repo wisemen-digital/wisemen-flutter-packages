@@ -36,8 +36,10 @@ class _AnimatedNumbersState extends State<AnimatedNumbers>
   @override
   void initState() {
     super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: widget.duration);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
     _animations = widget.numbers
         .map(
           (factor) => Tween<double>(
@@ -54,13 +56,15 @@ class _AnimatedNumbersState extends State<AnimatedNumbers>
     if (!listEquals(widget.numbers, oldWidget.numbers)) {
       for (var i = 0; i < widget.numbers.length; i++) {
         _animations[i] =
-            Tween<double>(begin: oldWidget.numbers[i], end: widget.numbers[i])
-                .animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeInOut,
-          ),
-        );
+            Tween<double>(
+              begin: oldWidget.numbers[i],
+              end: widget.numbers[i],
+            ).animate(
+              CurvedAnimation(
+                parent: _animationController,
+                curve: Curves.easeInOut,
+              ),
+            );
       }
       _animationController
         ..reset()

@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/src/widgets/animated_numbers.dart';
 
 void main() {
-  testWidgets('AnimatedNumbers animates to new values',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedNumbers animates to new values', (
+    WidgetTester tester,
+  ) async {
     var animatedValues = <double>[0, 0];
 
     await tester.pumpWidget(
@@ -41,8 +42,9 @@ void main() {
     expect(animatedValues, [30.0, 40.0]);
   });
 
-  testWidgets('AnimatedNumbers respects custom duration',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedNumbers respects custom duration', (
+    WidgetTester tester,
+  ) async {
     var animatedValues = <double>[0, 0];
 
     await tester.pumpWidget(
@@ -89,8 +91,9 @@ void main() {
     expect(animatedValues, [30.0, 40.0]);
   });
 
-  testWidgets('AnimatedNumbers updates widget correctly',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedNumbers updates widget correctly', (
+    WidgetTester tester,
+  ) async {
     var animatedValues = <double>[0, 0];
 
     await tester.pumpWidget(

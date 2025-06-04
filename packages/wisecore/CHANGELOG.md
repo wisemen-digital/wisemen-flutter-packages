@@ -1,3 +1,10 @@
+## 2.2.0
+
+- Added mixin `LoadingStreamProvider` for stream providers
+- Added `whenStream` extension as a replacement for riverpod's when
+- Added `isNullOrEmpty` extension for nullable lists
+- Removed `correctEllipsis` extension (Flutter fixed issue that made this necessary)
+
 ## 2.1.0
 
 - Changed alert/error dialogs

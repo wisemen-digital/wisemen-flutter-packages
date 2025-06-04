@@ -13,8 +13,9 @@ class TestDropdownModel implements DropdownModel {
 }
 
 void main() {
-  testWidgets('DropdownModel getString returns correct string',
-      (WidgetTester tester) async {
+  testWidgets('DropdownModel getString returns correct string', (
+    WidgetTester tester,
+  ) async {
     final model = TestDropdownModel();
 
     await tester.pumpWidget(

@@ -20,8 +20,9 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageTransition on Android without currentRoute',
-      (tester) async {
+  testWidgets('Returns PageTransition on Android without currentRoute', (
+    tester,
+  ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
     final route = platformRoute<dynamic>(route: testWidget);
@@ -31,12 +32,15 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageTransition on Android with currentRoute',
-      (tester) async {
+  testWidgets('Returns PageTransition on Android with currentRoute', (
+    tester,
+  ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
-    final route =
-        platformRoute<dynamic>(route: testWidget, currentRoute: currentWidget);
+    final route = platformRoute<dynamic>(
+      route: testWidget,
+      currentRoute: currentWidget,
+    );
     expect(route, isA<PageTransition<dynamic>>());
     expect(
       (route as PageTransition).type,

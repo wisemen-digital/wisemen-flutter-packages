@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wisewidgetslibrary/src/widgets/animated_numbers_mapped.dart';
 
 void main() {
-  testWidgets('AnimatedNumbersMapped animates to new values',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedNumbersMapped animates to new values', (
+    WidgetTester tester,
+  ) async {
     var animatedValues = <String, double>{'a': 0.0, 'b': 0.0};
 
     await tester.pumpWidget(
@@ -45,8 +46,9 @@ void main() {
     expect(animatedValues, {'a': 30.0, 'b': 40.0});
   });
 
-  testWidgets('AnimatedNumbersMapped respects custom duration',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedNumbersMapped respects custom duration', (
+    WidgetTester tester,
+  ) async {
     var animatedValues = <String, double>{'a': 0.0, 'b': 0.0};
 
     await tester.pumpWidget(
@@ -97,8 +99,9 @@ void main() {
     expect(animatedValues, {'a': 30.0, 'b': 40.0});
   });
 
-  testWidgets('AnimatedNumbersMapped updates widget correctly',
-      (WidgetTester tester) async {
+  testWidgets('AnimatedNumbersMapped updates widget correctly', (
+    WidgetTester tester,
+  ) async {
     var animatedValues = <String, double>{'a': 0.0, 'b': 0.0};
 
     await tester.pumpWidget(

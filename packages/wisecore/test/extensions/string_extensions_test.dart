@@ -3,12 +3,6 @@ import 'package:wisecore/src/extensions/extensions.dart';
 
 void main() {
   group('StringExtensions', () {
-    test('correctEllipsis should add zero-width spaces', () {
-      const original = 'test';
-      const expected = 't\u200Be\u200Bs\u200Bt';
-      expect(original.correctEllipsis, expected);
-    });
-
     test('capitalized should capitalize the first letter', () {
       const original = 'hello';
       const expected = 'Hello';

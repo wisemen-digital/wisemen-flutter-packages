@@ -12,8 +12,8 @@ class FullscreenImage extends StatelessWidget {
     required this.child,
     super.key,
     this.errorWidget,
-  })  : imageUrl = null,
-        imagePath = null;
+  }) : imageUrl = null,
+       imagePath = null;
 
   /// Constructor [FullscreenImage.network] for cached network image
   FullscreenImage.network({
@@ -21,8 +21,8 @@ class FullscreenImage extends StatelessWidget {
     required this.child,
     super.key,
     this.errorWidget,
-  })  : imagePath = null,
-        imageAsset = null;
+  }) : imagePath = null,
+       imageAsset = null;
 
   /// Constructor [FullscreenImage.file] for file image
   FullscreenImage.file({
@@ -30,8 +30,8 @@ class FullscreenImage extends StatelessWidget {
     required this.child,
     super.key,
     this.errorWidget,
-  })  : imageUrl = null,
-        imageAsset = null;
+  }) : imageUrl = null,
+       imageAsset = null;
 
   /// Image URL
   final String? imageUrl;
@@ -65,9 +65,9 @@ class FullscreenImage extends StatelessWidget {
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) =>
                     FadeTransition(
-              opacity: animation,
-              child: child,
-            ),
+                      opacity: animation,
+                      child: child,
+                    ),
             pageBuilder: (BuildContext context, _, __) {
               return Scaffold(
                 backgroundColor: Colors.black,
@@ -76,25 +76,26 @@ class FullscreenImage extends StatelessWidget {
                   child: PhotoView(
                     errorBuilder: (context, error, stackTrace) =>
                         GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: errorWidget ??
-                          const Center(
-                            child: Material(
-                              type: MaterialType.transparency,
-                              child: Text(
-                                'Failed to load image',
-                                style: TextStyle(
-                                  color: Colors.white,
+                          onTap: () => Navigator.pop(context),
+                          child:
+                              errorWidget ??
+                              const Center(
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: Text(
+                                    'Failed to load image',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                    ),
+                        ),
                     imageProvider: imageUrl != null
                         ? CachedNetworkImageProvider(imageUrl!)
                         : imagePath != null
-                            ? Image.file(File(imagePath!)).image
-                            : Image.asset(imageAsset!).image,
+                        ? Image.file(File(imagePath!)).image
+                        : Image.asset(imageAsset!).image,
                     onTapUp: (context, details, controllerValue) {
                       Navigator.pop(context);
                     },

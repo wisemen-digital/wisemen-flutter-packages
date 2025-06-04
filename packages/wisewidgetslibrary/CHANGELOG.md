@@ -1,3 +1,10 @@
+## 2.1.0
+
+* `PagedError` type
+* `PaginationMeta` type
+* `InfiniteScrollController` controller for paginated lists
+* `PagedList<T>` and `SliverPagedList<T>` that consume `InfiniteScrollController`
+
 ## 2.0.4
 
 * Added `PlatformButton2` (with the intention of removing current `PlatformButton`)
