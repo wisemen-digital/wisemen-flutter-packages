@@ -8,8 +8,9 @@ PODS:
     - Flutter
   - flutter_platform_alert (0.0.1):
     - Flutter
-  - flutter_secure_storage (6.0.0):
+  - flutter_secure_storage_darwin (10.0.0):
     - Flutter
+    - FlutterMacOS
   - objective_c (0.0.1):
     - Flutter
   - onesignal_flutter (5.3.0):
@@ -112,7 +113,7 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - flutter_platform_alert (from `.symlinks/plugins/flutter_platform_alert/ios`)
-  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
+  - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
   - objective_c (from `.symlinks/plugins/objective_c/ios`)
   - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
@@ -141,8 +142,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_native_splash/ios"
   flutter_platform_alert:
     :path: ".symlinks/plugins/flutter_platform_alert/ios"
-  flutter_secure_storage:
-    :path: ".symlinks/plugins/flutter_secure_storage/ios"
+  flutter_secure_storage_darwin:
+    :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
   objective_c:
     :path: ".symlinks/plugins/objective_c/ios"
   onesignal_flutter:
@@ -168,25 +169,25 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   atlantis-proxyman: 0b9dbc99302a941f6553ee74ed30e0b7c23673db
-  cupertino_http: 947a233f40cfea55167a49f2facc18434ea117ba
+  cupertino_http: 94ac07f5ff090b8effa6c5e2c47871d48ab7c86c
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: df59bb2e1421aa0282cb2e95618af4dcb0c56c29
-  flutter_platform_alert: 6a241c90f3cc350d0286deeefee9f52bee957019
-  flutter_secure_storage: d33dac7ae2ea08509be337e775f6b59f1ff45f12
-  objective_c: 77e887b5ba1827970907e10e832eec1683f3431d
-  onesignal_flutter: c4442bab25faaf3a3ab77cdcd33f4507f10b05b8
+  flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
+  flutter_platform_alert: 857a54f416124cc4fb913c1130d345b67ab8f6bb
+  flutter_secure_storage_darwin: ce237a8775b39723566dc72571190a3769d70468
+  objective_c: 89e720c30d716b036faf9c9684022048eee1eee2
+  onesignal_flutter: 6596144e1f08756a2c402047366c867a62b0f6f1
   OneSignalXCFramework: 1a3b28dfbff23aabce585796d23c1bef37772774
-  package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
-  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
+  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
-  sentry_flutter: 6a134f9d381e49f22ea25a67736cf0cf4d02ec9c
-  share_plus: 8b6f8b3447e494cca5317c8c3073de39b3600d1f
-  shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  sqflite_darwin: 5a7236e3b501866c1c9befc6771dfd73ffb8702d
+  sentry_flutter: 942017adbe00f963061cb11ec260414a990b7a42
+  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
+  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
+  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
   sqlite3: fc1400008a9b3525f5914ed715a5d1af0b8f4983
-  sqlite3_flutter_libs: 487032b9008b28de37c72a3aa66849ef3745f3e6
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
-  wisewidgetslibrary: d2092c1450694961a34bb4369e6af3beedac0afe
+  sqlite3_flutter_libs: f6acaa2172e6bb3e2e70c771661905080e8ebcf2
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
+  wisewidgetslibrary: c7c13a0916800ffa2e65a38b3b17aecc4a331ba2
 
 PODFILE CHECKSUM: 80894b2c9c8bc0d5ecb416aee06ce09771d3093e
 
