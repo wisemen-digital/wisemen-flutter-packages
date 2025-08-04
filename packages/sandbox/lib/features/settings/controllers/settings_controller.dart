@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sandbox/features/settings/settings_feature.dart';
 
-import '../../shared/shared.dart';
-
 part 'settings_controller.g.dart';
 
 @riverpod
@@ -13,7 +11,7 @@ class SettingsController extends _$SettingsController {
     listenSelf(
       (previous, next) {
         if (next.hasError && !next.isLoading) {
-          ErrorUtils.showAsyncError(next);
+          // ErrorUtils.showAsyncError(next);
         }
       },
     );
