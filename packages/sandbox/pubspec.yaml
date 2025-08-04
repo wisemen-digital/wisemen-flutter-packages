@@ -15,8 +15,8 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # Wisemen
-  wisecore:
-    path: ../wisecore
+  # wisecore:
+  #   path: ../wisecore
   wisewidgetslibrary:
     path: ../wisewidgetslibrary
   wise_nav_bar:
@@ -49,6 +49,10 @@ dependencies:
 
   # Logging
   talker_flutter: ^4.3.4
+
+  flutter_platform_alert:
+    path: ../../../wise-packages/flutter_platform_alert
+  shared_preferences: ^2.5.3
 
 dev_dependencies: 
   # Code generation

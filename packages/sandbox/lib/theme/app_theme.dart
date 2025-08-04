@@ -358,7 +358,8 @@ class AppTheme {
         ),
       ),
     ),
-    dialogTheme: const DialogThemeData(backgroundColor: Color(0xff121313)), tabBarTheme: const TabBarThemeData(indicatorColor: Color(0xffffffff)),
+    dialogTheme: const DialogThemeData(backgroundColor: Color(0xff121313)),
+    tabBarTheme: const TabBarThemeData(indicatorColor: Color(0xffffffff)),
   );
 
   //light theme
@@ -708,6 +709,7 @@ class AppTheme {
         ),
       ),
     ),
-    dialogTheme: const DialogThemeData(backgroundColor: Color(0xffe2e5ed)), tabBarTheme: const TabBarThemeData(indicatorColor: Color(0xffffffff)),
+    dialogTheme: const DialogThemeData(backgroundColor: Color(0xffe2e5ed)),
+    tabBarTheme: const TabBarThemeData(indicatorColor: Color(0xffffffff)),
   );
 }

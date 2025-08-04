@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
-import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../settings.dart';
@@ -48,12 +47,7 @@ class OtherSettingsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Text(
-                        ref
-                                .watch(themeModeStreamProvider)
-                                .value
-                                ?.name
-                                .capitalized ??
-                            '',
+                        ref.watch(themeModeStreamProvider).value?.name ?? '',
                       ),
                     ],
                   ),

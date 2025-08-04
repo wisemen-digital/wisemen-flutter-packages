@@ -11,10 +11,11 @@ dependencies:
   # Flutter
   flutter:
     sdk: flutter
-  intl: any
+  intl: ">=0.20.2 <1.0.0"
 
   # Riverpod
   hooks_riverpod: ">=2.0.0 <3.0.0"
+  riverpod: ">=2.0.0 <3.0.0"
 
   # Networking
   dio: ">=5.0.0 <6.0.0"
@@ -27,8 +28,8 @@ dependencies:
   flutter_platform_alert: ^0.5.3
 
   # platform interfaces
-  plugin_platform_interface: any
-  url_launcher_platform_interface: any
+  plugin_platform_interface: ">=2.1.8 <3.0.0"
+  url_launcher_platform_interface: ">=2.3.2 <3.0.0"
 
 dev_dependencies:
   # Static analysis & linting
