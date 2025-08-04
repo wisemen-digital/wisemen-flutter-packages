@@ -23,28 +23,47 @@ class DashboardRouter extends StatelessWidget {
           top: false,
           child: Padding(
             padding: padHM,
-            child: PlatformFloatingBottomBar(
-              backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              onTap: tabsRouter.setActiveIndex,
-              currentIndex: tabsRouter.activeIndex,
-              inActiveColor: Theme.of(context).colorScheme.onSecondary,
-              activeColor: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(kToolbarHeight),
-              indicatorType: TabIndicatorType.roundedRectangle,
-              items: [
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Settings',
-                ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  label: 'SettingsV2',
-                ),
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.mic_none),
-                  label: 'Void',
-                ),
-              ],
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(kToolbarHeight),
+                boxShadow: [
+                  BoxShadow(
+                    color: Theme.of(context).colorScheme.shadow,
+                    blurRadius: 24,
+                    spreadRadius: -16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              // elevation: 1,
+              // borderRadius: BorderRadius.circular(100),
+              child: PlatformFloatingBottomBar(
+                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                onTap: tabsRouter.setActiveIndex,
+                currentIndex: tabsRouter.activeIndex,
+                inActiveColor: Theme.of(context).colorScheme.onSecondary,
+                activeColor: Theme.of(context).colorScheme.primary,
+                borderRadius: BorderRadius.circular(kToolbarHeight),
+                indicatorType: TabIndicatorType.roundedRectangle,
+                items: [
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Settings',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Settings',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.settings),
+                    label: 'SettingsV2',
+                  ),
+                  const BottomNavigationBarItem(
+                    icon: Icon(Icons.mic_none),
+                    label: 'Void',
+                  ),
+                ],
+              ).createMaterialWidget(context),
             ),
           ),
         );
