@@ -76,6 +76,8 @@ class PlatformFloatingBottomBar
   @override
   FloatingMaterialBottomBar createMaterialWidget(BuildContext context) =>
       FloatingMaterialBottomBar(
+        // Widget gets clipped for ink responses, clipping messes up elevation
+        elevation: 0,
         items: items,
         onTap: onTap,
         currentIndex: currentIndex,

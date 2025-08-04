@@ -1,6 +1,6 @@
 name: wise_nav_bar
 description: "This package provides implementations of app bars and navigation bars based on the designs and standards used by Wisemen."
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_nav_bar
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_nav_bar
 
