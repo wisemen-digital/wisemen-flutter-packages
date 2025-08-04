@@ -662,30 +662,35 @@ class _FloatingMaterialBottomBarState extends State<FloatingMaterialBottomBar>
 
     return Semantics(
       explicitChildNodes: true,
-      child: _Bar(
-        elevation: widget.elevation ?? bottomTheme.elevation ?? 4.0,
-        shape: widget.shape,
-        color: backgroundColor,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minHeight: kBottomNavigationBarHeight,
-          ),
-          child: CustomPaint(
-            painter: _RadialPainter(
-              circles: _circles.toList(),
-              textDirection: Directionality.of(context),
+      child: ClipPath(
+        clipper: _BorderRadiusClipper(
+          BorderRadius.circular(kBottomNavigationBarHeight),
+        ),
+        child: _Bar(
+          elevation: widget.elevation ?? bottomTheme.elevation ?? 4.0,
+          shape: widget.shape,
+          color: backgroundColor,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(
+              minHeight: kBottomNavigationBarHeight,
             ),
-            child: Material(
-              // Splashes.
-              type: MaterialType.transparency,
-              child: MediaQuery.removePadding(
-                context: context,
-                removeBottom: true,
-                child: DefaultTextStyle.merge(
-                  overflow: TextOverflow.ellipsis,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _createTiles(),
+            child: CustomPaint(
+              painter: _RadialPainter(
+                circles: _circles.toList(),
+                textDirection: Directionality.of(context),
+              ),
+              child: Material(
+                // Splashes.
+                type: MaterialType.transparency,
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeBottom: true,
+                  child: DefaultTextStyle.merge(
+                    overflow: TextOverflow.ellipsis,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: _createTiles(),
+                    ),
                   ),
                 ),
               ),
@@ -832,5 +837,61 @@ class _RadialPainter extends CustomPainter {
         paint,
       );
     }
+  }
+}
+
+class _BorderRadiusClipper extends CustomClipper<Path> {
+  _BorderRadiusClipper(this.borderRadius);
+  final BorderRadius borderRadius;
+
+  @override
+  Path getClip(Size size) {
+    final radiusValue = borderRadius.topRight.x / 2;
+    const heightFixValue = 10.0;
+    final borderStart = Path()
+      ..moveTo(0, size.height / 2)
+      // Top left arc
+      ..quadraticBezierTo(
+        0,
+        0,
+        radiusValue,
+        0,
+      )
+      // Top edge
+      ..lineTo(radiusValue, -heightFixValue)
+      ..lineTo(size.width - radiusValue, -heightFixValue)
+      ..lineTo(size.width - radiusValue, 0)
+      // Top right arc
+      ..quadraticBezierTo(
+        size.width,
+        0,
+        size.width,
+        size.height / 2,
+      )
+      // Bottom right arc
+      ..quadraticBezierTo(
+        size.width,
+        size.height,
+        size.width - radiusValue,
+        size.height,
+      )
+      // Bottom edge
+      ..lineTo(radiusValue, size.height)
+      // Bottom left arc
+      ..quadraticBezierTo(
+        0,
+        size.height,
+        0,
+        size.height / 2,
+      )
+      // Left edge back to start
+      ..close();
+
+    return borderStart;
+  }
+
+  @override
+  bool shouldReclip(_BorderRadiusClipper oldClipper) {
+    return borderRadius != oldClipper.borderRadius;
   }
 }
