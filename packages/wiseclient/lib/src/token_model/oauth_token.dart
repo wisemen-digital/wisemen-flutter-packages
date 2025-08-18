@@ -1,4 +1,6 @@
-import 'package:fresh_dio/fresh_dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
+import '../fresh/fresh_fork.dart';
 
 /// OAuth2Token extended with some factories
 class OAuthToken extends OAuth2Token {
@@ -34,4 +36,7 @@ class OAuthToken extends OAuth2Token {
       scope: map['scope'] != null ? map['scope'] as String : null,
     );
   }
+
+  /// Token expiry DateTime
+  DateTime get expiresAt => JwtDecoder.getExpirationDate(accessToken);
 }

@@ -39,7 +39,7 @@ class PlatformSwitch extends PlatformWidget<CupertinoSwitch, Switch> {
   Switch createMaterialWidget(BuildContext context) => Switch(
     value: value,
     onChanged: onChanged,
-    activeColor: activeColor,
+    activeTrackColor: activeColor,
     inactiveThumbColor: inactiveColor,
     trackOutlineColor: value
         ? null

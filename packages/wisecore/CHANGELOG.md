@@ -1,3 +1,7 @@
+## 2.2.1
+
+- Dependency update
+
 ## 2.2.0
 
 - Added mixin `LoadingStreamProvider` for stream providers

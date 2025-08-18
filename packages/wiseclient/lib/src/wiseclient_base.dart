@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
-import 'package:fresh_dio/fresh_dio.dart';
+
 import 'client/wiseclient_native.dart'
     if (dart.library.html) 'client/wiseclient_web.dart';
 import 'exceptions/exceptions.dart';
+import 'fresh/fresh.dart';
 import 'interceptors/interceptors.dart';
 import 'options.dart';
 import 'secure_token_storage/fresh_secure_token_storage.dart';
@@ -17,6 +18,8 @@ abstract mixin class WiseClient implements Dio {
     bool useNativeAdapter = false,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? interceptors,
+    void Function(Object, StackTrace)? refreshErrorHandler,
+    Duration refreshBuffer = const Duration(minutes: 10),
   }) {
     assert(
       wiseInterceptors.contains(WiseInterceptor.fresh)
@@ -31,6 +34,8 @@ abstract mixin class WiseClient implements Dio {
       useNativeAdapter: useNativeAdapter,
       interceptorsToAdd: interceptorsToAdd,
       replacementInterceptors: interceptors,
+      refreshErrorHandler: refreshErrorHandler,
+      refreshBuffer: refreshBuffer,
     );
   }
 
@@ -41,6 +46,8 @@ abstract mixin class WiseClient implements Dio {
   Fresh<OAuth2Token> fresh = Fresh.oAuth2(
     tokenStorage: FreshSecureTokenStorage(),
     refreshToken: (_, __) async => const OAuth2Token(accessToken: ''),
+    refreshErrorHandler: (_, __) {},
+    refreshBuffer: const Duration(minutes: 10),
   );
 
   /// [CancelToken] for wise requests

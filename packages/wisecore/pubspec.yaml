@@ -1,6 +1,6 @@
 name: wisecore
 description: A flutter core project used by Wisemen. Comes with a bunch of generally useful extensions and functions.
-version: 2.2.0
+version: 2.2.1
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
 
@@ -30,11 +30,12 @@ dependencies:
   plugin_platform_interface: any
   url_launcher_platform_interface: any
 
+  riverpod: any
 dev_dependencies:
   # Static analysis & linting
   flutter_lints: ^5.0.0
-  custom_lint: ^0.7.0
-  dependency_validator: ^4.1.2
+  custom_lint: ^0.8.0
+  dependency_validator: ^5.0.2
 
   # Testing
   test: ^1.25.15
