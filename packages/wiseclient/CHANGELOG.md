@@ -1,3 +1,9 @@
+## 1.1.3-prerelease.0
+
+- Make sure refresh calls have better support for concurrent calls
+- Refresh tokens before call occurs
+- Add 10 second hard cache before doing new refresh call
+
 ## 1.1.2-prerelease.0
 
 - Updated Flutter Secure storage

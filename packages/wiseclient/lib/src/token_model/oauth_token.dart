@@ -1,4 +1,6 @@
-import 'package:fresh_dio/fresh_dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+
+import '../fresh/fresh_fork.dart';
 
 /// OAuth2Token extended with some factories
 class OAuthToken extends OAuth2Token {
@@ -17,8 +19,7 @@ class OAuthToken extends OAuth2Token {
       accessToken: map['access_token'] as String,
       tokenType: map['token_type'] != null ? map['token_type'] as String : null,
       expiresIn: map['expires_in'] != null ? map['expires_in'] as int : null,
-      refreshToken:
-          map['refresh_token'] != null ? map['refresh_token'] as String : null,
+      refreshToken: map['refresh_token'] != null ? map['refresh_token'] as String : null,
       scope: map['scope'] != null ? map['scope'] as String : null,
     );
   }
@@ -29,9 +30,11 @@ class OAuthToken extends OAuth2Token {
       accessToken: map['accessToken'] as String,
       tokenType: map['tokenType'] != null ? map['tokenType'] as String : null,
       expiresIn: map['expiresIn'] != null ? map['expiresIn'] as int : null,
-      refreshToken:
-          map['refreshToken'] != null ? map['refreshToken'] as String : null,
+      refreshToken: map['refreshToken'] != null ? map['refreshToken'] as String : null,
       scope: map['scope'] != null ? map['scope'] as String : null,
     );
   }
+
+  /// Token expiry DateTime
+  DateTime get expiresAt => JwtDecoder.getExpirationDate(accessToken);
 }

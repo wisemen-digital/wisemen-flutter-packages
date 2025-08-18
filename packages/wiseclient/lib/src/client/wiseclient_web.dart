@@ -1,8 +1,8 @@
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:wiseclient/src/wiseclient_base.dart';
 
+import '../fresh/fresh.dart';
 import '../interceptors/interceptors.dart';
 
 /// Creates a [WiseClient] for native
@@ -33,8 +33,7 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
     Iterable<Interceptor>? replacementInterceptors,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)
-      ..withCredentials = true;
+    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)..withCredentials = true;
     if (replacementInterceptors != null) {
       interceptors.addAll(replacementInterceptors);
     } else {

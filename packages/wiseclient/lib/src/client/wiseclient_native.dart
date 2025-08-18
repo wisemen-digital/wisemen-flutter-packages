@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:wiseclient/wiseclient.dart';
+
+import '../fresh/fresh.dart';
 
 /// Creates a [WiseClient] for native
 WiseClient createClient({
@@ -34,8 +35,7 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     Iterable<Interceptor>? replacementInterceptors,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter =
-        useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
+    httpClientAdapter = useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
     if (replacementInterceptors != null) {
       interceptors.addAll(
         replacementInterceptors,
