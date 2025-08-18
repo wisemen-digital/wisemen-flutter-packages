@@ -13,6 +13,7 @@ WiseClient createClient({
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
+  void Function(Object, StackTrace)? refreshErrorHandler,
 }) =>
     WebWiseClient(
       wiseInterceptors: wiseInterceptors,
@@ -20,6 +21,7 @@ WiseClient createClient({
       refreshFunction: refreshFunction,
       interceptorsToAdd: interceptorsToAdd,
       replacementInterceptors: replacementInterceptors,
+      refreshErrorHandler: refreshErrorHandler ?? (_, __) {},
     );
 
 /// Implements [DioForBrowser] for native
@@ -27,18 +29,25 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
   /// Creates a [WebWiseClient] instance
   WebWiseClient({
     required Iterable<WiseInterceptor> wiseInterceptors,
+    required void Function(Object, StackTrace) refreshErrorHandler,
     Future<OAuth2Token> Function(OAuth2Token?, Dio)? refreshFunction,
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
+    Duration refreshBuffer = const Duration(minutes: 10),
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)..withCredentials = true;
+    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)
+      ..withCredentials = true;
     if (replacementInterceptors != null) {
       interceptors.addAll(replacementInterceptors);
     } else {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
-        fresh = getFreshInterceptor(refreshFunction: refreshFunction!);
+        fresh = getFreshInterceptor(
+          refreshFunction: refreshFunction!,
+          refreshErrorHandler: refreshErrorHandler,
+          refreshBuffer: refreshBuffer,
+        );
       }
       interceptors.addAll(
         [

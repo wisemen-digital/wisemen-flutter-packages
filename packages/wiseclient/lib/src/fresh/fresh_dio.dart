@@ -29,11 +29,15 @@ class Fresh<T> extends Interceptor with FreshMixin<T> {
     required TokenHeaderBuilder<T> tokenHeader,
     required TokenStorage<T> tokenStorage,
     required RefreshToken<T> refreshToken,
+    required void Function(Object, StackTrace) refreshErrorHandler,
+    required Duration refreshBuffer,
     ShouldRefresh? shouldRefresh,
     Dio? httpClient,
   })  : _refreshToken = refreshToken,
         _tokenHeader = tokenHeader,
         _shouldRefresh = shouldRefresh ?? _defaultShouldRefresh,
+        _refreshErrorHandler = refreshErrorHandler,
+        _refreshBuffer = refreshBuffer,
         _httpClient = httpClient ?? Dio() {
     this.tokenStorage = tokenStorage;
   }
@@ -52,6 +56,8 @@ class Fresh<T> extends Interceptor with FreshMixin<T> {
   static Fresh<T> oAuth2<T extends OAuth2Token>({
     required TokenStorage<T> tokenStorage,
     required RefreshToken<T> refreshToken,
+    required void Function(Object, StackTrace) refreshErrorHandler,
+    required Duration refreshBuffer,
     ShouldRefresh? shouldRefresh,
     Dio? httpClient,
     TokenHeaderBuilder<T>? tokenHeader,
@@ -60,6 +66,8 @@ class Fresh<T> extends Interceptor with FreshMixin<T> {
       refreshToken: refreshToken,
       tokenStorage: tokenStorage,
       shouldRefresh: shouldRefresh,
+      refreshBuffer: refreshBuffer,
+      refreshErrorHandler: refreshErrorHandler,
       httpClient: httpClient,
       tokenHeader: tokenHeader ??
           (token) {
@@ -74,6 +82,8 @@ class Fresh<T> extends Interceptor with FreshMixin<T> {
   final TokenHeaderBuilder<T> _tokenHeader;
   final ShouldRefresh _shouldRefresh;
   final RefreshToken<T> _refreshToken;
+  final void Function(Object, StackTrace) _refreshErrorHandler;
+  final Duration _refreshBuffer;
 
   @override
   Future<dynamic> onRequest(
@@ -107,14 +117,17 @@ Example:
     if (currentToken is OAuthToken) {
       try {
         final oAuthToken = currentToken as OAuthToken;
-        if (oAuthToken.expiresAt.isAfter(DateTime.now().add(const Duration(minutes: -10)))) {
+        if (DateTime.now().add(_refreshBuffer).isAfter(oAuthToken.expiresAt)) {
           currentToken = await _refreshToken(await token, _httpClient);
           await setToken(currentToken);
         }
-        // ignore: empty_catches
-      } catch (e) {}
+      } catch (e, s) {
+        _refreshErrorHandler(e, s);
+      }
     }
-    final headers = currentToken != null ? _tokenHeader(currentToken) : const <String, String>{};
+    final headers = currentToken != null
+        ? _tokenHeader(currentToken)
+        : const <String, String>{};
     options.headers.addAll(headers);
     handler.next(options);
   }
@@ -141,7 +154,10 @@ Example:
     ErrorInterceptorHandler handler,
   ) async {
     final response = err.response;
-    if (response == null || await token == null || err.error is RevokeTokenException || !_shouldRefresh(response)) {
+    if (response == null ||
+        await token == null ||
+        err.error is RevokeTokenException ||
+        !_shouldRefresh(response)) {
       return handler.next(err);
     }
     try {
@@ -163,6 +179,8 @@ Example:
         error: error,
         response: response,
       );
+    } catch (e, s) {
+      _refreshErrorHandler(e, s);
     }
 
     await setToken(refreshedToken);
@@ -180,11 +198,13 @@ Example:
         sendTimeout: response.requestOptions.sendTimeout,
         receiveTimeout: response.requestOptions.receiveTimeout,
         extra: response.requestOptions.extra,
-        headers: response.requestOptions.headers..addAll(_tokenHeader(refreshedToken)),
+        headers: response.requestOptions.headers
+          ..addAll(_tokenHeader(refreshedToken)),
         responseType: response.requestOptions.responseType,
         contentType: response.requestOptions.contentType,
         validateStatus: response.requestOptions.validateStatus,
-        receiveDataWhenStatusError: response.requestOptions.receiveDataWhenStatusError,
+        receiveDataWhenStatusError:
+            response.requestOptions.receiveDataWhenStatusError,
         followRedirects: response.requestOptions.followRedirects,
         maxRedirects: response.requestOptions.maxRedirects,
         requestEncoder: response.requestOptions.requestEncoder,

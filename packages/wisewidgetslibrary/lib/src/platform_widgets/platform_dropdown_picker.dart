@@ -133,7 +133,7 @@ class PlatformDropdownPicker<T extends DropdownModel> extends PlatformWidget {
                 controller.open();
               }
             },
-            child: this.child,
+            child: child,
           ),
         );
       },
