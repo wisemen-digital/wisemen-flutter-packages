@@ -1,15 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:sandbox/app.dart';
 import 'package:sandbox/feature_init_util.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wisecore/wisecore.dart';
+// import 'package:wisecore/wisecore.dart';
 
 import 'flavors.dart';
 
@@ -31,32 +28,28 @@ Future<void> initMain(Flavor flavor) async {
 
   await clearSecureStorage();
 
-  ProviderContainer container = await initCore(
-    appName: F.appName,
-    flavorName: F.name,
-  );
-  if (!F.onesignalKey.isNullOrEmpty) {
-    try {
-      OneSignal.initialize(F.onesignalKey!);
-    } catch (e) {
-      debugPrint(e.toString());
-    }
-  }
-  if (!kDebugMode && !F.sentryDsn.isNullOrEmpty) {
-    await SentryFlutter.init(
-      (options) {
-        options
-          ..dsn = F.sentryDsn
-          ..environment = F.name.toLowerCase();
-      },
-    );
-  }
+  // if (!F.onesignalKey.isNullOrEmpty) {
+  //   try {
+  //     OneSignal.initialize(F.onesignalKey!);
+  //   } catch (e) {
+  //     debugPrint(e.toString());
+  //   }
+  // }
+  // if (!kDebugMode && !F.sentryDsn.isNullOrEmpty) {
+  //   await SentryFlutter.init(
+  //     (options) {
+  //       options
+  //         ..dsn = F.sentryDsn
+  //         ..environment = F.name.toLowerCase();
+  //     },
+  //   );
+  // }
 
   initFeatures();
 
   runApp(
     UncontrolledProviderScope(
-      container: container,
+      container: ProviderContainer(),
       child: const App(),
     ),
   );

@@ -17,7 +17,7 @@ class PlatformButton2 extends PlatformWidget {
     this.isDisabled = false,
     this.isLoading = false,
     this.disabledColor,
-    this.size = const Size.fromHeight(48),
+    this.size,
     this.borderRadius = const BorderRadius.all(
       Radius.circular(10),
     ),
@@ -25,6 +25,7 @@ class PlatformButton2 extends PlatformWidget {
       horizontal: 8,
     ),
     this.borderSide,
+    this.semanticsLabel,
   });
 
   /// Constructor for [PlatformButton2] with text
@@ -39,7 +40,7 @@ class PlatformButton2 extends PlatformWidget {
     this.isDisabled = false,
     this.isLoading = false,
     this.disabledColor,
-    this.size = const Size.fromHeight(48),
+    this.size,
     this.borderRadius = const BorderRadius.all(
       Radius.circular(10),
     ),
@@ -47,13 +48,15 @@ class PlatformButton2 extends PlatformWidget {
       horizontal: 8,
     ),
     this.borderSide,
+    String? semanticsLabel,
   }) : child = Text(
          text,
          style: textStyle,
-       );
+       ),
+       semanticsLabel = semanticsLabel ?? text;
 
   /// Button size
-  final Size size;
+  final Size? size;
 
   /// Button child
   final Widget child;
@@ -88,28 +91,37 @@ class PlatformButton2 extends PlatformWidget {
   /// Button padding
   final EdgeInsetsGeometry padding;
 
+  /// Semantics label for the button
+  final String? semanticsLabel;
+
   /// Checks if button can be pressed
   bool get canBePressed => !isDisabled && !isLoading;
 
   @override
   Widget createCupertinoWidget(BuildContext context) {
-    return SizedBox.fromSize(
-      size: size,
-      child: CupertinoButton(
-        padding: padding,
-        onPressed: canBePressed ? onPressed : null,
-        disabledColor: disabledColor ?? color.withValues(alpha: .4),
-        color: color,
-        borderRadius: borderRadius,
-        child: Center(
-          child: AnimatedSwitcher(
-            duration: Durations.short1,
-            child: isLoading
-                ? loadingChild ??
-                      CupertinoActivityIndicator(
-                        color: foregroundColor,
-                      )
-                : child,
+    return Semantics(
+      label: semanticsLabel,
+      button: true,
+      enabled: canBePressed,
+      child: SizedBox.fromSize(
+        size: size,
+        child: CupertinoButton(
+          minimumSize: size,
+          padding: padding,
+          onPressed: canBePressed ? onPressed : null,
+          disabledColor: disabledColor ?? color.withValues(alpha: .4),
+          color: color,
+          borderRadius: borderRadius,
+          child: Center(
+            child: AnimatedSwitcher(
+              duration: Durations.short1,
+              child: isLoading
+                  ? loadingChild ??
+                        CupertinoActivityIndicator(
+                          color: foregroundColor,
+                        )
+                  : child,
+            ),
           ),
         ),
       ),
@@ -118,28 +130,34 @@ class PlatformButton2 extends PlatformWidget {
 
   @override
   Widget createMaterialWidget(BuildContext context) {
-    return SizedBox.fromSize(
-      size: size,
-      child: MaterialButton(
-        height: size.height,
-        onPressed: canBePressed ? onPressed : null,
-        disabledColor: disabledColor,
-        color: color,
-        padding: padding,
-        shape: RoundedRectangleBorder(
-          borderRadius: borderRadius,
-          side: borderSide ?? BorderSide.none,
-        ),
-        elevation: 0,
-        child: Center(
-          child: AnimatedSwitcher(
-            duration: Durations.short1,
-            child: isLoading
-                ? loadingChild ??
-                      CircularProgressIndicator(
-                        color: foregroundColor,
-                      )
-                : child,
+    return Semantics(
+      label: semanticsLabel,
+      button: true,
+      enabled: canBePressed,
+      child: SizedBox.fromSize(
+        size: size,
+        child: MaterialButton(
+          height: size?.height,
+          minWidth: size?.width,
+          onPressed: canBePressed ? onPressed : null,
+          disabledColor: disabledColor,
+          color: color,
+          padding: padding,
+          shape: RoundedRectangleBorder(
+            borderRadius: borderRadius,
+            side: borderSide ?? BorderSide.none,
+          ),
+          elevation: 0,
+          child: Center(
+            child: AnimatedSwitcher(
+              duration: Durations.short1,
+              child: isLoading
+                  ? loadingChild ??
+                        CircularProgressIndicator(
+                          color: foregroundColor,
+                        )
+                  : child,
+            ),
           ),
         ),
       ),
