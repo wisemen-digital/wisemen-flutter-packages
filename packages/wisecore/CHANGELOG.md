@@ -1,3 +1,7 @@
+## 2.2.2
+
+- Unstuck riverpod dependency
+
 ## 2.2.1
 
 - Dependency update

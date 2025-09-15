@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wisecore/src/services/core_service.dart';
 import 'package:wisecore/src/services/shared_preferences.dart';
