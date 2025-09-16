@@ -1,3 +1,7 @@
+## 2.2.4
+
+- [bugfix] LoadingStreamProvider > $StreamNotifier
+
 ## 2.2.3
 
 - Updated riverpod to >=3.0.0
