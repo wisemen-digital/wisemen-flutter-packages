@@ -1,6 +1,6 @@
 name: wise_zitadel_login
 description: A Zitadel login package to be used with wisemen backends
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_zitadel_login
 repository: https://github.com/wisemen-digital/flutter-networking-client/packages/wise_zitadel_login
 
@@ -18,7 +18,7 @@ dependencies:
 
   auto_route: '>=10.0.1 <11.0.0'
   wise_nav_bar: '>=0.0.1 <1.0.0'
-  hooks_riverpod: '>=2.6.1 <3.0.0'
+  hooks_riverpod: '>=3.0.0 <4.0.0'
   wiseclient: '>=1.1.1 <2.0.0'
   wisewidgetslibrary: '>=2.0.4 <3.0.0'
   flutter_svg: '>=2.1.0 <3.0.0'

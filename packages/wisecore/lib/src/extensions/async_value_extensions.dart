@@ -5,7 +5,7 @@ import 'package:riverpod/riverpod.dart';
 import '../utils/loading_stream_provider.dart';
 
 /// Extensions for [AsyncValue] to simplify handling its states.
-extension AsyncValueExtensions<T> on LoadingStreamProvider<T> {
+extension AsyncValueExtensions<T> on AsyncValue<T> {
   /// Performs an action based on the state of the [AsyncValue]. mixed with
   /// [LoadingStreamProvider] to handle loading states correctly.
   ///
@@ -32,7 +32,7 @@ extension AsyncValueExtensions<T> on LoadingStreamProvider<T> {
   ///   with the previous state.
   ///
   /// - [skipError] (false by default) decides whether to invoke [data] instead
-  ///   of [error] if a previous [state] is available.
+  ///   of [error] if a previous state is available.
   /// {@endtemplate}
   Widget whenStream({
     required Widget Function(T data) data,
@@ -42,14 +42,24 @@ extension AsyncValueExtensions<T> on LoadingStreamProvider<T> {
     bool skipLoadingOnRefresh = true,
     bool skipError = false,
   }) {
+    if (this is! LoadingStreamProvider) {
+      return when(
+        data: data,
+        error: error,
+        loading: loading,
+        skipLoadingOnReload: skipLoadingOnReload,
+        skipLoadingOnRefresh: skipLoadingOnRefresh,
+        skipError: skipError,
+      );
+    }
     return ValueListenableBuilder(
-      valueListenable: initialLoading,
-      builder: (_, isLoading, __) {
-        if (state.isLoading || isLoading) {
+      valueListenable: (this as LoadingStreamProvider).initialLoading,
+      builder: (_, initLoading, __) {
+        if (isLoading || initLoading) {
           bool skip;
-          if (state.isRefreshing) {
+          if (isRefreshing) {
             skip = skipLoadingOnRefresh;
-          } else if (state.isReloading) {
+          } else if (isReloading) {
             skip = skipLoadingOnReload;
           } else {
             skip = false;
@@ -57,11 +67,11 @@ extension AsyncValueExtensions<T> on LoadingStreamProvider<T> {
           if (!skip) return loading();
         }
 
-        if (state.hasError && (!state.hasValue || !skipError)) {
-          return error(state.error!, state.stackTrace!);
+        if (hasError && (!hasValue || !skipError)) {
+          return error(error, stackTrace!);
         }
 
-        return data(state.requireValue);
+        return data(requireValue);
       },
     );
   }

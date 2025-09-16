@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 // ignore: depend_on_referenced_packages, implementation_imports
-import 'package:riverpod/src/async_notifier.dart';
+import 'package:riverpod/src/providers/async_notifier.dart';
 
 import '../extensions/list_extension.dart';
 
 /// Mixin for loading stream data in a provider with correct loading
 // ignore: invalid_use_of_internal_member
-mixin LoadingStreamProvider<T> on AsyncNotifierBase<T> {
+mixin LoadingStreamProvider<T> on $AsyncNotifier<T> {
   /// [refreshFunction] refreshes stream data and writes to wherever the stream is read from
   Future<void> refreshFunction();
 
