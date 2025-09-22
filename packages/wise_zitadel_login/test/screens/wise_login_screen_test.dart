@@ -4,7 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
-import 'package:wisewidgetslibrary/wisewidgetslibrary.dart' show PlatformButton2;
+import 'package:wisewidgetslibrary/wisewidgetslibrary.dart'
+    show PlatformButton2;
 
 import '../utils/fake_ref.dart';
 import '../utils/mock_auth.dart';
@@ -25,7 +26,8 @@ void main() {
     loginCalls = 0;
   });
 
-  testWidgets('WiseLoginScreen with builder has buttons and builder content', (tester) async {
+  testWidgets('WiseLoginScreen with builder has buttons and builder content',
+      (tester) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
