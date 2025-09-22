@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:riverpod/misc.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wisecore/src/services/core_service.dart';
@@ -27,7 +28,7 @@ void main() {
 
       expect(
         () => container.read(sharedPreferencesProvider),
-        throwsA(isA<UnimplementedError>()),
+        throwsA(isA<ProviderException>()),
       );
     });
 
