@@ -5,7 +5,7 @@ import 'package:riverpod/riverpod.dart';
 import '../utils/loading_stream_provider.dart';
 
 /// Extensions for [AsyncValue] to simplify handling its states.
-extension AsyncValueExtensions<T> on AsyncValue<T> {
+extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
   /// Performs an action based on the state of the [AsyncValue]. mixed with
   /// [LoadingStreamProvider] to handle loading states correctly.
   ///
@@ -69,6 +69,10 @@ extension AsyncValueExtensions<T> on AsyncValue<T> {
 
         if (hasError && (!hasValue || !skipError)) {
           return error(error, stackTrace!);
+        }
+
+        if (requireValue == null) {
+          return loading();
         }
 
         return data(requireValue);

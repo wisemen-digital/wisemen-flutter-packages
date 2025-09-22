@@ -1,3 +1,7 @@
+## 2.2.5
+
+- Fixed the whenStream extension on `AsyncValue<T>`
+
 ## 2.2.4
 
 - [bugfix] LoadingStreamProvider > $StreamNotifier
