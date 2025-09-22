@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:hooks_riverpod/misc.dart';
 import 'package:test/test.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
 
@@ -16,7 +17,7 @@ void main() {
     final container = ProviderContainer();
     expect(
       () => container.read(wiseZitadelOptionsProvider),
-      throwsA(isA<UnimplementedError>()),
+      throwsA(isA<ProviderException>()),
     );
   });
 }
