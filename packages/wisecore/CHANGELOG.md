@@ -1,3 +1,19 @@
+## 2.2.5
+
+- Fixed the whenStream extension on `AsyncValue<T>`
+
+## 2.2.4
+
+- [bugfix] LoadingStreamProvider > $StreamNotifier
+
+## 2.2.3
+
+- Updated riverpod to >=3.0.0
+
+## 2.2.2
+
+- Unstuck riverpod dependency
+
 ## 2.2.1
 
 - Dependency update

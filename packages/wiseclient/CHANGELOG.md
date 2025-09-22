@@ -1,3 +1,7 @@
+## 1.1.3-prerelease.1
+
+- Updated dependencies
+
 ## 1.1.3-prerelease.0
 
 - Make sure refresh calls have better support for concurrent calls
