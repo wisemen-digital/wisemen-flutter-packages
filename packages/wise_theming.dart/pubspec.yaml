@@ -1,0 +1,28 @@
+name: wise_theming
+description: A flutter theming package used by wisemen.
+version: 1.0.0
+homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_theming
+repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_theming
+
+environment:
+  sdk: ">=3.6.0 <4.0.0"
+resolution: workspace
+dependencies:
+  # Flutter
+  flutter:
+    sdk: flutter
+  intl: any
+
+dev_dependencies:
+  # Static analysis & linting
+  flutter_lints: ^5.0.0
+  custom_lint: ^0.8.0
+  dependency_validator: ^5.0.2
+
+  # Testing
+  test: ^1.25.15
+
+  # Mocking
+  mocktail: ^1.0.4
+  flutter_test:
+    sdk: flutter
