@@ -3,6 +3,10 @@ import 'dart:ui';
 import '../colors/colors.dart';
 import 'primitive_colors.dart';
 
+/// Default implementation of [BorderColors] for light mode.
+///
+/// Provides a complete set of border colors based on [PrimitiveColors] gray
+/// and brand color scales, optimized for light backgrounds.
 class LightBorderColors implements BorderColors {
   @override
   Color get primary => PrimitiveColors.gray[300]!;
@@ -24,6 +28,10 @@ class LightBorderColors implements BorderColors {
   Color get errorSubtle => PrimitiveColors.error[300]!;
 }
 
+/// Default implementation of [BorderColors] for dark mode.
+///
+/// Provides a complete set of border colors based on [PrimitiveColors] dark gray
+/// and brand color scales, optimized for dark backgrounds.
 class DarkBorderColors implements BorderColors {
   @override
   Color get primary => PrimitiveColors.grayDark[700]!;

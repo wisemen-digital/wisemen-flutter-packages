@@ -3,6 +3,10 @@ import 'dart:ui';
 import '../colors/colors.dart';
 import 'primitive_colors.dart';
 
+/// Default implementation of [UtilityColors] for dark mode.
+///
+/// Provides a set of vibrant utility colors for special purposes like
+/// badges, status indicators, and categorization in dark mode.
 class DarkUtilityColors implements UtilityColors {
   @override
   Color get teal => HexColor.fromString('#2ED3B7');
@@ -32,6 +36,10 @@ class DarkUtilityColors implements UtilityColors {
   Color get yellow => HexColor.fromString('#FBBF24');
 }
 
+/// Default implementation of [UtilityColors] for light mode.
+///
+/// Provides a set of vibrant utility colors for special purposes like
+/// badges, status indicators, and categorization in light mode.
 class LightUtilityColors implements UtilityColors {
   @override
   Color get teal => HexColor.fromString('#2ED3B7');

@@ -3,6 +3,11 @@ import 'dart:ui';
 import '../colors/colors.dart';
 import 'primitive_colors.dart';
 
+/// Default implementation of [ForegroundColors] for light mode.
+///
+/// Provides a complete set of foreground colors for icons and UI elements,
+/// based on [PrimitiveColors] with various intensity levels (primary through senary)
+/// and semantic states, all optimized for light backgrounds.
 class LightForegroundColors implements ForegroundColors {
   @override
   Color get primary => PrimitiveColors.gray[900]!;
@@ -50,6 +55,11 @@ class LightForegroundColors implements ForegroundColors {
   Color get successSecondary => PrimitiveColors.success[500]!;
 }
 
+/// Default implementation of [ForegroundColors] for dark mode.
+///
+/// Provides a complete set of foreground colors for icons and UI elements,
+/// based on [PrimitiveColors] with various intensity levels (primary through senary)
+/// and semantic states, all optimized for dark backgrounds.
 class DarkForegroundColors implements ForegroundColors {
   @override
   Color get primary => PrimitiveColors.white;

@@ -3,6 +3,11 @@ import 'dart:ui';
 import '../colors/colors.dart';
 import 'primitive_colors.dart';
 
+/// Default implementation of [BackgroundColors] for light mode.
+///
+/// Provides a comprehensive set of background colors based on [PrimitiveColors],
+/// including surfaces, overlays, and various semantic states (hover, disabled, etc.),
+/// all optimized for light mode.
 class LightBackgroundColors implements BackgroundColors {
   @override
   Color get primary => PrimitiveColors.white;
@@ -68,6 +73,11 @@ class LightBackgroundColors implements BackgroundColors {
   Color get successSolid => PrimitiveColors.success[600]!;
 }
 
+/// Default implementation of [BackgroundColors] for dark mode.
+///
+/// Provides a comprehensive set of background colors based on [PrimitiveColors],
+/// including surfaces, overlays, and various semantic states (hover, disabled, etc.),
+/// all optimized for dark mode.
 class DarkBackgroundColors implements BackgroundColors {
   @override
   Color get primary => PrimitiveColors.grayDark[950]!;

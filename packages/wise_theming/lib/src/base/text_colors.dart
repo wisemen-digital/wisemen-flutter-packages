@@ -3,6 +3,11 @@ import 'dart:ui';
 import '../colors/colors.dart';
 import 'primitive_colors.dart';
 
+/// Default implementation of [TextColors] for light mode.
+///
+/// Provides a complete set of text colors based on [PrimitiveColors],
+/// including various text hierarchies (primary, secondary, tertiary, etc.),
+/// brand colors, and semantic states, all optimized for light backgrounds.
 class LightTextColors implements TextColors {
   @override
   Color get primary => PrimitiveColors.gray[900]!;
@@ -46,6 +51,11 @@ class LightTextColors implements TextColors {
   Color get successPrimary => PrimitiveColors.success[600]!;
 }
 
+/// Default implementation of [TextColors] for dark mode.
+///
+/// Provides a complete set of text colors based on [PrimitiveColors],
+/// including various text hierarchies (primary, secondary, tertiary, etc.),
+/// brand colors, and semantic states, all optimized for dark backgrounds.
 class DarkTextColors implements TextColors {
   @override
   Color get primary => PrimitiveColors.grayDark[50]!;
