@@ -60,29 +60,30 @@ class ExampleScreen extends StatelessWidget {
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: theming.supportedThemes.map((theme) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: ElevatedButton(
-                      onPressed: () => _switchTheme(theme.identifier),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            context.wiseTheme.identifier == theme.identifier
-                                ? context.foregroundColors.brandPrimary
-                                : context.backgroundColors.secondary,
-                        foregroundColor:
-                            context.wiseTheme.identifier == theme.identifier
-                                ? context.textColors.primaryOnBrand
-                                : context.textColors.primary,
-                        side: BorderSide(color: context.borderColors.primary),
-                      ),
-                      child: Text(
-                        theme.identifier,
-                        style: context.body,
-                      ),
-                    ),
-                  );
-                }).toList(),
+                children: theming.supportedThemes
+                    .map((theme) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          child: ElevatedButton(
+                            onPressed: () => _switchTheme(theme.identifier),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: context.wiseTheme.identifier ==
+                                      theme.identifier
+                                  ? context.foregroundColors.brandPrimary
+                                  : context.backgroundColors.secondary,
+                              foregroundColor: context.wiseTheme.identifier ==
+                                      theme.identifier
+                                  ? context.textColors.primaryOnBrand
+                                  : context.textColors.primary,
+                              side: BorderSide(
+                                  color: context.borderColors.primary),
+                            ),
+                            child: Text(
+                              theme.identifier,
+                              style: context.body,
+                            ),
+                          ),
+                        ))
+                    .toList(),
               ),
               Text(
                 'Theme Colors:',
@@ -114,6 +115,7 @@ class ExampleScreen extends StatelessWidget {
                       ),
                     ),
                     Row(
+                      spacing: 8,
                       children: [
                         Container(
                           width: 20,
@@ -123,13 +125,12 @@ class ExampleScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                        const SizedBox(width: 8),
                         Text(
                           'Error',
                           style: context.body
                               .copyWith(color: context.textColors.errorPrimary),
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox.shrink(),
                         Container(
                           width: 20,
                           height: 20,
@@ -138,13 +139,12 @@ class ExampleScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                        const SizedBox(width: 8),
                         Text(
                           'Warning',
                           style: context.body.copyWith(
                               color: context.textColors.warningPrimary),
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox.shrink(),
                         Container(
                           width: 20,
                           height: 20,
@@ -153,7 +153,6 @@ class ExampleScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                           ),
                         ),
-                        const SizedBox(width: 8),
                         Text(
                           'Success',
                           style: context.body.copyWith(
