@@ -19,13 +19,30 @@ import 'package:flutter/widgets.dart';
 /// }
 /// ```
 abstract class UtilityColors {
+  /// Teal utility color for badges, tags, or status indicators.
   Color get teal;
+
+  /// Blue utility color for badges, tags, or status indicators.
   Color get blue;
+
+  /// Orange utility color for badges, tags, or status indicators.
   Color get orange;
+
+  /// Pink utility color for badges, tags, or status indicators.
   Color get pink;
+
+  /// Purple utility color for badges, tags, or status indicators.
   Color get purple;
+
+  /// Green utility color for badges, tags, or status indicators.
   Color get green;
+
+  /// Red utility color for badges, tags, or status indicators.
   Color get red;
+
+  /// Yellow utility color for badges, tags, or status indicators.
   Color get yellow;
+
+  /// Indigo utility color for badges, tags, or status indicators.
   Color get indigo;
 }
