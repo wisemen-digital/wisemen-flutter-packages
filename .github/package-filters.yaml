@@ -16,3 +16,6 @@ wisecore:
 wisewidgetslibrary:
   - '.github/**'
   - 'packages/wisewidgetslibrary/**'
+wise_theming:
+  - '.github/**'
+  - 'packages/wise_theming/**'

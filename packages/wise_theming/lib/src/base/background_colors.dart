@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import '../colors/colors.dart';
 import 'primitive_colors.dart';
 
@@ -8,137 +6,153 @@ import 'primitive_colors.dart';
 /// Provides a comprehensive set of background colors based on [PrimitiveColors],
 /// including surfaces, overlays, and various semantic states (hover, disabled, etc.),
 /// all optimized for light mode.
-class LightBackgroundColors implements BackgroundColors {
-  @override
-  Color get primary => PrimitiveColors.white;
-  @override
-  Color get primaryAlt => PrimitiveColors.white;
-  @override
-  Color get primaryHover => PrimitiveColors.gray[50]!;
-  @override
-  Color get primarySolid => PrimitiveColors.gray[950]!;
-  @override
-  Color get secondary => PrimitiveColors.gray[50]!;
-  @override
-  Color get secondaryAlt => PrimitiveColors.gray[50]!;
-  @override
-  Color get secondaryHover => PrimitiveColors.gray[100]!;
-  @override
-  Color get secondarySubtle => PrimitiveColors.gray[25]!;
-  @override
-  Color get secondarySolid => PrimitiveColors.gray[600]!;
-  @override
-  Color get tertiary => PrimitiveColors.gray[100]!;
-  @override
-  Color get quaternary => PrimitiveColors.gray[200]!;
-  @override
-  Color get active => PrimitiveColors.gray[50]!;
-  @override
-  Color get disabled => PrimitiveColors.gray[100]!;
-  @override
-  Color get disabledSubtle => PrimitiveColors.gray[50]!;
-  @override
-  Color get overlay => PrimitiveColors.gray[950]!;
-  @override
-  Color get brandPrimary => PrimitiveColors.brand[50]!;
-  @override
-  Color get brandPrimaryAlt => PrimitiveColors.brand[50]!;
-  @override
-  Color get brandSecondary => PrimitiveColors.brand[100]!;
-  @override
-  Color get brandSolid => PrimitiveColors.brand[600]!;
-  @override
-  Color get brandSolidHover => PrimitiveColors.brand[700]!;
-  @override
-  Color get brandSection => PrimitiveColors.brand[800]!;
-  @override
-  Color get brandSectionSubtle => PrimitiveColors.brand[700]!;
-  @override
-  Color get errorPrimary => PrimitiveColors.error[50]!;
-  @override
-  Color get errorSecondary => PrimitiveColors.error[100]!;
-  @override
-  Color get errorSolid => PrimitiveColors.error[600]!;
-  @override
-  Color get warningPrimary => PrimitiveColors.warning[50]!;
-  @override
-  Color get warningSecondary => PrimitiveColors.warning[100]!;
-  @override
-  Color get warningSolid => PrimitiveColors.warning[600]!;
-  @override
-  Color get successPrimary => PrimitiveColors.success[50]!;
-  @override
-  Color get successSecondary => PrimitiveColors.success[100]!;
-  @override
-  Color get successSolid => PrimitiveColors.success[600]!;
-}
+final lightBackgroundColors = BackgroundColors(
+  primary: PrimitiveColors.white,
+  primaryAlt: PrimitiveColors.white,
+  primaryHover: PrimitiveColors.gray[50]!,
+  primarySolid: PrimitiveColors.gray[950]!,
+  secondary: PrimitiveColors.gray[50]!,
+  secondaryAlt: PrimitiveColors.gray[50]!,
+  secondaryHover: PrimitiveColors.gray[100]!,
+  secondarySubtle: PrimitiveColors.gray[25]!,
+  secondarySolid: PrimitiveColors.gray[600]!,
+  tertiary: PrimitiveColors.gray[100]!,
+  quaternary: PrimitiveColors.gray[200]!,
+  active: PrimitiveColors.gray[50]!,
+  disabled: PrimitiveColors.gray[100]!,
+  disabledSubtle: PrimitiveColors.gray[50]!,
+  overlay: PrimitiveColors.gray[950]!,
+  brandPrimary: PrimitiveColors.brand[50]!,
+  brandPrimaryAlt: PrimitiveColors.brand[50]!,
+  brandSecondary: PrimitiveColors.brand[100]!,
+  brandSolid: PrimitiveColors.brand[600]!,
+  brandSolidHover: PrimitiveColors.brand[700]!,
+  brandSection: PrimitiveColors.brand[800]!,
+  brandSectionSubtle: PrimitiveColors.brand[700]!,
+  errorPrimary: PrimitiveColors.error[50]!,
+  errorSecondary: PrimitiveColors.error[100]!,
+  errorSolid: PrimitiveColors.error[600]!,
+  warningPrimary: PrimitiveColors.warning[50]!,
+  warningSecondary: PrimitiveColors.warning[100]!,
+  warningSolid: PrimitiveColors.warning[600]!,
+  successPrimary: PrimitiveColors.success[50]!,
+  successSecondary: PrimitiveColors.success[100]!,
+  successSolid: PrimitiveColors.success[600]!,
+);
 
 /// Default implementation of [BackgroundColors] for dark mode.
 ///
 /// Provides a comprehensive set of background colors based on [PrimitiveColors],
 /// including surfaces, overlays, and various semantic states (hover, disabled, etc.),
 /// all optimized for dark mode.
-class DarkBackgroundColors implements BackgroundColors {
-  @override
-  Color get primary => PrimitiveColors.grayDark[950]!;
-  @override
-  Color get primaryAlt => PrimitiveColors.grayDark[900]!;
-  @override
-  Color get primaryHover => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get primarySolid => PrimitiveColors.grayDark[900]!;
-  @override
-  Color get secondary => PrimitiveColors.grayDark[900]!;
-  @override
-  Color get secondaryAlt => PrimitiveColors.grayDark[950]!;
-  @override
-  Color get secondaryHover => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get secondarySubtle => PrimitiveColors.grayDark[600]!;
-  @override
-  Color get secondarySolid => PrimitiveColors.grayDark[600]!;
-  @override
-  Color get tertiary => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get quaternary => PrimitiveColors.grayDark[700]!;
-  @override
-  Color get active => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get disabled => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get disabledSubtle => PrimitiveColors.grayDark[900]!;
-  @override
-  Color get overlay => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get brandPrimary => PrimitiveColors.brand[500]!;
-  @override
-  Color get brandPrimaryAlt => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get brandSecondary => PrimitiveColors.brand[600]!;
-  @override
-  Color get brandSolid => PrimitiveColors.brand[600]!;
-  @override
-  Color get brandSolidHover => PrimitiveColors.brand[500]!;
-  @override
-  Color get brandSection => PrimitiveColors.grayDark[800]!;
-  @override
-  Color get brandSectionSubtle => PrimitiveColors.grayDark[950]!;
-  @override
-  Color get errorPrimary => PrimitiveColors.error[500]!;
-  @override
-  Color get errorSecondary => PrimitiveColors.error[600]!;
-  @override
-  Color get errorSolid => PrimitiveColors.error[600]!;
-  @override
-  Color get warningPrimary => PrimitiveColors.warning[500]!;
-  @override
-  Color get warningSecondary => PrimitiveColors.warning[600]!;
-  @override
-  Color get warningSolid => PrimitiveColors.warning[600]!;
-  @override
-  Color get successPrimary => PrimitiveColors.success[500]!;
-  @override
-  Color get successSecondary => PrimitiveColors.success[600]!;
-  @override
-  Color get successSolid => PrimitiveColors.success[600]!;
-}
+final darkBackgroundColors = BackgroundColors(
+  primary: PrimitiveColors.grayDark[950]!,
+  primaryAlt: PrimitiveColors.grayDark[900]!,
+  primaryHover: PrimitiveColors.grayDark[800]!,
+  primarySolid: PrimitiveColors.grayDark[900]!,
+  secondary: PrimitiveColors.grayDark[900]!,
+  secondaryAlt: PrimitiveColors.grayDark[950]!,
+  secondaryHover: PrimitiveColors.grayDark[800]!,
+  secondarySubtle: PrimitiveColors.grayDark[600]!,
+  secondarySolid: PrimitiveColors.grayDark[600]!,
+  tertiary: PrimitiveColors.grayDark[800]!,
+  quaternary: PrimitiveColors.grayDark[700]!,
+  active: PrimitiveColors.grayDark[800]!,
+  disabled: PrimitiveColors.grayDark[800]!,
+  disabledSubtle: PrimitiveColors.grayDark[900]!,
+  overlay: PrimitiveColors.grayDark[800]!,
+  brandPrimary: PrimitiveColors.brand[500]!,
+  brandPrimaryAlt: PrimitiveColors.grayDark[800]!,
+  brandSecondary: PrimitiveColors.brand[600]!,
+  brandSolid: PrimitiveColors.brand[600]!,
+  brandSolidHover: PrimitiveColors.brand[500]!,
+  brandSection: PrimitiveColors.grayDark[800]!,
+  brandSectionSubtle: PrimitiveColors.grayDark[950]!,
+  errorPrimary: PrimitiveColors.error[500]!,
+  errorSecondary: PrimitiveColors.error[600]!,
+  errorSolid: PrimitiveColors.error[600]!,
+  warningPrimary: PrimitiveColors.warning[500]!,
+  warningSecondary: PrimitiveColors.warning[600]!,
+  warningSolid: PrimitiveColors.warning[600]!,
+  successPrimary: PrimitiveColors.success[500]!,
+  successSecondary: PrimitiveColors.success[600]!,
+  successSolid: PrimitiveColors.success[600]!,
+);
+
+/// High contrast implementation of [BackgroundColors] for light mode.
+///
+/// Provides enhanced contrast colors for better accessibility, using more
+/// distinct background colors based on [PrimitiveColors], with increased
+/// contrast ratios between surfaces and text for improved readability.
+final highContrastLightBackgroundColors = BackgroundColors(
+  primary: PrimitiveColors.white,
+  primaryAlt: PrimitiveColors.white,
+  primaryHover: PrimitiveColors.gray[25]!,
+  primarySolid: PrimitiveColors.black,
+  secondary: PrimitiveColors.gray[25]!,
+  secondaryAlt: PrimitiveColors.gray[25]!,
+  secondaryHover: PrimitiveColors.gray[50]!,
+  secondarySubtle: PrimitiveColors.white,
+  secondarySolid: PrimitiveColors.gray[800]!,
+  tertiary: PrimitiveColors.gray[50]!,
+  quaternary: PrimitiveColors.gray[100]!,
+  active: PrimitiveColors.gray[25]!,
+  disabled: PrimitiveColors.gray[200]!,
+  disabledSubtle: PrimitiveColors.gray[100]!,
+  overlay: PrimitiveColors.black,
+  brandPrimary: PrimitiveColors.brand[25]!,
+  brandPrimaryAlt: PrimitiveColors.brand[25]!,
+  brandSecondary: PrimitiveColors.brand[50]!,
+  brandSolid: PrimitiveColors.brand[700]!,
+  brandSolidHover: PrimitiveColors.brand[800]!,
+  brandSection: PrimitiveColors.brand[900]!,
+  brandSectionSubtle: PrimitiveColors.brand[800]!,
+  errorPrimary: PrimitiveColors.error[25]!,
+  errorSecondary: PrimitiveColors.error[50]!,
+  errorSolid: PrimitiveColors.error[700]!,
+  warningPrimary: PrimitiveColors.warning[25]!,
+  warningSecondary: PrimitiveColors.warning[50]!,
+  warningSolid: PrimitiveColors.warning[700]!,
+  successPrimary: PrimitiveColors.success[25]!,
+  successSecondary: PrimitiveColors.success[50]!,
+  successSolid: PrimitiveColors.success[700]!,
+);
+
+/// High contrast implementation of [BackgroundColors] for dark mode.
+///
+/// Provides enhanced contrast colors for better accessibility in dark mode,
+/// using more distinct background colors based on [PrimitiveColors], with
+/// increased contrast ratios and darker backgrounds for improved readability.
+final highContrastDarkBackgroundColors = BackgroundColors(
+  primary: PrimitiveColors.black,
+  primaryAlt: PrimitiveColors.grayDark[950]!,
+  primaryHover: PrimitiveColors.grayDark[900]!,
+  primarySolid: PrimitiveColors.white,
+  secondary: PrimitiveColors.grayDark[950]!,
+  secondaryAlt: PrimitiveColors.black,
+  secondaryHover: PrimitiveColors.grayDark[800]!,
+  secondarySubtle: PrimitiveColors.grayDark[900]!,
+  secondarySolid: PrimitiveColors.grayDark[300]!,
+  tertiary: PrimitiveColors.grayDark[900]!,
+  quaternary: PrimitiveColors.grayDark[800]!,
+  active: PrimitiveColors.grayDark[900]!,
+  disabled: PrimitiveColors.grayDark[900]!,
+  disabledSubtle: PrimitiveColors.grayDark[950]!,
+  overlay: PrimitiveColors.grayDark[700]!,
+  brandPrimary: PrimitiveColors.brand[400]!,
+  brandPrimaryAlt: PrimitiveColors.grayDark[900]!,
+  brandSecondary: PrimitiveColors.brand[500]!,
+  brandSolid: PrimitiveColors.brand[500]!,
+  brandSolidHover: PrimitiveColors.brand[400]!,
+  brandSection: PrimitiveColors.grayDark[900]!,
+  brandSectionSubtle: PrimitiveColors.black,
+  errorPrimary: PrimitiveColors.error[400]!,
+  errorSecondary: PrimitiveColors.error[500]!,
+  errorSolid: PrimitiveColors.error[500]!,
+  warningPrimary: PrimitiveColors.warning[400]!,
+  warningSecondary: PrimitiveColors.warning[500]!,
+  warningSolid: PrimitiveColors.warning[500]!,
+  successPrimary: PrimitiveColors.success[400]!,
+  successSecondary: PrimitiveColors.success[500]!,
+  successSolid: PrimitiveColors.success[500]!,
+);

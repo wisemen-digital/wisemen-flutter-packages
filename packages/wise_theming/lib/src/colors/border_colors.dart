@@ -1,48 +1,72 @@
 import 'dart:ui';
 
-/// Abstract base class defining all border colors used throughout the application.
-///
-/// Implement this class to provide a complete set of border colors for either
-/// light or dark mode. Border colors are used for outlines, dividers, and
-/// container boundaries.
-///
-/// Example implementation:
-/// ```dart
-/// class MyLightBorderColors extends BorderColors {
-///   @override
-///   Color get primary => const Color(0xFFE0E0E0);
-///
-///   @override
-///   Color get secondary => const Color(0xFFF0F0F0);
-///
-///   // ... implement all other colors
-/// }
-/// ```
-abstract class BorderColors {
-  /// Primary border color for main dividers and outlines.
-  Color get primary;
+/// [BorderColors] that holds colors used for borders throughout the app.
+/// Use border color variables to manage all stroke colors in your designs across light and dark modes.
+class BorderColors {
+  /// Creates an instance of [BorderColors].
+  const BorderColors({
+    required this.primary,
+    required this.secondary,
+    required this.tertiary,
+    required this.disabled,
+    required this.disabledSubtle,
+    required this.brand,
+    required this.brandAlt,
+    required this.error,
+    required this.errorSubtle,
+  });
 
-  /// Secondary border color for subtle separators.
-  Color get secondary;
+  /// High contrast border color for prominent elements.
+  /// Used for components such as input fields, button groups, and checkboxes that need clear definition.
+  final Color primary;
 
-  /// Tertiary border color for minimal emphasis borders.
-  Color get tertiary;
+  /// Medium contrast border color for standard elements.
+  /// This is the most commonly used border color and is the default for most components
+  /// such as file uploaders, cards like tables, and content dividers.
+  final Color secondary;
 
-  /// Border color for disabled elements.
-  Color get disabled;
+  /// Low contrast border color for subtle elements.
+  /// Useful for very subtle dividers and borders such as line and bar chart axis dividers.
+  final Color tertiary;
 
-  /// Subtle border color for disabled elements.
-  Color get disabledSubtle;
+  /// Default disabled border color for inactive elements.
+  /// Used for disabled states in components such as input fields and checkboxes.
+  final Color disabled;
 
-  /// Brand border color for branded elements.
-  Color get brand;
+  /// Subtle disabled border color with reduced emphasis.
+  /// A more subtle (lower contrast) alternative for disabled borders such as disabled buttons.
+  final Color disabledSubtle;
 
-  /// Alternative brand border color for variation.
-  Color get brandAlt;
+  /// Default brand border color for branded elements.
+  /// Useful for active states in components such as input fields with brand focus states.
+  final Color brand;
 
-  /// Border color for error states and validation.
-  Color get error;
+  /// Alternative brand border color that adapts to theme.
+  /// A brand border color that switches to gray when in dark mode.
+  /// Useful for components such as brand-style variants of banners and footers.
+  final Color brandAlt;
 
-  /// Subtle border color for error states.
-  Color get errorSubtle;
+  /// Default error semantic border color for error states.
+  /// Used for error states in components such as input fields and file uploaders.
+  final Color error;
+
+  /// Subtle error border color with reduced emphasis.
+  /// A more subtle (lower contrast) alternative for error state semantic borders
+  /// such as error state input fields.
+  final Color errorSubtle;
+
+  /// Linearly interpolates between two [BorderColors] themes.
+  static BorderColors lerp(BorderColors a, BorderColors b, double t) {
+    return BorderColors(
+      primary: Color.lerp(a.primary, b.primary, t)!,
+      secondary: Color.lerp(a.secondary, b.secondary, t)!,
+      tertiary: Color.lerp(a.tertiary, b.tertiary, t)!,
+      disabled: Color.lerp(a.disabled, b.disabled, t)!,
+      disabledSubtle: Color.lerp(a.disabledSubtle, b.disabledSubtle, t)!,
+      brand: Color.lerp(a.brand, b.brand, t)!,
+      brandAlt: Color.lerp(a.brandAlt, b.brandAlt, t)!,
+      error: Color.lerp(a.error, b.error, t)!,
+      errorSubtle: Color.lerp(a.errorSubtle, b.errorSubtle, t)!,
+    );
+  }
 }

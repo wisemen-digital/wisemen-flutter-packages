@@ -1,87 +1,148 @@
 import 'dart:ui';
 
-/// Abstract base class defining all foreground colors used throughout the application.
-///
-/// Implement this class to provide a complete set of foreground colors for either
-/// light or dark mode. Foreground colors are typically used for icons, interactive
-/// elements, and decorative UI components.
-///
-/// Example implementation:
-/// ```dart
-/// class MyLightForegroundColors extends ForegroundColors {
-///   @override
-///   Color get primary => const Color(0xFF000000);
-///
-///   @override
-///   Color get secondary => const Color(0xFF888888);
-///
-///   // ... implement all other colors
-/// }
-/// ```
-abstract class ForegroundColors {
-  /// Primary foreground color for icons and main UI elements.
-  Color get primary;
+/// [ForegroundColors] that holds colors used for non-text foreground elements throughout the app.
+/// Use foreground color variables to manage all non-text foreground elements in your designs across light and dark modes.
+class ForegroundColors {
+  /// Creates an instance of [ForegroundColors].
+  const ForegroundColors({
+    required this.primary,
+    required this.secondary,
+    required this.secondaryHover,
+    required this.tertiary,
+    required this.tertiaryHover,
+    required this.quaternary,
+    required this.quaternaryHover,
+    required this.quinary,
+    required this.quinaryHover,
+    required this.senary,
+    required this.white,
+    required this.disabled,
+    required this.disabledSubtle,
+    required this.brandPrimary,
+    required this.brandPrimaryAlt,
+    required this.brandSecondary,
+    required this.errorPrimary,
+    required this.errorSecondary,
+    required this.warningPrimary,
+    required this.warningSecondary,
+    required this.successPrimary,
+    required this.successSecondary,
+  });
 
-  /// Secondary foreground color for less prominent icons and elements.
-  Color get secondary;
+  /// Highest contrast non-text foreground color for prominent elements.
+  /// Used for the most important non-text foreground elements such as icons that need maximum visibility.
+  final Color primary;
 
-  /// Secondary foreground color in hover state.
-  Color get secondaryHover;
+  /// High contrast non-text foreground color for secondary elements.
+  /// Used for important non-text foreground elements such as icons that need strong visibility.
+  final Color secondary;
 
-  /// Tertiary foreground color for subtle UI elements.
-  Color get tertiary;
+  /// Secondary foreground color on hover state.
+  /// Applied when interactive secondary foreground elements are hovered over.
+  final Color secondaryHover;
 
-  /// Tertiary foreground color in hover state.
-  Color get tertiaryHover;
+  /// Medium contrast non-text foreground color for tertiary elements.
+  /// Used for supporting non-text foreground elements such as icons with moderate emphasis.
+  final Color tertiary;
 
-  /// Quaternary foreground color for de-emphasized elements.
-  Color get quaternary;
+  /// Tertiary foreground color on hover state.
+  /// Applied when interactive tertiary foreground elements are hovered over.
+  final Color tertiaryHover;
 
-  /// Quaternary foreground color in hover state.
-  Color get quaternaryHover;
+  /// Medium-low contrast non-text foreground color for quaternary elements.
+  /// Used for less prominent non-text foreground elements such as icons with reduced emphasis.
+  final Color quaternary;
 
-  /// Quinary foreground color for minimal emphasis.
-  Color get quinary;
+  /// Quaternary foreground color on hover state.
+  /// Applied when interactive quaternary foreground elements are hovered over.
+  final Color quaternaryHover;
 
-  /// Quinary foreground color in hover state.
-  Color get quinaryHover;
+  /// Low contrast non-text foreground color for quinary elements.
+  /// Used for subtle non-text foreground elements such as help icons that need minimal emphasis.
+  final Color quinary;
 
-  /// Senary foreground color for extremely subtle elements.
-  Color get senary;
+  /// Quinary foreground color on hover state.
+  /// Applied when interactive quinary foreground elements like help icons are hovered over.
+  final Color quinaryHover;
 
-  /// White foreground color for use on dark backgrounds.
-  Color get white;
+  /// Lowest contrast non-text foreground color for senary elements.
+  /// Used very sparingly for the most subtle non-text foreground elements such as breadcrumb divider icons and vector map elements.
+  final Color senary;
 
-  /// Foreground color for disabled elements.
-  Color get disabled;
+  /// Pure white foreground color for elements that are always white.
+  /// Used for foreground elements that remain white regardless of the current theme mode.
+  final Color white;
 
-  /// Subtle foreground color for disabled elements.
-  Color get disabledSubtle;
+  /// Default disabled foreground color for inactive elements.
+  /// Used for non-text foreground elements such as icons in disabled button group buttons and input dropdown menu items.
+  final Color disabled;
 
-  /// Primary brand foreground color.
-  Color get brandPrimary;
+  /// Subtle disabled foreground color with reduced emphasis.
+  /// A more subtle (lower contrast) alternative for non-text disabled foreground elements such as disabled active checkboxes and tag checkboxes.
+  final Color disabledSubtle;
 
-  /// Alternative primary brand foreground color.
-  Color get brandPrimaryAlt;
+  /// Primary brand foreground color for brand elements.
+  /// Used for primary brand color non-text foreground elements such as featured icons and progress bars.
+  final Color brandPrimary;
 
-  /// Secondary brand foreground color.
-  Color get brandSecondary;
+  /// Alternative brand foreground color that adapts to theme.
+  /// An alternative for primary brand color non-text foreground elements that switches to gray when in dark mode such as active horizontal tabs.
+  final Color brandPrimaryAlt;
 
-  /// Primary error foreground color for error icons.
-  Color get errorPrimary;
+  /// Secondary brand foreground color for supporting brand elements.
+  /// Used for secondary brand color non-text foreground elements such as accents and arrows in marketing site sections like hero header sections.
+  final Color brandSecondary;
 
-  /// Secondary error foreground color.
-  Color get errorSecondary;
+  /// Primary error semantic foreground color for error states.
+  /// Used for primary error state color for non-text foreground elements such as featured icons.
+  final Color errorPrimary;
 
-  /// Primary warning foreground color for warning icons.
-  Color get warningPrimary;
+  /// Secondary error semantic foreground color for supporting error states.
+  /// Used for secondary error state color for non-text foreground elements such as icons in error state input fields and negative metrics item charts and icons.
+  final Color errorSecondary;
 
-  /// Secondary warning foreground color.
-  Color get warningSecondary;
+  /// Primary warning semantic foreground color for warning states.
+  /// Used for primary warning state color for non-text foreground elements such as featured icons.
+  final Color warningPrimary;
 
-  /// Primary success foreground color for success icons.
-  Color get successPrimary;
+  /// Secondary warning semantic foreground color for supporting warning states.
+  /// Used for secondary warning state color for non-text foreground elements.
+  final Color warningSecondary;
 
-  /// Secondary success foreground color.
-  Color get successSecondary;
+  /// Primary success semantic foreground color for success states.
+  /// Used for primary success state color for non-text foreground elements such as featured icons.
+  final Color successPrimary;
+
+  /// Secondary success semantic foreground color for supporting success states.
+  /// Used for secondary success state color for non-text foreground elements such as button dots, avatar online indicator dots, and positive metrics item charts and icons.
+  final Color successSecondary;
+
+  /// Linearly interpolates between two [ForegroundColors] themes.
+  static ForegroundColors lerp(
+      ForegroundColors a, ForegroundColors b, double t) {
+    return ForegroundColors(
+      primary: Color.lerp(a.primary, b.primary, t)!,
+      secondary: Color.lerp(a.secondary, b.secondary, t)!,
+      secondaryHover: Color.lerp(a.secondaryHover, b.secondaryHover, t)!,
+      tertiary: Color.lerp(a.tertiary, b.tertiary, t)!,
+      tertiaryHover: Color.lerp(a.tertiaryHover, b.tertiaryHover, t)!,
+      quaternary: Color.lerp(a.quaternary, b.quaternary, t)!,
+      quaternaryHover: Color.lerp(a.quaternaryHover, b.quaternaryHover, t)!,
+      quinary: Color.lerp(a.quinary, b.quinary, t)!,
+      quinaryHover: Color.lerp(a.quinaryHover, b.quinaryHover, t)!,
+      senary: Color.lerp(a.senary, b.senary, t)!,
+      white: Color.lerp(a.white, b.white, t)!,
+      disabled: Color.lerp(a.disabled, b.disabled, t)!,
+      disabledSubtle: Color.lerp(a.disabledSubtle, b.disabledSubtle, t)!,
+      brandPrimary: Color.lerp(a.brandPrimary, b.brandPrimary, t)!,
+      brandPrimaryAlt: Color.lerp(a.brandPrimaryAlt, b.brandPrimaryAlt, t)!,
+      brandSecondary: Color.lerp(a.brandSecondary, b.brandSecondary, t)!,
+      errorPrimary: Color.lerp(a.errorPrimary, b.errorPrimary, t)!,
+      errorSecondary: Color.lerp(a.errorSecondary, b.errorSecondary, t)!,
+      warningPrimary: Color.lerp(a.warningPrimary, b.warningPrimary, t)!,
+      warningSecondary: Color.lerp(a.warningSecondary, b.warningSecondary, t)!,
+      successPrimary: Color.lerp(a.successPrimary, b.successPrimary, t)!,
+      successSecondary: Color.lerp(a.successSecondary, b.successSecondary, t)!,
+    );
+  }
 }

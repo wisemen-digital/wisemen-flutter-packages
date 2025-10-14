@@ -1,10 +1,50 @@
 import '../theming/theming.dart';
 import 'base.dart';
 
-/// The default base theme provided by wise_theming.
+final _baseLightTheme = WiseTheme(
+  identifier: 'Base theme',
+  themeType: WiseThemeType.light,
+  textColors: lightTextColors,
+  foregroundColors: lightForegroundColors,
+  borderColors: lightBorderColors,
+  backgroundColors: lightBackgroundColors,
+  utilityColors: lightUtilityColors,
+);
+
+final _baseDarkTheme = WiseTheme(
+  identifier: 'Base dark theme',
+  themeType: WiseThemeType.dark,
+  textColors: darkTextColors,
+  foregroundColors: darkForegroundColors,
+  borderColors: darkBorderColors,
+  backgroundColors: darkBackgroundColors,
+  utilityColors: darkUtilityColors,
+);
+
+final _highContrastLightTheme = WiseTheme(
+  identifier: 'High contrast theme',
+  themeType: WiseThemeType.lightContrast,
+  textColors: highContrastLightTextColors,
+  foregroundColors: highContrastLightForegroundColors,
+  borderColors: highContrastLightBorderColors,
+  backgroundColors: highContrastLightBackgroundColors,
+  utilityColors: highContrastLightUtilityColors,
+);
+
+final _highContrastDarkTheme = WiseTheme(
+  identifier: 'High contrast dark theme',
+  themeType: WiseThemeType.darkContrast,
+  textColors: highContrastDarkTextColors,
+  foregroundColors: highContrastDarkForegroundColors,
+  borderColors: highContrastDarkBorderColors,
+  backgroundColors: highContrastDarkBackgroundColors,
+  utilityColors: highContrastDarkUtilityColors,
+);
+
+/// The default base supported themes provided by wise_theming.
 ///
-/// This theme uses the default color implementations ([LightTextColors],
-/// [LightBackgroundColors], etc.) based on [PrimitiveColors]. It serves as:
+/// This theme uses the default color implementations ([lightForegroundColors],
+/// [lightForegroundColors], [lightBorderColors], [lightBackgroundColors], etc.
 /// - A fallback theme when a requested theme identifier is not found
 /// - A reference implementation showing how to construct a [WiseTheme]
 /// - A ready-to-use default theme for quick prototyping
@@ -13,27 +53,14 @@ import 'base.dart';
 ///
 /// Example usage:
 /// ```dart
-/// // Use as fallback
-/// WiseTheming.init(
-///   supportedThemes: [customTheme],
+/// WiseTheming(
+///   supportedThemes: supportedThemes,
 ///   currentTheme: 'custom',
 /// );
-/// // If 'custom' is not found, baseTheme is used automatically
 /// ```
-final baseTheme = WiseTheme(
-  identifier: 'wise_theming_base_theme',
-  lightColors: WiseBrightness(
-    textColors: LightTextColors(),
-    foregroundColors: LightForegroundColors(),
-    borderColors: LightBorderColors(),
-    backgroundColors: LightBackgroundColors(),
-    utilityColors: LightUtilityColors(),
-  ),
-  darkColors: WiseBrightness(
-    textColors: DarkTextColors(),
-    foregroundColors: DarkForegroundColors(),
-    borderColors: DarkBorderColors(),
-    backgroundColors: DarkBackgroundColors(),
-    utilityColors: DarkUtilityColors(),
-  ),
-);
+final List<WiseTheme> supportedThemes = [
+  _baseLightTheme,
+  _baseDarkTheme,
+  _highContrastLightTheme,
+  _highContrastDarkTheme,
+];

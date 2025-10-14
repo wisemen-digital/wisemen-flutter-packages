@@ -4,38 +4,44 @@ import 'package:flutter/material.dart';
 ///
 /// These base text styles define font families, sizes, and weights but do not
 /// include colors. Colors should be applied separately using the theme system.
+/// Loosely based on iOS (SwiftUI) text styles for consistency.
 ///
 /// Example:
 /// ```dart
-/// // Direct usage with color
 /// Text('Hello', style: AppStyles.title.copyWith(color: Colors.black))
 ///
-/// // Or use the context extension for automatic color application (preferred)
-/// Text('Hello', style: context.title)
+/// Text('Hello', style: context.body)
 /// ```
 class AppStyles {
-  /// Large title text style using Albert Sans font at 24px.
-  ///
   /// Typically used for page titles and major headings.
-  static const TextStyle title = TextStyle(fontWeight: FontWeight.w600, fontSize: 24, height: 0);
+  static const TextStyle largeTitle =
+      TextStyle(fontWeight: FontWeight.w600, fontSize: 33, height: 0);
 
-  /// Normal body text style at 14px with regular weight.
-  ///
-  /// The default text style for most content.
-  static const TextStyle normal = TextStyle(fontWeight: FontWeight.w400, fontSize: 14, height: 0);
+  /// Used for page titles and major headings.
+  static const TextStyle title =
+      TextStyle(fontWeight: FontWeight.w400, fontSize: 24, height: 0);
 
-  /// Label text style at 14px with medium weight.
+  /// Headline text style at 14px with medium weight.
   ///
   /// Used for form labels, captions, and secondary headings.
-  static const TextStyle label = TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 0);
+  static const TextStyle headline =
+      TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 0);
 
-  /// Hint text style at 16px with regular weight.
+  /// SubHeadline text style at 11px with regular weight.
   ///
-  /// Used for placeholder text and input hints.
-  static const TextStyle hint = TextStyle(fontWeight: FontWeight.w400, fontSize: 16, height: 0);
+  /// Used for secondary headings and supporting text.
+  static const TextStyle subHeadline =
+      TextStyle(fontWeight: FontWeight.w400, fontSize: 11, height: 0);
 
-  /// Button text style at 16px with semi-bold weight.
+  /// Body text style at 14px with regular weight.
   ///
-  /// Used for button labels and call-to-action text.
-  static const TextStyle button = TextStyle(fontWeight: FontWeight.w600, fontSize: 16, height: 0);
+  /// The default text style for most content.
+  static const TextStyle body =
+      TextStyle(fontWeight: FontWeight.w400, fontSize: 14, height: 0);
+
+  /// Title text style at 14px with semi-bold weight.
+  ///
+  /// Used for text inputs (height 0 in text inputs messes with padding).
+  static const TextStyle input =
+      TextStyle(fontWeight: FontWeight.w400, fontSize: 14);
 }

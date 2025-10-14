@@ -1,5 +1,5 @@
-/// Barrel file for core.
-library wise_theming;
+/// Barrel file for wise_theming.
+library;
 
 export 'src/base/base.dart';
 export 'src/colors/colors.dart';
