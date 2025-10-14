@@ -65,7 +65,6 @@ class WiseTheming {
   ///
   /// The generated theme includes:
   /// - Material and Cupertino theme configurations
-  /// - Light color scheme mapped from [currentTheme.lightColors]
   /// - Optional custom input decoration theme
   ///
   /// [inputDecoration] - Optional input decoration theme to override the default.
@@ -105,7 +104,6 @@ class WiseTheming {
   ///
   /// The generated theme includes:
   /// - Material and Cupertino theme configurations
-  /// - Dark color scheme mapped from [currentTheme.darkColors]
   /// - Optional custom input decoration theme
   ///
   /// [inputDecoration] - Optional input decoration theme to override the default.
@@ -181,6 +179,7 @@ class WiseTheming {
   /// // Switch to a different theme
   /// final theming = WiseTheming.setCurrentTheme('dark-mode');
   /// ```
+  // ignore: prefer_constructors_over_static_methods
   static WiseTheming setCurrentTheme(String themeIdentifier) {
     final themes = supportedThemes.where((t) => t.identifier == themeIdentifier);
 
@@ -227,19 +226,21 @@ extension ColorClassesExtensions on BuildContext {
   bool get _isDark => brightness == Brightness.dark;
 
   /// Returns the appropriate [TextColors] for the current brightness.
-  TextColors get textColor => _isDark ? DarkTextColors() : LightTextColors();
+  TextColors get textColor => _isDark ? WiseTheming.currentTheme.darkColors.textColors : WiseTheming.currentTheme.lightColors.textColors;
 
   /// Returns the appropriate [ForegroundColors] for the current brightness.
-  ForegroundColors get fgColor => _isDark ? DarkForegroundColors() : LightForegroundColors();
+  ForegroundColors get fgColor =>
+      _isDark ? WiseTheming.currentTheme.darkColors.foregroundColors : WiseTheming.currentTheme.lightColors.foregroundColors;
 
   /// Returns the appropriate [BorderColors] for the current brightness.
-  BorderColors get borderColor => _isDark ? DarkBorderColors() : LightBorderColors();
+  BorderColors get borderColor => _isDark ? WiseTheming.currentTheme.darkColors.borderColors : WiseTheming.currentTheme.lightColors.borderColors;
 
   /// Returns the appropriate [BackgroundColors] for the current brightness.
-  BackgroundColors get bgColor => _isDark ? DarkBackgroundColors() : LightBackgroundColors();
+  BackgroundColors get bgColor =>
+      _isDark ? WiseTheming.currentTheme.darkColors.backgroundColors : WiseTheming.currentTheme.lightColors.backgroundColors;
 
   /// Returns the appropriate [UtilityColors] for the current brightness.
-  UtilityColors get utilityColor => _isDark ? DarkUtilityColors() : LightUtilityColors();
+  UtilityColors get utilityColor => _isDark ? WiseTheming.currentTheme.darkColors.utilityColors : WiseTheming.currentTheme.lightColors.utilityColors;
 }
 
 /// Extension on [BuildContext] providing convenient access to pre-styled text styles.
