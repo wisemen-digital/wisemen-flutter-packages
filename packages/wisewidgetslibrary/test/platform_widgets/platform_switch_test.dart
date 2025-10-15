@@ -51,7 +51,7 @@ void main() {
 
     expect(materialSwitch, isA<Switch>());
     expect(materialSwitch.value, false);
-    expect(materialSwitch.activeColor, Colors.blue);
+    expect(materialSwitch.activeTrackColor, Colors.blue);
     expect(materialSwitch.inactiveThumbColor, Colors.grey);
   });
 

@@ -1,3 +1,7 @@
+## 2.1.1
+
+- Dependency update
+
 ## 2.1.0
 
 * `PagedError` type

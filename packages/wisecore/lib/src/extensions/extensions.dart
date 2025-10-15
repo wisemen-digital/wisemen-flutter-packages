@@ -1,3 +1,4 @@
+export 'async_value_extensions.dart';
 export 'color_extensions.dart';
 export 'date_extensions.dart';
 export 'double_extensions.dart';

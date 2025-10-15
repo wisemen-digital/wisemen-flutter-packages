@@ -1,0 +1,220 @@
+import 'package:dio/dio.dart';
+
+import '../token_model/oauth_token.dart';
+import 'fresh.dart';
+
+/// Signature for `shouldRefresh` on [Fresh].
+typedef ShouldRefresh = bool Function(Response<dynamic>? response);
+
+/// Signature for `refreshToken` on [Fresh].
+typedef RefreshToken<T> = Future<T> Function(T? token, Dio httpClient);
+
+/// {@template fresh}
+/// A Dio Interceptor for automatic token refresh.
+/// Requires a concrete implementation of [TokenStorage] and [RefreshToken].
+/// Handles transparently refreshing/caching tokens.
+///
+/// ```dart
+/// dio.interceptors.add(
+///   Fresh<OAuth2Token>(
+///     tokenStorage: InMemoryTokenStorage(),
+///     refreshToken: (token, client) async {...},
+///   ),
+/// );
+/// ```
+/// {@endtemplate}
+class Fresh<T> extends Interceptor with FreshMixin<T> {
+  /// {@macro fresh}
+  Fresh({
+    required TokenHeaderBuilder<T> tokenHeader,
+    required TokenStorage<T> tokenStorage,
+    required RefreshToken<T> refreshToken,
+    required void Function(Object, StackTrace) refreshErrorHandler,
+    required Duration refreshBuffer,
+    ShouldRefresh? shouldRefresh,
+    Dio? httpClient,
+  })  : _refreshToken = refreshToken,
+        _tokenHeader = tokenHeader,
+        _shouldRefresh = shouldRefresh ?? _defaultShouldRefresh,
+        _refreshErrorHandler = refreshErrorHandler,
+        _refreshBuffer = refreshBuffer,
+        _httpClient = httpClient ?? Dio() {
+    this.tokenStorage = tokenStorage;
+  }
+
+  /// A constructor that returns a [Fresh] interceptor that uses an
+  /// [OAuth2Token] token.
+  ///
+  /// ```dart
+  /// dio.interceptors.add(
+  ///   Fresh.oAuth2(
+  ///     tokenStorage: InMemoryTokenStorage<OAuth2Token>(),
+  ///     refreshToken: (token, client) async {...},
+  ///   ),
+  /// );
+  /// ```
+  static Fresh<T> oAuth2<T extends OAuth2Token>({
+    required TokenStorage<T> tokenStorage,
+    required RefreshToken<T> refreshToken,
+    required void Function(Object, StackTrace) refreshErrorHandler,
+    required Duration refreshBuffer,
+    ShouldRefresh? shouldRefresh,
+    Dio? httpClient,
+    TokenHeaderBuilder<T>? tokenHeader,
+  }) {
+    return Fresh<T>(
+      refreshToken: refreshToken,
+      tokenStorage: tokenStorage,
+      shouldRefresh: shouldRefresh,
+      refreshBuffer: refreshBuffer,
+      refreshErrorHandler: refreshErrorHandler,
+      httpClient: httpClient,
+      tokenHeader: tokenHeader ??
+          (token) {
+            return {
+              'authorization': '${token.tokenType} ${token.accessToken}',
+            };
+          },
+    );
+  }
+
+  final Dio _httpClient;
+  final TokenHeaderBuilder<T> _tokenHeader;
+  final ShouldRefresh _shouldRefresh;
+  final RefreshToken<T> _refreshToken;
+  final void Function(Object, StackTrace) _refreshErrorHandler;
+  final Duration _refreshBuffer;
+
+  @override
+  Future<dynamic> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    assert(
+      _httpClient.interceptors.every((interceptor) => interceptor != this),
+      '''
+Cycle Detected!
+
+The Fresh instance was created using an http client 
+which already contains the Fresh instance as an interceptor.
+
+This will cause an infinite loop on token refresh.
+  
+Example:
+
+  ```
+  final httpClient = Dio();
+  final fresh = Fresh.oAuth2(
+    httpClient: httpClient,
+    ...
+  );
+  httpClient.interceptors.add(fresh); // <-- BAD
+  ```
+''',
+    );
+
+    var currentToken = await token;
+    if (currentToken is OAuthToken) {
+      try {
+        final oAuthToken = currentToken as OAuthToken;
+        if (DateTime.now().add(_refreshBuffer).isAfter(oAuthToken.expiresAt)) {
+          currentToken = await _refreshToken(await token, _httpClient);
+          await setToken(currentToken);
+        }
+      } catch (e, s) {
+        _refreshErrorHandler(e, s);
+      }
+    }
+    final headers = currentToken != null
+        ? _tokenHeader(currentToken)
+        : const <String, String>{};
+    options.headers.addAll(headers);
+    handler.next(options);
+  }
+
+  @override
+  Future<dynamic> onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) async {
+    if (await token == null || !_shouldRefresh(response)) {
+      return handler.next(response);
+    }
+    try {
+      final refreshResponse = await _tryRefresh(response);
+      handler.resolve(refreshResponse);
+    } on DioException catch (error) {
+      handler.reject(error);
+    }
+  }
+
+  @override
+  Future<dynamic> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
+    final response = err.response;
+    if (response == null ||
+        await token == null ||
+        err.error is RevokeTokenException ||
+        !_shouldRefresh(response)) {
+      return handler.next(err);
+    }
+    try {
+      final refreshResponse = await _tryRefresh(response);
+      handler.resolve(refreshResponse);
+    } on DioException catch (error) {
+      handler.next(error);
+    }
+  }
+
+  Future<Response<dynamic>> _tryRefresh(Response<dynamic> response) async {
+    late final T refreshedToken;
+    try {
+      refreshedToken = await _refreshToken(await token, _httpClient);
+    } on RevokeTokenException catch (error) {
+      await clearToken();
+      throw DioException(
+        requestOptions: response.requestOptions,
+        error: error,
+        response: response,
+      );
+    } catch (e, s) {
+      _refreshErrorHandler(e, s);
+    }
+
+    await setToken(refreshedToken);
+    _httpClient.options.baseUrl = response.requestOptions.baseUrl;
+    final data = response.requestOptions.data;
+    return _httpClient.request<dynamic>(
+      response.requestOptions.path,
+      cancelToken: response.requestOptions.cancelToken,
+      data: data is FormData ? data.clone() : data,
+      onReceiveProgress: response.requestOptions.onReceiveProgress,
+      onSendProgress: response.requestOptions.onSendProgress,
+      queryParameters: response.requestOptions.queryParameters,
+      options: Options(
+        method: response.requestOptions.method,
+        sendTimeout: response.requestOptions.sendTimeout,
+        receiveTimeout: response.requestOptions.receiveTimeout,
+        extra: response.requestOptions.extra,
+        headers: response.requestOptions.headers
+          ..addAll(_tokenHeader(refreshedToken)),
+        responseType: response.requestOptions.responseType,
+        contentType: response.requestOptions.contentType,
+        validateStatus: response.requestOptions.validateStatus,
+        receiveDataWhenStatusError:
+            response.requestOptions.receiveDataWhenStatusError,
+        followRedirects: response.requestOptions.followRedirects,
+        maxRedirects: response.requestOptions.maxRedirects,
+        requestEncoder: response.requestOptions.requestEncoder,
+        responseDecoder: response.requestOptions.responseDecoder,
+        listFormat: response.requestOptions.listFormat,
+      ),
+    );
+  }
+
+  static bool _defaultShouldRefresh(Response<dynamic>? response) {
+    return response?.statusCode == 401;
+  }
+}

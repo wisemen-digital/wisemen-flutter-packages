@@ -1,8 +1,8 @@
 import 'dart:convert' show jsonEncode;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:wiseclient/src/token_model/oauth_token.dart';
+import '../fresh/fresh.dart';
 import 'map_from_token_extension.dart';
 import 'token_from_string_extension.dart';
 

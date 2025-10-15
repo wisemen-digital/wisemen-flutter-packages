@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 import 'package:talker_dio_logger/talker_dio_logger_interceptor.dart';
 import 'package:talker_dio_logger/talker_dio_logger_settings.dart';
 
+import '../fresh/fresh.dart';
 import 'interceptors.dart';
 
 /// [WiseInterceptor] enum to list the available interceptor options
