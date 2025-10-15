@@ -23,7 +23,10 @@ void main() {
 
       test('should be immutable', () {
         expect(AppStyles.largeTitle, isA<TextStyle>());
-        expect(AppStyles.largeTitle, const TextStyle(fontWeight: FontWeight.w600, fontSize: 33, height: 0));
+        expect(
+            AppStyles.largeTitle,
+            const TextStyle(
+                fontWeight: FontWeight.w600, fontSize: 33, height: 0));
       });
     });
 
@@ -46,7 +49,10 @@ void main() {
 
       test('should be immutable', () {
         expect(AppStyles.title, isA<TextStyle>());
-        expect(AppStyles.title, const TextStyle(fontWeight: FontWeight.w400, fontSize: 24, height: 0));
+        expect(
+            AppStyles.title,
+            const TextStyle(
+                fontWeight: FontWeight.w400, fontSize: 24, height: 0));
       });
     });
 
@@ -69,7 +75,10 @@ void main() {
 
       test('should be immutable', () {
         expect(AppStyles.headline, isA<TextStyle>());
-        expect(AppStyles.headline, const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, height: 0));
+        expect(
+            AppStyles.headline,
+            const TextStyle(
+                fontWeight: FontWeight.w500, fontSize: 14, height: 0));
       });
     });
 
@@ -92,7 +101,10 @@ void main() {
 
       test('should be immutable', () {
         expect(AppStyles.subHeadline, isA<TextStyle>());
-        expect(AppStyles.subHeadline, const TextStyle(fontWeight: FontWeight.w400, fontSize: 11, height: 0));
+        expect(
+            AppStyles.subHeadline,
+            const TextStyle(
+                fontWeight: FontWeight.w400, fontSize: 11, height: 0));
       });
     });
 
@@ -115,7 +127,10 @@ void main() {
 
       test('should be immutable', () {
         expect(AppStyles.body, isA<TextStyle>());
-        expect(AppStyles.body, const TextStyle(fontWeight: FontWeight.w400, fontSize: 14, height: 0));
+        expect(
+            AppStyles.body,
+            const TextStyle(
+                fontWeight: FontWeight.w400, fontSize: 14, height: 0));
       });
     });
 
@@ -138,32 +153,47 @@ void main() {
 
       test('should be immutable', () {
         expect(AppStyles.input, isA<TextStyle>());
-        expect(AppStyles.input, const TextStyle(fontWeight: FontWeight.w400, fontSize: 14));
+        expect(AppStyles.input,
+            const TextStyle(fontWeight: FontWeight.w400, fontSize: 14));
       });
     });
 
     group('Style hierarchy and relationships', () {
       test('largeTitle should be the largest font size', () {
-        expect(AppStyles.largeTitle.fontSize!, greaterThan(AppStyles.title.fontSize!));
-        expect(AppStyles.largeTitle.fontSize!, greaterThan(AppStyles.headline.fontSize!));
-        expect(AppStyles.largeTitle.fontSize!, greaterThan(AppStyles.subHeadline.fontSize!));
-        expect(AppStyles.largeTitle.fontSize!, greaterThan(AppStyles.body.fontSize!));
-        expect(AppStyles.largeTitle.fontSize!, greaterThan(AppStyles.input.fontSize!));
+        expect(AppStyles.largeTitle.fontSize!,
+            greaterThan(AppStyles.title.fontSize!));
+        expect(AppStyles.largeTitle.fontSize!,
+            greaterThan(AppStyles.headline.fontSize!));
+        expect(AppStyles.largeTitle.fontSize!,
+            greaterThan(AppStyles.subHeadline.fontSize!));
+        expect(AppStyles.largeTitle.fontSize!,
+            greaterThan(AppStyles.body.fontSize!));
+        expect(AppStyles.largeTitle.fontSize!,
+            greaterThan(AppStyles.input.fontSize!));
       });
 
       test('title should be larger than body text styles', () {
-        expect(AppStyles.title.fontSize!, greaterThan(AppStyles.headline.fontSize!));
-        expect(AppStyles.title.fontSize!, greaterThan(AppStyles.subHeadline.fontSize!));
-        expect(AppStyles.title.fontSize!, greaterThan(AppStyles.body.fontSize!));
-        expect(AppStyles.title.fontSize!, greaterThan(AppStyles.input.fontSize!));
+        expect(AppStyles.title.fontSize!,
+            greaterThan(AppStyles.headline.fontSize!));
+        expect(AppStyles.title.fontSize!,
+            greaterThan(AppStyles.subHeadline.fontSize!));
+        expect(
+            AppStyles.title.fontSize!, greaterThan(AppStyles.body.fontSize!));
+        expect(
+            AppStyles.title.fontSize!, greaterThan(AppStyles.input.fontSize!));
       });
 
       test('subHeadline should be the smallest font size', () {
-        expect(AppStyles.subHeadline.fontSize!, lessThan(AppStyles.largeTitle.fontSize!));
-        expect(AppStyles.subHeadline.fontSize!, lessThan(AppStyles.title.fontSize!));
-        expect(AppStyles.subHeadline.fontSize!, lessThan(AppStyles.headline.fontSize!));
-        expect(AppStyles.subHeadline.fontSize!, lessThan(AppStyles.body.fontSize!));
-        expect(AppStyles.subHeadline.fontSize!, lessThan(AppStyles.input.fontSize!));
+        expect(AppStyles.subHeadline.fontSize!,
+            lessThan(AppStyles.largeTitle.fontSize!));
+        expect(AppStyles.subHeadline.fontSize!,
+            lessThan(AppStyles.title.fontSize!));
+        expect(AppStyles.subHeadline.fontSize!,
+            lessThan(AppStyles.headline.fontSize!));
+        expect(AppStyles.subHeadline.fontSize!,
+            lessThan(AppStyles.body.fontSize!));
+        expect(AppStyles.subHeadline.fontSize!,
+            lessThan(AppStyles.input.fontSize!));
       });
 
       test('body and input should have same font size', () {
@@ -176,19 +206,28 @@ void main() {
 
       test('largeTitle should have the heaviest font weight', () {
         expect(AppStyles.largeTitle.fontWeight, FontWeight.w600);
-        expect(AppStyles.largeTitle.fontWeight!.index, greaterThan(AppStyles.title.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index, greaterThan(AppStyles.headline.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index, greaterThan(AppStyles.subHeadline.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index, greaterThan(AppStyles.body.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index, greaterThan(AppStyles.input.fontWeight!.index));
+        expect(AppStyles.largeTitle.fontWeight!.index,
+            greaterThan(AppStyles.title.fontWeight!.index));
+        expect(AppStyles.largeTitle.fontWeight!.index,
+            greaterThan(AppStyles.headline.fontWeight!.index));
+        expect(AppStyles.largeTitle.fontWeight!.index,
+            greaterThan(AppStyles.subHeadline.fontWeight!.index));
+        expect(AppStyles.largeTitle.fontWeight!.index,
+            greaterThan(AppStyles.body.fontWeight!.index));
+        expect(AppStyles.largeTitle.fontWeight!.index,
+            greaterThan(AppStyles.input.fontWeight!.index));
       });
 
       test('headline should have medium font weight', () {
         expect(AppStyles.headline.fontWeight, FontWeight.w500);
-        expect(AppStyles.headline.fontWeight!.index, greaterThan(AppStyles.title.fontWeight!.index));
-        expect(AppStyles.headline.fontWeight!.index, greaterThan(AppStyles.subHeadline.fontWeight!.index));
-        expect(AppStyles.headline.fontWeight!.index, greaterThan(AppStyles.body.fontWeight!.index));
-        expect(AppStyles.headline.fontWeight!.index, greaterThan(AppStyles.input.fontWeight!.index));
+        expect(AppStyles.headline.fontWeight!.index,
+            greaterThan(AppStyles.title.fontWeight!.index));
+        expect(AppStyles.headline.fontWeight!.index,
+            greaterThan(AppStyles.subHeadline.fontWeight!.index));
+        expect(AppStyles.headline.fontWeight!.index,
+            greaterThan(AppStyles.body.fontWeight!.index));
+        expect(AppStyles.headline.fontWeight!.index,
+            greaterThan(AppStyles.input.fontWeight!.index));
       });
 
       test('regular styles should have same font weight', () {
@@ -245,7 +284,8 @@ void main() {
 
       test('original styles should remain unchanged after copyWith', () {
         final originalTitle = AppStyles.title;
-        final modifiedTitle = AppStyles.title.copyWith(color: Colors.green, fontSize: 30);
+        final modifiedTitle =
+            AppStyles.title.copyWith(color: Colors.green, fontSize: 30);
 
         // Original should be unchanged
         expect(AppStyles.title.color, originalTitle.color);

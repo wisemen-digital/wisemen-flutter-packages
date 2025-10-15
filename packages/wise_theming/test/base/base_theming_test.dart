@@ -12,51 +12,149 @@ void main() {
     });
 
     test('should have complete gray color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.gray[shade], isNotNull, reason: 'gray[$shade] should not be null');
+        expect(PrimitiveColors.gray[shade], isNotNull,
+            reason: 'gray[$shade] should not be null');
       }
     });
 
     test('should have complete grayDark color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.grayDark[shade], isNotNull, reason: 'grayDark[$shade] should not be null');
+        expect(PrimitiveColors.grayDark[shade], isNotNull,
+            reason: 'grayDark[$shade] should not be null');
       }
     });
 
     test('should have complete brand color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.brand[shade], isNotNull, reason: 'brand[$shade] should not be null');
+        expect(PrimitiveColors.brand[shade], isNotNull,
+            reason: 'brand[$shade] should not be null');
       }
     });
 
     test('should have complete error color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.error[shade], isNotNull, reason: 'error[$shade] should not be null');
+        expect(PrimitiveColors.error[shade], isNotNull,
+            reason: 'error[$shade] should not be null');
       }
     });
 
     test('should have complete warning color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.warning[shade], isNotNull, reason: 'warning[$shade] should not be null');
+        expect(PrimitiveColors.warning[shade], isNotNull,
+            reason: 'warning[$shade] should not be null');
       }
     });
 
     test('should have complete success color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.success[shade], isNotNull, reason: 'success[$shade] should not be null');
+        expect(PrimitiveColors.success[shade], isNotNull,
+            reason: 'success[$shade] should not be null');
       }
     });
 
     test('should have complete yellow color swatch', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.yellow[shade], isNotNull, reason: 'yellow[$shade] should not be null');
+        expect(PrimitiveColors.yellow[shade], isNotNull,
+            reason: 'yellow[$shade] should not be null');
       }
     });
   });
@@ -235,16 +333,19 @@ void main() {
       expect(darkTheme.utilityColors, darkUtilityColors);
     });
 
-    test('should contain high contrast light theme with correct properties', () {
+    test('should contain high contrast light theme with correct properties',
+        () {
       final highContrastTheme = supportedThemes.firstWhere(
         (theme) => theme.identifier == 'High contrast theme',
       );
 
       expect(highContrastTheme.themeType, WiseThemeType.lightContrast);
       expect(highContrastTheme.textColors, highContrastLightTextColors);
-      expect(highContrastTheme.foregroundColors, highContrastLightForegroundColors);
+      expect(highContrastTheme.foregroundColors,
+          highContrastLightForegroundColors);
       expect(highContrastTheme.borderColors, highContrastLightBorderColors);
-      expect(highContrastTheme.backgroundColors, highContrastLightBackgroundColors);
+      expect(highContrastTheme.backgroundColors,
+          highContrastLightBackgroundColors);
       expect(highContrastTheme.utilityColors, highContrastLightUtilityColors);
     });
 
@@ -255,21 +356,26 @@ void main() {
 
       expect(highContrastDarkTheme.themeType, WiseThemeType.darkContrast);
       expect(highContrastDarkTheme.textColors, highContrastDarkTextColors);
-      expect(highContrastDarkTheme.foregroundColors, highContrastDarkForegroundColors);
+      expect(highContrastDarkTheme.foregroundColors,
+          highContrastDarkForegroundColors);
       expect(highContrastDarkTheme.borderColors, highContrastDarkBorderColors);
-      expect(highContrastDarkTheme.backgroundColors, highContrastDarkBackgroundColors);
-      expect(highContrastDarkTheme.utilityColors, highContrastDarkUtilityColors);
+      expect(highContrastDarkTheme.backgroundColors,
+          highContrastDarkBackgroundColors);
+      expect(
+          highContrastDarkTheme.utilityColors, highContrastDarkUtilityColors);
     });
 
     test('all theme identifiers should be unique', () {
-      final identifiers = supportedThemes.map((theme) => theme.identifier).toList();
+      final identifiers =
+          supportedThemes.map((theme) => theme.identifier).toList();
       final uniqueIdentifiers = identifiers.toSet();
 
       expect(identifiers.length, uniqueIdentifiers.length);
     });
 
     test('should have themes for all WiseThemeType values', () {
-      final themeTypes = supportedThemes.map((theme) => theme.themeType).toSet();
+      final themeTypes =
+          supportedThemes.map((theme) => theme.themeType).toSet();
 
       expect(
           themeTypes,
@@ -284,16 +390,36 @@ void main() {
 
   group('Color consistency', () {
     test('all color swatches should have consistent shade values', () {
-      final expectedShades = [25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+      final expectedShades = [
+        25,
+        50,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        950
+      ];
 
       for (final shade in expectedShades) {
-        expect(PrimitiveColors.gray[shade], isNotNull, reason: 'gray[$shade] should not be null');
-        expect(PrimitiveColors.grayDark[shade], isNotNull, reason: 'grayDark[$shade] should not be null');
-        expect(PrimitiveColors.brand[shade], isNotNull, reason: 'brand[$shade] should not be null');
-        expect(PrimitiveColors.error[shade], isNotNull, reason: 'error[$shade] should not be null');
-        expect(PrimitiveColors.warning[shade], isNotNull, reason: 'warning[$shade] should not be null');
-        expect(PrimitiveColors.success[shade], isNotNull, reason: 'success[$shade] should not be null');
-        expect(PrimitiveColors.yellow[shade], isNotNull, reason: 'yellow[$shade] should not be null');
+        expect(PrimitiveColors.gray[shade], isNotNull,
+            reason: 'gray[$shade] should not be null');
+        expect(PrimitiveColors.grayDark[shade], isNotNull,
+            reason: 'grayDark[$shade] should not be null');
+        expect(PrimitiveColors.brand[shade], isNotNull,
+            reason: 'brand[$shade] should not be null');
+        expect(PrimitiveColors.error[shade], isNotNull,
+            reason: 'error[$shade] should not be null');
+        expect(PrimitiveColors.warning[shade], isNotNull,
+            reason: 'warning[$shade] should not be null');
+        expect(PrimitiveColors.success[shade], isNotNull,
+            reason: 'success[$shade] should not be null');
+        expect(PrimitiveColors.yellow[shade], isNotNull,
+            reason: 'yellow[$shade] should not be null');
       }
     });
   });

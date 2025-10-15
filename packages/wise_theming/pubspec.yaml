@@ -11,7 +11,6 @@ dependencies:
   # Flutter
   flutter:
     sdk: flutter
-  intl: any
   meta: ">=1.8.0 <2.0.0"
 
 dev_dependencies:

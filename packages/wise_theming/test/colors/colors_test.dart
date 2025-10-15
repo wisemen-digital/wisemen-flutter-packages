@@ -238,7 +238,8 @@ void main() {
         successSolid: Color(0xFF007700),
       );
 
-      final interpolated = BackgroundColors.lerp(backgroundColors, otherBackgroundColors, 0.5);
+      final interpolated =
+          BackgroundColors.lerp(backgroundColors, otherBackgroundColors, 0.5);
 
       expect(interpolated.primary, isNotNull);
       expect(interpolated.brandPrimary, isNotNull);
@@ -288,7 +289,8 @@ void main() {
         errorSubtle: Color(0xFF663333),
       );
 
-      final interpolated = BorderColors.lerp(borderColors, otherBorderColors, 0.5);
+      final interpolated =
+          BorderColors.lerp(borderColors, otherBorderColors, 0.5);
 
       // Test that interpolation returns valid colors
       expect(interpolated.primary, isNotNull);
@@ -314,11 +316,13 @@ void main() {
       );
 
       // At t=0
-      final interpolatedAt0 = BorderColors.lerp(borderColors, otherBorderColors, 0.0);
+      final interpolatedAt0 =
+          BorderColors.lerp(borderColors, otherBorderColors, 0.0);
       expect(interpolatedAt0.primary, borderColors.primary);
 
       // At t=1
-      final interpolatedAt1 = BorderColors.lerp(borderColors, otherBorderColors, 1.0);
+      final interpolatedAt1 =
+          BorderColors.lerp(borderColors, otherBorderColors, 1.0);
       expect(interpolatedAt1.primary, otherBorderColors.primary);
     });
   });
@@ -404,7 +408,8 @@ void main() {
         successSecondary: Color(0xFF669966),
       );
 
-      final interpolated = ForegroundColors.lerp(foregroundColors, otherForegroundColors, 0.5);
+      final interpolated =
+          ForegroundColors.lerp(foregroundColors, otherForegroundColors, 0.5);
 
       expect(interpolated.primary, isNotNull);
       expect(interpolated.brandPrimary, isNotNull);
@@ -442,7 +447,10 @@ void main() {
     });
 
     test('should create UtilityColors with custom colors', () {
-      final customColors = {'customRed': const Color(0xFFAA0000), 'customGreen': const Color(0xFF00AA00)};
+      final customColors = {
+        'customRed': const Color(0xFFAA0000),
+        'customGreen': const Color(0xFF00AA00)
+      };
 
       final utilityColorsWithCustom = UtilityColors(
         teal: const Color(0xFF008080),
@@ -458,8 +466,10 @@ void main() {
       );
 
       expect(utilityColorsWithCustom.customColors, customColors);
-      expect(utilityColorsWithCustom.customColors?['customRed'], const Color(0xFFAA0000));
-      expect(utilityColorsWithCustom.customColors?['customGreen'], const Color(0xFF00AA00));
+      expect(utilityColorsWithCustom.customColors?['customRed'],
+          const Color(0xFFAA0000));
+      expect(utilityColorsWithCustom.customColors?['customGreen'],
+          const Color(0xFF00AA00));
     });
 
     test('should handle null customColors', () {
@@ -479,7 +489,8 @@ void main() {
         indigo: Color(0xFFB40082),
       );
 
-      final interpolated = UtilityColors.lerp(utilityColors, otherUtilityColors, 0.5);
+      final interpolated =
+          UtilityColors.lerp(utilityColors, otherUtilityColors, 0.5);
 
       expect(interpolated.teal, isNotNull);
       expect(interpolated.blue, isNotNull);
@@ -522,7 +533,8 @@ void main() {
         customColors: customColors2,
       );
 
-      final interpolated = UtilityColors.lerp(utilityColors1, utilityColors2, 0.5);
+      final interpolated =
+          UtilityColors.lerp(utilityColors1, utilityColors2, 0.5);
 
       // Custom colors should use the second parameter's custom colors
       expect(interpolated.customColors, customColors2);
