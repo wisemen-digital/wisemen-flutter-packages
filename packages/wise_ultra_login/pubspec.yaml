@@ -1,0 +1,50 @@
+name: wise_ultra_login
+description: A Zitadel login package to be used with wisemen backends in the context of ULTRA
+version: 1.0.0
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.19.5'
+resolution: workspace
+dependencies:
+  # Flutter
+  flutter:
+    sdk: flutter
+
+  # Wisemen
+  wisecore:
+    git:
+      url: https://github.com/wisemen-digital/wisemen-flutter-packages.git
+      ref: feature/wisemen-ultra-authentication
+      path: packages/wisecore
+  wise_theming: '>=1.0.0 <2.0.0'
+  wisewidgetslibrary: '>=2.0.4 <3.0.0'
+
+  
+  # Auth
+  flutter_appauth: ^9.0.0
+  flutter_custom_tabs: ^2.4.0
+
+  # Riverpod
+  riverpod_annotation: '>=3.0.0 <4.0.0'
+  riverpod: ">=3.0.0 <4.0.0"
+  hooks_riverpod: '>=3.0.0 <4.0.0'
+
+  # Client
+  wiseclient: '>=1.1.1 <2.0.0'
+
+  # SVG
+  flutter_svg: '>=2.1.0 <3.0.0'
+
+dev_dependencies:
+  # Static analysis & linting
+  lints: ^5.1.1
+  mocktail: ^1.0.4
+
+  # Testing
+  test: ^1.25.15
+
+  # Mocking
+  mockito: ^5.4.0
+  flutter_test:
+    sdk: flutter
