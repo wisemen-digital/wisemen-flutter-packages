@@ -1,3 +1,7 @@
+## 1.1.3-prerelease.2
+
+- Pass refreshBuffer through createClient
+
 ## 1.1.3-prerelease.1
 
 - Updated dependencies

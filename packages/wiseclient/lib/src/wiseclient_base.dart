@@ -129,7 +129,7 @@ abstract mixin class WiseClient implements Dio {
     return headers != null ? Options(headers: headers) : null;
   }
 
-  /// [cancelAndReset] method cancels current requests and resets the canceltoken
+  /// [cancelAndReset] method cancels current requests and resets the cancel token
   Future<void> cancelAndReset({Duration? cancelDuration}) async {
     cancelToken.cancel();
     await Future.delayed(
