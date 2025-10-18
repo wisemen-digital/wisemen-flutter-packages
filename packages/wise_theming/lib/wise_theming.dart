@@ -1,0 +1,8 @@
+/// Barrel file for wise_theming.
+library;
+
+export 'src/base/base.dart';
+export 'src/colors/colors.dart';
+export 'src/styles/styles.dart';
+export 'src/theming/theming.dart';
+export 'src/wise_theming.dart';

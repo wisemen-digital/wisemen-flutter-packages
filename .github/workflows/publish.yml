@@ -8,6 +8,7 @@ on:
       - "wisewidgetslibrary-v*"
       - "wise_nav_bar-v*"
       - "wise_zitadel_login-v*"
+      - "wise_theming-v*"
 jobs:
   publish:
     permissions:
