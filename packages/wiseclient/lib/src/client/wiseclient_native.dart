@@ -16,6 +16,7 @@ WiseClient createClient({
 }) =>
     NativeWiseClient(
       wiseInterceptors: wiseInterceptors,
+      refreshBuffer: refreshBuffer,
       baseOptions: options,
       refreshFunction: refreshFunction,
       useNativeAdapter: useNativeAdapter,

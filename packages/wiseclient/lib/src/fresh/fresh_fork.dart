@@ -132,7 +132,7 @@ mixin FreshMixin<T> {
     _updateStatus(token);
   }
 
-  /// Delete the storaged [token]. and emit the
+  /// Delete the stored [token]. and emit the
   /// `AuthenticationStatus.unauthenticated` if authenticationStatus
   /// not is `AuthenticationStatus.unauthenticated`
   /// This method should be called when the token is no longer valid.

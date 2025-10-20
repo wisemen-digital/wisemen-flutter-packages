@@ -31,7 +31,7 @@ dependencies:
   url_launcher_platform_interface: ">=2.3.2 <3.0.0"
 
   # Network client
-  wiseclient: 1.1.3-prerelease.1
+  wiseclient: 1.1.3-prerelease.2
 
   # Navigation
   auto_route: ">=10.0.0 <11.0.0"
