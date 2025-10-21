@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
@@ -7,7 +6,6 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../settings.dart';
 
-@RoutePage()
 class OtherSettingsScreen extends ConsumerWidget {
   const OtherSettingsScreen({super.key});
 
@@ -26,14 +24,10 @@ class OtherSettingsScreen extends ConsumerWidget {
               PlatformDropdownPicker<ThemeModeDropDownModel>(
                 onChanged: (option) async {
                   if (option != null) {
-                    await ref
-                        .read(settingsControllerProvider.notifier)
-                        .toggleThemeMode(option.mode);
+                    await ref.read(settingsControllerProvider.notifier).toggleThemeMode(option.mode);
                   }
                 },
-                options: ThemeMode.values
-                    .map((mode) => ThemeModeDropDownModel(mode: mode))
-                    .toList(),
+                options: ThemeMode.values.map((mode) => ThemeModeDropDownModel(mode: mode)).toList(),
                 borderRadius: BorderRadius.circular(12),
                 focusNode: FocusNode(),
                 selected: ref.watch(SettingsProviders.themeMode).value,
@@ -48,12 +42,7 @@ class OtherSettingsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Text(
-                        ref
-                                .watch(themeModeStreamProvider)
-                                .value
-                                ?.name
-                                .capitalized ??
-                            '',
+                        ref.watch(themeModeStreamProvider).value?.name.capitalized ?? '',
                       ),
                     ],
                   ),
