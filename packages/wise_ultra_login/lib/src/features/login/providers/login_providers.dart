@@ -1,3 +1,5 @@
+// ignore_for_file: use_setters_to_change_properties
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../login.dart';
