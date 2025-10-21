@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +9,6 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../settings.dart';
 
-@RoutePage()
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -38,14 +36,10 @@ class SettingsScreen extends ConsumerWidget {
               PlatformDropdownPicker<ThemeModeDropDownModel>(
                 onChanged: (option) async {
                   if (option != null) {
-                    await ref
-                        .read(settingsControllerProvider.notifier)
-                        .toggleThemeMode(option.mode);
+                    await ref.read(settingsControllerProvider.notifier).toggleThemeMode(option.mode);
                   }
                 },
-                options: ThemeMode.values
-                    .map((mode) => ThemeModeDropDownModel(mode: mode))
-                    .toList(),
+                options: ThemeMode.values.map((mode) => ThemeModeDropDownModel(mode: mode)).toList(),
                 borderRadius: BorderRadius.circular(12),
                 focusNode: FocusNode(),
                 selected: ref.watch(SettingsProviders.themeMode).value,
@@ -60,12 +54,7 @@ class SettingsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Text(
-                        ref
-                                .watch(themeModeStreamProvider)
-                                .value
-                                ?.name
-                                .capitalized ??
-                            '',
+                        ref.watch(themeModeStreamProvider).value?.name.capitalized ?? '',
                       ),
                     ],
                   ),
