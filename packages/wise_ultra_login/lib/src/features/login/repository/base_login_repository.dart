@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
@@ -89,6 +91,58 @@ class BaseLoginRepository implements LoginRepository {
     );
 
     ref.read(Wisecore.protectedClientProvider).removeFreshToken();
+  }
+
+  @override
+  Future<OAuth2Token> refresh(OAuth2Token? token) async {
+    final refreshToken = token?.refreshToken ?? '';
+
+    try {
+      const appAuth = FlutterAppAuth();
+
+      final discoveryDocumentUri = Uri.parse('${LoginFeature.flavors.authenticationUrl}/.well-known/openid-configuration');
+
+      final response = await appAuth.token(
+        TokenRequest(
+          LoginFeature.flavors.clientID,
+          _redirectUri.toString(),
+          refreshToken: refreshToken,
+          discoveryUrl: discoveryDocumentUri.toString(),
+          scopes: [
+            'openid',
+            'profile',
+            'email',
+            'offline_access',
+            'urn:zitadel:iam:org:id:${LoginFeature.flavors.organizationID}',
+          ],
+        ),
+      );
+
+      return OAuthToken(
+        tokenType: response.tokenType,
+        accessToken: response.accessToken!,
+        refreshToken: response.refreshToken,
+        expiresIn: response.accessTokenExpirationDateTime!.difference(DateTime.now()).inSeconds,
+      );
+    } on DioException catch (e) {
+      if ([401, 400].any(
+        (element) => element == e.response?.statusCode,
+      )) {
+        await logout();
+        throw RevokeTokenException();
+      } else {
+        rethrow;
+      }
+    } on FlutterAppAuthPlatformException catch (e) {
+      if (e.code == 'token_failed') {
+        await logout();
+        throw RevokeTokenException();
+      } else {
+        rethrow;
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 
