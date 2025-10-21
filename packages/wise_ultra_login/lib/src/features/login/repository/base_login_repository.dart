@@ -74,21 +74,23 @@ class BaseLoginRepository implements LoginRepository {
 
   @override
   Future<void> logout() async {
-    final idToken = await _flutterSecureStorage.read(key: ID_TOKEN_STORAGE_KEY);
+    try {
+      final idToken = await _flutterSecureStorage.read(key: ID_TOKEN_STORAGE_KEY);
 
-    Future.delayed(const Duration(seconds: 2), () async {
-      await closeCustomTabs();
-      await _flutterSecureStorage.delete(key: ID_TOKEN_STORAGE_KEY);
-    });
+      Future.delayed(const Duration(seconds: 2), () async {
+        await closeCustomTabs();
+        await _flutterSecureStorage.delete(key: ID_TOKEN_STORAGE_KEY);
+      });
 
-    await _appAuth.endSession(
-      EndSessionRequest(
-        idTokenHint: idToken,
-        postLogoutRedirectUrl: _redirectUri.toString(),
-        discoveryUrl: _discoveryDocumentUri.toString(),
-        externalUserAgent: ExternalUserAgent.sfSafariViewController,
-      ),
-    );
+      await _appAuth.endSession(
+        EndSessionRequest(
+          idTokenHint: idToken,
+          postLogoutRedirectUrl: _redirectUri.toString(),
+          discoveryUrl: _discoveryDocumentUri.toString(),
+          externalUserAgent: ExternalUserAgent.sfSafariViewController,
+        ),
+      );
+    } catch (e) {}
 
     ref.read(Wisecore.protectedClientProvider).removeFreshToken();
   }
@@ -118,12 +120,16 @@ class BaseLoginRepository implements LoginRepository {
         ),
       );
 
-      return OAuthToken(
+      final token = OAuthToken(
         tokenType: response.tokenType,
         accessToken: response.accessToken!,
         refreshToken: response.refreshToken,
         expiresIn: response.accessTokenExpirationDateTime!.difference(DateTime.now()).inSeconds,
       );
+
+      ref.read(Wisecore.protectedClientProvider).setFreshToken(token: token);
+
+      return token;
     } on DioException catch (e) {
       if ([401, 400].any(
         (element) => element == e.response?.statusCode,
