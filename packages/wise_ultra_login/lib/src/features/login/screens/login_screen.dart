@@ -1,10 +1,12 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:wise_theming/wise_theming.dart';
 import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
-import 'package:wise_theming/wise_theming.dart';
 
 import '../login.dart';
 
