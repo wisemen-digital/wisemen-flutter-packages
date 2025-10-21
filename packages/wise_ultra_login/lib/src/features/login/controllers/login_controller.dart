@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 
 import '../login.dart';
 
@@ -31,8 +32,27 @@ class LoginController extends _$LoginController {
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout({bool needsConfirmation = false}) async {
     try {
+      if (needsConfirmation) {
+        final result = await FlutterPlatformAlert.showCustomAlert(
+          windowTitle: LoginFeature.localizations.logout,
+          text: LoginFeature.localizations.logoutWarning,
+          positiveButtonTitle: LoginFeature.localizations.logout,
+          neutralButtonTitle: LoginFeature.localizations.cancel,
+          options: PlatformAlertOptions(
+            ios: IosAlertOptions(
+              positiveButtonStyle: IosButtonStyle.destructive,
+              neutralButtonStyle: IosButtonStyle.cancel,
+            ),
+          ),
+        );
+
+        if (result == CustomButton.neutralButton) {
+          return;
+        }
+      }
+
       state = const AsyncValue.loading();
 
       await ref.watch(LoginFeature.repository).logout();
