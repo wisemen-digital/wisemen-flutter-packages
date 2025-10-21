@@ -10,8 +10,50 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../login.dart';
 
+/// The main login screen widget that displays authentication options.
+///
+/// This screen provides a visually animated login interface with support for
+/// multiple authentication methods (Apple, Google, Email, and custom providers).
+/// It displays a splash image background with an animated bottom sheet containing
+/// login options.
+///
+/// The screen automatically retrieves supported login methods from [LoginFlavors]
+/// and displays them with appropriate icons and labels. Each method shows a
+/// loading indicator when authentication is in progress.
+///
+/// Example usage:
+/// ```dart
+/// Navigator.push(
+///   context,
+///   MaterialPageRoute(
+///     builder: (_) => LoginScreen(
+///       belowTitleHeader: Text('Welcome back!'),
+///       footer: TermsAndConditionsWidget(),
+///     ),
+///   ),
+/// );
+/// ```
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({super.key});
+  /// Creates a LoginScreen widget.
+  ///
+  /// All parameters are optional and can be used to customize the UI.
+  const LoginScreen({
+    super.key,
+    this.belowTitleHeader,
+    this.footer,
+  });
+
+  /// Optional widget to display below the title and subtitle.
+  ///
+  /// This can be used to add custom content such as welcome messages,
+  /// promotional text, or other UI elements.
+  final Widget? belowTitleHeader;
+
+  /// Optional widget to display at the bottom of the login options.
+  ///
+  /// Commonly used for terms and conditions, privacy policy links,
+  /// or other footer content.
+  final Widget? footer;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
@@ -74,6 +116,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       style: context.body.copyWith(color: context.foregroundColors.secondary),
                       textAlign: TextAlign.center,
                     ),
+                    if (widget.belowTitleHeader != null) ...[
+                      gapHM,
+                      widget.belowTitleHeader!,
+                    ],
                     gapHM,
                     ...supportedMethods.map(
                       (m) => Padding(
@@ -133,6 +179,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                     ),
+                    if (widget.footer != null) ...[
+                      gapHM,
+                      widget.footer!,
+                    ],
                   ],
                 ),
               ),
