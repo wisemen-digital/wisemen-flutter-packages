@@ -1,3 +1,7 @@
+## 2.2.6
+
+- Fixed custom alert options order
+
 ## 2.2.5
 
 - Fixed the whenStream extension on `AsyncValue<T>`
