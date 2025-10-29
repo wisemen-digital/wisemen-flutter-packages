@@ -85,9 +85,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           Positioned.fill(
             child: ColoredBox(
               color: context.backgroundColors.primary,
-              child: CachedNetworkImage(imageUrl: LoginFeature.flavors.splashImage, fit: BoxFit.cover),
+              child: Image.asset(LoginFeature.assets.splashImage, fit: BoxFit.cover),
             ),
           ),
+          if (LoginFeature.flavors.splashImage.isNotEmpty)
+            Positioned.fill(
+              child: ColoredBox(
+                color: context.backgroundColors.primary,
+                child: CachedNetworkImage(imageUrl: LoginFeature.flavors.splashImage, fit: BoxFit.cover),
+              ),
+            ),
           Positioned(
             left: 0,
             right: 0,

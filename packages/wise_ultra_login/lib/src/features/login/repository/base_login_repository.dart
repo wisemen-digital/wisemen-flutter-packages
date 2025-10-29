@@ -42,6 +42,7 @@ class BaseLoginRepository implements LoginRepository {
   final FlutterSecureStorage _flutterSecureStorage = const FlutterSecureStorage();
 
   /// Storage key for the ID token in secure storage.
+  // ignore: constant_identifier_names
   static const String ID_TOKEN_STORAGE_KEY = 'ID_TOKEN';
 
   /// Constructs the OAuth2 redirect URI based on the current platform.
@@ -151,7 +152,9 @@ class BaseLoginRepository implements LoginRepository {
           externalUserAgent: ExternalUserAgent.sfSafariViewController,
         ),
       );
-    } catch (e) {}
+    } catch (e) {
+      rethrow;
+    }
 
     await ref.read(Wisecore.protectedClientProvider).removeFreshToken();
   }

@@ -59,5 +59,6 @@ class SelectedLoginMethod extends _$SelectedLoginMethod {
   ///
   /// Parameters:
   /// - [value]: The login method being processed, or null to clear the selection
+  // ignore: use_setters_to_change_properties
   void changeValue(LoginMethod? value) => state = value;
 }
