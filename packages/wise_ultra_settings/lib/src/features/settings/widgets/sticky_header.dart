@@ -2,12 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:wise_theming/wise_theming.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
+import '../settings.dart';
+
+/// Widget that displays a sticky section header.
+///
+/// Renders a section title that can stick to the top of the scroll view.
+/// When pinned, shows a bottom border and adjusts spacing based on scroll position.
+///
+/// Used internally by [SettingsSectionList] to display section headers.
 class StickyHeader extends StatelessWidget {
+  /// Creates a sticky header widget.
   const StickyHeader({
-    super.key,
     required this.title,
     required this.isPinned,
     required this.scrollPercentage,
+    super.key,
     this.outerPadding = padHM,
     this.trailing,
     this.trailingEnd = false,
@@ -15,13 +24,28 @@ class StickyHeader extends StatelessWidget {
     this.bottomPadding = 6,
   });
 
+  /// The title text to display in the header.
   final String title;
+
+  /// Whether the header is currently pinned to the top.
   final bool isPinned;
+
+  /// The scroll percentage (0-1) when the header is being pinned.
   final double scrollPercentage;
+
+  /// Outer padding around the header.
   final EdgeInsets outerPadding;
+
+  /// Optional trailing widget to display on the right side.
   final Widget? trailing;
+
+  /// Padding above the header.
   final double topPadding;
+
+  /// Padding below the header.
   final double bottomPadding;
+
+  /// Whether the title should expand to fill available space before the trailing widget.
   final bool trailingEnd;
 
   @override

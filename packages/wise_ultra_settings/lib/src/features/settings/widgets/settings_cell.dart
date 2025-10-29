@@ -8,9 +8,20 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../settings.dart';
 
+/// Widget that renders a single settings item as a tappable cell.
+///
+/// Displays the item's title, optional trailing text or widget, and a chevron
+/// icon for navigable items. The logout item receives special styling with
+/// error color and bold text.
+///
+/// Used internally by [SettingsSectionList] to render each item in a section.
 class SettingsCell extends ConsumerWidget {
+  /// Creates a settings cell widget.
+  ///
+  /// The [item] parameter defines the settings item to display.
   const SettingsCell({required this.item, super.key});
 
+  /// The settings item to display.
   final SettingsItem item;
 
   @override

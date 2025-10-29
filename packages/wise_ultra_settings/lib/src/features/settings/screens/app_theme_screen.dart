@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -7,12 +6,22 @@ import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wise_theming/wise_theming.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
-import '../providers/settings_providers.dart';
-
 import '../settings.dart';
 
-@RoutePage()
+/// Screen for selecting the app's theme mode.
+///
+/// Provides options for light mode, dark mode, and system (auto) mode.
+/// The selected theme is persisted and applied across the app.
+///
+/// This screen is provided by the package and can be used directly
+/// by navigating to it from [SettingsNavigationManager.navigateToAppTheme].
+///
+/// Example:
+/// ```dart
+/// context.router.push(const AppThemeRoute());
+/// ```
 class AppThemeScreen extends ConsumerWidget {
+  /// Creates an app theme selection screen.
   const AppThemeScreen({super.key});
 
   @override
@@ -24,7 +33,15 @@ class AppThemeScreen extends ConsumerWidget {
       appBar: PlatformAppBar(
         backgroundColor: context.backgroundColors.primary,
         title: const SizedBox.shrink(),
-        actions: [AppBarButton(title: SettingsFeature.localizations.done(context), isBold: true, onPressed: context.router.maybePop)],
+        actions: [
+          AppBarButton(
+            title: SettingsFeature.localizations.done(context),
+            isBold: true,
+            onPressed: () {
+              ref.watch(SettingsFeature.navigationManager).completeSettingsScreen();
+            },
+          ),
+        ],
         transitionBetweenRoutes: false,
       ),
       body: _buildThemeModeOptions(context, ref, themeMode),
