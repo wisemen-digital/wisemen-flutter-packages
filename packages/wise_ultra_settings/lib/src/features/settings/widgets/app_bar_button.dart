@@ -2,13 +2,37 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
+/// A text button for use in app bars with loading and disabled states.
+///
+/// Displays a text label that can be styled as bold, and supports showing
+/// a loading indicator while an action is in progress. The button smoothly
+/// animates between the loading and normal states.
+///
+/// Used in the settings screen app bar for the "Done" button.
 class AppBarButton extends StatelessWidget {
-  const AppBarButton({super.key, this.isLoading = false, this.isDisabled = false, required this.title, this.isBold = false, required this.onPressed});
+  /// Creates an app bar button.
+  const AppBarButton({
+    required this.title,
+    required this.onPressed,
+    super.key,
+    this.isLoading = false,
+    this.isDisabled = false,
+    this.isBold = false,
+  });
 
+  /// Whether to show a loading indicator instead of the title.
   final bool isLoading;
+
+  /// Whether the button is disabled and cannot be pressed.
   final bool isDisabled;
+
+  /// The text to display on the button.
   final String title;
+
+  /// Whether the title text should be bold.
   final bool isBold;
+
+  /// Callback invoked when the button is pressed.
   final VoidCallback? onPressed;
 
   @override

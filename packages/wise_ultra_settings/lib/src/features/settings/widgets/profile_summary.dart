@@ -1,14 +1,31 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wise_theming/wise_theming.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 import '../settings.dart';
 
+/// Widget displaying a user profile summary card in the settings screen.
+///
+/// Shows the user's profile picture (or initials if no picture is available)
+/// and their full name in a branded card with a partially overlapping avatar.
+///
+/// This widget is automatically used by [SettingsScreen] to display user
+/// information at the top of the settings page.
 class ProfileSummary extends ConsumerWidget {
+  /// Creates a profile summary widget.
+  ///
+  /// The [user] parameter is required and contains the user information to display.
   const ProfileSummary({required this.user, super.key});
+
+  /// The user whose information should be displayed.
   final User user;
 
+  /// Profile image size
   static const double IMAGE_SIZE = 80;
+
+  /// Profile image overlap
   static const double IMAGE_OVERLAP = 0.33;
 
   @override
