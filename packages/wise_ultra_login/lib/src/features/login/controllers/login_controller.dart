@@ -72,6 +72,7 @@ class LoginController extends _$LoginController {
       state = const AsyncValue.data(null);
     } catch (e, s) {
       state = AsyncValue.error(e, s);
+      rethrow;
     } finally {
       ref.read(selectedLoginMethodProvider.notifier).changeValue(null);
     }

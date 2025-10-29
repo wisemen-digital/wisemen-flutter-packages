@@ -52,11 +52,12 @@ class SettingsControllers extends _$SettingsControllers {
     try {
       state = const AsyncValue.loading();
 
-      ref.read(SettingsFeature.repository).updateUser(
+      await ref.read(SettingsFeature.repository).updateUser(
             firstName: firstName,
             lastName: lastName,
             birthDate: birthDate,
           );
+      ref.read(SettingsFeature.navigationManager).completeSettingsScreen();
 
       state = const AsyncValue.data(null);
     } catch (e, s) {
