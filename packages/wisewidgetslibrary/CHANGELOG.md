@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Added invisibleItemsThreshold to the PagedList constructor
+
 ## 2.1.1
 
 - Dependency update

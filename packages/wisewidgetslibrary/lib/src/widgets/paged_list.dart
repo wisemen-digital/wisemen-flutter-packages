@@ -24,6 +24,7 @@ class PagedList<T> extends StatelessWidget {
     this.animationInterval = 200,
     this.shimmerColor,
     this.shimmerHighlightColor,
+    this.invisibleItemsThreshold = 5,
   });
 
   /// List of items to display, usually a stream from database
@@ -72,6 +73,9 @@ class PagedList<T> extends StatelessWidget {
   /// Optional shimmer highlight color for the loading indicator
   final Color? shimmerHighlightColor;
 
+  /// The threshold for the number of invisible items to trigger fetching more data.
+  final int invisibleItemsThreshold;
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -105,7 +109,7 @@ class PagedList<T> extends StatelessWidget {
           loadMoreErrorBuilder: (context, onRetry) =>
               Center(child: errorBuilder(context, onRetry)),
           loadMoreNoMoreItemsBuilder: (context) => const SizedBox.shrink(),
-          invisibleItemsThreshold: 5,
+          invisibleItemsThreshold: invisibleItemsThreshold,
         ),
       ),
     );
