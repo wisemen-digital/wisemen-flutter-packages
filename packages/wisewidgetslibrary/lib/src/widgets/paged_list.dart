@@ -25,7 +25,7 @@ class PagedList<T> extends StatelessWidget {
     this.shimmerColor,
     this.shimmerHighlightColor,
     this.invisibleItemsThreshold = 5,
-    this.scrollDirection = Axis.horizontal,
+    this.scrollDirection = Axis.vertical,
   });
 
   /// List of items to display, usually a stream from database
