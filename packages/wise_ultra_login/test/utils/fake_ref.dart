@@ -55,17 +55,16 @@ class FakeLoginLocalizations implements LoginLocalizations {
 
 class FakeLoginAssets implements LoginAssets {
   @override
-  String get apple => 'packages/wise_ultra_login/assets/apple.svg';
+  String get apple => 'test/fixtures/test_icon.svg';
 
   @override
-  String get email => 'packages/wise_ultra_login/assets/email.svg';
+  String get email => 'test/fixtures/test_icon.svg';
 
   @override
-  String get google => 'packages/wise_ultra_login/assets/google.svg';
+  String get google => 'test/fixtures/test_icon.svg';
 
   @override
-  // Return empty string to prevent asset loading in tests
-  String get splashImage => '';
+  String get splashImage => 'test/fixtures/test_image.png';
 }
 
 class MockLoginRepository extends Mock implements LoginRepository {
@@ -93,5 +92,17 @@ class MockLoginRepository extends Mock implements LoginRepository {
       refreshToken: 'refreshed_refresh_token',
       expiresIn: 3600,
     );
+  }
+}
+
+class MockWiseClient extends Mock implements WiseClient {
+  @override
+  Future<void> setFreshToken({required OAuth2Token token}) async {
+    // Mock implementation
+  }
+
+  @override
+  Future<void> removeFreshToken() async {
+    // Mock implementation
   }
 }

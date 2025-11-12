@@ -51,3 +51,7 @@ dev_dependencies:
   mockito: ^5.4.0
   flutter_test:
     sdk: flutter
+
+flutter:
+  assets:
+    - test/fixtures/

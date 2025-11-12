@@ -117,7 +117,7 @@ void main() {
 
       expect(
         method.getIconAsset(),
-        'packages/wise_ultra_login/assets/apple.svg',
+        'test/fixtures/test_icon.svg',
       );
     });
 
@@ -130,7 +130,7 @@ void main() {
 
       expect(
         method.getIconAsset(),
-        'packages/wise_ultra_login/assets/google.svg',
+        'test/fixtures/test_icon.svg',
       );
     });
 
@@ -143,7 +143,7 @@ void main() {
 
       expect(
         method.getIconAsset(),
-        'packages/wise_ultra_login/assets/email.svg',
+        'test/fixtures/test_icon.svg',
       );
     });
 

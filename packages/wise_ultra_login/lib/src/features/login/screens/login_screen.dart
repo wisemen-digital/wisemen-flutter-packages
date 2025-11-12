@@ -41,6 +41,7 @@ class LoginScreen extends ConsumerStatefulWidget {
     super.key,
     this.belowTitleHeader,
     this.footer,
+    this.disableAnimations = false,
   });
 
   /// Optional widget to display below the title and subtitle.
@@ -55,6 +56,12 @@ class LoginScreen extends ConsumerStatefulWidget {
   /// or other footer content.
   final Widget? footer;
 
+  /// Whether to disable animations for testing purposes.
+  ///
+  /// When set to true, the bottom sheet will appear immediately without
+  /// the delayed animation. Defaults to false.
+  final bool disableAnimations;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
 }
@@ -66,12 +73,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      () => setState(() {
-        _isOpen = true;
-      }),
-    );
+    if (widget.disableAnimations) {
+      _isOpen = true;
+    } else {
+      Future.delayed(
+        const Duration(milliseconds: 500),
+        () => setState(() {
+          _isOpen = true;
+        }),
+      );
+    }
   }
 
   @override
@@ -101,6 +112,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             bottom: 0,
             child: AnimatedClipRect(
               open: _isOpen,
+              duration: widget.disableAnimations ? Duration.zero : const Duration(milliseconds: 300),
               child: Container(
                 margin: const EdgeInsets.only(top: 64),
                 padding: padM.copyWith(bottom: MediaQuery.paddingOf(context).bottom + Sizes.m),
@@ -147,13 +159,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                   Positioned.fill(
                                     child: AnimatedOpacity(
                                       opacity: ref.watch(loginControllerProvider).isLoading && selectedMethod?.id == m.id ? 1 : 0,
-                                      duration: const Duration(milliseconds: 300),
+                                      duration: widget.disableAnimations ? Duration.zero : const Duration(milliseconds: 300),
                                       child: const Center(child: PlatformLoadingIndicator()),
                                     ),
                                   ),
                                   AnimatedOpacity(
                                     opacity: ref.watch(loginControllerProvider).isLoading && selectedMethod?.id == m.id ? 0 : 1,
-                                    duration: const Duration(milliseconds: 300),
+                                    duration: widget.disableAnimations ? Duration.zero : const Duration(milliseconds: 300),
                                     child: Center(
                                       child: Row(
                                         spacing: Sizes.s,
