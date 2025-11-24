@@ -256,7 +256,7 @@ final class CurrentUserProvider
   CurrentUser create() => CurrentUser();
 }
 
-String _$currentUserHash() => r'8a37126d2ec5ba62c1b8c5baae77efb30fe429ad';
+String _$currentUserHash() => r'ce6245bbdf8854042d915d8a75008bed10b7e00c';
 
 abstract class _$CurrentUser extends $StreamNotifier<User?> {
   Stream<User?> build();
