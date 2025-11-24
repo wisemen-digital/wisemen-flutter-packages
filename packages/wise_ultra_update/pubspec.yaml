@@ -1,6 +1,6 @@
 name: wise_ultra_update
 description: An ULTRA package that shows a dialog when an update is available
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_ultra_update
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_ultra_update
 
@@ -14,18 +14,9 @@ dependencies:
     sdk: flutter
 
   # Wisemen
-  wisecore:
-    git:
-      url: https://github.com/wisemen-digital/wisemen-flutter-packages.git
-      ref: feature/wisemen-ultra-authentication
-      path: packages/wisecore
+  wisecore: '>=2.0.0 < 3.0.0'
   wise_theming: '>=1.0.0 <2.0.0'
   wisewidgetslibrary: '>=2.0.4 <3.0.0'
-
-  
-  # Auth
-  flutter_appauth: ^9.0.0
-  flutter_custom_tabs: ^2.4.0
 
   # Riverpod
   riverpod_annotation: '>=3.0.0 <4.0.0'

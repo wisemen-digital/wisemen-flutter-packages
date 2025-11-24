@@ -5,12 +5,21 @@ import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../update_feature.dart';
 
+/// Widget that displays the update dialog UI.
+///
+/// Shows a dialog with update information and action buttons.
+/// The UI adapts based on whether the update is required or optional.
 class UpdateWidget extends ConsumerWidget {
+  /// Creates an update widget.
+  ///
+  /// The [isRequired] parameter determines whether the "Later" button is shown.
   const UpdateWidget({
     required this.isRequired,
     super.key,
   });
 
+  /// Whether this update is required (mandatory).
+  /// If true, the "Later" button will not be shown.
   final bool isRequired;
 
   @override

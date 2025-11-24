@@ -4,9 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wise_ultra_update/src/features/update/update.dart';
 
+/// Widget that wraps your app and automatically checks for updates.
+///
+/// This widget will:
+/// - Check for updates when the app launches
+/// - Check for updates when the app resumes from background
+/// - Show update dialogs when needed
 class UpdateWrapper extends ConsumerStatefulWidget {
+  /// Creates an update wrapper.
+  ///
+  /// The [child] is typically your app's root widget.
   const UpdateWrapper({required this.child, super.key});
 
+  /// The widget to wrap with update checking functionality.
   final Widget child;
 
   @override

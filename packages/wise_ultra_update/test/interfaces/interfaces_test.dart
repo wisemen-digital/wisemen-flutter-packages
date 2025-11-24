@@ -93,14 +93,14 @@ void main() {
     });
 
     test('installUpdate can be called', () {
-      final manager = TestUpdateNavigationManager();
-      manager.installUpdate();
+      final manager = TestUpdateNavigationManager()
+      ..installUpdate();
       expect(manager.installUpdateCalled, true);
     });
 
     test('installLater can be called', () {
-      final manager = TestUpdateNavigationManager();
-      manager.installLater();
+      final manager = TestUpdateNavigationManager()
+      ..installLater();
       expect(manager.installLaterCalled, true);
     });
   });

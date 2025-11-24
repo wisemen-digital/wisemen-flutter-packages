@@ -23,9 +23,12 @@ bool isVersionLower(String current, String latest) {
   return false;
 }
 
+/// Default implementation of [UpdateRepository] that uses the update service.
 class BaseUpdateRepository implements UpdateRepository {
+  /// Creates a base update repository.
   BaseUpdateRepository({required this.ref});
 
+  /// Riverpod ref for accessing providers.
   final Ref ref;
 
   @override
@@ -39,4 +42,5 @@ class BaseUpdateRepository implements UpdateRepository {
   }
 }
 
+/// Provider for the base update repository.
 final baseUpdateRepositoryProvider = Provider<BaseUpdateRepository>((ref) => BaseUpdateRepository(ref: ref));

@@ -43,7 +43,7 @@ void main() {
 
     test('UpdateWrapper can have a key', () {
       const key = Key('wrapper_key');
-      const widget = UpdateWrapper(child: Text('Test'), key: key);
+      const widget = UpdateWrapper(key: key, child: Text('Test'));
       expect(widget.key, key);
       expect(widget.child, isA<Text>());
     });

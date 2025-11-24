@@ -30,15 +30,15 @@ void main() {
     });
 
     test('HasShownUpdate state can be modified', () {
-      final notifier = container.read(hasShownUpdateProvider.notifier);
-      notifier.changeValue(true);
+      final notifier = container.read(hasShownUpdateProvider.notifier)
+      ..changeValue(true);
       expect(notifier.state, true);
     });
 
     test('HasShownUpdate changeValue modifies state', () {
-      final notifier = container.read(hasShownUpdateProvider.notifier);
+      final notifier = container.read(hasShownUpdateProvider.notifier)
       
-      notifier.changeValue(true);
+      ..changeValue(true);
       expect(notifier.state, true);
       
       notifier.changeValue(false);
@@ -46,9 +46,9 @@ void main() {
     });
 
     test('HasShownUpdate provider reflects notifier state', () {
-      final notifier = container.read(hasShownUpdateProvider.notifier);
+      final notifier = container.read(hasShownUpdateProvider.notifier)
       
-      notifier.changeValue(true);
+      ..changeValue(true);
       expect(container.read(hasShownUpdateProvider), true);
       
       notifier.changeValue(false);
