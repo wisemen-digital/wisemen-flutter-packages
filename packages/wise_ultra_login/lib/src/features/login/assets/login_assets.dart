@@ -52,4 +52,7 @@ abstract interface class LoginAssets {
   ///
   /// Example: 'assets/icons/email.svg'
   String get email;
+
+  /// Path to the avatar image asset.
+  String? get avatar;
 }
