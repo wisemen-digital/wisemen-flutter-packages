@@ -14,11 +14,7 @@ dependencies:
     sdk: flutter
 
   # Wisemen
-  wisecore:
-    git:
-      url: https://github.com/wisemen-digital/wisemen-flutter-packages.git
-      ref: feature/wisemen-ultra-authentication
-      path: packages/wisecore
+  wisecore: '>=2.0.0 < 3.0.0'
   wise_theming: '>=1.0.0 <2.0.0'
   wisewidgetslibrary: '>=2.0.4 <3.0.0'
 

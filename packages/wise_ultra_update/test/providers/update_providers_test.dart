@@ -39,9 +39,9 @@ void main() {
     });
 
     test('multiple changeValue calls work correctly', () {
-      final notifier = container.read(hasShownUpdateProvider.notifier);
+      final notifier = container.read(hasShownUpdateProvider.notifier)
       
-      notifier.changeValue(true);
+      ..changeValue(true);
       expect(container.read(hasShownUpdateProvider), true);
       
       notifier.changeValue(false);
