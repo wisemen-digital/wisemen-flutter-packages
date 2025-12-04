@@ -18,7 +18,12 @@ class FullscreenImageCarousel extends StatefulWidget {
     this.showCloseButton = true,
     this.enableRotation = false,
     this.extraChildren = const [],
-    this.currentPageTextstyle = const TextStyle(fontFamily: 'CupertinoSystemDisplay', fontWeight: FontWeight.w600, color: Colors.grey, fontSize: 16),
+    this.currentPageTextstyle = const TextStyle(
+      fontFamily: 'CupertinoSystemDisplay',
+      fontWeight: FontWeight.w600,
+      color: Colors.grey,
+      fontSize: 16,
+    ),
     this.pageIndicatorSeperatorTextstyle = const TextStyle(
       fontFamily: 'CupertinoSystemDisplay',
       fontWeight: FontWeight.w600,
@@ -51,7 +56,12 @@ class FullscreenImageCarousel extends StatefulWidget {
     this.showCloseButton = true,
     this.enableRotation = false,
     this.extraChildren = const [],
-    this.currentPageTextstyle = const TextStyle(fontFamily: 'CupertinoSystemDisplay', fontWeight: FontWeight.w600, color: Colors.grey, fontSize: 16),
+    this.currentPageTextstyle = const TextStyle(
+      fontFamily: 'CupertinoSystemDisplay',
+      fontWeight: FontWeight.w600,
+      color: Colors.grey,
+      fontSize: 16,
+    ),
     this.pageIndicatorSeperatorTextstyle = const TextStyle(
       fontFamily: 'CupertinoSystemDisplay',
       fontWeight: FontWeight.w600,
@@ -84,7 +94,12 @@ class FullscreenImageCarousel extends StatefulWidget {
     this.showCloseButton = true,
     this.enableRotation = false,
     this.extraChildren = const [],
-    this.currentPageTextstyle = const TextStyle(fontFamily: 'CupertinoSystemDisplay', fontWeight: FontWeight.w600, color: Colors.grey, fontSize: 16),
+    this.currentPageTextstyle = const TextStyle(
+      fontFamily: 'CupertinoSystemDisplay',
+      fontWeight: FontWeight.w600,
+      color: Colors.grey,
+      fontSize: 16,
+    ),
     this.pageIndicatorSeperatorTextstyle = const TextStyle(
       fontFamily: 'CupertinoSystemDisplay',
       fontWeight: FontWeight.w600,
@@ -117,7 +132,12 @@ class FullscreenImageCarousel extends StatefulWidget {
     this.showCloseButton = true,
     this.enableRotation = false,
     this.extraChildren = const [],
-    this.currentPageTextstyle = const TextStyle(fontFamily: 'CupertinoSystemDisplay', fontWeight: FontWeight.w600, color: Colors.grey, fontSize: 16),
+    this.currentPageTextstyle = const TextStyle(
+      fontFamily: 'CupertinoSystemDisplay',
+      fontWeight: FontWeight.w600,
+      color: Colors.grey,
+      fontSize: 16,
+    ),
     this.pageIndicatorSeperatorTextstyle = const TextStyle(
       fontFamily: 'CupertinoSystemDisplay',
       fontWeight: FontWeight.w600,
@@ -146,7 +166,8 @@ class FullscreenImageCarousel extends StatefulWidget {
   final Widget? child;
 
   /// Complex child widget
-  final Widget Function(void Function(int initialPage) openCarousel)? complexChild;
+  final Widget Function(void Function(int initialPage) openCarousel)?
+  complexChild;
 
   /// Error widget
   final Widget? errorWidget;
@@ -228,7 +249,8 @@ class _FullscreenImageCarouselState extends State<FullscreenImageCarousel> {
           showCloseButton: widget.showCloseButton,
           enableRotation: widget.enableRotation,
           currentPageTextstyle: widget.currentPageTextstyle,
-          pageIndicatorSeperatorTextstyle: widget.pageIndicatorSeperatorTextstyle,
+          pageIndicatorSeperatorTextstyle:
+              widget.pageIndicatorSeperatorTextstyle,
           totalAmountOfPagesTextstyle: widget.totalAmountOfPagesTextstyle,
           errorWidget: widget.errorWidget,
           imageUrls: widget.imageUrls,
