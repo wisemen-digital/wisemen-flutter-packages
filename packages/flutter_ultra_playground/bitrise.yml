@@ -1,0 +1,141 @@
+---
+format_version: '8'
+default_step_lib_source: 'https://github.com/bitrise-io/bitrise-steplib.git'
+project_type: flutter
+app:
+  envs:
+    - FASTLANE_USER: buildbot@appwise.be
+    - TEAM_ID: '#TODO - Add your team ID'
+    - BITRISE_PROJECT_PATH: ios/Runner.xcworkspace
+    - SLACK_CHANNEL: '#todo-app'
+trigger_map:
+  - push_branch: main
+    workflow: development
+workflows:
+  development:
+    title: Create a new "Development" archive and upload it
+    envs:
+      - BITRISE_SCHEME: development
+      - FASTLANE_LANE: development
+      - PILOT_APPLE_ID: '#TODO - Add flavor app store ID'
+    after_run:
+      - _deploy_common
+  qa:
+    title: Create a new "QA" archive and upload it
+    envs:
+      - BITRISE_SCHEME: qa
+      - FASTLANE_LANE: qa
+      - PILOT_APPLE_ID: '#TODO - Add flavor app store ID'
+    after_run:
+      - _deploy_common
+  staging:
+    title: Create a new "Staging" archive and upload it
+    envs:
+      - BITRISE_SCHEME: staging
+      - FASTLANE_LANE: staging
+      - PILOT_APPLE_ID: '#TODO - Add flavor app store ID'
+    after_run:
+      - _deploy_common
+  production:
+    title: Create a new "Production" archive and upload it
+    envs:
+      - BITRISE_SCHEME: production
+      - FASTLANE_LANE: production
+      - PILOT_APPLE_ID: '#TODO - Add flavor app store ID'
+    after_run:
+      - _deploy_common
+    steps:
+      - file-downloader@1:
+          inputs:
+            - destination: gc_fastlane_keys.json
+            - source: "$BITRISEIO_GC_KEYS_URL"
+          title: Download Google Authentication
+  _prepare:
+    steps:
+      - activate-ssh-key@4:
+          run_if: ''
+      - git-clone@8:
+          inputs:
+            - update_submodules: 'no'
+            - fetch_tags: 'yes'
+      - generate-changelog@0.9.0: {}
+      - script@1:
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -ex
+                envman add --key CERT_KEYCHAIN_PASSWORD --value $BITRISE_KEYCHAIN_PASSWORD
+                envman add --key GEM_HOME --value "$(gem environment gemdir)"
+          title: Set environment variables
+      - flutter-installer@0:
+          inputs:
+            - is_update: 'true'
+      - cache-pull@2: {}
+      - script@1:
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -ex
+                flutter pub get --enforce-lockfile
+                dart pub global activate intl_utils
+                dart pub global run intl_utils:generate
+                dart run build_runner build --delete-conflicting-outputs
+          title: Install Flutter dependencies
+      - script@1:
+          inputs:
+            - content: |-
+                #!/usr/bin/env bash
+                set -ex
+                bundle config set path 'vendor/bundle'
+                bundle install
+                cd ios
+                flutter precache --ios
+                bundle exec pod install
+          title: Install iOS tooling & dependencies
+      - cache-push@2:
+          inputs:
+            - compress_archive: 'true'
+            - cache_paths: |-
+                $BITRISE_CACHE_DIR
+                ./vendor -> ./Gemfile.lock
+                .ios/Pods
+  _deploy_common:
+    before_run:
+      - _prepare
+    steps:
+      - manage-ios-code-signing@2:
+          inputs:
+            - project_path: ios/Runner.xcodeproj
+            - distribution_method: app-store
+            - apple_service_connection: apple-id
+            - apple_team_id: $TEAM_ID
+      - file-downloader@1:
+          inputs:
+            - destination: android/key.properties
+            - source: "$BITRISEIO_ANDROID_KEYPROPERTIES_URL"
+          title: Download Key Properties
+      - file-downloader@1:
+          inputs:
+            - destination: android/app/signing.jks
+            - source: "$BITRISEIO_ANDROID_KEYSTORE_URL"
+          title: Download Key Store
+      - script@1:
+          inputs:
+            - content: bundle exec fastlane $FASTLANE_LANE build_number:$BITRISE_BUILD_NUMBER
+          title: Fastlane
+      - slack@4:
+          inputs:
+            - channel_on_error: "$SLACK_CHANNEL"
+            - api_token: "$SLACK_BOT_TOKEN"
+            - fields: |
+                App|${BITRISE_APP_TITLE}
+                Tag|${BITRISE_GIT_TAG}
+                Branch|${BITRISE_GIT_BRANCH}
+                Workflow|${BITRISE_TRIGGERED_WORKFLOW_ID}
+      - deploy-to-bitrise-io@2:
+          inputs:
+            - is_enable_public_page: 'false'
+meta:
+  bitrise.io:
+    stack: osx-xcode-16.4.x
+    machine_type_id: g2-m1.4core

@@ -1,0 +1,95 @@
+fastlane_version '2.225.0'
+
+['Development', 'QA', 'Staging', 'Production'].each do |environment|
+  desc "Submit a new #{environment} Build to Apple TestFlight & Firebase"
+  lane "#{environment.downcase}".to_sym do |options|
+    build_number = options[:build_number]
+    update_flutter_build_number(build_number: build_number)
+    Fastlane::LaneManager.cruise_lane('ios', "#{environment.downcase}")
+    Fastlane::LaneManager.cruise_lane('android', "#{environment.downcase}")
+  end
+end
+
+# iOS
+platform :ios do
+  ['Development', 'QA', 'Staging', 'Production'].each do |environment|
+    desc "Submit a new #{environment} build to Apple TestFlight"
+    lane "#{environment.downcase}".to_sym do |options|
+      archiveAndUpload(build_number: options[:build_number])
+    end
+  end
+
+  private_lane :archiveAndUpload do |options|
+    scheme = CredentialsManager::AppfileConfig.try_fetch_value(:scheme)
+
+    increment_build_number(
+      build_number: options[:build_number],
+      xcodeproj: 'ios/Runner.xcodeproj'
+    )
+    build_ios_app(
+      workspace: 'ios/Runner.xcworkspace',
+      scheme: scheme,
+      include_bitcode: false,
+      output_directory: 'fastlane/build',
+      output_name: "#{scheme}.ipa",
+      silent: true,
+      xcargs: '-allowProvisioningUpdates',
+      clean: true
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
+
+# Android
+platform :android do
+  ['Development', 'QA', 'Staging', 'Production'].each do |environment|
+    desc "Submit a new #{environment} build to Firebase"
+    lane "#{environment.downcase}".to_sym do
+      archiveAndUpload()
+    end
+  end
+
+  private_lane :archiveAndUpload do |options|
+    flavor = CredentialsManager::AppfileConfig.try_fetch_value(:flavor)
+    app = CredentialsManager::AppfileConfig.try_fetch_value(:firebase_app_id)
+    testers = CredentialsManager::AppfileConfig.try_fetch_value(:testers)
+    groups = CredentialsManager::AppfileConfig.try_fetch_value(:groups)
+    releaseNotes = CredentialsManager::AppfileConfig.try_fetch_value(:releaseNotes)
+
+    sh("flutter build apk --release --flavor=#{flavor} --target=lib/main_#{flavor}.dart")
+    firebase_app_distribution(
+      app: app,
+      testers: testers,
+      groups: groups,
+      release_notes: releaseNotes,
+      apk_path: "build/app/outputs/flutter-apk/app-#{flavor}-release.apk",
+      debug: false
+    )
+  end
+end
+
+private_lane :update_flutter_build_number do |options|
+  build_number = options[:build_number]
+  UI.user_error!("Build number must be provided.") unless build_number
+
+  pubspec_path = "../pubspec.yaml"
+  pubspec_content = File.read(pubspec_path)
+
+  # Extract the current version and build number using regex
+  current_version_match = pubspec_content.match(/^version: (\d+\.\d+\.\d+)\+(\d+)$/)
+
+  if current_version_match
+    version_number = current_version_match[1]
+    new_version = "#{version_number}+#{build_number}"
+
+    # Replace the version line in the pubspec.yaml with the new version
+    updated_content = pubspec_content.gsub(/^version: .*/, "version: #{new_version}")
+    File.open(pubspec_path, "w") { |file| file.puts updated_content }
+
+    UI.message("Updated pubspec.yaml to new version: #{new_version}")
+  else
+    UI.user_error!("Could not find a valid version line in pubspec.yaml")
+  end
+end

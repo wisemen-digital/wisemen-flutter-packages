@@ -1,0 +1,66 @@
+# iOS
+apple_id ENV['USER_APPLE_ID']
+team_name '#TODO - Apple Team name'
+itc_team_name '#TODO - Apple Team name'
+
+# lane specific settings
+for_platform :ios do
+  for_lane :development do
+    app_identifier '#TODO - App identifier'
+    setter(:scheme, 'development')
+  end
+
+  for_lane :qa do
+    app_identifier '#TODO - App identifier'
+    setter(:scheme, 'qa')
+  end
+
+  for_lane :staging do
+    app_identifier '#TODO - App identifier'
+    setter(:scheme, 'staging')
+  end
+
+  for_lane :production do
+    app_identifier '#TODO - App identifier'
+    setter(:scheme, 'production')
+  end
+end
+
+# Android
+json_key_file("#TODO - Customer Play Store GC") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("#TODO - Android package name")
+
+# lane specific settings
+for_platform :android do
+  ## was from the time before dev,stag,prod --> only debug en prod (staging env and production env)
+  for_lane :development do
+    setter(:flavor, 'development')
+    setter(:firebase_app_id, '#TODO - Firebase app id')
+    setter(:testers, 'test@appwise.be')
+    setter(:releaseNotes, 'Dit is een firebase development versie')
+  end
+
+  for_lane :qa do
+    setter(:flavor, 'qa')
+    setter(:firebase_app_id, '#TODO - Firebase app id')
+    setter(:testers, 'test@appwise.be')
+    setter(:groups, "")
+    setter(:releaseNotes, 'Dit is een firebase qa versie')
+  end
+  
+  ##has no "staging build"
+  for_lane :staging do
+    setter(:flavor, 'staging')
+    setter(:firebase_app_id, '#TODO - Firebase app id')
+    setter(:testers, 'test@appwise.be')
+    setter(:groups, '')
+    setter(:releaseNotes, 'Dit is een firebase staging versie')
+  end
+
+  for_lane :production do
+    setter(:flavor, 'production')
+    setter(:firebase_app_id, '#TODO - Firebase app id')
+    setter(:testers, 'test@appwise.be')
+    setter(:releaseNotes, 'Dit is een firebase release versie')
+  end
+end
