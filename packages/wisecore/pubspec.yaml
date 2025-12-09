@@ -3,6 +3,7 @@ description: A flutter core project used by Wisemen. Comes with a bunch of gener
 version: 2.2.5
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
+publish_to: none
 
 environment:
   sdk: ">=3.6.0 <4.0.0"
@@ -17,7 +18,7 @@ dependencies:
   riverpod: ">=3.0.0 <4.0.0"
 
   # Networking
-  dio: ">=5.0.0 <6.0.0"
+  dio: ">=5.0.0" 
 
   # Storage
   shared_preferences: ">=2.0.0 <3.0.0"
@@ -31,10 +32,11 @@ dependencies:
   url_launcher_platform_interface: ">=2.3.2 <3.0.0"
 
   # Network client
-  wiseclient: 1.1.3-prerelease.2
+  wiseclient:
+    path: ../wiseclient
 
   # Navigation
-  auto_route: ">=10.0.0 <11.0.0"
+  auto_route: ">=11.0.0"
 
 dev_dependencies:
   # Static analysis & linting

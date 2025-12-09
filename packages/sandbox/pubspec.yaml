@@ -27,8 +27,8 @@ dependencies:
     path: ../wiseclient
   
  # Riverpod
-  riverpod_annotation: ^2.3.5
-  hooks_riverpod: ^2.5.1
+  riverpod_annotation: ^3.0.3
+  hooks_riverpod: ^3.0.3
 
   # UI
   modal_bottom_sheet: ^3.0.0
@@ -48,18 +48,18 @@ dependencies:
   flutter_native_splash: ^2.4.1
 
   # Logging
-  talker_flutter: ^4.3.4
+  talker_flutter: ^5.0.0
   onesignal_flutter: ^5.2.9
-  sentry_flutter: ^8.12.0
+  sentry_flutter: 9.8.0
+
 dev_dependencies: 
   # Code generation
-  build_runner: ^2.4.9
-
+  build_runner: 
   # Riverpod
-  riverpod_generator: ^2.4.0
+  riverpod_generator: ^3.0.0
 
   # Routing
-  auto_route_generator: ^9.0.0
+  auto_route_generator:
   
   # Data
   json_serializable: ^6.6.1
@@ -71,8 +71,8 @@ dev_dependencies:
   flutter_flavorizr: ^2.1.6
   
   # Linting
-  riverpod_lint: ^2.6.3
-  custom_lint: ^0.7.5
+  riverpod_lint: ^3.0.3
+  custom_lint: ^0.8.0
 
 # flavors
 flavorizr:
