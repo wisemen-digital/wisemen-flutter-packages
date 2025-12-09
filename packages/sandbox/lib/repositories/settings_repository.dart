@@ -1,5 +1,4 @@
 import 'package:flutter/src/material/app.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sandbox/data/dao/app_settings_dao.dart';
 import 'package:sandbox/features/settings/settings.dart';

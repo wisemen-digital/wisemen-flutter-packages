@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:fresh_dio/fresh_dio.dart';
 
 import 'package:wiseclient/wiseclient.dart';
 
@@ -37,8 +36,10 @@ class FakerWiseClient implements WiseClient {
 
   @override
   Fresh<OAuth2Token> fresh = Fresh.oAuth2(
-    tokenStorage: InMemoryTokenStorage(),
-    refreshToken: (_, __) async => const OAuth2Token(accessToken: ''),
+      tokenStorage: InMemoryTokenStorage(),
+      refreshToken: (_, __) async => const OAuth2Token(accessToken: ''),
+      refreshErrorHandler: (_, __) => {},
+      refreshBuffer: const Duration(seconds: 60),
   );
 
   @override

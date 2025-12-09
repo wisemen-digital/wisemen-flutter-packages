@@ -24,7 +24,7 @@ dependencies:
   
   # Logging & Debugging
   native_dio_adapter: ^1.5.0
-  talker_dio_logger: ">=5.0.0 <6.0.0"
+  talker_dio_logger: ">=5.0.0"
 
 dev_dependencies:
   # Static analysis & linting
