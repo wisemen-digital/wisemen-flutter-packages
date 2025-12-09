@@ -39,7 +39,8 @@ class FakerWiseClient implements WiseClient {
       tokenStorage: InMemoryTokenStorage(),
       refreshToken: (_, __) async => const OAuth2Token(accessToken: ''),
       refreshErrorHandler: (_, __) => {},
-      refreshBuffer: Duration(seconds: 60));
+      refreshBuffer: const Duration(seconds: 60),
+  );
 
   @override
   HttpClientAdapter httpClientAdapter = HttpClientAdapter();
