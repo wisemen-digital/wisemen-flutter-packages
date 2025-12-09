@@ -24,6 +24,8 @@ class PagedList<T> extends StatelessWidget {
     this.animationInterval = 200,
     this.shimmerColor,
     this.shimmerHighlightColor,
+    this.invisibleItemsThreshold = 5,
+    this.scrollDirection = Axis.vertical,
   });
 
   /// List of items to display, usually a stream from database
@@ -72,11 +74,19 @@ class PagedList<T> extends StatelessWidget {
   /// Optional shimmer highlight color for the loading indicator
   final Color? shimmerHighlightColor;
 
+  /// The threshold for the number of invisible items to trigger fetching more data.
+  final int invisibleItemsThreshold;
+
+  /// The [Axis] along which the scroll view's offset increases.
+  /// Defaults to [Axis.vertical].
+  final Axis scrollDirection;
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: controller.isLoading,
       builder: (context, isLoading, child) => InfiniteListView.separated(
+        scrollDirection: scrollDirection,
         shrinkWrap: shrinkWrap,
         physics: physics,
         padding: padding,
@@ -105,7 +115,7 @@ class PagedList<T> extends StatelessWidget {
           loadMoreErrorBuilder: (context, onRetry) =>
               Center(child: errorBuilder(context, onRetry)),
           loadMoreNoMoreItemsBuilder: (context) => const SizedBox.shrink(),
-          invisibleItemsThreshold: 5,
+          invisibleItemsThreshold: invisibleItemsThreshold,
         ),
       ),
     );
