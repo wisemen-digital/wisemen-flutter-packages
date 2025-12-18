@@ -37,7 +37,7 @@ dependencies:
 
 dev_dependencies:
   # Static analysis & linting
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   custom_lint: ^0.8.0
   dependency_validator: ^5.0.2
   flutter_test:
