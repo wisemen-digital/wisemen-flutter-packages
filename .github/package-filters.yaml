@@ -19,3 +19,6 @@ wisewidgetslibrary:
 wise_theming:
   - '.github/**'
   - 'packages/wise_theming/**'
+wise_review:
+  - '.github/**'
+  - 'packages/wise_review/**'

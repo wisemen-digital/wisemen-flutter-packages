@@ -9,6 +9,7 @@ workspace:
   - packages/wise_nav_bar
   - packages/wise_zitadel_login
   - packages/wise_theming
+  - packages/wise_review
 dev_dependencies:
   melos: ^6.3.2
   coverage: ^1.11.1
