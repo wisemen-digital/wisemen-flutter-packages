@@ -23,7 +23,10 @@ void main() {
 
       test('equivalent temperatures in different units are equal', () {
         const celsius = Temperature(value: 0, unit: TemperatureUnit.celsius);
-        const fahrenheit = Temperature(value: 32, unit: TemperatureUnit.fahrenheit);
+        const fahrenheit = Temperature(
+          value: 32,
+          unit: TemperatureUnit.fahrenheit,
+        );
 
         expect(celsius, equals(fahrenheit));
       });
@@ -48,7 +51,10 @@ void main() {
 
       test('compares across different units', () {
         const celsius = Temperature(value: 0, unit: TemperatureUnit.celsius);
-        const fahrenheit = Temperature(value: 50, unit: TemperatureUnit.fahrenheit);
+        const fahrenheit = Temperature(
+          value: 50,
+          unit: TemperatureUnit.fahrenheit,
+        );
 
         expect(celsius.compareTo(fahrenheit), lessThan(0));
       });
@@ -63,7 +69,9 @@ void main() {
 
     testWidgets('label with celsius preference', (tester) async {
       const temp = Temperature(value: 20, unit: TemperatureUnit.celsius);
-      final options = await _createOptions(temperatureUnit: TemperatureUnit.celsius);
+      final options = await _createOptions(
+        temperatureUnit: TemperatureUnit.celsius,
+      );
 
       await tester.pumpWidget(
         _buildTestWidget(options, (context) {
@@ -75,7 +83,9 @@ void main() {
 
     testWidgets('label with fahrenheit preference', (tester) async {
       const temp = Temperature(value: 20, unit: TemperatureUnit.celsius);
-      final options = await _createOptions(temperatureUnit: TemperatureUnit.fahrenheit);
+      final options = await _createOptions(
+        temperatureUnit: TemperatureUnit.fahrenheit,
+      );
 
       await tester.pumpWidget(
         _buildTestWidget(options, (context) {
@@ -133,8 +143,14 @@ void main() {
       });
 
       test('parses fahrenheit', () {
-        expect(TemperatureUnit.fromString('fahrenheit'), TemperatureUnit.fahrenheit);
-        expect(TemperatureUnit.fromString('fahrenhe'), TemperatureUnit.fahrenheit); // Android bug
+        expect(
+          TemperatureUnit.fromString('fahrenheit'),
+          TemperatureUnit.fahrenheit,
+        );
+        expect(
+          TemperatureUnit.fromString('fahrenhe'),
+          TemperatureUnit.fahrenheit,
+        ); // Android bug
       });
 
       test('parses kelvin', () {
@@ -263,7 +279,10 @@ void main() {
     group('calculateFrom', () {
       test('converts meters to kilometers', () {
         const dist = Distance(value: 1000, unit: DistanceUnit.meters);
-        final result = DistanceUnit.kilometers.calculateFrom(dist, useMetric: true);
+        final result = DistanceUnit.kilometers.calculateFrom(
+          dist,
+          useMetric: true,
+        );
 
         expect(result.unit, DistanceUnit.kilometers);
         expect(result.value, 1);
@@ -286,7 +305,10 @@ void main() {
 
       test('respects imperial preference', () {
         const dist = Distance(value: 1000, unit: DistanceUnit.meters);
-        final imperial = DistanceUnit.feet.calculateFrom(dist, useMetric: false);
+        final imperial = DistanceUnit.feet.calculateFrom(
+          dist,
+          useMetric: false,
+        );
 
         expect(imperial.unit.isMetric, false);
       });
@@ -300,28 +322,32 @@ Future<ScalarOptions> _createOptions({
 }) async {
   const channel = MethodChannel('wise_scalars');
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-    channel,
-    (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case 'getFirstDayOfWeek':
-          return 1;
-        case 'getTemperatureUnit':
-          return temperatureUnit?.name;
-        case 'getUsesMetricSystemForDistance':
-          return usesMetricDistance;
-        case 'getDateFormatStyles':
-          return {};
-        default:
-          return null;
-      }
-    },
-  );
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+        channel,
+        (MethodCall methodCall) async {
+          switch (methodCall.method) {
+            case 'getFirstDayOfWeek':
+              return 1;
+            case 'getTemperatureUnit':
+              return temperatureUnit?.name;
+            case 'getUsesMetricSystemForDistance':
+              return usesMetricDistance;
+            case 'getDateFormatStyles':
+              return {};
+            default:
+              return null;
+          }
+        },
+      );
 
   return ScalarOptions.fromMethodChannel();
 }
 
-Widget _buildTestWidget(ScalarOptions options, void Function(BuildContext) test) {
+Widget _buildTestWidget(
+  ScalarOptions options,
+  void Function(BuildContext) test,
+) {
   return WiseScalarScope(
     options: options,
     child: Builder(

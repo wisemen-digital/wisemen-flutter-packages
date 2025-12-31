@@ -8,8 +8,12 @@ import 'wise_scalar_scope.dart';
 /// Configuration options for scalars
 @immutable
 class ScalarOptions {
-  ScalarOptions._(this.firstDayOfWeek, this.temperatureUnit, this.usesMetricDistance, {DateFormatPatterns? dateFormatPatterns})
-    : dateFormatPatterns = dateFormatPatterns ?? DateFormatPatterns.init();
+  ScalarOptions._(
+    this.firstDayOfWeek,
+    this.temperatureUnit,
+    this.usesMetricDistance, {
+    DateFormatPatterns? dateFormatPatterns,
+  }) : dateFormatPatterns = dateFormatPatterns ?? DateFormatPatterns.init();
 
   /// Retrieves the [ScalarOptions] from method channel
   static Future<ScalarOptions> fromMethodChannel() async {
@@ -24,7 +28,9 @@ class ScalarOptions {
       results[0] as int?,
       TemperatureUnit.fromString(results[1] as String?),
       results[2] as bool?,
-      dateFormatPatterns: DateFormatPatterns.fromMap(results[3] as Map<String, String>?),
+      dateFormatPatterns: DateFormatPatterns.fromMap(
+        results[3] as Map<String, String>?,
+      ),
     );
   }
 

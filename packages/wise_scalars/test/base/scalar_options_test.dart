@@ -10,38 +10,41 @@ void main() {
   const channel = MethodChannel('wise_scalars');
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   group('ScalarOptions.fromMethodChannel', () {
     test('creates options with metric system settings', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1; // Monday
-            case 'getTemperatureUnit':
-              return 'celsius';
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 1; // Monday
+                case 'getTemperatureUnit':
+                  return 'celsius';
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'dd/MM/yy',
+                    'medium': 'd MMM yyyy',
+                    'long': 'd MMMM yyyy',
+                    'full': 'EEEE d MMMM yyyy',
+                    'time': 'HH:mm',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -53,29 +56,30 @@ void main() {
     });
 
     test('creates options with imperial system settings (US)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 7; // Sunday
-            case 'getTemperatureUnit':
-              return 'fahrenheit';
-            case 'getUsesMetricSystemForDistance':
-              return false;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'M/d/yy',
-                'medium': 'MMM d, yyyy',
-                'long': 'MMMM d, yyyy',
-                'full': 'EEEE, MMMM d, yyyy',
-                'time': 'h:mm a',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 7; // Sunday
+                case 'getTemperatureUnit':
+                  return 'fahrenheit';
+                case 'getUsesMetricSystemForDistance':
+                  return false;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'M/d/yy',
+                    'medium': 'MMM d, yyyy',
+                    'long': 'MMMM d, yyyy',
+                    'full': 'EEEE, MMMM d, yyyy',
+                    'time': 'h:mm a',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -87,29 +91,30 @@ void main() {
     });
 
     test('creates options with kelvin temperature unit', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1;
-            case 'getTemperatureUnit':
-              return 'kelvin';
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 1;
+                case 'getTemperatureUnit':
+                  return 'kelvin';
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'dd/MM/yy',
+                    'medium': 'd MMM yyyy',
+                    'long': 'd MMMM yyyy',
+                    'full': 'EEEE d MMMM yyyy',
+                    'time': 'HH:mm',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -117,29 +122,30 @@ void main() {
     });
 
     test('handles Android fahrenheit bug (fahrenhe)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 7;
-            case 'getTemperatureUnit':
-              return 'fahrenhe'; // Android bug
-            case 'getUsesMetricSystemForDistance':
-              return false;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'M/d/yy',
-                'medium': 'MMM d, yyyy',
-                'long': 'MMMM d, yyyy',
-                'full': 'EEEE, MMMM d, yyyy',
-                'time': 'h:mm a',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 7;
+                case 'getTemperatureUnit':
+                  return 'fahrenhe'; // Android bug
+                case 'getUsesMetricSystemForDistance':
+                  return false;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'M/d/yy',
+                    'medium': 'MMM d, yyyy',
+                    'long': 'MMMM d, yyyy',
+                    'full': 'EEEE, MMMM d, yyyy',
+                    'time': 'h:mm a',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -147,12 +153,13 @@ void main() {
     });
 
     test('handles null values gracefully', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              return null;
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -164,23 +171,24 @@ void main() {
     });
 
     test('handles partial null values', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1;
-            case 'getTemperatureUnit':
-              return null; // Null temperature
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return null; // Null date formats
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 1;
+                case 'getTemperatureUnit':
+                  return null; // Null temperature
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return null; // Null date formats
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -191,29 +199,30 @@ void main() {
     });
 
     test('handles unknown temperature unit string', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1;
-            case 'getTemperatureUnit':
-              return 'rankine'; // Unknown unit
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 1;
+                case 'getTemperatureUnit':
+                  return 'rankine'; // Unknown unit
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'dd/MM/yy',
+                    'medium': 'd MMM yyyy',
+                    'long': 'd MMMM yyyy',
+                    'full': 'EEEE d MMMM yyyy',
+                    'time': 'HH:mm',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -222,29 +231,30 @@ void main() {
 
     test('handles different first day of week values', () async {
       for (final day in [1, 2, 3, 4, 5, 6, 7]) {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-          channel,
-          (MethodCall methodCall) async {
-            switch (methodCall.method) {
-              case 'getFirstDayOfWeek':
-                return day;
-              case 'getTemperatureUnit':
-                return 'celsius';
-              case 'getUsesMetricSystemForDistance':
-                return true;
-              case 'getDateFormatStyles':
-                return {
-                  'short': 'dd/MM/yy',
-                  'medium': 'd MMM yyyy',
-                  'long': 'd MMMM yyyy',
-                  'full': 'EEEE d MMMM yyyy',
-                  'time': 'HH:mm',
-                };
-              default:
-                return null;
-            }
-          },
-        );
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              channel,
+              (MethodCall methodCall) async {
+                switch (methodCall.method) {
+                  case 'getFirstDayOfWeek':
+                    return day;
+                  case 'getTemperatureUnit':
+                    return 'celsius';
+                  case 'getUsesMetricSystemForDistance':
+                    return true;
+                  case 'getDateFormatStyles':
+                    return {
+                      'short': 'dd/MM/yy',
+                      'medium': 'd MMM yyyy',
+                      'long': 'd MMMM yyyy',
+                      'full': 'EEEE d MMMM yyyy',
+                      'time': 'HH:mm',
+                    };
+                  default:
+                    return null;
+                }
+              },
+            );
 
         final options = await ScalarOptions.fromMethodChannel();
         expect(options.firstDayOfWeek, day);
@@ -252,29 +262,30 @@ void main() {
     });
 
     test('creates options with Asian date formats', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1;
-            case 'getTemperatureUnit':
-              return 'celsius';
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'yy/MM/dd',
-                'medium': 'yyyy/MM/dd',
-                'long': 'yyyy年M月d日',
-                'full': 'yyyy年M月d日 EEEE',
-                'time': 'H:mm',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 1;
+                case 'getTemperatureUnit':
+                  return 'celsius';
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'yy/MM/dd',
+                    'medium': 'yyyy/MM/dd',
+                    'long': 'yyyy年M月d日',
+                    'full': 'yyyy年M月d日 EEEE',
+                    'time': 'H:mm',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -305,7 +316,9 @@ void main() {
       expect(retrievedOptions, equals(options));
     });
 
-    testWidgets('throws assertion error when WiseScalarScope is missing', (tester) async {
+    testWidgets('throws assertion error when WiseScalarScope is missing', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         Builder(
           builder: (context) {
@@ -320,7 +333,9 @@ void main() {
       );
     });
 
-    testWidgets('retrieves updated options after scope changes', (tester) async {
+    testWidgets('retrieves updated options after scope changes', (
+      tester,
+    ) async {
       final options1 = await _createMockOptions();
       final options2 = await _createMockOptions(firstDayOfWeek: 7);
 
@@ -373,7 +388,9 @@ void main() {
 
     test('different temperatureUnit makes options unequal', () async {
       final options1 = await _createMockOptions();
-      final options2 = await _createMockOptions(temperatureUnit: TemperatureUnit.fahrenheit);
+      final options2 = await _createMockOptions(
+        temperatureUnit: TemperatureUnit.fahrenheit,
+      );
 
       expect(options1, isNot(equals(options2)));
     });
@@ -446,29 +463,30 @@ void main() {
 
   group('ScalarOptions integration scenarios', () {
     test('complete metric user scenario (European)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1; // Monday
-            case 'getTemperatureUnit':
-              return 'celsius';
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 1; // Monday
+                case 'getTemperatureUnit':
+                  return 'celsius';
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'dd/MM/yy',
+                    'medium': 'd MMM yyyy',
+                    'long': 'd MMMM yyyy',
+                    'full': 'EEEE d MMMM yyyy',
+                    'time': 'HH:mm',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -480,29 +498,30 @@ void main() {
     });
 
     test('complete imperial user scenario (American)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 7; // Sunday
-            case 'getTemperatureUnit':
-              return 'fahrenheit';
-            case 'getUsesMetricSystemForDistance':
-              return false;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'M/d/yy',
-                'medium': 'MMM d, yyyy',
-                'long': 'MMMM d, yyyy',
-                'full': 'EEEE, MMMM d, yyyy',
-                'time': 'h:mm a',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getFirstDayOfWeek':
+                  return 7; // Sunday
+                case 'getTemperatureUnit':
+                  return 'fahrenheit';
+                case 'getUsesMetricSystemForDistance':
+                  return false;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'M/d/yy',
+                    'medium': 'MMM d, yyyy',
+                    'long': 'MMMM d, yyyy',
+                    'full': 'EEEE, MMMM d, yyyy',
+                    'time': 'h:mm a',
+                  };
+                default:
+                  return null;
+              }
+            },
+          );
 
       final options = await ScalarOptions.fromMethodChannel();
 
@@ -513,36 +532,40 @@ void main() {
       expect(options.dateFormatPatterns.time.pattern, 'h:mm a');
     });
 
-    test('mixed preference scenario (UK: metric distance, but mixed other)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getFirstDayOfWeek':
-              return 1; // Monday
-            case 'getTemperatureUnit':
-              return 'celsius';
-            case 'getUsesMetricSystemForDistance':
-              return false; // UK sometimes uses miles
-            case 'getDateFormatStyles':
-              return {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-            default:
-              return null;
-          }
-        },
-      );
+    test(
+      'mixed preference scenario (UK: metric distance, but mixed other)',
+      () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              channel,
+              (MethodCall methodCall) async {
+                switch (methodCall.method) {
+                  case 'getFirstDayOfWeek':
+                    return 1; // Monday
+                  case 'getTemperatureUnit':
+                    return 'celsius';
+                  case 'getUsesMetricSystemForDistance':
+                    return false; // UK sometimes uses miles
+                  case 'getDateFormatStyles':
+                    return {
+                      'short': 'dd/MM/yy',
+                      'medium': 'd MMM yyyy',
+                      'long': 'd MMMM yyyy',
+                      'full': 'EEEE d MMMM yyyy',
+                      'time': 'HH:mm',
+                    };
+                  default:
+                    return null;
+                }
+              },
+            );
 
-      final options = await ScalarOptions.fromMethodChannel();
+        final options = await ScalarOptions.fromMethodChannel();
 
-      expect(options.temperatureUnit, TemperatureUnit.celsius);
-      expect(options.usesMetricDistance, false);
-    });
+        expect(options.temperatureUnit, TemperatureUnit.celsius);
+        expect(options.usesMetricDistance, false);
+      },
+    );
   });
 }
 
@@ -555,30 +578,31 @@ Future<ScalarOptions> _createMockOptions({
 }) async {
   const channel = MethodChannel('wise_scalars');
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-    channel,
-    (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case 'getFirstDayOfWeek':
-          return firstDayOfWeek;
-        case 'getTemperatureUnit':
-          return temperatureUnit?.name;
-        case 'getUsesMetricSystemForDistance':
-          return usesMetricDistance;
-        case 'getDateFormatStyles':
-          return dateFormats ??
-              {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-        default:
-          return null;
-      }
-    },
-  );
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+        channel,
+        (MethodCall methodCall) async {
+          switch (methodCall.method) {
+            case 'getFirstDayOfWeek':
+              return firstDayOfWeek;
+            case 'getTemperatureUnit':
+              return temperatureUnit?.name;
+            case 'getUsesMetricSystemForDistance':
+              return usesMetricDistance;
+            case 'getDateFormatStyles':
+              return dateFormats ??
+                  {
+                    'short': 'dd/MM/yy',
+                    'medium': 'd MMM yyyy',
+                    'long': 'd MMMM yyyy',
+                    'full': 'EEEE d MMMM yyyy',
+                    'time': 'HH:mm',
+                  };
+            default:
+              return null;
+          }
+        },
+      );
 
   return ScalarOptions.fromMethodChannel();
 }

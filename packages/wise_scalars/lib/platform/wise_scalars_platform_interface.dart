@@ -31,7 +31,9 @@ abstract class WiseScalarsPlatform extends PlatformInterface {
 
   /// Check if the device uses the metric system for distance.
   Future<bool?> getUsesMetricSystemForDistance() {
-    throw UnimplementedError('getUsesMetricSystemForDistance() has not been implemented.');
+    throw UnimplementedError(
+      'getUsesMetricSystemForDistance() has not been implemented.',
+    );
   }
 
   /// Get date format styles.

@@ -18,7 +18,8 @@ class ScalarScopeExample extends StatefulWidget {
   State<ScalarScopeExample> createState() => _ScalarScopeExampleState();
 }
 
-class _ScalarScopeExampleState extends State<ScalarScopeExample> with WidgetsBindingObserver {
+class _ScalarScopeExampleState extends State<ScalarScopeExample>
+    with WidgetsBindingObserver {
   late ScalarOptions scalarOptions;
   @override
   void initState() {
@@ -75,8 +76,12 @@ class App extends StatelessWidget {
                 Text('Date medium: ${DateTime.now().medium(context)}'),
                 Text('Date long: ${DateTime.now().long(context)}'),
                 Text('Date full: ${DateTime.now().full(context)}'),
-                Text('20 celsius is: ${const Temperature(value: 20, unit: TemperatureUnit.celsius).label(context)}'),
-                Text('100 meters is: ${const Distance(value: 100, unit: DistanceUnit.meters).label(context)}'),
+                Text(
+                  '20 celsius is: ${const Temperature(value: 20, unit: TemperatureUnit.celsius).label(context)}',
+                ),
+                Text(
+                  '100 meters is: ${const Distance(value: 100, unit: DistanceUnit.meters).label(context)}',
+                ),
                 Text(
                   'First day of the week: ${DateFormat('EEEE').format(DateTime.now().subtract(Duration(days: DateTime.now().weekday - (ScalarOptions.of(context).firstDayOfWeek ?? 1))))}',
                 ),
