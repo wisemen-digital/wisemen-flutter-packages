@@ -9,6 +9,7 @@ on:
       - "wise_nav_bar-v*"
       - "wise_zitadel_login-v*"
       - "wise_theming-v*"
+      - "wise_scalars-v*"
 jobs:
   publish:
     permissions:
