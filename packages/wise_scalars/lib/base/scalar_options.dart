@@ -55,12 +55,16 @@ class ScalarOptions {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ScalarOptions &&
-          runtimeType == other.runtimeType &&
           firstDayOfWeek == other.firstDayOfWeek &&
           temperatureUnit == other.temperatureUnit &&
           usesMetricDistance == other.usesMetricDistance &&
           dateFormatPatterns == other.dateFormatPatterns;
 
   @override
-  int get hashCode => firstDayOfWeek.hashCode ^ temperatureUnit.hashCode ^ usesMetricDistance.hashCode ^ dateFormatPatterns.hashCode;
+  int get hashCode => Object.hash(
+    firstDayOfWeek,
+    temperatureUnit,
+    usesMetricDistance,
+    dateFormatPatterns,
+  );
 }
