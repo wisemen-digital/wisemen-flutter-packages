@@ -340,7 +340,10 @@ void main() {
     });
 
     test('handles very small positive numbers', () {
-      const scalar = TestScalar(value: double.minPositive, unit: TestUnit.small);
+      const scalar = TestScalar(
+        value: double.minPositive,
+        unit: TestUnit.small,
+      );
 
       expect(scalar.value, double.minPositive);
     });
@@ -352,7 +355,10 @@ void main() {
     });
 
     test('handles negative infinity', () {
-      const scalar = TestScalar(value: double.negativeInfinity, unit: TestUnit.small);
+      const scalar = TestScalar(
+        value: double.negativeInfinity,
+        unit: TestUnit.small,
+      );
 
       expect(scalar.value, double.negativeInfinity);
     });
@@ -376,7 +382,8 @@ enum TestUnit {
 
 /// Basic test implementation of Scalar using default label behavior
 class TestScalar extends Scalar {
-  const TestScalar({required super.value, required this.unit}) : super(unit: unit);
+  const TestScalar({required super.value, required this.unit})
+    : super(unit: unit);
 
   @override
   final TestUnit unit;
@@ -384,7 +391,9 @@ class TestScalar extends Scalar {
   @override
   int compareTo(Scalar other) {
     if (other is! TestScalar) {
-      throw ArgumentError('Cannot compare TestScalar with ${other.runtimeType}');
+      throw ArgumentError(
+        'Cannot compare TestScalar with ${other.runtimeType}',
+      );
     }
     return value.compareTo(other.value);
   }
@@ -392,7 +401,8 @@ class TestScalar extends Scalar {
 
 /// Test implementation with custom label override
 class CustomLabelScalar extends Scalar {
-  const CustomLabelScalar({required super.value, required this.unit}) : super(unit: unit);
+  const CustomLabelScalar({required super.value, required this.unit})
+    : super(unit: unit);
 
   @override
   final TestUnit unit;
@@ -405,7 +415,9 @@ class CustomLabelScalar extends Scalar {
   @override
   int compareTo(Scalar other) {
     if (other is! CustomLabelScalar) {
-      throw ArgumentError('Cannot compare CustomLabelScalar with ${other.runtimeType}');
+      throw ArgumentError(
+        'Cannot compare CustomLabelScalar with ${other.runtimeType}',
+      );
     }
     return value.compareTo(other.value);
   }
@@ -413,7 +425,8 @@ class CustomLabelScalar extends Scalar {
 
 /// Test implementation for compareTo testing
 class ComparableScalar extends Scalar {
-  const ComparableScalar({required super.value, required this.unit}) : super(unit: unit);
+  const ComparableScalar({required super.value, required this.unit})
+    : super(unit: unit);
 
   @override
   final TestUnit unit;
@@ -421,7 +434,9 @@ class ComparableScalar extends Scalar {
   @override
   int compareTo(Scalar other) {
     if (other is! ComparableScalar) {
-      throw ArgumentError('Cannot compare ComparableScalar with ${other.runtimeType}');
+      throw ArgumentError(
+        'Cannot compare ComparableScalar with ${other.runtimeType}',
+      );
     }
     return value.compareTo(other.value);
   }
@@ -434,7 +449,8 @@ enum OtherUnit {
 }
 
 class OtherTypeScalar extends Scalar {
-  const OtherTypeScalar({required super.value, required this.unit}) : super(unit: unit);
+  const OtherTypeScalar({required super.value, required this.unit})
+    : super(unit: unit);
 
   @override
   final OtherUnit unit;
@@ -442,7 +458,9 @@ class OtherTypeScalar extends Scalar {
   @override
   int compareTo(Scalar other) {
     if (other is! OtherTypeScalar) {
-      throw ArgumentError('Cannot compare OtherTypeScalar with ${other.runtimeType}');
+      throw ArgumentError(
+        'Cannot compare OtherTypeScalar with ${other.runtimeType}',
+      );
     }
     return value.compareTo(other.value);
   }

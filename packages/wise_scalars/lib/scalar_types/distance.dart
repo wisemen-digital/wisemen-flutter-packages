@@ -18,7 +18,8 @@ class Distance implements Scalar {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other.runtimeType != runtimeType) return false;
-    return other is Distance && unit._inMillimeters(value) == other.unit._inMillimeters(other.value);
+    return other is Distance &&
+        unit._inMillimeters(value) == other.unit._inMillimeters(other.value);
   }
 
   @override
@@ -26,7 +27,9 @@ class Distance implements Scalar {
     if (other is! Distance) {
       throw ArgumentError('Cannot compare Distance with ${other.runtimeType}');
     }
-    return unit._inMillimeters(value).compareTo(other.unit._inMillimeters(other.value));
+    return unit
+        ._inMillimeters(value)
+        .compareTo(other.unit._inMillimeters(other.value));
   }
 
   @override
@@ -73,7 +76,8 @@ enum DistanceUnit {
   miles(isMetric: false, size: _UnitSize.l)
   ;
 
-  const DistanceUnit({required this.isMetric, required _UnitSize size}) : _size = size;
+  const DistanceUnit({required this.isMetric, required _UnitSize size})
+    : _size = size;
 
   /// Whether this unit is part of the metric system
   final bool isMetric;
@@ -124,7 +128,10 @@ enum DistanceUnit {
   }
 
   /// Converts the given [Distance] to a unit of this type.
-  ({DistanceUnit unit, double value}) calculateFrom(Distance distance, {required bool useMetric}) {
+  ({DistanceUnit unit, double value}) calculateFrom(
+    Distance distance, {
+    required bool useMetric,
+  }) {
     final valueInMillimeters = distance.unit._inMillimeters(distance.value);
     if (isMetric != useMetric) {
       return _oppositeSystemUnit.calculateFrom(distance, useMetric: useMetric);

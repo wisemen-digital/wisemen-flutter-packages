@@ -20,14 +20,17 @@ class Temperature implements Scalar {
   @override
   int compareTo(Scalar other) {
     if (other is! Temperature) {
-      throw ArgumentError('Cannot compare Temperature with ${other.runtimeType}');
+      throw ArgumentError(
+        'Cannot compare Temperature with ${other.runtimeType}',
+      );
     }
     return _asCelsius.compareTo(other._asCelsius);
   }
 
   @override
   String labelValue(BuildContext context) {
-    final unitValue = ScalarOptions.of(context).temperatureUnit?.calculateFrom(this) ?? value;
+    final unitValue =
+        ScalarOptions.of(context).temperatureUnit?.calculateFrom(this) ?? value;
     return NumberFormat('#').format(unitValue);
   }
 

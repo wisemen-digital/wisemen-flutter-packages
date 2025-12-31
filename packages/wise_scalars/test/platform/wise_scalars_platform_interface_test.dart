@@ -35,12 +35,15 @@ void main() {
       );
     });
 
-    test('getUsesMetricSystemForDistance throws UnimplementedError by default', () {
-      expect(
-        () => platform.getUsesMetricSystemForDistance(),
-        throwsA(isA<UnimplementedError>()),
-      );
-    });
+    test(
+      'getUsesMetricSystemForDistance throws UnimplementedError by default',
+      () {
+        expect(
+          () => platform.getUsesMetricSystemForDistance(),
+          throwsA(isA<UnimplementedError>()),
+        );
+      },
+    );
 
     test('getDateFormatStyles throws UnimplementedError by default', () {
       expect(
@@ -63,7 +66,8 @@ void main() {
       WiseScalarsPlatform.instance = customPlatform;
 
       final tempUnit = await WiseScalarsPlatform.instance.getTemperatureUnit();
-      final usesMetric = await WiseScalarsPlatform.instance.getUsesMetricSystemForDistance();
+      final usesMetric = await WiseScalarsPlatform.instance
+          .getUsesMetricSystemForDistance();
       final firstDay = await WiseScalarsPlatform.instance.getFirstDayOfWeek();
 
       expect(tempUnit, 'celsius');
@@ -79,7 +83,8 @@ void main() {
       WiseScalarsPlatform.instance = customPlatform;
 
       final tempUnit = await WiseScalarsPlatform.instance.getTemperatureUnit();
-      final usesMetric = await WiseScalarsPlatform.instance.getUsesMetricSystemForDistance();
+      final usesMetric = await WiseScalarsPlatform.instance
+          .getUsesMetricSystemForDistance();
       final firstDay = await WiseScalarsPlatform.instance.getFirstDayOfWeek();
 
       expect(tempUnit, 'fahrenheit');
@@ -94,7 +99,8 @@ void main() {
       final customPlatform = CustomDateFormatPlatformMock();
       WiseScalarsPlatform.instance = customPlatform;
 
-      final dateFormats = await WiseScalarsPlatform.instance.getDateFormatStyles();
+      final dateFormats = await WiseScalarsPlatform.instance
+          .getDateFormatStyles();
 
       expect(dateFormats, isNotNull);
       expect(dateFormats!['short'], 'dd-MM-yyyy');
@@ -109,8 +115,10 @@ void main() {
       WiseScalarsPlatform.instance = customPlatform;
 
       final tempUnit = await WiseScalarsPlatform.instance.getTemperatureUnit();
-      final usesMetric = await WiseScalarsPlatform.instance.getUsesMetricSystemForDistance();
-      final dateFormats = await WiseScalarsPlatform.instance.getDateFormatStyles();
+      final usesMetric = await WiseScalarsPlatform.instance
+          .getUsesMetricSystemForDistance();
+      final dateFormats = await WiseScalarsPlatform.instance
+          .getDateFormatStyles();
       final firstDay = await WiseScalarsPlatform.instance.getFirstDayOfWeek();
 
       expect(tempUnit, isNull);

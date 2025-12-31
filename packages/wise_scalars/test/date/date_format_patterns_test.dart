@@ -636,7 +636,9 @@ void main() {
       );
     });
 
-    testWidgets('formats AM times correctly with 12-hour pattern', (tester) async {
+    testWidgets('formats AM times correctly with 12-hour pattern', (
+      tester,
+    ) async {
       final patterns = DateFormatPatterns(
         short: DateFormat('M/d/yy'),
         medium: DateFormat('MMM d, yyyy'),
@@ -662,7 +664,9 @@ void main() {
       );
     });
 
-    testWidgets('formats PM times correctly with 12-hour pattern', (tester) async {
+    testWidgets('formats PM times correctly with 12-hour pattern', (
+      tester,
+    ) async {
       final patterns = DateFormatPatterns(
         short: DateFormat('M/d/yy'),
         medium: DateFormat('MMM d, yyyy'),
@@ -728,7 +732,9 @@ void main() {
         time: DateFormat('HH:mm'),
       );
 
-      final options1 = await _createScalarOptions(dateFormatPatterns: patterns1);
+      final options1 = await _createScalarOptions(
+        dateFormatPatterns: patterns1,
+      );
       final date = DateTime(2024, 3, 15, 14, 30);
 
       String? formattedShort;
@@ -756,7 +762,9 @@ void main() {
         time: DateFormat('h:mm a'),
       );
 
-      final options2 = await _createScalarOptions(dateFormatPatterns: patterns2);
+      final options2 = await _createScalarOptions(
+        dateFormatPatterns: patterns2,
+      );
 
       await tester.pumpWidget(
         WiseScalarScope(
@@ -843,7 +851,10 @@ void main() {
           child: Builder(
             builder: (context) {
               expect(DateTime(2024).time(context), '00:00:00');
-              expect(DateTime(2024, 1, 1, 23, 59, 59).time(context), '23:59:59');
+              expect(
+                DateTime(2024, 1, 1, 23, 59, 59).time(context),
+                '23:59:59',
+              );
               return const SizedBox.shrink();
             },
           ),
@@ -858,29 +869,30 @@ Future<ScalarOptions> _createScalarOptions({
 }) async {
   const channel = MethodChannel('wise_scalars');
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-    channel,
-    (MethodCall methodCall) async {
-      switch (methodCall.method) {
-        case 'getFirstDayOfWeek':
-          return 1;
-        case 'getTemperatureUnit':
-          return TemperatureUnit.celsius.name;
-        case 'getUsesMetricSystemForDistance':
-          return true;
-        case 'getDateFormatStyles':
-          return {
-            'short': dateFormatPatterns.short.pattern,
-            'medium': dateFormatPatterns.medium.pattern,
-            'long': dateFormatPatterns.long.pattern,
-            'full': dateFormatPatterns.full.pattern,
-            'time': dateFormatPatterns.time.pattern,
-          };
-        default:
-          return null;
-      }
-    },
-  );
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(
+        channel,
+        (MethodCall methodCall) async {
+          switch (methodCall.method) {
+            case 'getFirstDayOfWeek':
+              return 1;
+            case 'getTemperatureUnit':
+              return TemperatureUnit.celsius.name;
+            case 'getUsesMetricSystemForDistance':
+              return true;
+            case 'getDateFormatStyles':
+              return {
+                'short': dateFormatPatterns.short.pattern,
+                'medium': dateFormatPatterns.medium.pattern,
+                'long': dateFormatPatterns.long.pattern,
+                'full': dateFormatPatterns.full.pattern,
+                'time': dateFormatPatterns.time.pattern,
+              };
+            default:
+              return null;
+          }
+        },
+      );
 
   return ScalarOptions.fromMethodChannel();
 }

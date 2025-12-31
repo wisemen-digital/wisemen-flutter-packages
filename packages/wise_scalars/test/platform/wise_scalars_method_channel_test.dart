@@ -9,51 +9,56 @@ void main() {
   const channel = MethodChannel('wise_scalars');
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, null);
   });
 
   group('getTemperatureUnit', () {
     test('returns celsius for metric users', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getTemperatureUnit') {
-            return 'celsius';
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getTemperatureUnit') {
+                return 'celsius';
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getTemperatureUnit();
       expect(result, 'celsius');
     });
 
     test('returns fahrenheit for imperial users', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getTemperatureUnit') {
-            return 'fahrenheit';
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getTemperatureUnit') {
+                return 'fahrenheit';
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getTemperatureUnit();
       expect(result, 'fahrenheit');
     });
 
     test('handles null response gracefully', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              return null;
+            },
+          );
 
       final result = await platform.getTemperatureUnit();
       expect(result, isNull);
@@ -62,42 +67,45 @@ void main() {
 
   group('getUsesMetricSystemForDistance', () {
     test('returns true for metric system users (Europe, Asia, etc.)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getUsesMetricSystemForDistance') {
-            return true;
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getUsesMetricSystemForDistance') {
+                return true;
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getUsesMetricSystemForDistance();
       expect(result, true);
     });
 
     test('returns false for imperial system users (US, UK, etc.)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getUsesMetricSystemForDistance') {
-            return false;
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getUsesMetricSystemForDistance') {
+                return false;
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getUsesMetricSystemForDistance();
       expect(result, false);
     });
 
     test('handles null response gracefully', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              return null;
+            },
+          );
 
       final result = await platform.getUsesMetricSystemForDistance();
       expect(result, isNull);
@@ -106,21 +114,22 @@ void main() {
 
   group('getDateFormatStyles', () {
     test('returns US date format styles', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getDateFormatStyles') {
-            return {
-              'short': 'M/d/yy',
-              'medium': 'MMM d, yyyy',
-              'long': 'MMMM d, yyyy',
-              'full': 'EEEE, MMMM d, yyyy',
-              'time': 'h:mm a',
-            };
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getDateFormatStyles') {
+                return {
+                  'short': 'M/d/yy',
+                  'medium': 'MMM d, yyyy',
+                  'long': 'MMMM d, yyyy',
+                  'full': 'EEEE, MMMM d, yyyy',
+                  'time': 'h:mm a',
+                };
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getDateFormatStyles();
       expect(result, isNotNull);
@@ -132,21 +141,22 @@ void main() {
     });
 
     test('returns European date format styles', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getDateFormatStyles') {
-            return {
-              'short': 'dd/MM/yy',
-              'medium': 'd MMM yyyy',
-              'long': 'd MMMM yyyy',
-              'full': 'EEEE d MMMM yyyy',
-              'time': 'HH:mm',
-            };
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getDateFormatStyles') {
+                return {
+                  'short': 'dd/MM/yy',
+                  'medium': 'd MMM yyyy',
+                  'long': 'd MMMM yyyy',
+                  'full': 'EEEE d MMMM yyyy',
+                  'time': 'HH:mm',
+                };
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getDateFormatStyles();
       expect(result, isNotNull);
@@ -156,21 +166,22 @@ void main() {
     });
 
     test('returns Asian date format styles', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getDateFormatStyles') {
-            return {
-              'short': 'yy/MM/dd',
-              'medium': 'yyyy/MM/dd',
-              'long': 'yyyy年M月d日',
-              'full': 'yyyy年M月d日 EEEE',
-              'time': 'H:mm',
-            };
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getDateFormatStyles') {
+                return {
+                  'short': 'yy/MM/dd',
+                  'medium': 'yyyy/MM/dd',
+                  'long': 'yyyy年M月d日',
+                  'full': 'yyyy年M月d日 EEEE',
+                  'time': 'H:mm',
+                };
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getDateFormatStyles();
       expect(result, isNotNull);
@@ -180,15 +191,16 @@ void main() {
     });
 
     test('handles empty map response', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getDateFormatStyles') {
-            return <String, String>{};
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getDateFormatStyles') {
+                return <String, String>{};
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getDateFormatStyles();
       expect(result, isNotNull);
@@ -196,12 +208,13 @@ void main() {
     });
 
     test('handles null response gracefully', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              return null;
+            },
+          );
 
       final result = await platform.getDateFormatStyles();
       expect(result, isNull);
@@ -210,57 +223,61 @@ void main() {
 
   group('getFirstDayOfWeek', () {
     test('returns 1 for Monday (most of Europe, Asia)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getFirstDayOfWeek') {
-            return 1;
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getFirstDayOfWeek') {
+                return 1;
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getFirstDayOfWeek();
       expect(result, 1);
     });
 
     test('returns 7 for Sunday (US, Canada, etc.)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getFirstDayOfWeek') {
-            return 7;
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getFirstDayOfWeek') {
+                return 7;
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getFirstDayOfWeek();
       expect(result, 7);
     });
 
     test('returns 6 for Saturday (some Middle Eastern countries)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          if (methodCall.method == 'getFirstDayOfWeek') {
-            return 6;
-          }
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              if (methodCall.method == 'getFirstDayOfWeek') {
+                return 6;
+              }
+              return null;
+            },
+          );
 
       final result = await platform.getFirstDayOfWeek();
       expect(result, 6);
     });
 
     test('handles null response gracefully', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          return null;
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              return null;
+            },
+          );
 
       final result = await platform.getFirstDayOfWeek();
       expect(result, isNull);
@@ -274,22 +291,23 @@ void main() {
 
     test('handles multiple sequential calls correctly', () async {
       var callCount = 0;
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          callCount++;
-          switch (methodCall.method) {
-            case 'getTemperatureUnit':
-              return 'celsius';
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getFirstDayOfWeek':
-              return 1;
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              callCount++;
+              switch (methodCall.method) {
+                case 'getTemperatureUnit':
+                  return 'celsius';
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getFirstDayOfWeek':
+                  return 1;
+                default:
+                  return null;
+              }
+            },
+          );
 
       await platform.getTemperatureUnit();
       await platform.getUsesMetricSystemForDistance();
@@ -299,29 +317,30 @@ void main() {
     });
 
     test('simulates complete metric user profile', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getTemperatureUnit':
-              return 'celsius';
-            case 'getUsesMetricSystemForDistance':
-              return true;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'dd/MM/yy',
-                'medium': 'd MMM yyyy',
-                'long': 'd MMMM yyyy',
-                'full': 'EEEE d MMMM yyyy',
-                'time': 'HH:mm',
-              };
-            case 'getFirstDayOfWeek':
-              return 1;
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getTemperatureUnit':
+                  return 'celsius';
+                case 'getUsesMetricSystemForDistance':
+                  return true;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'dd/MM/yy',
+                    'medium': 'd MMM yyyy',
+                    'long': 'd MMMM yyyy',
+                    'full': 'EEEE d MMMM yyyy',
+                    'time': 'HH:mm',
+                  };
+                case 'getFirstDayOfWeek':
+                  return 1;
+                default:
+                  return null;
+              }
+            },
+          );
 
       final tempUnit = await platform.getTemperatureUnit();
       final usesMetric = await platform.getUsesMetricSystemForDistance();
@@ -335,29 +354,30 @@ void main() {
     });
 
     test('simulates complete imperial user profile (US)', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
-        channel,
-        (MethodCall methodCall) async {
-          switch (methodCall.method) {
-            case 'getTemperatureUnit':
-              return 'fahrenheit';
-            case 'getUsesMetricSystemForDistance':
-              return false;
-            case 'getDateFormatStyles':
-              return {
-                'short': 'M/d/yy',
-                'medium': 'MMM d, yyyy',
-                'long': 'MMMM d, yyyy',
-                'full': 'EEEE, MMMM d, yyyy',
-                'time': 'h:mm a',
-              };
-            case 'getFirstDayOfWeek':
-              return 7;
-            default:
-              return null;
-          }
-        },
-      );
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(
+            channel,
+            (MethodCall methodCall) async {
+              switch (methodCall.method) {
+                case 'getTemperatureUnit':
+                  return 'fahrenheit';
+                case 'getUsesMetricSystemForDistance':
+                  return false;
+                case 'getDateFormatStyles':
+                  return {
+                    'short': 'M/d/yy',
+                    'medium': 'MMM d, yyyy',
+                    'long': 'MMMM d, yyyy',
+                    'full': 'EEEE, MMMM d, yyyy',
+                    'time': 'h:mm a',
+                  };
+                case 'getFirstDayOfWeek':
+                  return 7;
+                default:
+                  return null;
+              }
+            },
+          );
 
       final tempUnit = await platform.getTemperatureUnit();
       final usesMetric = await platform.getUsesMetricSystemForDistance();

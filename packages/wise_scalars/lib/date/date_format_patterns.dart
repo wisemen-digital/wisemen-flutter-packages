@@ -81,7 +81,8 @@ class DateFormatPatterns {
 
 /// Extension methods for [DateTime] to format using [DateFormatPatterns]
 extension DateFormatPatternsExtension on DateTime {
-  DateFormatPatterns _getPatterns(BuildContext context) => ScalarOptions.of(context).dateFormatPatterns;
+  DateFormatPatterns _getPatterns(BuildContext context) =>
+      ScalarOptions.of(context).dateFormatPatterns;
 
   /// Formats date using short pattern using [DateFormatPatterns.short]
   String short(BuildContext context) {
