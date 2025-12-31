@@ -1,11 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sandbox/features/shared/shared.dart';
-import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
-import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../settings.dart';
@@ -23,9 +21,7 @@ class SettingsScreen extends ConsumerWidget {
           CupertinoButton(
             padding: EdgeInsets.zero,
             child: const Icon(Icons.settings),
-            onPressed: () {
-              AutoRouter.of(context).push(const OtherSettingsScreenRoute());
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -60,12 +56,7 @@ class SettingsScreen extends ConsumerWidget {
                   child: Row(
                     children: [
                       Text(
-                        ref
-                                .watch(themeModeStreamProvider)
-                                .value
-                                ?.name
-                                .capitalized ??
-                            '',
+                        ref.watch(themeModeStreamProvider).value?.name ?? '',
                       ),
                     ],
                   ),
@@ -79,7 +70,19 @@ class SettingsScreen extends ConsumerWidget {
               ),
               PlatformAnimatedButton(
                 onPressed: () async {
-                  await AlertUtils.confirmAction('message');
+                  FlutterPlatformAlert.showCustomAlert(
+                    windowTitle: 'windowTitle',
+                    text: 'text',
+                    negativeButtonTitle: 'doom',
+                    neutralButtonTitle: 'gloom',
+                    options: PlatformAlertOptions(
+                      ios: IosAlertOptions(
+                        alertStyle: IosAlertStyle.actionSheet,
+                        negativeButtonStyle: IosButtonStyle.destructive,
+                        neutralButtonStyle: IosButtonStyle.normal,
+                      ),
+                    ),
+                  );
                 },
                 child: Text(
                   'Other settings',

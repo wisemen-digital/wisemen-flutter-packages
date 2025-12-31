@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wisecore/wisecore.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 class ThemeModeDropDownModel extends DropdownModel {
@@ -12,7 +11,7 @@ class ThemeModeDropDownModel extends DropdownModel {
       case ThemeMode.system:
       case ThemeMode.light:
       case ThemeMode.dark:
-        return mode.name.capitalized;
+        return mode.name;
     }
   }
 
