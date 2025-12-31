@@ -40,7 +40,7 @@ class Temperature implements Scalar {
       case TemperatureUnit.kelvin:
         return '${labelValue(context)}${options.temperatureUnit!.symbol}';
       case null:
-        return '$value${unit.symbol}';
+        return '${NumberFormat('#').format(value)}${unit.symbol}';
     }
   }
 
