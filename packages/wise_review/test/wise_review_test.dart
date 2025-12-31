@@ -65,7 +65,6 @@ void main() {
           ],
           child: const MaterialApp(
             home: WiseReview(
-              canShowReview: true,
               child: Text('Test'),
             ),
           ),
@@ -91,7 +90,6 @@ void main() {
           child: const MaterialApp(
             home: WiseReview(
               minimumOpenCount: 3,
-              canShowReview: true,
               child: Text('Test'),
             ),
           ),
@@ -156,7 +154,6 @@ void main() {
           ],
           child: const MaterialApp(
             home: WiseReview(
-              canShowReview: true,
               child: Text('Test'),
             ),
           ),
@@ -406,7 +403,6 @@ void main() {
           child: const MaterialApp(
             home: WiseReview(
               minimumOpenCount: 0,
-              canShowReview: true,
               child: Text('Test'),
             ),
           ),
@@ -430,7 +426,6 @@ void main() {
           ],
           child: const MaterialApp(
             home: WiseReview(
-              canShowReview: true,
               minimumOpenCount: 1000000,
               child: Text('Test'),
             ),
@@ -455,7 +450,6 @@ void main() {
           ],
           child: const MaterialApp(
             home: WiseReview(
-              canShowReview: true,
               child: Text('Test'),
             ),
           ),
@@ -479,7 +473,6 @@ void main() {
           ],
           child: const MaterialApp(
             home: WiseReview(
-              canShowReview: true,
               child: Text('Test'),
             ),
           ),
