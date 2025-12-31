@@ -38,6 +38,7 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
+    this.onPageChange,
   }) : complexChild = null,
        imageUrls = null;
 
@@ -75,6 +76,7 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
+    this.onPageChange,
   }) : child = null,
        imageUrls = null;
 
@@ -112,6 +114,7 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
+    this.onPageChange,
   }) : complexChild = null,
        imageProviders = null;
 
@@ -149,6 +152,7 @@ class FullscreenImageCarousel extends StatefulWidget {
     ),
     this.dismissTresholds,
     this.dismissDirection,
+    this.onPageChange,
   }) : child = null,
        imageProviders = null;
 
@@ -207,34 +211,34 @@ class FullscreenImageCarousel extends StatefulWidget {
   /// Total amount of pages text style
   final TextStyle totalAmountOfPagesTextstyle;
 
+  /// Delegate for page change
+  final void Function(int?)? onPageChange;
+
   @override
   State<StatefulWidget> createState() => _FullscreenImageCarouselState();
 }
 
 class _FullscreenImageCarouselState extends State<FullscreenImageCarousel> {
   PageController controller = PageController();
-  int currentPage = 0;
 
   @override
   void initState() {
     super.initState();
-    controller = PageController(initialPage: widget.initialPage ?? 0);
-    currentPage = widget.initialPage ?? 0;
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
+    controller.addListener(() {
+      widget.onPageChange?.call(controller.page?.round() ?? 0);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    void openCarousel({
-      int initialPage = 0,
-    }) {
+    Future<void> openCarousel({int initialPage = 0}) async {
       controller = PageController(initialPage: initialPage);
-      context.pushTransparentRoute<void>(
+
+      controller.addListener(() {
+        widget.onPageChange?.call(controller.page?.round() ?? 0);
+      });
+
+      await context.pushTransparentRoute<void>(
         CustomImageCarousel(
           photoViewBackgroundColor: widget.photoViewBackgroundColor,
           dismissThresholds: widget.dismissTresholds,
@@ -256,6 +260,10 @@ class _FullscreenImageCarouselState extends State<FullscreenImageCarousel> {
           controller: controller,
         ),
       );
+
+      widget.onPageChange?.call(null);
+
+      controller.dispose();
     }
 
     if (widget.complexChild != null) {

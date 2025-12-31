@@ -1,3 +1,15 @@
+## 2.1.4
+
+* Added `onPageChanged` to the `imageCarousel` so it's caller can respond
+
+## 2.1.3
+
+* Added scrollDirection to the PagedList constructor
+
+## 2.1.2
+
+* Added invisibleItemsThreshold to the PagedList constructor
+
 ## 2.1.1
 
 - Dependency update
