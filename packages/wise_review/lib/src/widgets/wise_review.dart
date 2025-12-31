@@ -57,7 +57,8 @@ class WiseReview extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _WiseReviewState();
 }
 
-class _WiseReviewState extends ConsumerState<WiseReview> with WidgetsBindingObserver {
+class _WiseReviewState extends ConsumerState<WiseReview>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -95,7 +96,8 @@ class _WiseReviewState extends ConsumerState<WiseReview> with WidgetsBindingObse
     return widget.child;
   }
 
-  Future<void> _incrementOpenCountAndShowReviewIfNeeded({bool increment = false}) async {
+  Future<void> _incrementOpenCountAndShowReviewIfNeeded(
+      {bool increment = false}) async {
     final prefs = ref.read(sharedPreferencesProvider);
     final openCount = prefs.getInt(Constants.appOpenCount) ?? 0;
 

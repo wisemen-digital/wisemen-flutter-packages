@@ -10,7 +10,7 @@ void main() {
     test('appOpenCount is consistent across calls', () {
       final firstCall = Constants.appOpenCount;
       final secondCall = Constants.appOpenCount;
-      
+
       expect(firstCall, secondCall);
     });
 

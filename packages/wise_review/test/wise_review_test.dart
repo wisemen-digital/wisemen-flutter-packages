@@ -78,7 +78,8 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('respects custom minimumOpenCount', (WidgetTester tester) async {
+    testWidgets('respects custom minimumOpenCount',
+        (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 2});
       final prefs = await SharedPreferences.getInstance();
 
@@ -359,7 +360,8 @@ void main() {
       expect(countAfterPause, countBeforePause);
     });
 
-    testWidgets('does not increment on app inactive', (WidgetTester tester) async {
+    testWidgets('does not increment on app inactive',
+        (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 5});
       final prefs = await SharedPreferences.getInstance();
 
@@ -416,7 +418,8 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('handles very large minimumOpenCount', (WidgetTester tester) async {
+    testWidgets('handles very large minimumOpenCount',
+        (WidgetTester tester) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 100});
       final prefs = await SharedPreferences.getInstance();
 
