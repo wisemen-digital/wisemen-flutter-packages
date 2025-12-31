@@ -16,7 +16,7 @@ dependencies:
   # Auth
   flutter_appauth: ^9.0.0
 
-  auto_route: '>=10.0.1 <11.0.0'
+  auto_route: '>=11.0.0'
   wise_nav_bar: '>=0.0.1 <1.0.0'
   hooks_riverpod: '>=3.0.0 <4.0.0'
   wiseclient: '>=1.1.1 <2.0.0'
