@@ -90,9 +90,9 @@ mixin class AlertDialog {
     switch (option) {
       case CustomButton.positiveButton:
         return firstButton;
-      case CustomButton.negativeButton:
-        return secondButton;
       case CustomButton.neutralButton:
+        return secondButton;
+      case CustomButton.negativeButton:
         return thirdButton;
       case CustomButton.other:
         return null;
