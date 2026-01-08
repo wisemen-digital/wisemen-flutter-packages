@@ -80,7 +80,6 @@ class AppTheme {
     hintColor: const Color(0x99ffffff),
     hoverColor: const Color(0x0affffff),
     iconTheme: const IconThemeData(color: Color(0xffffffff)),
-    indicatorColor: const Color(0xffffffff),
     inputDecorationTheme: const InputDecorationTheme(),
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     primaryColor: const Color(0xff121313),
@@ -360,6 +359,7 @@ class AppTheme {
       ),
     ),
     dialogTheme: const DialogThemeData(backgroundColor: Color(0xff121313)),
+    tabBarTheme: const TabBarThemeData(indicatorColor: Color(0xffffffff)),
   );
 
   //light theme
@@ -431,7 +431,6 @@ class AppTheme {
     hintColor: const Color(0x99000000),
     hoverColor: const Color(0x0a000000),
     iconTheme: const IconThemeData(color: Color(0xdd000000)),
-    indicatorColor: const Color(0xffffffff),
     inputDecorationTheme: const InputDecorationTheme(),
     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
     primaryColor: const Color(0xff892057),
@@ -711,5 +710,6 @@ class AppTheme {
       ),
     ),
     dialogTheme: const DialogThemeData(backgroundColor: Color(0xffe2e5ed)),
+    tabBarTheme: const TabBarThemeData(indicatorColor: Color(0xffffffff)),
   );
 }

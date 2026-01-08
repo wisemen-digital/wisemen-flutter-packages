@@ -49,8 +49,11 @@ dependencies:
 
   # Logging
   talker_flutter: ^4.3.4
-  onesignal_flutter: ^5.2.9
-  sentry_flutter: ^8.12.0
+
+  flutter_platform_alert:
+    path: ../../../wise-packages/flutter_platform_alert
+  shared_preferences: ^2.5.3
+
 dev_dependencies: 
   # Code generation
   build_runner: ^2.4.9
