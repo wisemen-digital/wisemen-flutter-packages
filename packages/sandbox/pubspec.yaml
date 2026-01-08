@@ -15,8 +15,8 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # Wisemen
-  # wisecore:
-  #   path: ../wisecore
+  wisecore:
+    path: ../wisecore
   wisewidgetslibrary:
     path: ../wisewidgetslibrary
   wise_nav_bar:
