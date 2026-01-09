@@ -22,7 +22,7 @@ import 'package:openapi/src/api/user_api.dart';
 import 'package:wiseclient/wiseclient.dart';
 
 class Openapi {
-  static const String basePath = r'https://vue.project-template.development.appwi.se';
+  static const String basePath = r'http://localhost:8080';
 
   final WiseClient client;
   final Serializers serializers;

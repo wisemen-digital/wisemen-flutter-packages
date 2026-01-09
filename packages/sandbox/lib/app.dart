@@ -1,4 +1,4 @@
-// import 'package:auto_route/auto_route.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +6,7 @@ import 'package:sandbox/generated/l10n.dart';
 import 'package:sandbox/router/app_router_service.dart';
 import 'package:sandbox/router/route_observer.dart';
 import 'package:sandbox/theme/theme.dart';
+import 'package:sandbox/utils/utils.dart';
 
 import 'flavors.dart';
 
@@ -40,8 +41,9 @@ class App extends ConsumerWidget {
                   .config(
                     deepLinkBuilder: (deepLink) => deepLink,
                     navigatorObservers: () => [AppRouterObserver()],
-                    // reevaluateListenable: ReevaluateListenable.stream(ref.watch(protectedClientProvider).authenticationStatus),
-                    // ignore: require_trailing_commas
+                    reevaluateListenable: ReevaluateListenable.stream(
+                      ref.watch(appRepositoryServiceProvider).authenticationStatus,
+                    ),
                   ),
             );
           },
