@@ -22,9 +22,13 @@ class F {
 
   static String get baseUrl => dotenv.get('BASE_URL');
 
+  static String get zitadelBaseUrl => dotenv.get('AUTH_BASE_URL');
+
   static String get clientId => dotenv.get('CLIENT_ID');
 
-  static String get clientSecret => dotenv.get('CLIENT_SECRET');
+  static String get zitadelAppId => dotenv.get('AUTH_APPLICATION_ID');
+
+  static String get zitadelOrganizationId => dotenv.get('AUTH_ORGANIZATION_ID');
 
   static String? get bannerName {
     switch (appFlavor) {
@@ -38,6 +42,21 @@ class F {
         return null;
       default:
         return null;
+    }
+  }
+
+  static String get bundleId {
+    switch (appFlavor) {
+      case Flavor.DEVELOPMENT:
+        return 'com.wisemen.app.development';
+      case Flavor.STAGING:
+        return 'com.wisemen.app.staging';
+      case Flavor.QA:
+        return 'com.wisemen.app.qa';
+      case Flavor.PRODUCTION:
+        return 'com.wisemen.app';
+      default:
+        return 'com.wisemen.app.development';
     }
   }
 
