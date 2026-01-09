@@ -8,25 +8,17 @@ class WiseLauncher {
   /// Launches a url on the device's default browser.
   static Future<void> launchUrl({
     required String url,
-    required VoidCallback onCannotLaunchUrl,
-    bool isPlatformDefault = true,
+    required void Function(Object) onCannotLaunchUrl,
+    ul.LaunchMode launchMode = ul.LaunchMode.platformDefault,
   }) async {
-    final uri = Uri.tryParse(url);
-    if (uri != null) {
-      await ul.canLaunchUrl(uri).then((canLaunch) async {
-        if (canLaunch) {
-          await ul.launchUrl(
-            uri,
-            mode: isPlatformDefault
-                ? ul.LaunchMode.platformDefault
-                : ul.LaunchMode.externalApplication,
-          );
-        } else {
-          onCannotLaunchUrl();
-        }
-      });
-    } else {
-      onCannotLaunchUrl();
+    try {
+      final uri = Uri.parse(url);
+      await ul.launchUrl(
+        uri,
+        mode: launchMode,
+      );
+    } catch (e) {
+      onCannotLaunchUrl(e);
     }
   }
 

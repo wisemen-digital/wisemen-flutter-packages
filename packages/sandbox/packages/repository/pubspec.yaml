@@ -1,0 +1,14 @@
+name: repository
+description: Repository layer
+publish_to: none
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+resolution: workspace
+dependencies:
+  database:
+    path: ../database
+  openapi:
+    path: ../network
+  collection: ^1.19.1
+  drift: ^2.30.0
