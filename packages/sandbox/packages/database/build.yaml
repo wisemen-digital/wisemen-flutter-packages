@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        enabled: false
+      drift_dev:analyzer:
+        enabled: true
+        options: &options
+          store_date_time_values_as_text: true
+          skip_verification_code: true
+          data_class_to_companions: false
+      drift_dev:modular:
+        enabled: true
+        options: *options
