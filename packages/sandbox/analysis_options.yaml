@@ -3,8 +3,14 @@ analyzer:
     invalid_annotation_target: ignore
   plugins: 
     - custom_lint
-  exclude: [build/**, lib/**.g.dart, lib/generated/**]
+  exclude: [build/**, lib/**.g.dart, lib/generated/**, packages/**.g.dart, packages/**.drift.dart]
 
+custom_lint:
+  rules:
+    - avoid_manual_providers_as_generated_provider_dependency: false
+formatter:
+  trailing_commas: preserve
+  page_width: 150
 linter:
   rules:
     avoid_print: true
@@ -53,7 +59,6 @@ linter:
     prefer_const_constructors: true
     prefer_const_declarations: true
     prefer_contains: true
-    require_trailing_commas: true
     sized_box_shrink_expand: true
     sort_child_properties_last: true
     unnecessary_breaks: true

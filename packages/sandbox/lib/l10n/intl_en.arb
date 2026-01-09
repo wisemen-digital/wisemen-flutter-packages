@@ -1,5 +1,6 @@
 {
-  "appName": "Sanbox",
+  "@@locale": "en",
+  "appName": "Sandbox",
   "ok": "Okay",
   "back": "Back",
   "save": "Save",
