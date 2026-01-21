@@ -1,23 +1,27 @@
-import 'dart:async';
-import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:wise_sentry/src/logger/sentry_logger.dart';
 import 'package:wise_sentry/src/models/wise_exceptions.dart';
+
+/// A function that converts an exception of type [T] into a [WiseException].
+typedef WiseExceptionConverter<T> = WiseException Function(T exception);
 
 /// Logger for HTTP errors
 /// Handles logging of various HTTP-related exceptions to Sentry
 /// Includes filtering for common network exceptions
 class HttpErrorLogger {
   /// Logs HTTP errors to Sentry
-  static void logHttpError(DioException e, StackTrace stackTrace) {
-    final wiseException = WiseException.fromDioException(e);
+  static void logDioError(
+    DioException e,
+    StackTrace stackTrace, {
+    WiseExceptionConverter<DioException>? exceptionConverter,
+  }) {
+    final wiseException = exceptionConverter != null ? exceptionConverter(e) : WiseException.fromDioException(e);
 
     //log to sentry
-    Sentry.captureException(
+    WiseSentryLogger.capture(
       wiseException,
-      stackTrace: stackTrace,
-      withScope: (scope) {
+      stackTrace,
+      configureScope: (scope) {
         scope
           ..setContexts('Request details', {
             'method': e.requestOptions.method,

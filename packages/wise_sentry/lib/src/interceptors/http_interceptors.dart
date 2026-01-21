@@ -14,7 +14,7 @@ class WiseSentryDioInterceptor extends Interceptor {
 
     // 3. Log the custom HttpError to Sentry
     // We use the stackTrace from the DioException if available, otherwise current.
-    WiseSentry.logHttpError(
+    WiseSentry.logDioError(
       err,
       err.stackTrace,
     );

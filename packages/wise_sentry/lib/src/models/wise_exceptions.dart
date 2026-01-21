@@ -1,4 +1,4 @@
-import 'package:dio/src/dio_exception.dart';
+import 'package:dio/dio.dart';
 
 /// Base classs for all WiseSentry exceptions.
 abstract class WiseException implements Exception {
@@ -70,8 +70,28 @@ class MapperError extends WiseException {
     super.message, {
     super.originalError,
     super.stackTrace,
+    Map<String, dynamic>? extras, // NEW: Accept extras parameter
   }) : super(
-          extras: {'error_type': 'MapperError'},
+          extras: {
+            'error_type': 'MapperError',
+            ...(extras ?? {}), // NEW: Merge with provided extras
+          },
+        );
+}
+
+/// Errors related to DTO/Network data (e.g., invalid data from API, DTO parsing failure).
+class DTOError extends WiseException {
+  /// Errors related to DTO/Network data (e.g., invalid data from API, DTO parsing failure).
+  DTOError(
+    super.message, {
+    super.originalError,
+    super.stackTrace,
+    Map<String, dynamic>? extras,
+  }) : super(
+          extras: {
+            'error_type': 'DTOError',
+            ...(extras ?? {}),
+          },
         );
 }
 
@@ -97,4 +117,41 @@ class UIError extends WiseException {
   }) : super(
           extras: {'error_type': 'UIError'},
         );
+}
+
+/// Errors related to type mismatches, often during data mapping or deserialization.
+class WiseTypeError extends WiseException {
+  /// Errors related to type mismatches, often during data mapping or deserialization.
+  WiseTypeError(
+    super.message, {
+    required this.expectedType,
+    required this.actualValue,
+    this.fieldName,
+    super.originalError,
+    super.stackTrace,
+    Map<String, dynamic>? extras, // NEW: Accept extras parameter
+  }) : super(
+          extras: {
+            'error_type': 'WiseTypeError',
+            'expected_type': expectedType,
+            'actual_value': actualValue.toString(), // Convert to string for Sentry
+            if (fieldName != null) 'field_name': fieldName,
+            ...(extras ?? {}), // NEW: Merge with provided extras
+          },
+        );
+
+  /// The type that was expected.
+  final String expectedType;
+
+  /// The actual value that caused the type error.
+  final dynamic actualValue;
+
+  /// The name of the field that caused the type error, if applicable.
+  final String? fieldName;
+
+  @override
+  String toString() {
+    final fieldInfo = fieldName != null ? ' (Field: $fieldName)' : '';
+    return 'WiseTypeError: $message$fieldInfo. Expected $expectedType, got $actualValue.';
+  }
 }

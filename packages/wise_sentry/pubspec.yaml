@@ -12,7 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   sentry_flutter: ^9.7.0
-  dio: any
+  dio: '>=5.0.0 <6.0.0'
 
 dev_dependencies:
   flutter_test:
