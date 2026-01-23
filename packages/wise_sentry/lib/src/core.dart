@@ -26,7 +26,6 @@ class WiseSentry {
     bool logInDebugMode = false,
   }) async {
     if (dsn == null || dsn.isEmpty) {
-      // If no DSN is provided, run the app without Sentry
       print('WiseSentry: No DSN provided, running without Sentry.');
       runApp(appRunner());
       return;
@@ -45,9 +44,26 @@ class WiseSentry {
                 logInDebugMode: logInDebugMode,
               );
       },
-      appRunner: () => runApp(
-        SentryWidget(child: appRunner()),
-      ),
+      appRunner: () {
+        // Set up global error handlers for UI and platform errors
+        FlutterError.onError = (FlutterErrorDetails details) {
+          // Optionally filter/enrich here, or just send to Sentry
+          WiseSentry.captureException(
+            details.exception,
+            details.stack ?? StackTrace.current,
+            extras: {'flutterError': true},
+          );
+        };
+        PlatformDispatcher.instance.onError = (error, stack) {
+          WiseSentry.captureException(
+            error,
+            stack,
+            extras: {'platformError': true},
+          );
+          return true;
+        };
+        runApp(SentryWidget(child: appRunner()));
+      },
     );
   }
 

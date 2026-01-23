@@ -8,32 +8,45 @@ import 'models/wise_exceptions.dart';
 
 /// A [BeforeSendCallback] that analyzes, categorizes, and fingerprints events.
 SentryEvent? wiseSentryBeforeSend(SentryEvent event, {Hint? hint, bool logInDebugMode = false}) {
-  // Type guard: ensure we're only processing SentryEvent, not SentryTransaction
-  // In some cases, Sentry may pass other types through this callback
-  if (event.type == 'transaction') {
-    return event; // Pass through transactions unchanged
-  }
+  // 1. Type guard: ensure we're only processing SentryEvent, not SentryTransaction
+  if (event.type == 'transaction') return event;
 
-  // Preserve existing logic: drop events in debug mode if not explicitly enabled.
+  // 2. Drop events in debug mode if not explicitly enabled
   if (!logInDebugMode && kDebugMode) {
-    // ignore: avoid_print
     print('Sentry event dropped in debug mode: ${event.throwable}');
     return null;
   }
 
-  // --- FILTERING: Drop unnecessary network/connection errors ---
+  // 3. FILTERING: Drop unnecessary network/connection errors
   if (_shouldFilterError(event.throwable)) {
-    if (kDebugMode) {
-      // ignore: avoid_print
-      print('Sentry event filtered (network/connection error): ${event.throwable}');
-    }
+    if (kDebugMode) print('Sentry event filtered (network/connection error): ${event.throwable}');
     return null;
   }
 
-  // --- ENRICHMENT: Convert raw TypeErrors and FormatExceptions to WiseExceptions ---
-  var enrichedEvent = event;
+  // 4. ENRICHMENT: Convert raw TypeErrors and FormatExceptions to WiseExceptions
+  final enrichedEvent = _enrichEventWithWiseException(event, hint);
 
-  // Only enrich if it's NOT already a WiseException (preserve user overrides)
+  // 5. CATEGORIZATION: Determine error category and wise-type tag
+  final throwable = enrichedEvent.throwable;
+  final category = _getErrorCategory(throwable, enrichedEvent);
+  final wiseType = _getWiseType(throwable);
+
+  // 6. FINGERPRINT: Build a granular fingerprint for Sentry grouping
+  final newFingerprint = _buildFingerprint(enrichedEvent, category);
+
+  // 7. RETURN: Copy event with new fingerprint and tags
+  return enrichedEvent.copyWith(
+    fingerprint: newFingerprint,
+    tags: {
+      ...enrichedEvent.tags ?? {},
+      'error-category': category,
+      if (wiseType != null) 'wise-type': wiseType,
+    },
+  );
+}
+
+/// Enriches the event with a WiseException if possible.
+SentryEvent _enrichEventWithWiseException(SentryEvent event, Hint? hint) {
   if (event.throwable != null && event.throwable is! WiseException) {
     try {
       final wiseException = _convertToWiseException(event.throwable!, event, hint);
@@ -41,168 +54,133 @@ SentryEvent? wiseSentryBeforeSend(SentryEvent event, {Hint? hint, bool logInDebu
         throw wiseException;
       }
     } catch (e) {
-      // If it's a WiseException we just created, update the event with it
       if (e is WiseException) {
-        enrichedEvent = event.copyWith(throwable: e, message: SentryMessage(e.toString()));
+        return event.copyWith(throwable: e, message: SentryMessage(e.toString()));
       }
-      // If conversion fails for other reasons, continue with original event
     }
   }
+  return event;
+}
 
-  // --- Granular Fingerprinting Logic ---
-
-  // 1. Determine the high-level category for the error.
-  var category = 'uncategorized';
-  final throwable = enrichedEvent.throwable;
-
+/// Determines the high-level error category for Sentry grouping.
+String _getErrorCategory(Object? throwable, SentryEvent event) {
   if (throwable is WiseException) {
-    if (throwable is UIError) {
-      category = 'ui';
-    } else if (throwable is DTOError) {
-      category = 'dto';
-    } else if (throwable is MapperError || throwable is WiseTypeError) {
-      category = 'mapper';
-    } else if (throwable is BusinessLogicError) {
-      category = 'business-logic';
-    } else if (throwable is HttpError) {
-      category = 'network';
-    }
+    if (throwable is UIError) return 'ui';
+    if (throwable is DTOError) return 'dto';
+    if (throwable is MapperError || throwable is WiseTypeError) return 'mapper';
+    if (throwable is BusinessLogicError) return 'business-logic';
+    if (throwable is HttpError) return 'network';
   } else if (throwable is DioException) {
-    category = 'network';
+    return 'network';
   } else if (throwable is FlutterError) {
-    category = 'flutter';
+    return 'flutter';
   } else if (throwable is FormatException) {
-    category = 'dto';
+    return 'dto';
   } else if (throwable is TypeError) {
-    category = 'dto';
+    return 'dto';
   } else {
     // Fallback to stack trace analysis if no specific type matches.
-    final stackTrace = enrichedEvent.threads?.lastOrNull?.stacktrace;
+    final stackTrace = event.threads?.lastOrNull?.stacktrace;
     if (stackTrace?.frames.isNotEmpty ?? false) {
       for (final frame in stackTrace!.frames.reversed) {
         final path = frame.absPath ?? frame.fileName ?? '';
-        if (path.contains('_mapper.dart')) {
-          category = 'mapper';
-          break;
-        }
-        if (path.contains('_repository.dart')) {
-          category = 'repository';
-          break;
-        }
-        if (path.contains('_page.dart') || path.contains('_view.dart') || path.contains('/ui/')) {
-          category = 'ui';
-          break;
-        }
+        if (path.contains('_mapper.dart')) return 'mapper';
+        if (path.contains('_repository.dart')) return 'repository';
+        if (path.contains('_page.dart') || path.contains('_view.dart') || path.contains('_widget.dart') || path.contains('/ui/')) return 'ui';
       }
     }
   }
+  return 'uncategorized';
+}
 
-  // 2. Extract additional details for a granular fingerprint.
+/// Returns the WiseException subtype as a string for tagging.
+String? _getWiseType(Object? throwable) {
+  if (throwable is WiseException) {
+    if (throwable is UIError) return 'UIError';
+    if (throwable is DTOError) return 'DTOError';
+    if (throwable is MapperError) return 'MapperError';
+    if (throwable is WiseTypeError) return 'WiseTypeError';
+    if (throwable is BusinessLogicError) return 'BusinessLogicError';
+    if (throwable is HttpError) return 'HttpError';
+    return 'WiseException';
+  }
+  return null;
+}
+
+/// Builds a granular fingerprint for Sentry event grouping.
+List<String> _buildFingerprint(SentryEvent event, String category) {
+  final throwable = event.throwable;
   final exceptionType = throwable.runtimeType.toString();
-  final exceptionValue = enrichedEvent.message?.formatted ?? throwable.toString();
+  final exceptionValue = event.message?.formatted ?? throwable.toString();
 
   // Find the first in-app frame for a more accurate location.
   var location = 'unknown_location';
-  // Prioritize exception's stack trace, then fall back to thread's stack trace.
-  final exceptionStackFrames = enrichedEvent.exceptions?.lastOrNull?.stackTrace?.frames;
-  final threadStackFrames = enrichedEvent.threads?.lastOrNull?.stacktrace?.frames;
-
+  final exceptionStackFrames = event.exceptions?.lastOrNull?.stackTrace?.frames;
+  final threadStackFrames = event.threads?.lastOrNull?.stacktrace?.frames;
   final Iterable<SentryStackFrame>? framesToSearch = exceptionStackFrames ?? threadStackFrames;
-
   if (framesToSearch?.isNotEmpty ?? false) {
     for (final frame in framesToSearch!) {
-      // Check if the frame is in-app and has a file name.
       if ((frame.inApp ?? false) && frame.fileName != null) {
         location = frame.fileName!;
         break;
       }
     }
   }
-
-  // 3. Construct the new fingerprint.
-  final newFingerprint = [
-    category,
-    location,
-    exceptionType,
-    exceptionValue,
-  ];
-
-  return enrichedEvent.copyWith(
-    fingerprint: newFingerprint,
-    tags: {
-      ...enrichedEvent.tags ?? {},
-      'error-category': category,
-    },
-  );
+  return [category, location, exceptionType, exceptionValue];
+}
 }
 
 /// Determines whether an error should be filtered out (not sent to Sentry).
 /// Returns true for network/connection errors that are expected and not actionable.
 bool _shouldFilterError(dynamic throwable) {
-  // Filter Dio connection/network errors
   if (throwable is DioException) {
-    // Filter client errors (4xx) for GET requests only
-    // POST/PUT/PATCH/DELETE errors are kept for tracking (may indicate data issues)
-    if (throwable.type == DioExceptionType.badResponse) {
-      final statusCode = throwable.response?.statusCode;
-      final method = throwable.requestOptions.method.toUpperCase();
+    final method = throwable.requestOptions.method.toUpperCase();
+    final statusCode = throwable.response?.statusCode;
+    final hasUserParams = throwable.requestOptions.queryParameters?.isNotEmpty == true;
 
-      // Filter all server errors (5xx)
-      if (statusCode != null && statusCode >= 500) {
-        return true;
-      }
-
-      // Filter GET client errors (4xx)
-      if (statusCode != null && statusCode >= 400 && statusCode < 500 && method == 'GET') {
-        return true;
-      }
-
-      // Check underlying error for non-filtered responses
-      return _shouldFilterError(throwable.error);
+    // GET: Only log 400/422 with user params
+    if (method == 'GET') {
+      return !(hasUserParams && (statusCode == 400 || statusCode == 422));
     }
 
-    switch (throwable.type) {
-      case DioExceptionType.connectionTimeout:
-      case DioExceptionType.sendTimeout:
-      case DioExceptionType.receiveTimeout:
-      case DioExceptionType.connectionError:
-      case DioExceptionType.cancel:
-      case DioExceptionType.badCertificate:
-      case DioExceptionType.unknown:
-        return true; // Filter these out
-      default:
-        return false;
+    // POST/PUT/PATCH/DELETE: filter server/network errors
+    if (method == 'POST' || method == 'PUT' || method == 'PATCH' || method == 'DELETE') {
+      if (statusCode != null && statusCode >= 500) return true;
+      const filteredTypes = {
+        DioExceptionType.connectionTimeout,
+        DioExceptionType.sendTimeout,
+        DioExceptionType.receiveTimeout,
+        DioExceptionType.connectionError,
+        DioExceptionType.cancel,
+        DioExceptionType.badCertificate,
+        DioExceptionType.unknown,
+      };
+      return filteredTypes.contains(throwable.type);
     }
-  }
-
-  // Filter SocketException (network unreachable, host lookup failed, etc.)
-  if (throwable is SocketException) {
     return true;
   }
 
-  // Filter SSL/TLS handshake failures
-  if (throwable is HandshakeException) {
+  // NetworkExceptions: Filter all network-related errors
+  if (throwable is SocketException || throwable is HandshakeException || throwable is HttpException) {
     return true;
   }
 
-  // Filter HttpException (generic HTTP connection issues)
-  if (throwable is HttpException) {
-    return true;
-  }
-
-  // Filter OSError with connection-related messages
   if (throwable is OSError) {
     final message = throwable.message.toLowerCase();
-    if (message.contains('connection refused') ||
-        message.contains('connection reset') ||
-        message.contains('connection closed') ||
-        message.contains('connection aborted') ||
-        message.contains('network is unreachable') ||
-        message.contains('no route to host') ||
-        message.contains('software caused connection abort')) {
-      return true;
-    }
+    const patterns = [
+      'connection refused',
+      'connection reset',
+      'connection closed',
+      'connection aborted',
+      'network is unreachable',
+      'no route to host',
+      'software caused connection abort',
+    ];
+    return patterns.any(message.contains);
   }
+
+  // Provider errors (Riverpod): TODO: Add specific filtering for known non-breaking errors
+  // Example: if (throwable is SomeProviderException && throwable.message.contains('Future is already completed')) return true;
 
   return false;
 }
