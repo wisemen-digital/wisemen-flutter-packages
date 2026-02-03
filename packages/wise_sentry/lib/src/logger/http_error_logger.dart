@@ -33,7 +33,7 @@ class HttpErrorLogger {
           ..setContexts('Response details', {
             'status_code': e.response?.statusCode,
             'headers': e.response?.headers,
-            'data': (wiseException as HttpError).errorBody,
+            'data': (wiseException as HttpException).errorBody,
           });
       },
     );

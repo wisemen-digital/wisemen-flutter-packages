@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
 
+import 'api_error_response.dart';
+
 /// Base classs for all WiseSentry exceptions.
 abstract class WiseException implements Exception {
   /// Base classs for all WiseSentry exceptions.
@@ -29,30 +31,49 @@ abstract class WiseException implements Exception {
 
   /// Factory method to create a WiseException from a DioException
   static WiseException fromDioException(DioException e) {
-    return HttpError(
-      'Dio Request Failed (${e.response?.statusCode}): ${e.requestOptions.method} ${e.requestOptions.path}',
+    // Try to parse the standard API error response
+    final apiError = ApiErrorResponse.fromJson(e.response?.data);
+
+    // Use API error detail if available, otherwise build a descriptive message
+    String message;
+    if (apiError?.errors.firstOrNull?.detail != null) {
+      message = apiError!.errors.first.detail!;
+    } else if (e.response?.data != null && e.response!.data is String) {
+      // If response body is a plain string, include it
+      message = 'HTTP ${e.response?.statusCode}: ${e.response!.data}';
+    } else {
+      // Generic fallback
+      message = 'HTTP ${e.response?.statusCode}: ${e.requestOptions.method} ${e.requestOptions.path}';
+    }
+
+    return HttpException(
+      message,
       statusCode: e.response?.statusCode,
       originalError: e,
       errorBody: e.response?.data,
+      apiError: apiError,
       stackTrace: e.stackTrace,
     );
   }
 }
 
-/// HTTP/Network related errors (e.g., 404, 500, timeouts).
-class HttpError extends WiseException {
-  /// HTTP/Network related errors (e.g., 404, 500, timeouts).
-  HttpError(
+/// HTTP/Network related exceptions (e.g., 404, 500, timeouts).
+class HttpException extends WiseException {
+  /// HTTP/Network related exceptions (e.g., 404, 500, timeouts).
+  HttpException(
     super.message, {
     this.statusCode,
     this.errorBody,
+    this.apiError,
     super.originalError,
     super.stackTrace,
   }) : super(
           extras: {
             'http_status': statusCode,
-            'error_type': 'HttpError',
+            'error_type': 'HttpException',
             if (errorBody != null) 'http_response_body': errorBody,
+            // Add parsed API error details if available
+            if (apiError != null) ...apiError.toSentryExtras(),
           },
         );
 
@@ -61,68 +82,73 @@ class HttpError extends WiseException {
 
   /// The response body or error details from the server, if any.
   final dynamic errorBody;
+
+  /// Parsed API error response (if the response matches the standard format).
+  final ApiErrorResponse? apiError;
+
+  @override
+  String toString() {
+    // Use API error code and detail if available for cleaner display
+    if (apiError?.errors.firstOrNull != null) {
+      final error = apiError!.errors.first;
+      return 'HttpException: ${error.code} ($statusCode) - ${error.detail}';
+    }
+    return 'HttpException: $message';
+  }
 }
 
-/// Errors during data transformation (e.g., JSON parsing failure, missing fields).
-class MapperError extends WiseException {
-  /// Errors during data transformation (e.g., JSON parsing failure, missing fields).
-  MapperError(
+/// Exceptions during data transformation (e.g., JSON parsing failure, missing fields).
+class MapperException extends WiseException {
+  /// Exceptions during data transformation (e.g., JSON parsing failure, missing fields).
+  MapperException(
     super.message, {
     super.originalError,
     super.stackTrace,
     Map<String, dynamic>? extras, // NEW: Accept extras parameter
   }) : super(
           extras: {
-            'error_type': 'MapperError',
+            'error_type': 'MapperException',
             ...(extras ?? {}), // NEW: Merge with provided extras
           },
         );
 }
 
-/// Errors related to DTO/Network data (e.g., invalid data from API, DTO parsing failure).
-class DTOError extends WiseException {
-  /// Errors related to DTO/Network data (e.g., invalid data from API, DTO parsing failure).
-  DTOError(
+/// Exceptions related to DTO/Network data (e.g., invalid data from API, DTO parsing failure).
+class DTOException extends WiseException {
+  /// Exceptions related to DTO/Network data (e.g., invalid data from API, DTO parsing failure).
+  DTOException(
     super.message, {
     super.originalError,
     super.stackTrace,
     Map<String, dynamic>? extras,
   }) : super(
           extras: {
-            'error_type': 'DTOError',
+            'error_type': 'DTOException',
             ...(extras ?? {}),
           },
         );
 }
 
-/// Errors specific to core domain logic (e.g., invalid state, unauthorized actions).
-class BusinessLogicError extends WiseException {
-  /// Errors specific to core domain logic (e.g., invalid state, unauthorized actions).
-  BusinessLogicError(
+/// Exceptions originating from the Presentation/UI layer (e.g., unexpected user input).
+class UIException extends WiseException {
+  /// Exceptions originating from the Presentation/UI layer (e.g., unexpected user input).
+  UIException(
     super.message, {
     super.originalError,
     super.stackTrace,
+    Map<String, dynamic>? extras,
   }) : super(
-          extras: {'error_type': 'BusinessLogicError'},
+          extras: {
+            'error_type': 'UIException',
+            ...(extras ?? {}),
+          },
         );
 }
 
-/// Errors originating from the Presentation/UI layer (e.g., unexpected user input).
-class UIError extends WiseException {
-  /// Errors originating from the Presentation/UI layer (e.g., unexpected user input).
-  UIError(
-    super.message, {
-    super.originalError,
-    super.stackTrace,
-  }) : super(
-          extras: {'error_type': 'UIError'},
-        );
-}
-
-/// Errors related to type mismatches, often during data mapping or deserialization.
-class WiseTypeError extends WiseException {
-  /// Errors related to type mismatches, often during data mapping or deserialization.
-  WiseTypeError(
+/// Exceptions related to type mismatches, often during data mapping or deserialization.
+class WiseTypeException extends WiseException {
+  /// Exceptions related to type mismatches, often during data mapping or deserialization.
+  WiseTypeException(
     super.message, {
     required this.expectedType,
     required this.actualValue,
@@ -132,7 +158,7 @@ class WiseTypeError extends WiseException {
     Map<String, dynamic>? extras, // NEW: Accept extras parameter
   }) : super(
           extras: {
-            'error_type': 'WiseTypeError',
+            'error_type': 'WiseTypeException',
             'expected_type': expectedType,
             'actual_value': actualValue.toString(), // Convert to string for Sentry
             if (fieldName != null) 'field_name': fieldName,
@@ -152,6 +178,6 @@ class WiseTypeError extends WiseException {
   @override
   String toString() {
     final fieldInfo = fieldName != null ? ' (Field: $fieldName)' : '';
-    return 'WiseTypeError: $message$fieldInfo. Expected $expectedType, got $actualValue.';
+    return 'WiseTypeException: $message$fieldInfo. Expected $expectedType, got $actualValue.';
   }
 }

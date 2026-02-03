@@ -4,29 +4,31 @@ import 'package:flutter/material.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import '../wise_sentry.dart';
-import 'logger/http_error_logger.dart';
-import 'logger/sentry_logger.dart';
+import 'logger/logger.dart';
 import 'sentry_before_send.dart';
-
-export 'interceptors/http_interceptors.dart';
 
 /// Wise Sentry class
 class WiseSentry {
   /// Initialize Wisemen Sentry
   /// [dsn] Sentry DSN
+  ///
   /// [appRunner] Function that runs the main app widget
+  ///
   /// [environment] Optional environment string (e.g., 'production', 'staging')
+  ///
   /// [productionSampleRate] Sample rate for production environment (default is 0.2)
+  ///
   /// [logInDebugMode] Whether to log errors in debug mode (default is false)
   static Future<void> init({
     required String? dsn,
     required Widget Function() appRunner,
     String? environment,
-    double productionSampleRate = 0.2,
+    double sampleRate = 1.0,
+    double tracesSampleRate = 0.2,
     bool logInDebugMode = false,
   }) async {
     if (dsn == null || dsn.isEmpty) {
-      print('WiseSentry: No DSN provided, running without Sentry.');
+      print('[WiseSentry] No DSN provided, running without Sentry.');
       runApp(appRunner());
       return;
     }
@@ -36,7 +38,8 @@ class WiseSentry {
         options
           ..dsn = dsn
           ..environment = environment
-          ..tracesSampleRate = environment == 'production' ? productionSampleRate : 1.0
+          ..sampleRate = sampleRate
+          ..tracesSampleRate = tracesSampleRate
           ..enableAppHangTracking = false
           ..beforeSend = (event, hint) => wiseSentryBeforeSend(
                 event,
@@ -129,7 +132,7 @@ class WiseSentry {
   /// Log a UI error to Sentry
   static void logUIError(dynamic e, StackTrace stackTrace) {
     WiseSentryLogger.capture(
-      UIError(
+      UIException(
         e.toString(),
         originalError: e,
         stackTrace: stackTrace,

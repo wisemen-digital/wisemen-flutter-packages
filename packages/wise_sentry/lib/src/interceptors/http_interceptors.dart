@@ -1,19 +1,16 @@
 import 'package:dio/dio.dart';
 import '../../wise_sentry.dart';
 
-/// A custom Dio Interceptor to catch DioExceptions, wrap them as HttpError,
+/// A custom Dio Interceptor to catch DioExceptions, wrap them as HttpException,
 /// and log them using our structured SentryLogger.
 class WiseSentryDioInterceptor extends Interceptor {
   @override
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
-    // 1. Check for errors that should be explicitly ignored (e.g., cancelled requests)
     if (CancelToken.isCancel(err)) {
       // Do not report cancelled requests to Sentry
       return handler.next(err);
     }
 
-    // 3. Log the custom HttpError to Sentry
-    // We use the stackTrace from the DioException if available, otherwise current.
     WiseSentry.logDioError(
       err,
       err.stackTrace,
