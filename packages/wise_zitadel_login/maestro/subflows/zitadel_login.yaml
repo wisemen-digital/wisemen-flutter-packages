@@ -1,0 +1,23 @@
+appId: ${appId}
+---
+# 1. Zitadel Account Selection (Handles 0, 1, or many accounts)
+# We use regex to find 'Other User' regardless of the list length or weird icons
+- tapOn:
+    text: ".*Other User.*"
+    optional: true
+
+# 2. Page 1: Username/Email
+- tapOn:
+    index: 0
+    optional: true
+- inputText: "${email}"
+- pressKey: Enter
+
+# 3. Page 2: Password
+- waitForAnimationToEnd
+- tapOn:
+    index: 0
+    optional: true
+
+- inputText: "${password}"
+- pressKey: Enter
