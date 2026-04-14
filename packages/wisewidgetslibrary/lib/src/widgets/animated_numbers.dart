@@ -1,9 +1,28 @@
-import 'package:flutter/foundation.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
-/// [AnimatedNumbers] widget
-class AnimatedNumbers extends StatefulWidget {
-  /// Constructor [AnimatedNumbers]
+/// A widget that animates between lists of numeric values with smooth transitions.
+///
+/// When [numbers] changes, the widget animates from the previous values to the
+/// new values using the specified [duration] and [curve].
+///
+/// This widget uses Flutter's [TweenAnimationBuilder] internally with a custom
+/// [_ListTween] to handle list interpolation.
+///
+/// Example:
+/// ```dart
+/// AnimatedNumbers(
+///   numbers: [value1, value2, value3],
+///   child: (context, values) => Row(
+///     children: values.map((v) => Text(v.toStringAsFixed(0))).toList(),
+///   ),
+/// )
+/// ```
+class AnimatedNumbers extends StatelessWidget {
+  /// Creates an [AnimatedNumbers] widget.
+  ///
+  /// The [numbers] and [child] parameters are required.
   const AnimatedNumbers({
     required this.numbers,
     required this.child,
@@ -12,78 +31,52 @@ class AnimatedNumbers extends StatefulWidget {
     super.key,
   });
 
-  /// List of animation number values
+  /// The target list of numeric values to animate towards.
   final List<double> numbers;
 
-  /// Children
-  final Widget Function(List<double>) child;
+  /// Builder function that receives the current animated values
+  /// and returns the widget to display.
+  final Widget Function(BuildContext context, List<double> values) child;
 
-  /// Animation duration (default 1000ms)
+  /// The duration of the animation.
+  ///
+  /// Defaults to 1000 milliseconds.
   final Duration duration;
 
-  /// Animation curve (default Curves.easeInOut)
+  /// The curve to apply to the animation.
+  ///
+  /// Defaults to [Curves.easeInOut].
   final Curve curve;
 
   @override
-  State<AnimatedNumbers> createState() => _AnimatedNumbersState();
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<List<double>>(
+      tween: _ListTween(end: numbers),
+      duration: duration,
+      curve: curve,
+      builder: (context, values, _) => child(context, values),
+    );
+  }
 }
 
-class _AnimatedNumbersState extends State<AnimatedNumbers>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late List<Animation<double>> _animations;
+/// A custom [Tween] that interpolates between two lists of doubles.
+class _ListTween extends Tween<List<double>> {
+  _ListTween({required List<double> end}) : super(end: end);
 
   @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-    _animations = widget.numbers
-        .map(
-          (factor) => Tween<double>(
-            begin: factor,
-            end: factor,
-          ).animate(_animationController),
-        )
-        .toList();
-  }
+  List<double> lerp(double t) {
+    final beginList = begin ?? end!;
+    final endList = end!;
 
-  @override
-  void didUpdateWidget(AnimatedNumbers oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!listEquals(widget.numbers, oldWidget.numbers)) {
-      for (var i = 0; i < widget.numbers.length; i++) {
-        _animations[i] =
-            Tween<double>(
-              begin: oldWidget.numbers[i],
-              end: widget.numbers[i],
-            ).animate(
-              CurvedAnimation(
-                parent: _animationController,
-                curve: Curves.easeInOut,
-              ),
-            );
-      }
-      _animationController
-        ..reset()
-        ..forward();
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) =>
-          widget.child(_animations.map((e) => e.value).toList()),
-    );
+    // Handle different list lengths by using the longer list's length
+    final maxLength = endList.length;
+    return [
+      for (var i = 0; i < maxLength; i++)
+        lerpDouble(
+          i < beginList.length ? beginList[i] : 0,
+          endList[i],
+          t,
+        )!,
+    ];
   }
 }
