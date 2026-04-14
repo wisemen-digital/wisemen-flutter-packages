@@ -1,9 +1,30 @@
 ---
-applyTo: "lib/features/**"
-description: "Use when creating new features, adding screens/widgets to features, or understanding feature organization. Covers the standard feature folder structure, barrel exports, feature initialization, and the shared feature pattern."
+applyTo: 'lib/features/**'
+description: 'Use when creating new features, adding screens/widgets to features, or understanding feature organization. Covers the standard feature folder structure, barrel exports, feature initialization, and the shared feature pattern.'
 ---
 
-# Feature Structure
+# Feature Structure Guidelines
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     FEATURE MODULE                          │
+│  Self-contained: screens, widgets, providers, models        │
+├─────────────────┬─────────────────┬─────────────────────────┤
+│    screens/     │    widgets/     │      providers/         │
+│    UI pages     │   Components    │    State management     │
+├─────────────────┴─────────────────┴─────────────────────────┤
+│      models/         │       repositories/ (interface)      │
+│   Domain objects     │       Abstract contract only         │
+└──────────────────────┴──────────────────────────────────────┘
+                            │
+                            ▼ Implementation lives outside
+┌─────────────────────────────────────────────────────────────┐
+│                  lib/repository/                            │
+│  Repository implementations + DTO/Table mappers             │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Standard Feature Layout
 
@@ -163,3 +184,13 @@ features/shared/
 | Barrel export | `feature_name.dart` | `my_feature.dart` |
 | Feature class | `PascalCase + Feature` | `MyFeatureFeature` |
 | Feature file | `feature_name_feature.dart` | `my_feature_feature.dart` |
+
+## Best Practices
+
+1. **Keep features self-contained** — avoid cross-feature imports except through managers
+2. **Use barrel exports** — only expose public APIs through the main feature file
+3. **Define interfaces in features** — implementations live in `lib/repository/`
+4. **Initialize via `init()`** — wire dependencies at app startup
+5. **Use the shared feature sparingly** — only for truly cross-cutting utilities
+6. **One repository per feature** — maps to feature's domain boundaries
+7. **Screens are thin** — delegate logic to providers and repositories

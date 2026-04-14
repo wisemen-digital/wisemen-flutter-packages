@@ -1,9 +1,9 @@
 ---
-applyTo: "**/*repository*.dart"
-description: "Use when creating repositories, understanding the repository pattern, or implementing data flow between network and database layers. Covers the two-layer pattern (interface + implementation), stream patterns, and fetch/watch operations."
+applyTo: '**/*repository*.dart'
+description: 'Use when creating repositories, understanding the repository pattern, or implementing data flow between network and database layers. Covers the two-layer pattern (interface + implementation), stream patterns, and fetch/watch operations.'
 ---
 
-# Repositories
+# Repositories Guidelines
 
 ## Two-Layer Repository Pattern
 

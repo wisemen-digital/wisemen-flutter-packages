@@ -1,9 +1,9 @@
 ---
-applyTo: "lib/database/**"
-description: "Use when working with Drift database, tables, DAOs, migrations, or value objects stored in database. Covers table definitions, DAO patterns, TypeConverters for nested JSON, and reactive queries."
+applyTo: 'lib/database/**'
+description: 'Use when working with Drift database, tables, DAOs, migrations, or value objects stored in database. Covers table definitions, DAO patterns, TypeConverters for nested JSON, and reactive queries.'
 ---
 
-# Database Layer
+# Database Guidelines
 
 ## Directory Structure
 

@@ -1,6 +1,6 @@
 ---
-description: 'Flutter managers architecture for feature decoupling. Use when: creating navigation managers, widget managers, implementing cross-feature communication, setting up feature initialization. Keywords: NavigationManager, WidgetManager, Feature decoupling, cross-feature communication, abstract interface, Provider, dependency injection.'
 applyTo: '**/managers/**'
+description: 'Flutter managers architecture for feature decoupling. Use when: creating navigation managers, widget managers, implementing cross-feature communication, setting up feature initialization. Keywords: NavigationManager, WidgetManager, Feature decoupling, cross-feature communication, abstract interface, Provider, dependency injection.'
 ---
 
 # Flutter Managers Guidelines

@@ -1,9 +1,9 @@
 ---
-applyTo: "lib/**"
-description: "Use when working with project folder structure, understanding lib/ organization, or creating new top-level directories. Covers the purpose of each main folder (features, network, database, repository, router, theme) and root-level files."
+applyTo: 'lib/**'
+description: 'Use when working with project folder structure, understanding lib/ organization, or creating new top-level directories. Covers the purpose of each main folder (features, network, database, repository, router, theme) and root-level files.'
 ---
 
-# Project Folder Structure
+# Project Structure Guidelines
 
 ## lib/ Directory Overview
 
@@ -139,3 +139,12 @@ export 'my_feature_feature.dart';
 2. **New service**: Add to `network/services/` with corresponding DTOs
 3. **New table**: Add to `database/tables/` with a DAO in `database/dao/`
 4. **New shared utility**: Evaluate if it belongs in `features/shared/` or a top-level folder
+
+## Best Practices
+
+1. **Follow folder conventions** — place files in their designated directories
+2. **Use barrel exports** — each directory exposes its public API
+3. **Keep layers separate** — network, database, and features don't directly import each other
+4. **Repository bridges layers** — only repositories connect network to database
+5. **Feature-first organization** — group by feature, not by type
+6. **Avoid circular dependencies** — features communicate through managers

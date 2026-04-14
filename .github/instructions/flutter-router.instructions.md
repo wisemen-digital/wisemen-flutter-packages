@@ -1,6 +1,6 @@
 ---
-description: 'Flutter router architecture using auto_route for navigation. Use when: setting up navigation, creating routes, implementing guards, building nested navigation, configuring route observers. Keywords: AppRouter, AutoRoute, AutoRouteGuard, StackRouter, TabRouter, AdaptiveRoute, CustomRoute, route guards, navigation.'
 applyTo: 'lib/router/**'
+description: 'Flutter router architecture using auto_route for navigation. Use when: setting up navigation, creating routes, implementing guards, building nested navigation, configuring route observers. Keywords: AppRouter, AutoRoute, AutoRouteGuard, StackRouter, TabRouter, AdaptiveRoute, CustomRoute, route guards, navigation.'
 ---
 
 # Flutter Router Guidelines

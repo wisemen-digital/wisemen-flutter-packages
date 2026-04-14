@@ -1,13 +1,35 @@
 ---
-applyTo: "**/*provider*.dart"
-description: "Use when creating Riverpod providers, working with state management, or understanding provider patterns. Covers @riverpod annotation, provider types (Stream, Notifier, AsyncNotifier), code generation, and provider organization."
+applyTo: '**/*provider*.dart'
+description: 'Use when creating Riverpod providers, working with state management, or understanding provider patterns. Covers @riverpod annotation, provider types (Stream, Notifier, AsyncNotifier), code generation, and provider organization.'
 ---
 
-# Providers — State Management
+# Providers Guidelines
 
 ## Overview
 
 State management uses **Riverpod** with code generation via `@riverpod` annotation. All providers generate companion `.g.dart` files.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      UI LAYER                               │
+│  ref.watch(provider) / ref.read(provider)                   │
+└─────────────────────────────────────────────────────────────┘
+                            ▲
+┌─────────────────────────────────────────────────────────────┐
+│                   PROVIDER LAYER                            │
+├─────────────────────────────────────────────────────────────┤
+│  StreamProvider   │  AsyncNotifier   │  Notifier            │
+│  Database watches │  Async mutations │  Sync state          │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                  REPOSITORY LAYER                           │
+│  Data orchestration (fetch, watch, transform)               │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## File Structure
 
@@ -201,7 +223,7 @@ Or in watch mode:
 dart run build_runner watch --delete-conflicting-outputs
 ```
 
-## Provider Best Practices
+## Best Practices
 
 1. **Use streams for database data** — enables reactive updates
 2. **Keep providers small** — one concern per provider

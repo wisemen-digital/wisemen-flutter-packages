@@ -1,6 +1,6 @@
 ---
-description: 'Flutter theming architecture with 3-layer semantic color system. Use when: setting up theme structure, creating colors, implementing dark mode, adding BuildContext extensions, defining text styles, creating color palettes, organizing theme files. Keywords: theme, colors, dark mode, light mode, TextColors, BackgroundColors, ForegroundColors, BorderColors, UtilityColors, PrimitiveColors, BuildContext extensions, ColorScheme, ThemeData.'
 applyTo: 'lib/theme/**'
+description: 'Flutter theming architecture with 3-layer semantic color system. Use when: setting up theme structure, creating colors, implementing dark mode, adding BuildContext extensions, defining text styles, creating color palettes, organizing theme files. Keywords: theme, colors, dark mode, light mode, TextColors, BackgroundColors, ForegroundColors, BorderColors, UtilityColors, PrimitiveColors, BuildContext extensions, ColorScheme, ThemeData.'
 ---
 
 # Flutter Theming Guidelines

@@ -1,9 +1,9 @@
 ---
-applyTo: "lib/**/models/**"
-description: "Use when creating domain models, understanding the three-tier model architecture (DTO, Database, Feature), or working with enums. Covers feature models, database value objects, and enum patterns."
+applyTo: 'lib/**/models/**'
+description: 'Use when creating domain models, understanding the three-tier model architecture (DTO, Database, Feature), or working with enums. Covers feature models, database value objects, and enum patterns.'
 ---
 
-# Models
+# Models Guidelines
 
 ## Three-Tier Model Architecture
 

@@ -1,9 +1,29 @@
 ---
-applyTo: "lib/network/**"
-description: "Use when working with API services, DTOs, HTTP clients, or mappers. Covers the network layer structure, json_serializable patterns, service class patterns, DTO-to-database mappers, and client configuration."
+applyTo: 'lib/network/**'
+description: 'Use when working with API services, DTOs, HTTP clients, or mappers. Covers the network layer structure, json_serializable patterns, service class patterns, DTO-to-database mappers, and client configuration.'
 ---
 
-# Network Layer
+# Network Guidelines
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     SERVICE LAYER                           │
+│  API operations (ItemService, AuthService)                  │
+├─────────────────────────────────────────────────────────────┤
+│                     CLIENT LAYER                            │
+│  HTTP handling (protected_client, unprotected_client)       │
+├─────────────────────────────────────────────────────────────┤
+│                      DTO LAYER                              │
+│  API response shapes (json_serializable)                    │
+└─────────────────────────────────────────────────────────────┘
+         │
+         ▼ DTO Mappers transform to database companions
+┌─────────────────────────────────────────────────────────────┐
+│                   DATABASE LAYER                            │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Directory Structure
 

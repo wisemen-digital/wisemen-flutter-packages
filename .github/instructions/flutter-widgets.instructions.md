@@ -1,11 +1,25 @@
 ---
-description: 'Flutter widgets architecture for reusable UI components. Use when: creating reusable widgets, building feature-specific widgets, implementing shared components, structuring widget files. Keywords: Widget, StatelessWidget, ConsumerWidget, shared widgets, feature widgets, CustomPainter, Semantics, accessibility.'
 applyTo: '**/widgets/**'
+description: 'Flutter widgets architecture for reusable UI components. Use when: creating reusable widgets, building feature-specific widgets, implementing shared components, structuring widget files. Keywords: Widget, StatelessWidget, ConsumerWidget, shared widgets, feature widgets, CustomPainter, Semantics, accessibility.'
 ---
 
 # Flutter Widgets Guidelines
 
 Widgets are reusable UI components organized by scope: shared widgets for app-wide use, feature widgets for feature-specific components.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     WIDGET LAYER                            │
+│  Reusable UI components (StatelessWidget, ConsumerWidget)   │
+├─────────────────────────────────────────────────────────────┤
+│  SHARED WIDGETS              │  FEATURE WIDGETS             │
+│  lib/features/shared/widgets │  lib/features/*/widgets      │
+│  App-wide components         │  Feature-specific components │
+│  PrimaryButton, EmptyState   │  ThreatCard, AssetListTile   │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Widget Organization
 

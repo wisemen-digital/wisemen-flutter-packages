@@ -1,11 +1,29 @@
 ---
-description: 'Flutter screens architecture for views, dialogs, and bottom sheets. Use when: creating screens, implementing dialogs, building bottom sheets, using auto_route annotations, structuring feature screens. Keywords: RoutePage, Screen, Dialog, BottomSheet, Modal, WoltModalSheet, ConsumerWidget, HookConsumerWidget, Scaffold.'
 applyTo: '**/screens/**'
+description: 'Flutter screens architecture for views, dialogs, and bottom sheets. Use when: creating screens, implementing dialogs, building bottom sheets, using auto_route annotations, structuring feature screens. Keywords: RoutePage, Screen, Dialog, BottomSheet, Modal, WoltModalSheet, ConsumerWidget, HookConsumerWidget, Scaffold.'
 ---
 
 # Flutter Screens Guidelines
 
 Screens are the main UI entry points for features. They use `@RoutePage()` annotation for navigation and follow consistent patterns for different display types.
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     SCREEN LAYER                            │
+│  @RoutePage() annotated widgets (ConsumerWidget)            │
+├─────────────────────────────────────────────────────────────┤
+│  Full Screens    │  Bottom Sheets   │  Dialogs/Modals       │
+│  AdaptiveRoute   │  BottomSheetRoute│  WoltModalSheet       │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    PROVIDER LAYER                           │
+│  State management via Riverpod (ref.watch, ref.read)        │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## Screen Types
 
