@@ -17,7 +17,7 @@ Widgets are reusable UI components organized by scope: shared widgets for app-wi
 │  SHARED WIDGETS              │  FEATURE WIDGETS             │
 │  lib/features/shared/widgets │  lib/features/*/widgets      │
 │  App-wide components         │  Feature-specific components │
-│  PrimaryButton, EmptyState   │  ThreatCard, AssetListTile   │
+│  PrimaryButton, EmptyState   │  ItemCard, ItemListTile      │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -26,7 +26,7 @@ Widgets are reusable UI components organized by scope: shared widgets for app-wi
 | Scope | Location | Purpose | Example |
 |-------|----------|---------|---------|
 | Shared | `lib/features/shared/widgets/` | App-wide reusable components | `PrimaryButton`, `EmptyState` |
-| Feature | `lib/features/[feature]/widgets/` | Feature-specific components | `ThreatListTile`, `AssetCard` |
+| Feature | `lib/features/[feature]/widgets/` | Feature-specific components | `ItemListTile`, `ItemCard` |
 
 ## File Structure
 
@@ -91,26 +91,26 @@ Use `ConsumerWidget` when widget needs Riverpod state.
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ThreatListTile extends ConsumerWidget {
-  const ThreatListTile({
+class ItemListTile extends ConsumerWidget {
+  const ItemListTile({
     super.key,
-    required this.threatId,
+    required this.itemId,
   });
 
-  final String threatId;
+  final String itemId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final threat = ref.watch(threatProvider(threatId));
+    final item = ref.watch(itemProvider(itemId));
     
     return ListTile(
-      title: Text(threat.name, style: context.normal),
-      subtitle: Text(threat.severity.label, style: context.label),
+      title: Text(item.name, style: context.normal),
+      subtitle: Text(item.status.label, style: context.label),
       leading: Icon(
-        Icons.warning,
-        color: threat.severity.color(context),
+        Icons.info,
+        color: item.status.color(context),
       ),
-      onTap: () => NavigationManager(context).navigateToThreatDetail(threatId),
+      onTap: () => NavigationManager(context).navigateToItemDetail(itemId),
     );
   }
 }
@@ -170,13 +170,13 @@ class PrimaryButton extends StatelessWidget {
 Feature-specific app bars as separate widgets.
 
 ```dart
-class ThreatsAppBar extends ConsumerWidget {
-  const ThreatsAppBar({super.key});
+class ItemsAppBar extends ConsumerWidget {
+  const ItemsAppBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverAppBar(
-      title: Text(S.of(context).threats, style: context.title),
+      title: Text(S.of(context).items, style: context.title),
       floating: true,
       actions: [
         IconButton(
@@ -191,7 +191,7 @@ class ThreatsAppBar extends ConsumerWidget {
     WoltModalSheet.show(
       context: context,
       pageListBuilder: (context) => [
-        const ThreatsFilterScreen().build(context),
+        const ItemsFilterScreen().build(context),
       ],
     );
   }
@@ -203,20 +203,20 @@ class ThreatsAppBar extends ConsumerWidget {
 Consistent list items with navigation.
 
 ```dart
-class AssetListTile extends StatelessWidget {
-  const AssetListTile({
+class ItemListTile extends StatelessWidget {
+  const ItemListTile({
     super.key,
-    required this.asset,
+    required this.item,
     this.onTap,
   });
 
-  final Asset asset;
+  final Item item;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: asset.name,
+      label: item.name,
       button: onTap != null,
       child: InkWell(
         onTap: onTap,
@@ -227,15 +227,15 @@ class AssetListTile extends StatelessWidget {
             children: [
               CircleAvatar(
                 backgroundColor: context.bgColor.brandPrimary,
-                child: Icon(asset.icon, color: context.fgColor.brandPrimary),
+                child: Icon(item.icon, color: context.fgColor.brandPrimary),
               ),
               const SizedBox(width: Sizes.m),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(asset.name, style: context.normal),
-                    Text(asset.type.label, style: context.label),
+                    Text(item.name, style: context.normal),
+                    Text(item.type.label, style: context.label),
                   ],
                 ),
               ),

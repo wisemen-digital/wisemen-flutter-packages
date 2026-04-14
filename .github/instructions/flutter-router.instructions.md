@@ -89,8 +89,8 @@ class AppRouter extends RootStackRouter {
           initial: true,
         ),
         AdaptiveRoute(
-          page: ThreatsScreenRoute.page,
-          path: 'threats',
+          page: ItemsScreenRoute.page,
+          path: 'items',
         ),
         AdaptiveRoute(
           path: 'chat',
@@ -102,8 +102,8 @@ class AppRouter extends RootStackRouter {
     
     // Detail routes
     AdaptiveRoute(
-      path: '/threat-detail',
-      page: ThreatDetailScreenRoute.page,
+      path: '/item-detail',
+      page: ItemDetailScreenRoute.page,
     ),
     
     // Bottom sheet route
@@ -284,7 +284,7 @@ class AdaptiveBottomSheetRoute<R> extends CustomRoute {
 
 ```dart
 // Push new route
-context.router.push(const ThreatDetailScreenRoute(threatId: '123'));
+context.router.push(const ItemDetailScreenRoute(itemId: '123'));
 
 // Replace current route
 context.router.replace(const DashboardRouter());
@@ -327,7 +327,7 @@ Future<void> navigateAfterAnimation() async {
     attempts++;
   }
   
-  currentRouter?.push(ThreatDetailScreenRoute(threatId: targetId));
+  currentRouter?.push(ItemDetailScreenRoute(itemId: targetId));
 }
 ```
 

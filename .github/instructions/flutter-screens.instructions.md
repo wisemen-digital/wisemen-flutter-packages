@@ -30,9 +30,9 @@ Screens are the main UI entry points for features. They use `@RoutePage()` annot
 | Type | Purpose | Route Type | Example |
 |------|---------|------------|---------|
 | Screen | Full-page view | `AdaptiveRoute` | `LoginScreen`, `DashboardScreen` |
-| Detail Screen | Item detail view | `AdaptiveRoute` | `ThreatDetailScreen`, `AssetDetailScreen` |
+| Detail Screen | Item detail view | `AdaptiveRoute` | `ItemDetailScreen` |
 | Bottom Sheet | Modal overlay | `AdaptiveBottomSheetRoute` | `SettingsScreen` |
-| Filter Sheet | Filterable modal | `WoltModalSheet` | `ThreatsFilterScreen` |
+| Filter Sheet | Filterable modal | `WoltModalSheet` | `ItemsFilterScreen` |
 
 ## File Structure
 
@@ -55,8 +55,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 @RoutePage()
-class ThreatsScreen extends ConsumerWidget {
-  const ThreatsScreen({super.key});
+class ItemsScreen extends ConsumerWidget {
+  const ItemsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -119,21 +119,21 @@ Screens can receive parameters via route arguments.
 
 ```dart
 @RoutePage()
-class ThreatDetailScreen extends ConsumerWidget {
-  const ThreatDetailScreen({
+class ItemDetailScreen extends ConsumerWidget {
+  const ItemDetailScreen({
     super.key,
-    required this.threatId,
+    required this.itemId,
   });
 
-  final String threatId;
+  final String itemId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final threat = ref.watch(threatDetailProvider(threatId));
+    final item = ref.watch(itemDetailProvider(itemId));
     
     return Scaffold(
-      body: threat.when(
-        data: (data) => ThreatDetailContent(threat: data),
+      body: item.when(
+        data: (data) => ItemDetailContent(item: data),
         loading: () => const CircularProgressIndicator(),
         error: (e, _) => ErrorWidget(e),
       ),
@@ -148,14 +148,14 @@ Use a custom scaffold for consistent layout across screens.
 
 ```dart
 @RoutePage()
-class ThreatsScreen extends ConsumerWidget {
-  const ThreatsScreen({super.key});
+class ItemsScreen extends ConsumerWidget {
+  const ItemsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SecutecScaffold(
+    return AppScaffold(
       slivers: [
-        const ThreatsAppBar(),
+        const ItemsAppBar(),
         const SliverToBoxAdapter(child: gapHM),
         SliverPadding(
           padding: const EdgeInsets.symmetric(vertical: Sizes.s),
@@ -182,7 +182,7 @@ Handle back navigation behavior with `PopScope`.
 
 ```dart
 @RoutePage()
-class ThreatsScreen extends ConsumerWidget {
+class ItemsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PopScope(
@@ -204,8 +204,8 @@ class ThreatsScreen extends ConsumerWidget {
 Use `WoltModalSheet` for complex modal dialogs with sliver content.
 
 ```dart
-class ThreatsFilterScreen {
-  const ThreatsFilterScreen();
+class ItemsFilterScreen {
+  const ItemsFilterScreen();
 
   SliverWoltModalSheetPage build(BuildContext context) {
     return SliverWoltModalSheetPage(
@@ -216,7 +216,7 @@ class ThreatsFilterScreen {
         child: Consumer(
           builder: (context, ref, _) => TextButton(
             onPressed: () => ref.read(filtersProvider.notifier).reset(),
-            child: Text('Clear All'),
+            child: Text(S.of(context).clearAll),
           ),
         ),
       ),
@@ -232,7 +232,7 @@ class ThreatsFilterScreen {
         child: Padding(
           padding: const EdgeInsets.all(Sizes.m),
           child: PrimaryButton(
-            text: 'Apply Filter',
+            text: S.of(context).applyFilter,
             onPressed: () {
               ref.read(pagingController).refresh();
               context.router.maybePop();
@@ -272,8 +272,8 @@ class SplashScreen extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(AppAssets.splashImage.path, fit: BoxFit.cover),
-          Image.asset(AppAssets.splashLogo.path, fit: BoxFit.scaleDown),
+          Image.asset(AppAssets.splashImage, fit: BoxFit.cover),
+          Image.asset(AppAssets.splashLogo, fit: BoxFit.scaleDown),
         ],
       ),
     );
@@ -286,10 +286,10 @@ class SplashScreen extends StatelessWidget {
 Export all screens from a single file.
 
 ```dart
-// lib/features/threats/screens/screens.dart
-export 'all_threats_screen.dart';
-export 'threat_detail_screen.dart';
-export 'threats_screen.dart';
+// lib/features/my_feature/screens/screens.dart
+export 'all_items_screen.dart';
+export 'item_detail_screen.dart';
+export 'items_screen.dart';
 ```
 
 ## Best Practices

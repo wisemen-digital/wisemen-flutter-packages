@@ -52,7 +52,7 @@ lib/
 │       └── dashboard_navigation_manager.dart
 ├── widget_managers/
 │   ├── widget_managers.dart         # Barrel export
-│   └── assets_widget_manager.dart
+│   └── items_widget_manager.dart
 └── features/
     └── login/
         ├── login_feature.dart       # Feature initialization class
@@ -107,30 +107,30 @@ Allow features to display widgets from other features without direct dependencie
 ### Abstract Interface (in feature)
 
 ```dart
-// lib/features/assets/managers/widget_manager.dart
+// lib/features/my_feature/managers/widget_manager.dart
 import 'package:flutter/widgets.dart';
 
-abstract interface class AssetsWidgetManager {
-  Widget assetThreatsWidget(String assetId);
+abstract interface class ItemsWidgetManager {
+  Widget itemRelatedWidget(String itemId);
 }
 ```
 
 ### Concrete Implementation (in widget_managers)
 
 ```dart
-// lib/widget_managers/assets_widget_manager.dart
+// lib/widget_managers/items_widget_manager.dart
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class AssetsWidgetManagerImpl implements AssetsWidgetManager {
+class ItemsWidgetManagerImpl implements ItemsWidgetManager {
   @override
-  Widget assetThreatsWidget(String assetId) {
-    return AssetThreatsList(assetId: assetId);
+  Widget itemRelatedWidget(String itemId) {
+    return ItemRelatedList(itemId: itemId);
   }
 }
 
-final assetsWidgetManagerProvider = Provider<AssetsWidgetManager>(
-  (ref) => AssetsWidgetManagerImpl(),
+final itemsWidgetManagerProvider = Provider<ItemsWidgetManager>(
+  (ref) => ItemsWidgetManagerImpl(),
 );
 ```
 
@@ -139,7 +139,7 @@ final assetsWidgetManagerProvider = Provider<AssetsWidgetManager>(
 For simple navigation within a feature, use a context-based manager.
 
 ```dart
-// lib/features/assets/managers/navigation_manager.dart
+// lib/features/my_feature/managers/navigation_manager.dart
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 
@@ -147,12 +147,12 @@ class NavigationManager {
   const NavigationManager(this.context);
   final BuildContext context;
 
-  void navigateToAssetDetail(String assetId) {
-    context.router.push(AssetDetailScreenRoute(assetId: assetId));
+  void navigateToItemDetail(String itemId) {
+    context.router.push(ItemDetailScreenRoute(itemId: itemId));
   }
 
-  void navigateToAllAssets() {
-    context.router.push(const AllAssetsScreenRoute());
+  void navigateToAllItems() {
+    context.router.push(const AllItemsScreenRoute());
   }
 }
 ```
@@ -190,9 +190,9 @@ void initFeatures() {
     navigationManager: authNavigationManagerProvider,
     repository: authRepositoryProvider,
   );
-  AssetsFeature.init(
-    repository: assetsRepositoryImplProvider,
-    widgetManager: assetsWidgetManagerProvider,
+  MyFeature.init(
+    repository: itemsRepositoryImplProvider,
+    widgetManager: itemsWidgetManagerProvider,
   );
   // ... more features
 }
@@ -220,13 +220,13 @@ class LoginScreen extends ConsumerWidget {
 ### Using Widget Manager
 
 ```dart
-class AssetDetailScreen extends ConsumerWidget {
+class ItemDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         // Widget from another feature via manager
-        ref.read(AssetsFeature.assetsWidgetManager).assetThreatsWidget(assetId),
+        ref.read(MyFeature.itemsWidgetManager).itemRelatedWidget(itemId),
       ],
     );
   }

@@ -256,7 +256,7 @@ Located in `lib/repository/dto_mappers/`. Transform DTOs to database companions.
 import 'package:drift/drift.dart';
 
 import '../../../database/database.dart';
-import '../../../network/dto/my_feature/item_dto.dart';
+import '../../../network/network.dart';
 
 extension ItemDtoMapper on ItemDTO {
   /// Maps DTO to database table companion for insertion
