@@ -53,8 +53,8 @@ import '../my_feature.dart';
 part 'my_providers.g.dart';
 
 class MyProviders {
-  static var items = itemsStreamProviderProvider;
-  static var itemDetail = itemDetailProviderProvider;
+  static var items = itemsStreamNotifierProvider;
+  static var itemDetail = itemDetailNotifierProvider;
   static var filters = filtersNotifierProvider;
 }
 ```
@@ -67,7 +67,7 @@ For reactive data that updates over time (most common for database watches):
 
 ```dart
 @riverpod
-class ItemsStreamProvider extends _$ItemsStreamProvider {
+class ItemsStreamNotifier extends _$ItemsStreamNotifier {
   @override
   Stream<List<MyItem>> build() {
     return ref.watch(MyFeature.myRepository).watchItems();
@@ -93,7 +93,7 @@ For state with async initialization and mutation methods:
 
 ```dart
 @riverpod
-class ItemDetailProvider extends _$ItemDetailProvider {
+class ItemDetailNotifier extends _$ItemDetailNotifier {
   @override
   FutureOr<MyItem?> build({required String id}) async {
     return ref.watch(MyFeature.myRepository).watchItemById(id: id).first;
