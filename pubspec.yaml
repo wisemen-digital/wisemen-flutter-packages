@@ -13,6 +13,11 @@ workspace:
 dev_dependencies:
   melos: ^6.3.2
   coverage: ^1.11.1
+dependencies:
+  args: ">=2.0.0 <3.0.0"
+executables:
+  sync_ai_skills: sync_ai_skills
+
 
 flutter:
   assets:
