@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// AnimatedNumbers(
 ///   numbers: [value1, value2, value3],
-///   child: (values) => Row(
+///   child: (context, values) => Row(
 ///     children: values.map((v) => Text(v.toStringAsFixed(0))).toList(),
 ///   ),
 /// )
@@ -36,7 +36,7 @@ class AnimatedNumbers extends StatelessWidget {
 
   /// Builder function that receives the current animated values
   /// and returns the widget to display.
-  final Widget Function(List<double> values) child;
+  final Widget Function(BuildContext context, List<double> values) child;
 
   /// The duration of the animation.
   ///
@@ -54,7 +54,7 @@ class AnimatedNumbers extends StatelessWidget {
       tween: _ListTween(end: numbers),
       duration: duration,
       curve: curve,
-      builder: (context, values, _) => child(values),
+      builder: (context, values, _) => child(context, values),
     );
   }
 }

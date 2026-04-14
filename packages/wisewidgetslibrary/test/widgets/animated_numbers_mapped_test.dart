@@ -12,7 +12,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbersMapped(
           numbers: const {'a': 10, 'b': 20},
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.entries
@@ -30,7 +30,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbersMapped(
           numbers: const {'a': 30, 'b': 40},
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.entries
@@ -57,7 +57,7 @@ void main() {
           numbers: const {'a': 10, 'b': 20},
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeIn,
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.entries
@@ -77,7 +77,7 @@ void main() {
           numbers: const {'a': 30, 'b': 40},
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeIn,
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.entries
@@ -108,7 +108,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbersMapped(
           numbers: const {'a': 10, 'b': 20},
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.entries
@@ -126,7 +126,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbersMapped(
           numbers: const {'a': 15, 'b': 25},
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.entries

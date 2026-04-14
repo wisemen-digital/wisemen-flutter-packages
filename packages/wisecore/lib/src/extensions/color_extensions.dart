@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:wisecore/src/extensions/extensions.dart';
+
+import 'extensions.dart';
 
 /// Extensions on [Color] type
 extension ColorExtensions on Color {
@@ -35,7 +36,8 @@ extension ColorExtensions on Color {
   Color lighten({required double amount}) {
     assert(amount >= 0 && amount <= 1, 'Amount must be between 0.0 and 1.0');
     final hsl = HSLColor.fromColor(this);
-    final lightened = hsl.withLightness(hsl.lightness + (1 - hsl.lightness) * amount);
+    final lightened =
+        hsl.withLightness(hsl.lightness + (1 - hsl.lightness) * amount);
     return lightened.toColor();
   }
 }

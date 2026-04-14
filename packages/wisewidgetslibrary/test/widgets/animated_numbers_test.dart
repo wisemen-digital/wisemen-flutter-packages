@@ -12,7 +12,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbers(
           numbers: const [10.0, 20.0],
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.map((value) => Text(value.toString())).toList(),
@@ -28,7 +28,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbers(
           numbers: const [30.0, 40.0],
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.map((value) => Text(value.toString())).toList(),
@@ -53,7 +53,7 @@ void main() {
           numbers: const [10.0, 20.0],
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeIn,
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.map((value) => Text(value.toString())).toList(),
@@ -71,7 +71,7 @@ void main() {
           numbers: const [30.0, 40.0],
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeIn,
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.map((value) => Text(value.toString())).toList(),
@@ -100,7 +100,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbers(
           numbers: const [10.0, 20.0],
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.map((value) => Text(value.toString())).toList(),
@@ -116,7 +116,7 @@ void main() {
       MaterialApp(
         home: AnimatedNumbers(
           numbers: const [15.0, 25.0],
-          child: (values) {
+          child: (context, values) {
             animatedValues = values;
             return Column(
               children: values.map((value) => Text(value.toString())).toList(),

@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// AnimatedNumbersMapped(
 ///   numbers: {'likes': 42, 'comments': 7},
-///   child: (values) => Row(
+///   child: (context, values) => Row(
 ///     children: [
 ///       Text('Likes: ${values['likes']?.toStringAsFixed(0)}'),
 ///       Text('Comments: ${values['comments']?.toStringAsFixed(0)}'),
@@ -35,13 +35,11 @@ class AnimatedNumbersMapped extends StatelessWidget {
   });
 
   /// The target map of numeric values to animate towards.
-  ///
-  /// Null values are treated as 0.
-  final Map<String, int?> numbers;
+  final Map<String, int> numbers;
 
   /// Builder function that receives the current animated values
   /// and returns the widget to display.
-  final Widget Function(Map<String, double> values) child;
+  final Widget Function(BuildContext context, Map<String, double> values) child;
 
   /// The duration of the animation.
   ///
@@ -57,11 +55,11 @@ class AnimatedNumbersMapped extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<Map<String, double>>(
       tween: _MapTween(
-        end: numbers.map((key, value) => MapEntry(key, (value ?? 0).toDouble())),
+        end: numbers.map((key, value) => MapEntry(key, value.toDouble())),
       ),
       duration: duration,
       curve: curve,
-      builder: (context, values, _) => child(values),
+      builder: (context, values, _) => child(context, values),
     );
   }
 }
