@@ -41,7 +41,8 @@ void main(List<String> arguments) async {
   // 2. Read Dart's package cache
   final packageConfigFile = File('.dart_tool/package_config.json');
   if (!packageConfigFile.existsSync()) {
-    print('❌ Error: .dart_tool/package_config.json not found. Run `dart pub get` first.');
+    print(
+        '❌ Error: .dart_tool/package_config.json not found. Run `dart pub get` first.');
     exit(1);
   }
 
@@ -62,25 +63,25 @@ void main(List<String> arguments) async {
     final name = package['name'];
     final rootUri = Uri.parse(package['rootUri']);
     final packagePath = rootUri.toFilePath(windows: Platform.isWindows);
-    
+
     // Look for a 'skills' folder in the package
     final sourceSkillsDir = Directory('$packagePath/skills');
-    
+
     if (sourceSkillsDir.existsSync()) {
       print('📦 Found skills in package: $name');
-      
+
       await for (final entity in sourceSkillsDir.list()) {
         if (entity is File) {
           final fileName = entity.uri.pathSegments.last;
-          
+
           // 5. Copy the file to every selected platform's directory
           for (final agent in selectedAgents) {
             final targetDirPath = platformDirectories[agent]!;
-            
-            // Note: Cursor specifically prefers .mdc extensions, you could add logic 
+
+            // Note: Cursor specifically prefers .mdc extensions, you could add logic
             // here to rename files if required by a specific platform.
             final destFile = File('$targetDirPath/${name}_$fileName');
-            
+
             entity.copySync(destFile.path);
             copiedCount++;
             print('  -> Copied $fileName to $targetDirPath');
