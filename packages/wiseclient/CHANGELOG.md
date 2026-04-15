@@ -1,3 +1,7 @@
+## 1.1.3-prerelease.3
+
+- Add a wiseclient skill
+
 ## 1.1.3-prerelease.2
 
 - Pass refreshBuffer through createClient
