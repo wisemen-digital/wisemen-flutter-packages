@@ -101,7 +101,10 @@ class ItemDetailNotifier extends _$ItemDetailNotifier {
 
   Future<void> refresh() async {
     state = const AsyncLoading();
-    await ref.read(MyFeature.myRepository).fetchItemById(id: id);
+    state = await AsyncValue.guard(() async {
+      await ref.read(MyFeature.myRepository).fetchItemById(id: id);
+      return ref.read(MyFeature.myRepository).watchItemById(id: id).first;
+    });
   }
 }
 ```
@@ -161,25 +164,34 @@ class AuthState extends _$AuthState {
 
 ## Loading State Mixin Pattern
 
-Create mixins for common loading patterns:
+Create mixins for common loading patterns that use reactive state:
 
 ```dart
-mixin LoadingStreamProvider<T> on AutoDisposeStreamNotifier<T> {
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
+mixin LoadingStreamProvider<T> on AutoDisposeStreamNotifier<List<T>> {
+  /// Performs an async action while showing loading state.
+  /// Preserves existing data during refresh for smooth UX.
   Future<void> withLoading(Future<void> Function() action) async {
-    _isLoading = true;
+    final previousData = state.valueOrNull;
+    
+    // Set loading while preserving previous data for smooth UI
+    state = previousData != null
+        ? AsyncLoading<List<T>>().copyWithPrevious(AsyncData(previousData))
+        : const AsyncLoading();
+    
     try {
       await action();
-    } finally {
-      _isLoading = false;
+      // Stream will automatically update state after action completes
+    } catch (e, st) {
+      // Restore previous data on error, or show error state
+      state = previousData != null
+          ? AsyncError<List<T>>(e, st).copyWithPrevious(AsyncData(previousData))
+          : AsyncError(e, st);
     }
   }
 }
 
 @riverpod
-class ItemsProvider extends _$ItemsProvider with LoadingStreamProvider<List<MyItem>> {
+class ItemsProvider extends _$ItemsProvider with LoadingStreamProvider<MyItem> {
   @override
   Stream<List<MyItem>> build() {
     return ref.watch(MyFeature.myRepository).watchItems();
@@ -190,6 +202,26 @@ class ItemsProvider extends _$ItemsProvider with LoadingStreamProvider<List<MyIt
   }
 }
 ```
+
+**Usage in UI:**
+
+```dart
+final itemsAsync = ref.watch(MyProviders.items);
+
+// Check if refreshing (has data but is loading)
+final isRefreshing = itemsAsync.isLoading && itemsAsync.hasValue;
+
+return itemsAsync.when(
+  data: (items) => RefreshIndicator(
+    onRefresh: () => ref.read(MyProviders.items.notifier).refresh(),
+    child: ListView.builder(...),
+  ),
+  loading: () => const CircularProgressIndicator(),
+  error: (e, st) => ErrorWidget(e),
+  skipLoadingOnRefresh: true, // Show previous data while refreshing
+);
+```
+
 
 ## Accessing Other Providers
 

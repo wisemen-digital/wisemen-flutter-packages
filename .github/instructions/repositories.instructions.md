@@ -121,7 +121,7 @@ class ItemRepositoryImpl implements ItemRepository {
 }
 
 // Provider registration
-final itemRepositoryProvider = Provider<ItemRepositoryImpl>(
+final itemRepositoryProvider = Provider<ItemRepository>(
   (ref) => ItemRepositoryImpl(ref: ref),
 );
 ```

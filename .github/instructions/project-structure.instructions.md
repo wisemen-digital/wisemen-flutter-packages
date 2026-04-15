@@ -138,7 +138,7 @@ export 'my_feature_feature.dart';
 1. **New feature**: Create under `features/` following feature structure
 2. **New service**: Add to `network/services/` with corresponding DTOs
 3. **New table**: Add to `database/tables/` with a DAO in `database/dao/`
-4. **New shared utility**: Evaluate if it belongs in `features/shared/` or a top-level folder
+4. **New shared utility**: Evaluate if it belongs in `features/shared/` or a top-level feature folder
 
 ## Best Practices
 

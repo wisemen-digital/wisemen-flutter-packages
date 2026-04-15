@@ -90,7 +90,7 @@ class LoginScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final emailFocusNode = useFocusNode();
-    final passwordFocusNode = useListenable(useFocusNode());
+    final passwordFocusNode = useFocusNode();
     final passwordController = useTextEditingController();
     
     return Scaffold(

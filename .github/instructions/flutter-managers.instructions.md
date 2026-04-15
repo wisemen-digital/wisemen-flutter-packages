@@ -157,47 +157,6 @@ class NavigationManager {
 }
 ```
 
-## Feature Initialization
-
-Features declare their dependencies via static providers, wired at app startup.
-
-### Feature Class
-
-```dart
-// lib/features/login/login_feature.dart
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-class LoginFeature {
-  static late Provider<LoginNavigationManager> loginNavigationManager;
-  static late Provider<LoginRepository> loginRepository;
-
-  static void init({
-    required Provider<LoginNavigationManager> navigationManager,
-    required Provider<LoginRepository> repository,
-  }) {
-    loginNavigationManager = navigationManager;
-    loginRepository = repository;
-  }
-}
-```
-
-### App Initialization
-
-```dart
-// lib/feature_init_util.dart
-void initFeatures() {
-  LoginFeature.init(
-    navigationManager: authNavigationManagerProvider,
-    repository: authRepositoryProvider,
-  );
-  MyFeature.init(
-    repository: itemsRepositoryImplProvider,
-    widgetManager: itemsWidgetManagerProvider,
-  );
-  // ... more features
-}
-```
-
 ## Usage in Widgets
 
 ### Using Navigation Manager

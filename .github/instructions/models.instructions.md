@@ -256,6 +256,67 @@ class ItemFilter {
 }
 ```
 
+## DTO Type Restrictions
+
+DTOs should only contain types that `json_serializable` can handle natively:
+
+### Allowed Types
+
+- **Primitives**: `String`, `int`, `double`, `bool`, `num`
+- **Nullable primitives**: `String?`, `int?`, etc.
+- **Collections**: `List<T>`, `Map<String, T>` (where T is an allowed type)
+- **Other DTOs**: Nested DTO classes with `@JsonSerializable`
+
+### DateTime Handling
+
+**Store DateTime as `String` in DTOs** — parsing happens in the mapper layer:
+
+```dart
+// DTO — stores as String
+@JsonSerializable(fieldRename: FieldRename.snake, explicitToJson: true)
+class EventDTO implements BaseDTO {
+  const EventDTO({
+    required this.id,
+    required this.createdAt,  // String, not DateTime
+    required this.updatedAt,
+  });
+
+  final String id;
+  final String createdAt;     // ISO 8601 string from API
+  final String? updatedAt;
+
+  factory EventDTO.fromJson(Json json) => _$EventDTOFromJson(json);
+  Json toJson() => _$EventDTOToJson(this);
+}
+```
+
+```dart
+// Mapper — parses to DateTime
+extension EventDtoMapper on EventDTO {
+  EventsTableCompanion toTableCompanion() {
+    return EventsTableCompanion(
+      id: Value(id),
+      createdAt: Value(DateTime.parse(createdAt)),
+      updatedAt: Value(updatedAt != null ? DateTime.parse(updatedAt!) : null),
+    );
+  }
+}
+```
+
+### Why String for DateTime?
+
+1. **Simpler serialization** — no custom `@JsonKey` converters needed
+2. **API flexibility** — handles various date formats in mapper
+3. **Explicit parsing** — makes the transformation visible and testable
+4. **Error handling** — parse errors surface in mapper, not in JSON layer
+
+### Forbidden in DTOs
+
+- `DateTime` — use `String` instead
+- `Duration` — use `int` (milliseconds/seconds)
+- Custom classes without `@JsonSerializable`
+- Enums without proper `@JsonValue` annotations or string values
+
 ## Model Location Summary
 
 | Model Type | Location | Purpose |

@@ -86,34 +86,49 @@ Each feature has a feature class that holds static references to its dependencie
 // features/my_feature/my_feature_feature.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'managers/my_navigation_manager.dart';
 import 'repositories/my_repository.dart';
 
 class MyFeature {
   MyFeature._();
 
-  static late final Provider<MyRepository> myRepository;
+  static late final Provider<MyNavigationManager> navigationManager;
+  static late final Provider<MyRepository> repository;
 
-  static void init({required Provider<MyRepository> repository}) {
-    myRepository = repository;
+  static void init({
+    required Provider<MyNavigationManager> navigationManager,
+    required Provider<MyRepository> repository,
+  }) {
+    MyFeature.navigationManager = navigationManager;
+    MyFeature.repository = repository;
   }
 }
 ```
 
 ## Feature Initialization
 
-Features are registered in `feature_init_util.dart`:
+Features are registered in `feature_init_util.dart` before `runApp()`:
 
 ```dart
+// lib/feature_init_util.dart
 void initFeatures() {
-  MyFeature.init(repository: myRepositoryProvider);
-  // ... other features
+  LoginFeature.init(
+    navigationManager: authNavigationManagerProvider,
+    repository: authRepositoryProvider,
+  );
+  MyFeature.init(
+    navigationManager: myNavigationManagerProvider,
+    repository: myRepositoryImplProvider,
+  );
+  // ... more features
 }
 ```
 
 This pattern allows:
-- Repository implementation to live outside the feature
-- Easy testing with mock repositories
+- Repository and manager implementations to live outside the feature
+- Easy testing with mock dependencies
 - Clear dependency declaration
+- Features remain decoupled from each other
 
 ## Repository Interface in Features
 
