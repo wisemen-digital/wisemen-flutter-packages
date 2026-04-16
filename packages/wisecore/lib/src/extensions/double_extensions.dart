@@ -9,8 +9,8 @@ extension DoubleExtensions on double {
 
   /// Converts a [double] between 0 and 1 to an alpha value between 0 and 255
   int opacityToAlpha() {
-    if (this < 0) return 0;
-    if (this > 1) return 255;
+    if (this <= 0) return 0;
+    if (this >= 1) return 255;
     return (this * 255).round();
   }
 }
