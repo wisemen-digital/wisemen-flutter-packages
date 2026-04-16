@@ -28,7 +28,7 @@ dependencies:
 
 dev_dependencies:
   # Static analysis & linting
-  lints: ^5.1.1
+  lints: ^6.0.0
   mocktail: ^1.0.4
 
   # Testing
