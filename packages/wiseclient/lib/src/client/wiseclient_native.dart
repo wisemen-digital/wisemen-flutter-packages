@@ -39,7 +39,8 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     TokenStorage<OAuthToken>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
+    httpClientAdapter =
+        useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
     if (replacementInterceptors != null) {
       interceptors.addAll(
         replacementInterceptors,

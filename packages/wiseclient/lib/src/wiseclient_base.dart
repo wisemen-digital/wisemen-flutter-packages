@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 
-import 'client/wiseclient_native.dart' if (dart.library.html) 'client/wiseclient_web.dart';
+import 'client/wiseclient_native.dart'
+    if (dart.library.html) 'client/wiseclient_web.dart';
 import 'exceptions/exceptions.dart';
 import 'interceptors/interceptors.dart';
 import 'options.dart';
@@ -23,7 +24,9 @@ abstract mixin class WiseClient implements Dio {
     TokenStorage<OAuthToken>? tokenStorage,
   }) {
     assert(
-      wiseInterceptors.contains(WiseInterceptor.fresh) ? refreshFunction != null : refreshFunction == null,
+      wiseInterceptors.contains(WiseInterceptor.fresh)
+          ? refreshFunction != null
+          : refreshFunction == null,
       'RefreshFunction is required when using fresh interceptor',
     );
     return createClient(

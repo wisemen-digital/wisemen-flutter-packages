@@ -38,7 +38,8 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
     TokenStorage<OAuthToken>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)..withCredentials = true;
+    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)
+      ..withCredentials = true;
     if (replacementInterceptors != null) {
       interceptors.addAll(replacementInterceptors);
     } else {

@@ -32,17 +32,20 @@ class MockTokenStorage<T> extends Mock implements TokenStorage<T> {}
 
 class MockRequestOptions extends Mock implements RequestOptions {}
 
-class MockRequestInterceptorHandler extends Mock implements RequestInterceptorHandler {}
+class MockRequestInterceptorHandler extends Mock
+    implements RequestInterceptorHandler {}
 
 class MockOptions extends Mock implements BaseOptions {}
 
 class MockResponse<T> extends Mock implements Response<T> {}
 
-class MockResponseInterceptorHandler extends Mock implements ResponseInterceptorHandler {}
+class MockResponseInterceptorHandler extends Mock
+    implements ResponseInterceptorHandler {}
 
 class MockDioException extends Mock implements DioException {}
 
-class MockErrorInterceptorHandler extends Mock implements ErrorInterceptorHandler {}
+class MockErrorInterceptorHandler extends Mock
+    implements ErrorInterceptorHandler {}
 
 class MockHttpClient extends Mock implements Dio {}
 
@@ -210,7 +213,8 @@ void main() {
       expect(awesome.cancelToken.isCancelled, isTrue);
     });
 
-    test('resetWiseCancelToken method does not result in a cancelled token ', () {
+    test('resetWiseCancelToken method does not result in a cancelled token ',
+        () {
       awesome.resetWiseCancelToken();
       expect(awesome.cancelToken.isCancelled, isFalse);
     });
@@ -329,7 +333,8 @@ void main() {
     });
 
     test('Token from string', () async {
-      const tokenString = '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope"}';
+      const tokenString =
+          '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope"}';
       final token = tokenString.toOAuthToken;
       expect(token, isA<OAuthToken>());
       expect(token.accessToken, 'token');
@@ -361,7 +366,8 @@ void main() {
         [AuthenticationStatus.authenticated],
       );
 
-      when(() => mockFresh.authenticationStatus).thenAnswer((_) => authStatusStream);
+      when(() => mockFresh.authenticationStatus)
+          .thenAnswer((_) => authStatusStream);
 
       expect(
         client.authenticationStatus,
@@ -522,7 +528,8 @@ void main() {
     });
 
     group('token', () {
-      test('returns token once it has successfully loaded from storage', () async {
+      test('returns token once it has successfully loaded from storage',
+          () async {
         final mockToken = MockToken();
         when(() => tokenStorage.read()).thenAnswer((_) async => mockToken);
         final freshController = FreshController<OAuth2Token>(tokenStorage);
