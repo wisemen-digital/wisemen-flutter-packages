@@ -206,28 +206,28 @@ void main() {
 
       test('largeTitle should have the heaviest font weight', () {
         expect(AppStyles.largeTitle.fontWeight, FontWeight.w600);
-        expect(AppStyles.largeTitle.fontWeight!.index,
-            greaterThan(AppStyles.title.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index,
-            greaterThan(AppStyles.headline.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index,
-            greaterThan(AppStyles.subHeadline.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index,
-            greaterThan(AppStyles.body.fontWeight!.index));
-        expect(AppStyles.largeTitle.fontWeight!.index,
-            greaterThan(AppStyles.input.fontWeight!.index));
+        expect(AppStyles.largeTitle.fontWeight!.value,
+            greaterThan(AppStyles.title.fontWeight!.value));
+        expect(AppStyles.largeTitle.fontWeight!.value,
+            greaterThan(AppStyles.headline.fontWeight!.value));
+        expect(AppStyles.largeTitle.fontWeight!.value,
+            greaterThan(AppStyles.subHeadline.fontWeight!.value));
+        expect(AppStyles.largeTitle.fontWeight!.value,
+            greaterThan(AppStyles.body.fontWeight!.value));
+        expect(AppStyles.largeTitle.fontWeight!.value,
+            greaterThan(AppStyles.input.fontWeight!.value));
       });
 
       test('headline should have medium font weight', () {
         expect(AppStyles.headline.fontWeight, FontWeight.w500);
-        expect(AppStyles.headline.fontWeight!.index,
-            greaterThan(AppStyles.title.fontWeight!.index));
-        expect(AppStyles.headline.fontWeight!.index,
-            greaterThan(AppStyles.subHeadline.fontWeight!.index));
-        expect(AppStyles.headline.fontWeight!.index,
-            greaterThan(AppStyles.body.fontWeight!.index));
-        expect(AppStyles.headline.fontWeight!.index,
-            greaterThan(AppStyles.input.fontWeight!.index));
+        expect(AppStyles.headline.fontWeight!.value,
+            greaterThan(AppStyles.title.fontWeight!.value));
+        expect(AppStyles.headline.fontWeight!.value,
+            greaterThan(AppStyles.subHeadline.fontWeight!.value));
+        expect(AppStyles.headline.fontWeight!.value,
+            greaterThan(AppStyles.body.fontWeight!.value));
+        expect(AppStyles.headline.fontWeight!.value,
+            greaterThan(AppStyles.input.fontWeight!.value));
       });
 
       test('regular styles should have same font weight', () {

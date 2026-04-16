@@ -14,12 +14,12 @@ dependencies:
   meta: ">=1.8.0 <2.0.0"
   wisecore: ">=2.0.0 <3.0.0"
   in_app_review: ">=2.0.0 <3.0.0"
-  riverpod_annotation: ">=3.0.0 <4.0.0"
+  riverpod_annotation: ">=4.0.2 <5.0.0"
   hooks_riverpod: ">=3.0.0 <4.0.0"
 
 dev_dependencies:
   # Static analysis & linting
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   custom_lint: ^0.8.0
   dependency_validator: ^5.0.2
 
