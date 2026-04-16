@@ -84,7 +84,8 @@ void main() {
       );
     });
 
-    testWidgets('calls backgroundResume only when the route is top', (tester) async {
+    testWidgets('calls backgroundResume only when the route is top',
+        (tester) async {
       await pumpRouter(tester);
 
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
@@ -118,7 +119,8 @@ class _VisibleAwarePage extends StatefulWidget {
   State<_VisibleAwarePage> createState() => _VisibleAwarePageState();
 }
 
-class _VisibleAwarePageState extends State<_VisibleAwarePage> with VisibleAwareStateMixin<_VisibleAwarePage> {
+class _VisibleAwarePageState extends State<_VisibleAwarePage>
+    with VisibleAwareStateMixin<_VisibleAwarePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

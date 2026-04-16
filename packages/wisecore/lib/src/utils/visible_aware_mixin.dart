@@ -38,7 +38,8 @@ class _AppLifecycleObserver with WidgetsBindingObserver {
 /// and reduce boilerplate code
 /// It automatically subscribes to the [VisibleAwareObserver] and listens to app lifecycle changes.
 /// Don't forget to add the [VisibleAwareObserver] to your [NavigatorObserver] list in your app.
-mixin VisibleAwareStateMixin<T extends StatefulWidget> on State<T> implements VisibleAware {
+mixin VisibleAwareStateMixin<T extends StatefulWidget> on State<T>
+    implements VisibleAware {
   VisibleAwareObserver? _observer;
   late final _AppLifecycleObserver _lifecycleObserver;
 
@@ -54,7 +55,8 @@ mixin VisibleAwareStateMixin<T extends StatefulWidget> on State<T> implements Vi
     super.didChangeDependencies();
     // RouterScope exposes the list of provided observers
     // including inherited observers
-    _observer = RouterScope.of(context).firstObserverOfType<VisibleAwareObserver>();
+    _observer =
+        RouterScope.of(context).firstObserverOfType<VisibleAwareObserver>();
 
     if (_observer != null) {
       // we subscribe to the observer by passing our
@@ -74,7 +76,8 @@ mixin VisibleAwareStateMixin<T extends StatefulWidget> on State<T> implements Vi
   void onViewDidAppear(AppearanceType type) {}
 
   void _handleAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && (_observer?.isTopRoute(context.routeData) ?? false)) {
+    if (state == AppLifecycleState.resumed &&
+        (_observer?.isTopRoute(context.routeData) ?? false)) {
       onViewDidAppear(AppearanceType.backgroundResume);
     }
   }
@@ -89,7 +92,8 @@ mixin VisibleAwareStateMixin<T extends StatefulWidget> on State<T> implements Vi
 /// will inform subscribed [VisibleAware]s whenever the user navigates away from
 /// the current page route to another page route.
 class VisibleAwareObserver extends AutoRouterObserver {
-  final Map<LocalKey, Set<VisibleAware>> _listeners = <LocalKey, Set<VisibleAware>>{};
+  final Map<LocalKey, Set<VisibleAware>> _listeners =
+      <LocalKey, Set<VisibleAware>>{};
 
   /// Subscribe [VisibleAware] to be informed about changes to [route].
   ///
@@ -97,7 +101,8 @@ class VisibleAwareObserver extends AutoRouterObserver {
   /// to [route], e.g. when [route] is covered by another route or when [route]
   /// is popped off the [Navigator] stack.
   void subscribe<T>(VisibleAware routeAware, RouteData<T> route) {
-    final subscribers = _listeners.putIfAbsent(route.key, () => <VisibleAware>{});
+    final subscribers =
+        _listeners.putIfAbsent(route.key, () => <VisibleAware>{});
     if (subscribers.add(routeAware)) {
       routeAware.onViewDidAppear(AppearanceType.push);
     }
@@ -136,8 +141,13 @@ class VisibleAwareObserver extends AutoRouterObserver {
 
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route.settings is AutoRoutePage && previousRoute?.settings is AutoRoutePage) {
-      final previousKey = (previousRoute!.settings as AutoRoutePage).routeData.router.topMatch.key;
+    if (route.settings is AutoRoutePage &&
+        previousRoute?.settings is AutoRoutePage) {
+      final previousKey = (previousRoute!.settings as AutoRoutePage)
+          .routeData
+          .router
+          .topMatch
+          .key;
       final previousSubscribers = _listeners[previousKey]?.toList();
 
       if (previousSubscribers != null) {
@@ -151,8 +161,13 @@ class VisibleAwareObserver extends AutoRouterObserver {
 
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route.settings is AutoRoutePage && previousRoute?.settings is AutoRoutePage) {
-      final previousKey = (previousRoute!.settings as AutoRoutePage).routeData.router.topMatch.key;
+    if (route.settings is AutoRoutePage &&
+        previousRoute?.settings is AutoRoutePage) {
+      final previousKey = (previousRoute!.settings as AutoRoutePage)
+          .routeData
+          .router
+          .topMatch
+          .key;
       final previousSubscribers = _listeners[previousKey];
 
       if (previousSubscribers != null) {
