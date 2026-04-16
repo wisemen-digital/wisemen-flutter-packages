@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:args/args.dart';
+import 'package:flutter/rendering.dart';
 
 // 🛠️ Map your AI platforms to their respective local directories
 const platformDirectories = {
@@ -23,26 +24,27 @@ void main(List<String> arguments) async {
   try {
     argResults = parser.parse(arguments);
   } catch (e) {
-    print('❌ Error: ${e.toString()}\n');
-    print('Usage: dart run scripts/sync_ai_skills.dart [options]');
-    print(parser.usage);
+    debugPrint('❌ Error: $e\n');
+    debugPrint('Usage: dart run scripts/sync_ai_skills.dart [options]');
+    debugPrint(parser.usage);
     exit(1);
   }
 
   if (argResults['help'] as bool) {
-    print('Usage: dart run scripts/sync_ai_skills.dart [options]');
-    print(parser.usage);
+    debugPrint('Usage: dart run scripts/sync_ai_skills.dart [options]');
+    debugPrint(parser.usage);
     exit(0);
   }
 
   final selectedAgents = argResults['agent'] as List<String>;
-  print('🤖 Syncing AI skills for: ${selectedAgents.join(', ')}...\n');
+  debugPrint('🤖 Syncing AI skills for: ${selectedAgents.join(', ')}...\n');
 
   // 2. Read Dart's package cache
   final packageConfigFile = File('.dart_tool/package_config.json');
   if (!packageConfigFile.existsSync()) {
-    print(
-        '❌ Error: .dart_tool/package_config.json not found. Run `dart pub get` first.');
+    debugPrint(
+      '❌ Error: .dart_tool/package_config.json not found. Run `dart pub get` first.',
+    );
     exit(1);
   }
 
@@ -56,19 +58,19 @@ void main(List<String> arguments) async {
 
   // 4. Scan installed packages
   final config = jsonDecode(packageConfigFile.readAsStringSync());
-  final packages = config['packages'] as List;
-  int copiedCount = 0;
+  final packages = (config as Map)['packages'] as List<Map<String, String>>;
+  var copiedCount = 0;
 
   for (final package in packages) {
     final name = package['name'];
-    final rootUri = Uri.parse(package['rootUri']);
-    final packagePath = rootUri.toFilePath(windows: Platform.isWindows);
+    final rootUri = Uri.tryParse(package['rootUri'] ?? '');
+    final packagePath = rootUri?.toFilePath(windows: Platform.isWindows);
 
     // Look for a 'skills' folder in the package
     final sourceSkillsDir = Directory('$packagePath/skills');
 
     if (sourceSkillsDir.existsSync()) {
-      print('📦 Found skills in package: $name');
+      debugPrint('📦 Found skills in package: $name');
 
       await for (final entity in sourceSkillsDir.list()) {
         if (entity is File) {
@@ -84,7 +86,7 @@ void main(List<String> arguments) async {
 
             entity.copySync(destFile.path);
             copiedCount++;
-            print('  -> Copied $fileName to $targetDirPath');
+            debugPrint('  -> Copied $fileName to $targetDirPath');
           }
         }
       }
@@ -92,8 +94,8 @@ void main(List<String> arguments) async {
   }
 
   if (copiedCount == 0) {
-    print('🤷‍♂️ No skills found in any of your installed packages.');
+    debugPrint('🤷‍♂️ No skills found in any of your installed packages.');
   } else {
-    print('\n✅ Successfully synced $copiedCount skill file(s)!');
+    debugPrint('\n✅ Successfully synced $copiedCount skill file(s)!');
   }
 }
