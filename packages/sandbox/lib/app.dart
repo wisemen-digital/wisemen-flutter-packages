@@ -8,6 +8,7 @@ import 'package:sandbox/router/app_router_service.dart';
 import 'package:sandbox/router/route_observer.dart';
 import 'package:sandbox/utils/utils.dart';
 import 'package:wise_theming/wise_theming.dart';
+import 'package:wisecore/wisecore.dart';
 
 import 'flavors.dart';
 
@@ -48,7 +49,7 @@ class App extends ConsumerWidget {
                   .watch(appRouterServiceProvider)
                   .config(
                     deepLinkBuilder: (deepLink) => deepLink,
-                    navigatorObservers: () => [AppRouterObserver()],
+                    navigatorObservers: () => [AppRouterObserver(), VisibleAwareObserver()],
                     reevaluateListenable: ReevaluateListenable.stream(
                       ref.watch(appRepositoryServiceProvider).authenticationStatus,
                     ),
