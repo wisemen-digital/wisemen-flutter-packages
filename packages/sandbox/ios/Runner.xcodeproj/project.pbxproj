@@ -1413,6 +1413,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = wisemen.sandbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1450,6 +1451,7 @@
 				DEVELOPMENT_TEAM = JF4JXY8D87;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-development";
 		};
@@ -1479,6 +1481,7 @@
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-staging";
 		};
@@ -1506,6 +1509,7 @@
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-qa";
 		};
@@ -1533,6 +1537,7 @@
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-production";
 		};

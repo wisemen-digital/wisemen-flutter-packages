@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:database/database.dart';
+import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:openapi/openapi.dart';
 import 'package:wiseclient/wiseclient.dart';
 
@@ -10,6 +11,7 @@ class RepositoryService {
 
   RepositoryService({
     required String baseUrl,
+    required String authUrl,
     required String clientId,
     required VoidCallback onLogout,
   }) : api = Openapi(
@@ -18,8 +20,8 @@ class RepositoryService {
            useNativeAdapter: true,
            wiseInterceptors: [WiseInterceptor.fresh],
            refreshFunction: (token, client) async {
-             final response = await client.post(
-               '$baseUrl/oauth/v2/token',
+             final response = await (client..httpClientAdapter = NativeAdapter()).post(
+               authUrl,
                data: {
                  'client_id': clientId,
                  'grant_type': 'refresh_token',

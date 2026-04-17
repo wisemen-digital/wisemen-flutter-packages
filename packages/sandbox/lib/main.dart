@@ -26,6 +26,7 @@ Future<void> initMain(Flavor flavor) async {
 
   final repository = RepositoryService(
     baseUrl: F.baseUrl,
+    authUrl: F.zitadelBaseUrl,
     clientId: F.clientId,
     onLogout: () {},
   );
@@ -57,7 +58,7 @@ Future<void> initMain(Flavor flavor) async {
                   return;
                 }
                 await ref.read(appRepositoryServiceProvider).setToken(token);
-                router.replace(const EmptyScreenRoute());
+                router.replace(const SettingsScreenRoute());
               },
               supportedTypes: [
                 const ZitadelLoginType(
