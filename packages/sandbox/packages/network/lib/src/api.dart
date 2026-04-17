@@ -21,6 +21,8 @@ import 'package:openapi/src/api/typesense_api.dart';
 import 'package:openapi/src/api/user_api.dart';
 import 'package:wiseclient/wiseclient.dart';
 
+import 'services/services.dart';
+
 class Openapi {
   static const String basePath = r'http://localhost:8080';
 
@@ -119,4 +121,7 @@ class Openapi {
   UserApi getUserApi() {
     return UserApi(client, serializers);
   }
+
+  //* Services
+  UserService get userService => UserServiceImpl(this);
 }

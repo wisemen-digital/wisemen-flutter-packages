@@ -22,7 +22,7 @@ class AppRouter extends RootStackRouter {
       page: WiseLoginScreenRoute.page,
       transitionsBuilder: TransitionsBuilders.noTransition,
     ),
-    AdaptiveRoute(page: EmptyScreenRoute.page),
+    AdaptiveRoute(page: SettingsScreenRoute.page),
     //mason: insert auto route
   ];
 }
