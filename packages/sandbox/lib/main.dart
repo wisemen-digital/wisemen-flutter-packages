@@ -8,6 +8,7 @@ import 'package:sandbox/app.dart';
 import 'package:sandbox/router/app_router.gr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
+import 'package:wisecore/wisecore.dart';
 
 import 'flavors.dart';
 import 'utils/utils.dart';
@@ -29,11 +30,14 @@ Future<void> initMain(Flavor flavor) async {
     onLogout: () {},
   );
 
+  final sharedPrefs = await SharedPreferences.getInstance();
+
   runApp(
     UncontrolledProviderScope(
       container: ProviderContainer(
         overrides: [
           appRepositoryServiceProvider.overrideWithValue(repository),
+          sharedPreferencesProvider.overrideWithValue(sharedPrefs),
           wiseZitadelOptionsProvider.overrideWithValue(
             WiseZitadelOptions(
               zitadelBaseUrl: F.zitadelBaseUrl,

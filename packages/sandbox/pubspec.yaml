@@ -33,6 +33,8 @@ dependencies:
     path: ../wiseclient
   wise_zitadel_login:
     path: ../wise_zitadel_login
+  wise_theming:
+    path: ../wise_theming
   
  # Riverpod
   riverpod_annotation: ^4.0.0
@@ -70,6 +72,9 @@ dev_dependencies:
   # Linting
   riverpod_lint: ^3.1.0
   custom_lint: ^0.8.1
+
+  # Melos
+  melos: ^7.5.1
 
 # flavors
 flavorizr:
@@ -119,3 +124,11 @@ flutter_intl:
   enabled: true # Required. Must be set to true to activate the plugin. Default: false
   class_name: S # Optional. Sets the name for the generated localization class. Default: S
   main_locale: en # Optional. Sets the main locale used for generating localization files. Provided value should comply with ISO-639-1 and ISO-3166-1 (e.g. "en", "en_GB"). Default: en
+
+melos:
+  useRootAsPackage: true
+  scripts:
+    build:
+      run: melos exec --depends-on build_runner -- dart run build_runner build -d
+    build_runner:
+      run: melos exec --depends-on build_runner -- dart run build_runner watch -d
