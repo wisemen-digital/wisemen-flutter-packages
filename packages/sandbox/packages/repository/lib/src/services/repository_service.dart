@@ -15,6 +15,7 @@ class RepositoryService {
   }) : api = Openapi(
          client: WiseClient(
            options: WiseOptions.base(url: baseUrl),
+           useNativeAdapter: true,
            wiseInterceptors: [WiseInterceptor.fresh],
            refreshFunction: (token, client) async {
              final response = await client.post(

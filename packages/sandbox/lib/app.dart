@@ -2,11 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sandbox/features/shared/shared.dart';
 import 'package:sandbox/generated/l10n.dart';
 import 'package:sandbox/router/app_router_service.dart';
 import 'package:sandbox/router/route_observer.dart';
-import 'package:sandbox/theme/theme.dart';
 import 'package:sandbox/utils/utils.dart';
+import 'package:wise_theming/wise_theming.dart';
 
 import 'flavors.dart';
 
@@ -22,12 +23,19 @@ class App extends ConsumerWidget {
       child: _flavorBanner(
         child: Consumer(
           builder: (context, ref, child) {
+            final theming = WiseTheming(
+              supportedThemes: supportedThemes,
+              targetPlatform: Theme.of(context).platform,
+              selectedTheme: ref.watch(AppSettingsProviders.themeMode).value,
+              // selectedTheme: ref.watch(themeModeStreamProvider).value ?? ThemeMode.system,
+            );
             return MaterialApp.router(
               title: F.appName,
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              // themeMode:
-              //     ref.watch(themeModeStreamProvider).value ?? ThemeMode.system,
+              theme: theming.lightTheme,
+              darkTheme: theming.darkTheme,
+              highContrastTheme: theming.lightContrastTheme,
+              highContrastDarkTheme: theming.darkContrastTheme,
+              themeMode: theming.themeMode,
               localizationsDelegates: const [
                 S.delegate,
                 GlobalMaterialLocalizations.delegate,

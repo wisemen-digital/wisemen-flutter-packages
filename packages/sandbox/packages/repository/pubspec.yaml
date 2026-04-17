@@ -10,6 +10,10 @@ dependencies:
     path: ../database
   openapi:
     path: ../network
+  
   collection: ^1.19.1
   flutter_riverpod: ^3.1.0
   riverpod_annotation: ^4.0.0
+  listenable_stream: ^2.0.1
+  wise_theming:
+    path: ../../../wise_theming
