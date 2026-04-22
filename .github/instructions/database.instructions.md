@@ -1,5 +1,5 @@
 ---
-applyTo: 'lib/database/**'
+applyTo: '**/database/**'
 description: 'Use when working with Drift database, tables, DAOs, migrations, or value objects stored in database. Covers table definitions, DAO patterns, TypeConverters for nested JSON, and reactive queries.'
 ---
 
@@ -140,11 +140,20 @@ class ItemsDao extends DatabaseAccessor<AppDatabase> with _$ItemsDaoMixin {
   // WRITE OPERATIONS
   // ═══════════════════════════════════════════════════════════════
 
-  /// Insert or update items (upsert)
+  /// Insert or update items
+  /// 
+  /// Cleanup strategies (choose based on use case):
+  /// - **Replace all**: Delete items not in companions (full sync, used here)
+  /// - **Stale threshold**: Delete where `updatedAt < DateTime.now().subtract(duration)`
+  ///   (partial sync / pagination — keeps items from other pages)
   Future<void> insertItems(List<ItemsTableCompanion> items) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(itemsTable, items);
     });
+
+    // Remove items not in the new set
+    final ids = items.map((e) => e.id.value).toSet();
+    await (delete(itemsTable)..where((t) => t.id.isNotIn(ids))).go();
   }
 
   /// Insert single item
@@ -289,6 +298,65 @@ class StringListConverter extends TypeConverter<List<String>, String> {
 }
 ```
 
+## Combining Streams with RxDart
+
+Use RxDart to combine streams from multiple tables for complex reactive queries:
+
+```dart
+// lib/repository/order_repository.dart
+import 'package:rxdart/rxdart.dart';
+
+class OrderRepositoryImpl implements OrderRepository {
+  const OrderRepositoryImpl({required this.ref});
+  final Ref ref;
+
+  /// Combine orders with their related items and customer data
+  @override
+  Stream<List<OrderWithDetails>> watchOrdersWithDetails() {
+    final ordersDao = ref.read(ordersDaoProvider);
+    final itemsDao = ref.read(itemsDaoProvider);
+    final customersDao = ref.read(customersDaoProvider);
+
+    return Rx.combineLatest3(
+      ordersDao.watchAll(),
+      itemsDao.watchAll(),
+      customersDao.watchAll(),
+      (List<OrderObject> orders, List<ItemObject> items, List<CustomerObject> customers) {
+        final itemsById = {for (final item in items) item.id: item};
+        final customersById = {for (final c in customers) c.id: c};
+
+        return orders.map((order) {
+          return OrderWithDetails(
+            order: order.toFeatureModel(),
+            items: order.itemIds
+                .map((id) => itemsById[id]?.toFeatureModel())
+                .whereType<Item>()
+                .toList(),
+            customer: customersById[order.customerId]?.toFeatureModel(),
+          );
+        }).toList();
+      },
+    );
+  }
+}
+```
+
+### Common RxDart Operators
+
+```dart
+// combineLatest2/3/4... — emit when ANY stream emits (after all have emitted once)
+Rx.combineLatest2(streamA, streamB, (a, b) => combine(a, b));
+
+// switchMap — flatten nested streams, cancel previous
+userIdStream.switchMap((id) => watchUserById(id));
+
+// debounceTime — wait for pause in emissions (good for search)
+searchStream.debounceTime(const Duration(milliseconds: 300));
+
+// distinctUnique — skip consecutive duplicates
+stream.distinct();
+```
+
 ## Code Generation
 
 After modifying tables or DAOs:
@@ -301,8 +369,6 @@ dart run build_runner build --delete-conflicting-outputs
 
 1. **Use `.watch()` for streams** — enables reactive UI updates
 2. **Batch writes** — wrap multiple inserts in `batch()`
-3. **UI state in DB** — use `inSearch`, `sortOrder`, `isTopFive` columns
-4. **Reset state methods** — clear flags before new fetches
-5. **Null safety** — use `.nullable()` for optional columns
-6. **JSON for nested data** — complex objects as JSON in text columns
-7. **Feature-specific DAOs** — one DAO per feature, can span multiple tables
+3. **Null safety** — use `.nullable()` for optional columns
+4. **JSON for nested data** — complex objects as JSON in text columns
+5. **Feature-specific DAOs** — one DAO per feature, can span multiple tables

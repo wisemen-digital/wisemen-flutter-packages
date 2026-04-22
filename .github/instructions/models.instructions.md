@@ -155,40 +155,6 @@ enum ItemType {
 }
 ```
 
-### Database Enums
-
-For enums stored in database columns using Drift's `intEnum`:
-
-```dart
-// lib/database/utils/enums/item_type_enum.dart
-enum ItemTypeEnum implements BaseDatabaseEnum {
-  typeA(0),
-  typeB(1),
-  typeC(2),
-  typeD(3);
-
-  const ItemTypeEnum(this.value);
-
-  @override
-  final int value;
-
-  // Convert from API string
-  static ItemTypeEnum fromString(String value) {
-    return switch (value.toLowerCase()) {
-      'type_a' => ItemTypeEnum.typeA,
-      'type_b' => ItemTypeEnum.typeB,
-      'type_c' => ItemTypeEnum.typeC,
-      'type_d' => ItemTypeEnum.typeD,
-      _ => ItemTypeEnum.typeA,
-    };
-  }
-}
-
-// Base interface for database enums
-abstract class BaseDatabaseEnum {
-  int get value;
-}
-```
 
 ### Enum Mappers
 

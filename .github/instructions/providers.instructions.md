@@ -61,6 +61,8 @@ class MyProviders {
 
 This allows clean access: `ref.watch(MyProviders.items)`
 
+<!-- TODO: add controller example and usage -->
+
 ## Stream Providers
 
 For reactive data that updates over time (most common for database watches):
@@ -164,61 +166,54 @@ class AuthState extends _$AuthState {
 
 ## Loading State Mixin Pattern
 
-Create mixins for common loading patterns that use reactive state:
+Use `LoadingStreamProvider` from core for providers that need loading state management with refresh functionality:
 
 ```dart
-mixin LoadingStreamProvider<T> on AutoDisposeStreamNotifier<List<T>> {
-  /// Performs an async action while showing loading state.
-  /// Preserves existing data during refresh for smooth UX.
-  Future<void> withLoading(Future<void> Function() action) async {
-    final previousData = state.valueOrNull;
-    
-    // Set loading while preserving previous data for smooth UI
-    state = previousData != null
-        ? AsyncLoading<List<T>>().copyWithPrevious(AsyncData(previousData))
-        : const AsyncLoading();
-    
-    try {
-      await action();
-      // Stream will automatically update state after action completes
-    } catch (e, st) {
-      // Restore previous data on error, or show error state
-      state = previousData != null
-          ? AsyncError<List<T>>(e, st).copyWithPrevious(AsyncData(previousData))
-          : AsyncError(e, st);
-    }
-  }
-}
-
 @riverpod
-class ItemsProvider extends _$ItemsProvider with LoadingStreamProvider<MyItem> {
+class ItemDetailProvider extends _$ItemDetailProvider with LoadingStreamProvider<MyItem?> {
   @override
-  Stream<List<MyItem>> build() {
-    return ref.watch(MyFeature.myRepository).watchItems();
+  Stream<MyItem?> build(String itemId) {
+    refresh();  // Trigger initial fetch
+    return ref.watch(MyFeature.myRepository).watchItemById(itemId);
   }
 
-  Future<void> refresh() async {
-    await withLoading(() => ref.read(MyFeature.myRepository).fetchItems());
+  @override
+  Future<void> onError(Object error, StackTrace stackTrace) async {
+    // Optional: Custom error handling (logging, analytics, etc.)
+    SentryUtil.captureException(
+      exception: error,
+      stackTrace: stackTrace,
+      ref: ref,
+    );
+  }
+
+  @override
+  Future<void> refreshFunction() async {
+    await ref.read(MyFeature.myRepository).fetchItemById(itemId);
   }
 }
 ```
 
+### Key Points
+
+- **Mixin from core**: `LoadingStreamProvider<T>` handles loading state and error recovery
+- **`refresh()`**: Call in `build()` to trigger initial data fetch
+- **`refreshFunction()`**: Override to define the actual fetch operation
+- **`onError()`**: Optional override for custom error handling (logging, Sentry, etc.)
+- **Smooth UX**: Preserves existing data during refresh
+
 **Usage in UI:**
 
 ```dart
-final itemsAsync = ref.watch(MyProviders.items);
+final itemAsync = ref.watch(MyProviders.itemDetail);
 
-// Check if refreshing (has data but is loading)
-final isRefreshing = itemsAsync.isLoading && itemsAsync.hasValue;
-
-return itemsAsync.when(
-  data: (items) => RefreshIndicator(
-    onRefresh: () => ref.read(MyProviders.items.notifier).refresh(),
-    child: ListView.builder(...),
+return itemAsync.whenStream(
+  data: (item) => RefreshIndicator(
+    onRefresh: () => ref.read(MyProviders.itemDetail.notifier).refresh(),
+    child: ItemDetailContent(item: item),
   ),
   loading: () => const CircularProgressIndicator(),
   error: (e, st) => ErrorWidget(e),
-  skipLoadingOnRefresh: true, // Show previous data while refreshing
 );
 ```
 

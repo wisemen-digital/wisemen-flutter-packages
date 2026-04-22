@@ -162,14 +162,27 @@ class NavigationManager {
 ### Using Navigation Manager
 
 ```dart
+// In controller/notifier — business logic calls navigation manager
+@riverpod
+class LoginController extends _$LoginController {
+  @override
+  FutureOr<void> build() {}
+
+  Future<void> login() async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(authRepositoryProvider).login();
+      await ref.read(LoginFeature.loginNavigationManager).onFinishLogin();
+    });
+  }
+}
+
+// In screen — UI triggers controller
 class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
-      onPressed: () async {
-        await performLogin();
-        await ref.read(LoginFeature.loginNavigationManager).onFinishLogin();
-      },
+      onPressed: () => ref.read(loginControllerProvider.notifier).login(),
       child: Text('Login'),
     );
   }

@@ -138,7 +138,6 @@ Raw<AppRouter> appRouterService(Ref ref) {
 | `AdaptiveRoute` | Standard screen | Most screens |
 | `CustomRoute` | Custom transitions | Splash screen |
 | `AdaptiveBottomSheetRoute` | Modal bottom sheet | Settings |
-| `AutoRoute` | Default navigation | Simple screens |
 
 ## Route Guards
 
@@ -313,6 +312,7 @@ class AuthNavigationManager implements LoginNavigationManager {
 }
 ```
 
+<!-- TODO: change this after discussed in team meeting -->
 ### Programmatic Navigation with Delay
 
 ```dart

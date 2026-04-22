@@ -32,6 +32,7 @@ Screens are the main UI entry points for features. They use `@RoutePage()` annot
 | Screen | Full-page view | `AdaptiveRoute` | `LoginScreen`, `DashboardScreen` |
 | Detail Screen | Item detail view | `AdaptiveRoute` | `ItemDetailScreen` |
 | Bottom Sheet | Modal overlay | `AdaptiveBottomSheetRoute` | `SettingsScreen` |
+| Nested Bottom Sheet | Bottom sheet with navigation | `AdaptiveBottomSheetRoute` + children | `FeatureRouterScreen` |
 | Filter Sheet | Filterable modal | `WoltModalSheet` | `ItemsFilterScreen` |
 
 ## File Structure
@@ -41,6 +42,7 @@ lib/features/[feature]/
 └── screens/
     ├── screens.dart              # Barrel export
     ├── [feature]_screen.dart     # Main screen
+    ├── [feature]_router_screen.dart # Router for nested navigation
     ├── [item]_detail_screen.dart # Detail screen
     └── all_[items]_screen.dart   # List screen
 ```
@@ -255,6 +257,68 @@ class ItemsFilterScreen {
   }
 }
 ```
+
+## Nested Navigation in Bottom Sheets
+
+Use `AdaptiveBottomSheetRoute` with child routes for bottom sheets that contain multiple navigable screens. This pattern requires a router screen that wraps an `AutoRouter`.
+
+### Router Screen
+
+Create a router screen that serves as the navigation container:
+
+```dart
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+
+@RoutePage(name: 'FeatureRouter')
+class FeatureRouterScreen extends StatelessWidget {
+  const FeatureRouterScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const AutoRouter();
+  }
+}
+```
+
+The `name` parameter in `@RoutePage()` creates a custom route name (`FeatureRouter`) instead of the default generated name.
+
+### Route Configuration
+
+Configure the bottom sheet route with nested children in your router:
+
+```dart
+AdaptiveBottomSheetRoute(
+  path: '/feature',
+  page: FeatureRouter.page,
+  title: (context, data) => S.of(context).feature,
+  children: [
+    AdaptiveRoute(
+      path: 'overview',
+      initial: true,  // Default child route
+      page: FeatureOverviewScreenRoute.page,
+      title: (context, data) => S.of(context).feature,
+    ),
+    AdaptiveRoute(
+      path: 'settings',
+      page: FeatureSettingsScreenRoute.page,
+      title: (context, data) => S.of(context).settings,
+    ),
+    AdaptiveRoute(
+      path: 'edit',
+      page: FeatureEditScreenRoute.page,
+      title: (context, data) => S.of(context).edit,
+    ),
+  ],
+),
+```
+
+### Key Points
+
+- **Router screen**: Use `AutoRouter()` widget to render child routes
+- **Custom route name**: Use `@RoutePage(name: 'FeatureRouter')` for clarity
+- **Initial route**: Mark one child with `initial: true` as the default screen
+- **Navigation**: Child screens can navigate to siblings using `context.router.push()`
 
 ## Splash Screen
 

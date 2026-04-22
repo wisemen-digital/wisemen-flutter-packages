@@ -156,7 +156,7 @@ For paginated lists with search:
 
 ```dart
 @override
-Future<void> fetchItems({
+Future<PaginationMeta> fetchItems({
   int offset = 0,
   int limit = 20,
   String? search,
@@ -172,6 +172,8 @@ Future<void> fetchItems({
   }).toList();
 
   await ref.read(itemDaoProvider).insertItems(companions);
+
+  return result;
 }
 ```
 

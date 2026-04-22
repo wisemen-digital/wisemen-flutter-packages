@@ -1,5 +1,5 @@
 ---
-applyTo: 'lib/network/**'
+applyTo: '**/network/**'
 description: 'Use when working with API services, DTOs, HTTP clients, or mappers. Covers the network layer structure, json_serializable patterns, service class patterns, DTO-to-database mappers, and client configuration.'
 ---
 

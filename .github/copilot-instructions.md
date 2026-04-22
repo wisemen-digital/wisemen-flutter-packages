@@ -67,8 +67,8 @@ import 'package:flutter/material.dart';
 // 3. External packages
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-// 4. Internal packages (from lib/)
-import 'package:my_app/features/my_feature/my_feature.dart';
+// 4. Internal packages (relative imports)
+import '../../my_feature.dart';
 ```
 
 ## Key Patterns
