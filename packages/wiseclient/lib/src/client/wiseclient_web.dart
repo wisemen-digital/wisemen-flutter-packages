@@ -1,11 +1,12 @@
 import 'package:dio/browser.dart';
 import 'package:dio/dio.dart';
+import 'package:fresh_dio/fresh_dio.dart';
 import 'package:wiseclient/src/wiseclient_base.dart';
 
-import '../fresh/fresh.dart';
 import '../interceptors/interceptors.dart';
+import '../token_model/oauth_token.dart';
 
-/// Creates a [WiseClient] for native
+/// Creates a [WiseClient] for web
 WiseClient createClient({
   required Iterable<WiseInterceptor> wiseInterceptors,
   required Duration refreshBuffer,
@@ -14,16 +15,15 @@ WiseClient createClient({
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
-  void Function(Object, StackTrace)? refreshErrorHandler,
+  TokenStorage<OAuthToken>? tokenStorage,
 }) =>
     WebWiseClient(
       wiseInterceptors: wiseInterceptors,
-      refreshBuffer: refreshBuffer,
       baseOptions: options,
       refreshFunction: refreshFunction,
       interceptorsToAdd: interceptorsToAdd,
       replacementInterceptors: replacementInterceptors,
-      refreshErrorHandler: refreshErrorHandler ?? (_, __) {},
+      tokenStorage: tokenStorage,
     );
 
 /// Implements [DioForBrowser] for native
@@ -31,12 +31,11 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
   /// Creates a [WebWiseClient] instance
   WebWiseClient({
     required Iterable<WiseInterceptor> wiseInterceptors,
-    required void Function(Object, StackTrace) refreshErrorHandler,
     Future<OAuth2Token> Function(OAuth2Token?, Dio)? refreshFunction,
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
-    Duration refreshBuffer = const Duration(minutes: 10),
+    TokenStorage<OAuthToken>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
     httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)
@@ -47,8 +46,7 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
         fresh = getFreshInterceptor(
           refreshFunction: refreshFunction!,
-          refreshErrorHandler: refreshErrorHandler,
-          refreshBuffer: refreshBuffer,
+          tokenStorage: tokenStorage,
         );
       }
       interceptors.addAll(

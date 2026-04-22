@@ -1,6 +1,4 @@
-import 'package:jwt_decoder/jwt_decoder.dart';
-
-import '../fresh/fresh_fork.dart';
+import 'package:fresh_dio/fresh_dio.dart';
 
 /// OAuth2Token extended with some factories
 class OAuthToken extends OAuth2Token {
@@ -11,6 +9,7 @@ class OAuthToken extends OAuth2Token {
     super.refreshToken,
     super.scope,
     super.tokenType,
+    super.issuedAt,
   });
 
   /// [OAuthToken] factory to get token from snake cased json
@@ -22,6 +21,9 @@ class OAuthToken extends OAuth2Token {
       refreshToken:
           map['refresh_token'] != null ? map['refresh_token'] as String : null,
       scope: map['scope'] != null ? map['scope'] as String : null,
+      issuedAt: map['issued_at'] != null
+          ? DateTime.parse(map['issued_at'] as String)
+          : DateTime.now(),
     );
   }
 
@@ -34,9 +36,9 @@ class OAuthToken extends OAuth2Token {
       refreshToken:
           map['refreshToken'] != null ? map['refreshToken'] as String : null,
       scope: map['scope'] != null ? map['scope'] as String : null,
+      issuedAt: map['issuedAt'] != null
+          ? DateTime.parse(map['issuedAt'] as String)
+          : DateTime.now(),
     );
   }
-
-  /// Token expiry DateTime
-  DateTime get expiresAt => JwtDecoder.getExpirationDate(accessToken);
 }

@@ -10,6 +10,7 @@ on:
       - "wise_zitadel_login-v*"
       - "wise_theming-v*"
       - "wise_review-v*"
+      - "wise_scalars-v*"
 jobs:
   publish:
     permissions:

@@ -1,3 +1,11 @@
+## 2.2.8
+
+- Add VisibleAwareStateMixin
+
+## 2.2.7
+
+- Add sync skills script
+
 ## 2.2.6
 
 - Fixed custom alert options order

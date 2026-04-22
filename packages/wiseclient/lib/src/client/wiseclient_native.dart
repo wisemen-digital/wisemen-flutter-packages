@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:fresh_dio/fresh_dio.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:wiseclient/wiseclient.dart';
 
@@ -13,16 +14,16 @@ WiseClient createClient({
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
   void Function(Object, StackTrace)? refreshErrorHandler,
+  TokenStorage<OAuthToken>? tokenStorage,
 }) =>
     NativeWiseClient(
       wiseInterceptors: wiseInterceptors,
-      refreshBuffer: refreshBuffer,
       baseOptions: options,
       refreshFunction: refreshFunction,
       useNativeAdapter: useNativeAdapter,
       interceptorsToAdd: interceptorsToAdd,
       replacementInterceptors: replacementInterceptors,
-      refreshErrorHandler: refreshErrorHandler ?? (_, __) => {},
+      tokenStorage: tokenStorage,
     );
 
 /// Implements [DioForNative] for native
@@ -31,12 +32,11 @@ base class NativeWiseClient extends DioForNative with WiseClient {
   NativeWiseClient({
     required Iterable<WiseInterceptor> wiseInterceptors,
     required bool useNativeAdapter,
-    required void Function(Object, StackTrace) refreshErrorHandler,
     Future<OAuth2Token> Function(OAuth2Token?, Dio)? refreshFunction,
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
-    Duration refreshBuffer = const Duration(minutes: 10),
+    TokenStorage<OAuthToken>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
     httpClientAdapter =
@@ -49,8 +49,7 @@ base class NativeWiseClient extends DioForNative with WiseClient {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
         fresh = getFreshInterceptor(
           refreshFunction: refreshFunction!,
-          refreshErrorHandler: refreshErrorHandler,
-          refreshBuffer: refreshBuffer,
+          tokenStorage: tokenStorage,
         );
       }
       interceptors.addAll(

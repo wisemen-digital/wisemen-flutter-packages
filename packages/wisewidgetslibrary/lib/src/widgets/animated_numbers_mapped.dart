@@ -1,9 +1,31 @@
-import 'package:flutter/foundation.dart';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
-/// [AnimatedNumbersMapped] widget
-class AnimatedNumbersMapped extends StatefulWidget {
-  /// Constructor [AnimatedNumbersMapped]
+/// A widget that animates between maps of numeric values with smooth transitions.
+///
+/// When [numbers] changes, the widget animates from the previous values to the
+/// new values using the specified [duration] and [curve].
+///
+/// This widget uses Flutter's [TweenAnimationBuilder] internally with a custom
+/// [_MapTween] to handle map interpolation.
+///
+/// Example:
+/// ```dart
+/// AnimatedNumbersMapped(
+///   numbers: {'likes': 42, 'comments': 7},
+///   child: (context, values) => Row(
+///     children: [
+///       Text('Likes: ${values['likes']?.toStringAsFixed(0)}'),
+///       Text('Comments: ${values['comments']?.toStringAsFixed(0)}'),
+///     ],
+///   ),
+/// )
+/// ```
+class AnimatedNumbersMapped extends StatelessWidget {
+  /// Creates an [AnimatedNumbersMapped] widget.
+  ///
+  /// The [numbers] and [child] parameters are required.
   const AnimatedNumbersMapped({
     required this.numbers,
     required this.child,
@@ -12,90 +34,52 @@ class AnimatedNumbersMapped extends StatefulWidget {
     super.key,
   });
 
-  /// Map of animation number values
-  final Map<String, int?> numbers;
+  /// The target map of numeric values to animate towards.
+  final Map<String, int> numbers;
 
-  /// Children
-  final Widget Function(Map<String, double>) child;
+  /// Builder function that receives the current animated values
+  /// and returns the widget to display.
+  final Widget Function(BuildContext context, Map<String, double> values) child;
 
-  /// Animation duration (default 1000ms)
+  /// The duration of the animation.
+  ///
+  /// Defaults to 1000 milliseconds.
   final Duration duration;
 
-  /// Animation curve (default Curves.easeInOut)
+  /// The curve to apply to the animation.
+  ///
+  /// Defaults to [Curves.easeInOut].
   final Curve curve;
 
   @override
-  State<AnimatedNumbersMapped> createState() => _AnimatedNumbersMappedState();
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<Map<String, double>>(
+      tween: _MapTween(
+        end: numbers.map((key, value) => MapEntry(key, value.toDouble())),
+      ),
+      duration: duration,
+      curve: curve,
+      builder: (context, values, _) => child(context, values),
+    );
+  }
 }
 
-class _AnimatedNumbersMappedState extends State<AnimatedNumbersMapped>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Map<String, Animation<double>> _animations;
+/// A custom [Tween] that interpolates between two maps of doubles.
+class _MapTween extends Tween<Map<String, double>> {
+  _MapTween({required Map<String, double> end}) : super(end: end);
 
   @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-    _animations = widget.numbers.map(
-      (key, value) {
-        return MapEntry(
-          key,
-          Tween<double>(
-            begin: value?.toDouble() ?? 0,
-            end: value?.toDouble() ?? 0,
-          ).animate(
-            CurvedAnimation(
-              parent: _animationController,
-              curve: Curves.easeInOut,
-            ),
-          ),
-        );
-      },
-    );
-  }
+  Map<String, double> lerp(double t) {
+    final beginMap = begin ?? end!;
+    final endMap = end!;
 
-  @override
-  void didUpdateWidget(AnimatedNumbersMapped oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (!mapEquals(widget.numbers, oldWidget.numbers)) {
-      for (final entry in widget.numbers.entries) {
-        _animations[entry.key] =
-            Tween<double>(
-              begin: (oldWidget.numbers[entry.key] ?? 0).toDouble(),
-              end: (entry.value ?? 0).toDouble(),
-            ).animate(
-              CurvedAnimation(
-                parent: _animationController,
-                curve: Curves.easeInOut,
-              ),
-            );
-      }
-      _animationController
-        ..reset()
-        ..forward();
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) {
-        final animatedValues = _animations.map(
-          (key, animation) => MapEntry(key, animation.value),
-        );
-        return widget.child(animatedValues);
-      },
-    );
+    return {
+      for (final key in endMap.keys)
+        key: lerpDouble(
+          beginMap[key] ?? 0,
+          endMap[key] ?? 0,
+          t,
+        )!,
+    };
   }
 }

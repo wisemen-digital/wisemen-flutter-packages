@@ -1,3 +1,14 @@
+## 2.0.0
+
+- Breaking change: Removed `fresh` fork
+- Needs migration: FreshSecureTokenStorage
+  - Added iOS options for `KeychainAccessibility.first_unlock`
+  - Use `tokenStorage` in client creation to achieve migration (or handle separately)
+
+## 1.1.3-prerelease.3
+
+- Add a wiseclient skill
+
 ## 1.1.3-prerelease.2
 
 - Pass refreshBuffer through createClient

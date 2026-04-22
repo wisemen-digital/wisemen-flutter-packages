@@ -1,5 +1,4 @@
 export 'animated_clip_rect.dart';
-export 'animated_number.dart';
 export 'animated_numbers.dart';
 export 'animated_numbers_mapped.dart';
 export 'custom_image_carousel.dart';
