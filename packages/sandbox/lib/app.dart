@@ -28,7 +28,6 @@ class App extends ConsumerWidget {
               supportedThemes: supportedThemes,
               targetPlatform: Theme.of(context).platform,
               selectedTheme: ref.watch(AppSettingsProviders.themeMode).value,
-              // selectedTheme: ref.watch(themeModeStreamProvider).value ?? ThemeMode.system,
             );
             return MaterialApp.router(
               title: F.appName,

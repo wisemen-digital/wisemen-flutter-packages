@@ -24,12 +24,17 @@ Future<void> initMain(Flavor flavor) async {
 
   initFeatures();
 
-  final repository = RepositoryService(
-    baseUrl: F.baseUrl,
-    authUrl: F.zitadelBaseUrl,
-    clientId: F.clientId,
-    onLogout: () {},
-  );
+  final RepositoryService repository;
+  if (flavor == Flavor.DEVELOPMENT) {
+    repository = RepositoryService.mock();
+  } else {
+    repository = RepositoryService(
+      baseUrl: F.baseUrl,
+      authUrl: F.zitadelBaseUrl,
+      clientId: F.clientId,
+      onLogout: () {},
+    );
+  }
 
   final sharedPrefs = await SharedPreferences.getInstance();
 

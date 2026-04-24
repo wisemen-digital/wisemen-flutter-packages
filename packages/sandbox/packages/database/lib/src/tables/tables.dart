@@ -1,2 +1,2 @@
-export 'users_table.dart';
-export 'users_table.drift.dart';
+export 'user_table.dart';
+export 'user_table.drift.dart';

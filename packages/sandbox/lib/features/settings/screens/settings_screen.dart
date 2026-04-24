@@ -26,15 +26,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
         title: const Text('Settings'),
       ),
       body: Center(
-        child: StreamBuilder<String>(
-          stream: ref.watch(SettingsFeature.settingsRepository).userName,
+        child: StreamBuilder<User?>(
+          stream: ref.watch(SettingsFeature.settingsRepository).user,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (snapshot.hasData) {
-              return Text('Hello, ${snapshot.data}');
+              final user = snapshot.data!;
+              return Text('Hello, ${user.firstName} ${user.lastName}');
             } else {
               return const Text('No data available');
             }

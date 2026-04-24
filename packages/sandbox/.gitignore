@@ -69,3 +69,6 @@ ios/fastlane/report.xml
 .env.*
 !.env.test
 !.env.example
+
+# Test related files
+**/.snaptest/

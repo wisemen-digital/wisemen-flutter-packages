@@ -1,4 +1,6 @@
+import '../settings.dart';
+
 abstract interface class SettingsRepository {
   Future<void> getMe();
-  Stream<String> get userName;
+  Stream<User?> get user;
 }
