@@ -203,6 +203,35 @@ class ItemsDao extends DatabaseAccessor<AppDatabase> with _$ItemsDaoMixin {
           ..orderBy([(t) => OrderingTerm.asc(t.createdAt)]))
         .watch();
   }
+
+  // ═══════════════════════════════════════════════════════════════
+  // COMBINED STREAMS — Using RxDart
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Watch items combined with related data from another table
+  /// Requires: import 'package:rxdart/rxdart.dart';
+  Stream<List<ItemWithCategory>> watchItemsWithCategories() {
+    return Rx.combineLatest2(
+      select(itemsTable).watch(),
+      select(categoriesTable).watch(),
+      (List<ItemObject> items, List<CategoryObject> categories) {
+        final categoriesById = {for (final c in categories) c.id: c};
+        return items.map((item) {
+          return ItemWithCategory(
+            item: item,
+            category: categoriesById[item.categoryId],
+          );
+        }).toList();
+      },
+    );
+  }
+}
+
+/// Combined result type
+class ItemWithCategory {
+  const ItemWithCategory({required this.item, this.category});
+  final ItemObject item;
+  final CategoryObject? category;
 }
 
 // Provider
@@ -298,64 +327,6 @@ class StringListConverter extends TypeConverter<List<String>, String> {
 }
 ```
 
-## Combining Streams with RxDart
-
-Use RxDart to combine streams from multiple tables for complex reactive queries:
-
-```dart
-// lib/repository/order_repository.dart
-import 'package:rxdart/rxdart.dart';
-
-class OrderRepositoryImpl implements OrderRepository {
-  const OrderRepositoryImpl({required this.ref});
-  final Ref ref;
-
-  /// Combine orders with their related items and customer data
-  @override
-  Stream<List<OrderWithDetails>> watchOrdersWithDetails() {
-    final ordersDao = ref.read(ordersDaoProvider);
-    final itemsDao = ref.read(itemsDaoProvider);
-    final customersDao = ref.read(customersDaoProvider);
-
-    return Rx.combineLatest3(
-      ordersDao.watchAll(),
-      itemsDao.watchAll(),
-      customersDao.watchAll(),
-      (List<OrderObject> orders, List<ItemObject> items, List<CustomerObject> customers) {
-        final itemsById = {for (final item in items) item.id: item};
-        final customersById = {for (final c in customers) c.id: c};
-
-        return orders.map((order) {
-          return OrderWithDetails(
-            order: order.toFeatureModel(),
-            items: order.itemIds
-                .map((id) => itemsById[id]?.toFeatureModel())
-                .whereType<Item>()
-                .toList(),
-            customer: customersById[order.customerId]?.toFeatureModel(),
-          );
-        }).toList();
-      },
-    );
-  }
-}
-```
-
-### Common RxDart Operators
-
-```dart
-// combineLatest2/3/4... — emit when ANY stream emits (after all have emitted once)
-Rx.combineLatest2(streamA, streamB, (a, b) => combine(a, b));
-
-// switchMap — flatten nested streams, cancel previous
-userIdStream.switchMap((id) => watchUserById(id));
-
-// debounceTime — wait for pause in emissions (good for search)
-searchStream.debounceTime(const Duration(milliseconds: 300));
-
-// distinctUnique — skip consecutive duplicates
-stream.distinct();
-```
 
 ## Code Generation
 

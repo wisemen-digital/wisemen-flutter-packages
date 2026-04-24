@@ -163,10 +163,17 @@ class NavigationManager {
 
 ```dart
 // In controller/notifier — business logic calls navigation manager
-@riverpod
+@Riverpod(keepAlive: true)
 class LoginController extends _$LoginController {
   @override
-  FutureOr<void> build() {}
+  FutureOr<void> build() async {
+    listenSelf(
+      (previous, next) {
+        ErrorUtils.showErrorDialog(next);
+      },
+    );
+    return null;
+  }
 
   Future<void> login() async {
     state = const AsyncLoading();
@@ -182,7 +189,7 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
-      onPressed: () => ref.read(loginControllerProvider.notifier).login(),
+      onPressed: ref.read(loginControllerProvider.notifier).login,
       child: Text('Login'),
     );
   }
