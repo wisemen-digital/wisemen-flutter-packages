@@ -76,6 +76,10 @@ dev_dependencies:
   # Melos
   melos: ^7.5.1
 
+  # Testing
+  mocktail: ^1.0.5
+  snaptest: ^0.3.0
+
 # flavors
 flavorizr:
   flavors:

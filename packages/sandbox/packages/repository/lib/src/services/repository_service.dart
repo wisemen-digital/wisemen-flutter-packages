@@ -6,7 +6,7 @@ import 'package:openapi/openapi.dart';
 import 'package:wiseclient/wiseclient.dart';
 
 class RepositoryService {
-  final Openapi api;
+  final SandboxApi api;
   final Database database;
 
   RepositoryService({
@@ -45,13 +45,15 @@ class RepositoryService {
        ),
        database = constructDb();
 
-  Stream<AuthenticationStatus> get authenticationStatus => api.client.authenticationStatus;
+  RepositoryService.mock({Database? database}) : api = MockApi(), database = database ?? constructDb();
+
+  Stream<AuthenticationStatus> get authenticationStatus => api.authenticationStatus;
 
   Future<void> setToken(OAuthToken token) async {
-    await api.client.fresh.setToken(token);
+    await api.setToken(token);
   }
 
   Future<void> clearToken() async {
-    await api.client.fresh.clearToken();
+    await api.clearToken();
   }
 }

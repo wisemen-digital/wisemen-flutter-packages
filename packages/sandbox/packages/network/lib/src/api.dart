@@ -23,7 +23,15 @@ import 'package:wiseclient/wiseclient.dart';
 
 import 'services/services.dart';
 
-class Openapi {
+abstract class SandboxApi {
+  Stream<AuthenticationStatus> get authenticationStatus;
+  Future<void> setToken(OAuthToken token);
+  Future<void> clearToken();
+  //* Services
+  UserService get userService;
+}
+
+class Openapi implements SandboxApi {
   static const String basePath = r'http://localhost:8080';
 
   final WiseClient client;
@@ -123,5 +131,19 @@ class Openapi {
   }
 
   //* Services
+  @override
   UserService get userService => UserServiceImpl(this);
+
+  @override
+  Stream<AuthenticationStatus> get authenticationStatus => client.authenticationStatus;
+
+  @override
+  Future<void> clearToken() async {
+    await client.fresh.clearToken();
+  }
+
+  @override
+  Future<void> setToken(OAuthToken token) async {
+    await client.fresh.setToken(token);
+  }
 }
