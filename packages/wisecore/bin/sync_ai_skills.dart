@@ -58,13 +58,14 @@ void main(List<String> arguments) async {
 
   // 4. Scan installed packages
   final config = jsonDecode(packageConfigFile.readAsStringSync());
-  final packages = (config as Map)['packages'] as List<Map<String, String>>;
-  var copiedCount = 0;
+  final packages = config['packages'] as List;
+  final packageConfigDir = packageConfigFile.parent.uri;
+  int copiedCount = 0;
 
   for (final package in packages) {
     final name = package['name'];
-    final rootUri = Uri.tryParse(package['rootUri'] ?? '');
-    final packagePath = rootUri?.toFilePath(windows: Platform.isWindows);
+    final rootUri = packageConfigDir.resolve(package['rootUri'] as String);
+    final packagePath = rootUri.toFilePath(windows: Platform.isWindows);
 
     // Look for a 'skills' folder in the package
     final sourceSkillsDir = Directory('$packagePath/skills');
