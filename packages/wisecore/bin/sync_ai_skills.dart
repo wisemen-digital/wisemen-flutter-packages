@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:args/args.dart';
-import 'package:flutter/rendering.dart';
 
 // 🛠️ Map your AI platforms to their respective local directories
 const platformDirectories = {
@@ -24,25 +23,25 @@ void main(List<String> arguments) async {
   try {
     argResults = parser.parse(arguments);
   } catch (e) {
-    debugPrint('❌ Error: $e\n');
-    debugPrint('Usage: dart run scripts/sync_ai_skills.dart [options]');
-    debugPrint(parser.usage);
+    print('❌ Error: $e\n');
+    print('Usage: dart run scripts/sync_ai_skills.dart [options]');
+    print(parser.usage);
     exit(1);
   }
 
   if (argResults['help'] as bool) {
-    debugPrint('Usage: dart run scripts/sync_ai_skills.dart [options]');
-    debugPrint(parser.usage);
+    print('Usage: dart run scripts/sync_ai_skills.dart [options]');
+    print(parser.usage);
     exit(0);
   }
 
   final selectedAgents = argResults['agent'] as List<String>;
-  debugPrint('🤖 Syncing AI skills for: ${selectedAgents.join(', ')}...\n');
+  print('🤖 Syncing AI skills for: ${selectedAgents.join(', ')}...\n');
 
   // 2. Read Dart's package cache
   final packageConfigFile = File('.dart_tool/package_config.json');
   if (!packageConfigFile.existsSync()) {
-    debugPrint(
+    print(
       '❌ Error: .dart_tool/package_config.json not found. Run `dart pub get` first.',
     );
     exit(1);
@@ -71,7 +70,7 @@ void main(List<String> arguments) async {
     final sourceSkillsDir = Directory('$packagePath/skills');
 
     if (sourceSkillsDir.existsSync()) {
-      debugPrint('📦 Found skills in package: $name');
+      print('📦 Found skills in package: $name');
 
       await for (final entity in sourceSkillsDir.list()) {
         if (entity is File) {
@@ -87,7 +86,7 @@ void main(List<String> arguments) async {
 
             entity.copySync(destFile.path);
             copiedCount++;
-            debugPrint('  -> Copied $fileName to $targetDirPath');
+            print('  -> Copied $fileName to $targetDirPath');
           }
         }
       }
@@ -95,8 +94,8 @@ void main(List<String> arguments) async {
   }
 
   if (copiedCount == 0) {
-    debugPrint('🤷‍♂️ No skills found in any of your installed packages.');
+    print('🤷‍♂️ No skills found in any of your installed packages.');
   } else {
-    debugPrint('\n✅ Successfully synced $copiedCount skill file(s)!');
+    print('\n✅ Successfully synced $copiedCount skill file(s)!');
   }
 }
