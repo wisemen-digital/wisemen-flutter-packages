@@ -1,3 +1,7 @@
+## 2.2.8
+
+- Add VisibleAwareStateMixin
+
 ## 2.2.7
 
 - Add sync skills script
