@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_dynamic_calls, avoid_print
 
 import 'dart:convert';
 import 'dart:io';
@@ -61,7 +61,7 @@ void main(List<String> arguments) async {
   final config = jsonDecode(packageConfigFile.readAsStringSync());
   final packages = config['packages'] as List;
   final packageConfigDir = packageConfigFile.parent.uri;
-  int copiedCount = 0;
+  var copiedCount = 0;
 
   for (final package in packages) {
     final name = package['name'];
