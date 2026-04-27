@@ -57,11 +57,12 @@ void main(List<String> arguments) async {
   // 4. Scan installed packages
   final config = jsonDecode(packageConfigFile.readAsStringSync());
   final packages = config['packages'] as List;
+  final packageConfigDir = packageConfigFile.parent.uri;
   int copiedCount = 0;
 
   for (final package in packages) {
     final name = package['name'];
-    final rootUri = Uri.parse(package['rootUri']);
+    final rootUri = packageConfigDir.resolve(package['rootUri'] as String);
     final packagePath = rootUri.toFilePath(windows: Platform.isWindows);
 
     // Look for a 'skills' folder in the package
