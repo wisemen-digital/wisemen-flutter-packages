@@ -7,6 +7,12 @@ import 'package:args/args.dart';
 // 🛠️ Map your AI platforms to their respective local directories
 const platformDirectories = {
   'claude-code': '.claude/skills',
+  'copilot': '.github/instructions',
+};
+
+// Platforms that require a custom file extension (replaces .md)
+const platformExtensions = {
+  'copilot': '.instructions.md',
 };
 
 void main(List<String> arguments) async {
@@ -16,7 +22,7 @@ void main(List<String> arguments) async {
       'agent',
       abbr: 'a',
       help: 'Choose which AI platforms to install skills for.',
-      allowed: platformDirectories.keys,
+      allowed: platformDirectories.keys.toList(),
       defaultsTo: ['claude-code'], // Default if no flags are passed
     )
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show usage info.');
@@ -81,14 +87,24 @@ void main(List<String> arguments) async {
           // 5. Copy the file to every selected platform's directory
           for (final agent in selectedAgents) {
             final targetDirPath = platformDirectories[agent]!;
+            final customExt = platformExtensions[agent];
 
-            // Note: Cursor specifically prefers .mdc extensions, you could add logic
-            // here to rename files if required by a specific platform.
-            final destFile = File('$targetDirPath/${name}_$fileName');
+            final destFileName = customExt != null
+                ? '${name}_${fileName.replaceFirst(RegExp(r'\.[^.]+$'), customExt)}'
+                : '${name}_$fileName';
 
-            entity.copySync(destFile.path);
+            final destFile = File('$targetDirPath/$destFileName');
+
+            if (agent == 'copilot') {
+              // Copilot requires applyTo frontmatter so instructions are auto-applied
+              final content = entity.readAsStringSync();
+              destFile.writeAsStringSync('---\napplyTo: "**"\n---\n\n$content');
+            } else {
+              entity.copySync(destFile.path);
+            }
+
             copiedCount++;
-            print('  -> Copied $fileName to $targetDirPath');
+            print('  -> Copied $fileName to $targetDirPath/$destFileName');
           }
         }
       }
