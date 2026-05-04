@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Added `AuthenticationStatus` to exports
+
 ## 2.0.0
 
 - Breaking change: Removed `fresh` fork
