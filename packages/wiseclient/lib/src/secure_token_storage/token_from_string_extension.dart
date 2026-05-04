@@ -13,6 +13,9 @@ extension OAuthTokenFromString on String {
       tokenType: tokenMap['tokenType'] as String?,
       scope: tokenMap['scope'] as String?,
       expiresIn: tokenMap['expiresIn'] as int?,
+      issuedAt: tokenMap['issuedAt'] != null
+          ? DateTime.parse(tokenMap['issuedAt'] as String)
+          : null,
     );
   }
 }

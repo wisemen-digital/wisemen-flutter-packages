@@ -1,3 +1,7 @@
+## 2.0.3
+
+- Added `issuedAt` to mappers
+
 ## 2.0.2
 
 - Added `RevokeTokenException` to exports

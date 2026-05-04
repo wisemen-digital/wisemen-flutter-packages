@@ -10,6 +10,7 @@ extension OAuthTokenToMap on OAuthToken {
       'expiresIn': expiresIn,
       'refreshToken': refreshToken,
       'scope': scope,
+      'issuedAt': issuedAt?.toIso8601String(),
     };
   }
 }
