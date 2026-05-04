@@ -1,3 +1,7 @@
+## 2.0.2
+
+- Added `RevokeTokenException` to exports
+
 ## 2.0.1
 
 - Added `AuthenticationStatus` to exports
