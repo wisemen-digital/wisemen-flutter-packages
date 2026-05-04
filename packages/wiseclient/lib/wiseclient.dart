@@ -2,6 +2,8 @@
 library wiseclient;
 
 export 'package:dio/dio.dart' show DioException, Options;
+// ignore: depend_on_referenced_packages
+export 'package:fresh/fresh.dart' show AuthenticationStatus;
 
 export 'src/error_screens/error_screens.dart';
 export 'src/exceptions/exceptions.dart';
