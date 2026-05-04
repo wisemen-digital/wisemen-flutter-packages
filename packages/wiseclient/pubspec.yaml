@@ -23,6 +23,7 @@ dependencies:
   native_dio_adapter: ^1.5.1
   talker_dio_logger: ">=5.0.0 <6.0.0"
   fresh_dio: ^0.6.0
+  fresh: ^0.6.1
 
 dev_dependencies:
   # Static analysis & linting
