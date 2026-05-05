@@ -41,7 +41,7 @@ void main() {
 
     test('darken should darken the color toward black', () {
       const color = Color(0xff808080);
-      final darkened = color.darken(amount: 0.5);
+      final darkened = color.darken(0.5);
       final original = HSLColor.fromColor(color);
       final darkenedHsl = HSLColor.fromColor(darkened);
 
@@ -50,19 +50,19 @@ void main() {
 
     test('darken with amount 0 should not change the color', () {
       const color = Color(0xff808080);
-      final darkened = color.darken(amount: 0);
+      final darkened = color.darken(0);
       expect(darkened, equals(color));
     });
 
     test('darken with amount 1 should produce black', () {
       const color = Color(0xff808080);
-      final darkened = color.darken(amount: 1);
+      final darkened = color.darken(1);
       expect(HSLColor.fromColor(darkened).lightness, closeTo(0.0, 0.001));
     });
 
     test('lighten should lighten the color toward white', () {
       const color = Color(0xff808080);
-      final lightened = color.lighten(amount: 0.5);
+      final lightened = color.lighten(0.5);
       final original = HSLColor.fromColor(color);
       final lightenedHsl = HSLColor.fromColor(lightened);
 
@@ -74,13 +74,13 @@ void main() {
 
     test('lighten with amount 0 should not change the color', () {
       const color = Color(0xff808080);
-      final lightened = color.lighten(amount: 0);
+      final lightened = color.lighten(0);
       expect(lightened, equals(color));
     });
 
     test('lighten with amount 1 should produce white', () {
       const color = Color(0xff808080);
-      final lightened = color.lighten(amount: 1);
+      final lightened = color.lighten(1);
       expect(HSLColor.fromColor(lightened).lightness, closeTo(1.0, 0.001));
     });
   });
