@@ -1,3 +1,8 @@
+## 2.2.10
+
+- Moved instructions to skills folder
+- Expanded ai sync script to also sync the copilot-instructions.md file
+
 ## 2.2.9
 
 - Changed darken and lighten color extensions to use a positional parameter instead of a named one
