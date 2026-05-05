@@ -1,0 +1,78 @@
+name: Flutter Package Workflow
+description: Build and test a Flutter package.
+
+inputs:
+  package_name:
+    required: true
+    description: Package name (artifacts)
+  working_directory:
+    required: true
+    default: "."
+    description: The working directory for this workflow
+  min_coverage:
+    required: false
+    default: "80"
+    description: The minimum coverage percentage value
+  github_token:
+    required: true
+    description: The GitHub token to use for reporting coverage
+  collect_score:
+    required: false
+    default: "false"
+    description: Whether to collect the pana score
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: stable
+        cache: true
+    
+    - run: flutter --version
+      shell: bash
+    
+    - name: Run flutter pub get
+      shell: bash
+      run: flutter pub get
+    
+    - name: Verify formatting
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      run: dart format . --set-exit-if-changed
+
+    - name: Analyze project source
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      run: dart analyze --fatal-infos --fatal-warnings
+
+    - name: Run Flutter WiseClient tests
+      shell: bash
+      working-directory: ${{ inputs.working_directory }}
+      run: flutter test --no-pub --coverage
+    
+    - name: Setup LCOV
+      uses: hrishikesh-kadam/setup-lcov@v1
+
+    - name: Report code coverage
+      uses: zgosalvez/github-actions-report-lcov@v4
+      with:
+        coverage-files: ${{ inputs.working_directory }}/coverage/lcov.info
+        minimum-coverage: ${{ inputs.min_coverage }}
+        github-token: ${{ inputs.github_token }}
+        working-directory: ${{ inputs.working_directory }}
+        artifact-name: ${{ inputs.package_name }}-coverage
+
+    - name: 💯 Verify Pub Score
+      if: inputs.collect_score == 'true'
+      working-directory: ${{ inputs.working_directory }}
+      shell: bash
+      run: |
+        dart pub global activate pana 0.22.17
+        sudo apt-get install webp
+        PANA=$(pana . --no-warning); PANA_SCORE=$(echo $PANA | sed -n "s/.*Points: \([0-9]*\)\/\([0-9]*\)./\1\/\2/p")
+        echo "score: $PANA_SCORE"
+        IFS='/'; read -a SCORE_ARR <<< "$PANA_SCORE"; SCORE=SCORE_ARR[0]; TOTAL=SCORE_ARR[1]
+        if [ -z "$1" ]; then MINIMUM_SCORE=TOTAL; else MINIMUM_SCORE=$1; fi
+        if (( $SCORE < $MINIMUM_SCORE )); then echo "minimum score $MINIMUM_SCORE was not met!"; exit 1; fi
