@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:args/args.dart';
 
 // 🛠️ Map your AI platforms to their respective local directories
@@ -86,12 +87,23 @@ void main(List<String> arguments) async {
 
           // 5. Copy the file to every selected platform's directory
           for (final agent in selectedAgents) {
+            // Special case: copilot-instructions.md goes to .github/ root
+            if (agent == 'copilot' && fileName == 'copilot-instructions.md') {
+              final githubDir = Directory('.github');
+              if (!githubDir.existsSync()) {
+                githubDir.createSync(recursive: true);
+              }
+              final destFile = File('.github/copilot-instructions.md');
+              entity.copySync(destFile.path);
+              copiedCount++;
+              print('  -> Copied $fileName to .github/copilot-instructions.md');
+              continue;
+            }
+
             final targetDirPath = platformDirectories[agent]!;
             final customExt = platformExtensions[agent];
 
-            final destFileName = customExt != null
-                ? '${name}_${fileName.replaceFirst(RegExp(r'\.[^.]+$'), customExt)}'
-                : '${name}_$fileName';
+            final destFileName = customExt != null ? '${name}_${fileName.replaceFirst(RegExp(r'\.[^.]+$'), customExt)}' : '${name}_$fileName';
 
             final destFile = File('$targetDirPath/$destFileName');
 
