@@ -24,7 +24,7 @@ extension ColorExtensions on Color {
 
   /// Darkens the color proportionally toward black.
   /// [amount] ranges from 0.0 (no change) to 1.0 (completely black).
-  Color darken({required double amount}) {
+  Color darken(double amount) {
     assert(amount >= 0 && amount <= 1, 'Amount must be between 0.0 and 1.0');
     final hsl = HSLColor.fromColor(this);
     final darkened = hsl.withLightness(hsl.lightness * (1 - amount));
@@ -33,11 +33,10 @@ extension ColorExtensions on Color {
 
   /// Lightens the color proportionally toward white.
   /// [amount] ranges from 0.0 (no change) to 1.0 (completely white).
-  Color lighten({required double amount}) {
+  Color lighten(double amount) {
     assert(amount >= 0 && amount <= 1, 'Amount must be between 0.0 and 1.0');
     final hsl = HSLColor.fromColor(this);
-    final lightened =
-        hsl.withLightness(hsl.lightness + (1 - hsl.lightness) * amount);
+    final lightened = hsl.withLightness(hsl.lightness + (1 - hsl.lightness) * amount);
     return lightened.toColor();
   }
 }
