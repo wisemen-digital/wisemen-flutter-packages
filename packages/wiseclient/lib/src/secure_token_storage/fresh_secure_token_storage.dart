@@ -15,7 +15,6 @@ class FreshSecureTokenStorage implements TokenStorage<OAuthToken> {
   final storage = const FlutterSecureStorage(
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock,
-      synchronizable: true,
     ),
   );
 
