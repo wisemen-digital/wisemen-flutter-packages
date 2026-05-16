@@ -1,3 +1,8 @@
+## 2.0.4
+
+- Removed `synchronizable` from iOS options in `FreshSecureTokenStorage`
+- Updated packages
+
 ## 2.0.3
 
 - Added `issuedAt` to mappers
