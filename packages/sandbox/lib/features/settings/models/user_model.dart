@@ -8,4 +8,6 @@ class User {
     required this.lastName,
     required this.email,
   });
+
+  String get fullName => '$firstName $lastName';
 }

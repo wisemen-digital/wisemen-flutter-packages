@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wise_theming/wise_theming.dart';
 import 'package:wisecore/wisecore.dart';
 
 import '../settings.dart';
@@ -26,21 +27,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
         title: const Text('Settings'),
       ),
       body: Center(
-        child: StreamBuilder<User?>(
-          stream: ref.watch(SettingsFeature.settingsRepository).user,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            } else if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            } else if (snapshot.hasData) {
-              final user = snapshot.data!;
-              return Text('Hello, ${user.firstName} ${user.lastName}');
-            } else {
-              return const Text('No data available');
-            }
-          },
-        ),
+        child: ref
+            .watch(SettingsProviders.user)
+            .whenStream(
+              data: (data) => Text(
+                data?.fullName ?? '',
+                style: context.body.copyWith(color: context.textColors.primary),
+              ),
+              error: (error, stackTrace) => ErrorWidget(error),
+              loading: () => const CircularProgressIndicator(),
+            ),
       ),
     );
   }

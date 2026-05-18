@@ -1,6 +1,6 @@
 # Command
 
-openapi-generator generate -i https://vue.project-template.development.appwi.se/api/docs/latest-json -g dart-dio --skip-validate-spec
+openapi-generator generate -i {link-to-json} -g dart-dio --skip-validate-spec
 
 # Flutter commands
 
