@@ -13,9 +13,11 @@ part 'database.g.dart';
 @DriftDatabase(
   tables: [
     AppSettingsTable,
+    TasksTable,
   ],
   daos: [
     AppSettingsDao,
+    TasksDao,
   ],
 )
 class Database extends _$Database {
@@ -24,7 +26,7 @@ class Database extends _$Database {
   final Ref ref;
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   Future<void> deleteDatabase() async {
     await transaction(() async {
@@ -37,18 +39,18 @@ class Database extends _$Database {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        beforeOpen: (details) async {
-          await customStatement('PRAGMA foreign_keys = ON');
-        },
-        onUpgrade: (m, from, to) async {
-          if (from < to) {
-            for (final table in allTables.toList().reversed) {
-              await m.deleteTable(table.actualTableName);
-              await m.createTable(table);
-            }
-          }
-        },
-      );
+    beforeOpen: (details) async {
+      await customStatement('PRAGMA foreign_keys = ON');
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < to) {
+        for (final table in allTables.toList().reversed) {
+          await m.deleteTable(table.actualTableName);
+          await m.createTable(table);
+        }
+      }
+    },
+  );
 }
 
 @Riverpod(keepAlive: true)
