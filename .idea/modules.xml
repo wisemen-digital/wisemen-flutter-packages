@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+<module fileurl="file://$PROJECT_DIR$/packages/wise_nav_bar/melos_wise_nav_bar.iml" filepath="$PROJECT_DIR$/packages/wise_nav_bar/melos_wise_nav_bar.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wise_review/melos_wise_review.iml" filepath="$PROJECT_DIR$/packages/wise_review/melos_wise_review.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wise_scalars/melos_wise_scalars.iml" filepath="$PROJECT_DIR$/packages/wise_scalars/melos_wise_scalars.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wise_theming/melos_wise_theming.iml" filepath="$PROJECT_DIR$/packages/wise_theming/melos_wise_theming.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wise_zitadel_login/melos_wise_zitadel_login.iml" filepath="$PROJECT_DIR$/packages/wise_zitadel_login/melos_wise_zitadel_login.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wiseclient/melos_wiseclient.iml" filepath="$PROJECT_DIR$/packages/wiseclient/melos_wiseclient.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wisecore/melos_wisecore.iml" filepath="$PROJECT_DIR$/packages/wisecore/melos_wisecore.iml"/>
+<module fileurl="file://$PROJECT_DIR$/packages/wisewidgetslibrary/melos_wisewidgetslibrary.iml" filepath="$PROJECT_DIR$/packages/wisewidgetslibrary/melos_wisewidgetslibrary.iml"/>
+<module fileurl="file://$PROJECT_DIR$/melos_wisemenflutterpackages.iml" filepath="$PROJECT_DIR$/melos_wisemenflutterpackages.iml"/>
+    </modules>
+  </component>
+</project>

@@ -21,9 +21,7 @@ class SettingsController extends _$SettingsController {
   Future<void> toggleThemeMode(ThemeMode mode) async {
     state = const AsyncValue.loading();
     try {
-      await ref
-          .read(SettingsFeature.settingsRepository)
-          .toggleThemeMode(themeMode: mode);
+      await ref.read(SettingsFeature.settingsRepository).toggleThemeMode(themeMode: mode);
       state = const AsyncValue.data(null);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);

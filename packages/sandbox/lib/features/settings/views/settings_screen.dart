@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_alert/flutter_platform_alert.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
@@ -86,6 +87,15 @@ class SettingsScreen extends ConsumerWidget {
                 },
                 child: Text(
                   'Other settings',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+              PlatformAnimatedButton(
+                onPressed: () {
+                  context.router.push(const JobInterviewScreenRoute());
+                },
+                child: Text(
+                  'Job Interview',
                   style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),

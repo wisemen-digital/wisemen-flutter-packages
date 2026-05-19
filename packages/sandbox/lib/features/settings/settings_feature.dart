@@ -1,12 +1,11 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'settings.dart';
 
 class SettingsFeature {
-  static late AutoDisposeProvider<SettingsRepository> settingsRepository;
+  // ignore: strict_raw_type
+  static late dynamic settingsRepository;
 
   static void init({
-    required AutoDisposeProvider<SettingsRepository> repository,
+    required dynamic repository,
   }) {
     settingsRepository = repository;
   }

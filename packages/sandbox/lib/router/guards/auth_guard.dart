@@ -17,14 +17,13 @@ class AuthGuard extends AutoRouteGuard {
     NavigationResolver resolver,
     StackRouter router,
   ) async {
-    final status =
-        await ref.read(protectedClientProvider).authenticationStatus.first;
+    final status = await ref.read(protectedClientProvider).authenticationStatus.first;
     switch (status) {
       case AuthenticationStatus.initial:
         resolver.next();
       case AuthenticationStatus.unauthenticated:
       case AuthenticationStatus.authenticated:
-        resolver.redirect(const DashboardRouter());
+        resolver.redirectUntil(const DashboardRouter());
     }
   }
 }

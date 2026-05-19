@@ -1,0 +1,7 @@
+targets:
+  $default:
+    auto_apply_builders: true
+    builders:
+      drift_dev:drift_dev:
+        options:
+          generate_connect_constructor: true

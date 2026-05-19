@@ -33,6 +33,10 @@ class AppRouter extends RootStackRouter {
         AdaptiveRoute(page: EmptyRoute.page),
       ],
     ),
+    AdaptiveRoute(
+      path: '/job-interview',
+      page: JobInterviewScreenRoute.page,
+    ),
     //mason: insert auto route
   ];
 }
