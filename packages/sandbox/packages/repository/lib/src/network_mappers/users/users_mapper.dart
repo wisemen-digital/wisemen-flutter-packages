@@ -1,5 +1,4 @@
 import 'package:database/database.dart';
-import 'package:drift/drift.dart';
 import 'package:openapi/openapi.dart';
 
 /// Extension to map [ViewRoleDetailResponse] to [Role]

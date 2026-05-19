@@ -55,6 +55,7 @@ dependencies:
   # Localization
   intl: ^0.20.2
   flutter_dotenv: ^6.0.0
+  cupertino_calendar_picker: ^2.2.6
 
 dev_dependencies: 
   # Code generation
