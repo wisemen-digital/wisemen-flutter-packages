@@ -1,3 +1,8 @@
+## 2.2.11
+
+- Fixed skills naming
+- Improved widget instructions
+
 ## 2.2.10
 
 - Moved instructions to skills folder
