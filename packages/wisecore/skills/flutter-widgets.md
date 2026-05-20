@@ -145,20 +145,21 @@ class PrimaryButton extends StatelessWidget {
       label: semanticLabel ?? text,
       button: true,
       enabled: !isDisabled,
-      child: ElevatedButton(
-        onPressed: isDisabled || isLoading ? null : onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: context.fgColor.brandPrimary,
-          foregroundColor: context.textColor.primaryOnBrand,
-          disabledBackgroundColor: context.bgColor.disabledSubtle,
-          minimumSize: SIZE,
-          shape: RoundedRectangleBorder(
+      child: InkWell(
+        onTap: isDisabled || isLoading ? null : onPressed,
+        child: Ink(
+          decoration: BoxDecoration(
+            color: isDisabled
+                ? context.bgColor.disabledSubtle
+                : context.fgColor.brandPrimary,
             borderRadius: BorderRadius.circular(SIZE.height),
           ),
+          child: Center(
+            child: isLoading
+                ? const CircularProgressIndicator()
+                : Text(text, style: context.button),
+          ),
         ),
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : Text(text, style: context.button),
       ),
     );
   }
@@ -220,16 +221,16 @@ class ItemListTile extends StatelessWidget {
       button: onTap != null,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(Sizes.s),
+        borderRadius: radS,
         child: Padding(
-          padding: const EdgeInsets.all(Sizes.m),
+          padding: padM,
           child: Row(
             children: [
               CircleAvatar(
                 backgroundColor: context.bgColor.brandPrimary,
                 child: Icon(item.icon, color: context.fgColor.brandPrimary),
               ),
-              const SizedBox(width: Sizes.m),
+              gapWM,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +273,7 @@ class EmptyState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(Sizes.l),
+        padding: padL,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -282,14 +283,14 @@ class EmptyState extends StatelessWidget {
                 size: 64,
                 color: context.fgColor.tertiary,
               ),
-            const SizedBox(height: Sizes.m),
+            gapM,
             Text(
               title,
               style: context.title,
               textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
-              const SizedBox(height: Sizes.s),
+              gapS,
               Text(
                 subtitle!,
                 style: context.label,
@@ -297,7 +298,7 @@ class EmptyState extends StatelessWidget {
               ),
             ],
             if (action != null) ...[
-              const SizedBox(height: Sizes.l),
+              gapL,
               action!,
             ],
           ],
@@ -334,12 +335,12 @@ class FlatIconButton extends StatelessWidget {
       button: true,
       child: Material(
         color: backgroundColor ?? context.bgColor.secondary,
-        borderRadius: BorderRadius.circular(Sizes.s),
+        borderRadius: radS,
         child: InkWell(
           onTap: onPressed,
-          borderRadius: BorderRadius.circular(Sizes.s),
+          borderRadius: radS,
           child: Padding(
-            padding: const EdgeInsets.all(Sizes.xs),
+            padding: padXS,
             child: child,
           ),
         ),

@@ -103,7 +103,9 @@ void main(List<String> arguments) async {
             final targetDirPath = platformDirectories[agent]!;
             final customExt = platformExtensions[agent];
 
-            final destFileName = customExt != null ? '${name}_${fileName.replaceFirst(RegExp(r'\.[^.]+$'), customExt)}' : '${name}_$fileName';
+            final destFileName = customExt != null
+                ? '${name}_${fileName.replaceFirst(RegExp(r'\.[^.]+$'), customExt)}'
+                : '${name}_$fileName';
 
             final destFile = File('$targetDirPath/$destFileName');
 
