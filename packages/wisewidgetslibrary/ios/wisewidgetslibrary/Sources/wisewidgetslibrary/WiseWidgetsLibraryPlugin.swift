@@ -1,7 +1,7 @@
 import Flutter
 import UIKit
 
-public class SwiftFlutterWidgetsLibraryPlugin: NSObject, FlutterPlugin {
+public class WiseWidgetsLibraryPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     
     let factory1 = FLDatePickerFactory(messenger: registrar.messenger())

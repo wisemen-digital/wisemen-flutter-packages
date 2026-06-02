@@ -4,7 +4,6 @@ import 'package:wisewidgetslibrary/src/models/pagination_meta.dart';
 class TestPaginationMeta extends PaginationMeta<int> {
   const TestPaginationMeta({required super.next, required super.pageSize});
 
-  @override
   factory TestPaginationMeta.fromJson(Map<String, dynamic> json) {
     return TestPaginationMeta(next: json['next'] as int, pageSize: appPageSize);
   }

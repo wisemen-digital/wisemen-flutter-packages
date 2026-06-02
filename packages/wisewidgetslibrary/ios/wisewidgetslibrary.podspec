@@ -9,12 +9,11 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
   Library for all self made widgets.
                        DESC
-  s.homepage         = 'https://bitbucket.org/appwise/flutterwidgetslibrary/src/master/?search_id=923d4fd2-a133-4bb1-a1e4-17342edbf13e'
+  s.homepage         = 'https://github.com/wisemen-digital/wisemen-flutter-packages/tree/main/packages/wisewidgetslibrary'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Circle Flutter' => 'circle-flutter@appwise.be' }
   s.source           = { :path => '.' }
-  s.source_files = 'Classes/**/*'
-  s.public_header_files = 'Classes/**/*.h'
+  s.source_files = 'wisewidgetslibrary/Sources/wisewidgetslibrary/**/*.swift'
   s.dependency 'Flutter'
   s.platform = :ios, '15.0'
 
