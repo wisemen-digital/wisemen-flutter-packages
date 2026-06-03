@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sandbox/router/guards/auth_guard.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
 
-import 'adaptive_bottom_sheet_route.dart';
 import 'app_router.gr.dart';
 
 @AutoRouterConfig(replaceInRouteName: '')
@@ -24,7 +23,6 @@ class AppRouter extends RootStackRouter {
       transitionsBuilder: TransitionsBuilders.noTransition,
     ),
     AdaptiveRoute(page: SettingsScreenRoute.page),
-    AdaptiveBottomSheetRoute(page: DamageFormScreenRoute.page),
     //mason: insert auto route
   ];
 }

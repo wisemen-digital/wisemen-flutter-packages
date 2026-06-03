@@ -4,12 +4,12 @@ import '../daos/daos.dart';
 import '../tables/tables.dart';
 import 'database.drift.dart';
 
-@DriftDatabase(tables: [UserTable, DamageFormTable], daos: [UserDao, DamageFormDao])
+@DriftDatabase(tables: [UserTable], daos: [UserDao])
 class Database extends $Database {
   Database(super.e);
 
   @override
-  int get schemaVersion => 244;
+  int get schemaVersion => 245;
 
   Future<void> deleteDatabase() async {
     await transaction(() async {

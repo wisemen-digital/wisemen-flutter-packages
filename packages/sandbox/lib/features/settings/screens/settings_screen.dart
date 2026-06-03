@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_theming/wise_theming.dart';
 import 'package:wisecore/wisecore.dart';
 
@@ -26,10 +25,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.pushRoute(const DamageFormScreenRoute()),
-        child: const Icon(Icons.add_rounded),
       ),
       body: Center(
         child: ref

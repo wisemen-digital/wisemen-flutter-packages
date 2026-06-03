@@ -9,6 +9,8 @@ dependencies:
   drift: ^2.30.0
   rxdart: ^0.28.0
   sqlite3_flutter_libs: ^0.6.0+eol
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   build_runner: any

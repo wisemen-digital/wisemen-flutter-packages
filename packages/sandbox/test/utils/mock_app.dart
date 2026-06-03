@@ -13,6 +13,7 @@ import 'package:sandbox/generated/l10n.dart';
 import 'package:sandbox/utils/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqlite3/open.dart';
+import 'package:wise_theming/wise_theming.dart';
 import 'package:wisecore/wisecore.dart';
 
 class MockStackRouter extends Mock implements StackRouter {}
@@ -62,11 +63,20 @@ Future<void> pumpRouterApp(
   NavigatorObserversBuilder observers = AutoRouterDelegate.defaultNavigatorObserversBuilder,
   ProviderContainer? container,
 }) {
+  final theming = WiseTheming(
+    supportedThemes: supportedThemes,
+    targetPlatform: TargetPlatform.android,
+  );
   return tester
       .pumpWidget(
         UncontrolledProviderScope(
           container: container ?? ProviderContainer(),
           child: MaterialApp.router(
+            theme: theming.lightTheme,
+            darkTheme: theming.darkTheme,
+            highContrastTheme: theming.lightContrastTheme,
+            highContrastDarkTheme: theming.darkContrastTheme,
+            themeMode: theming.themeMode,
             localizationsDelegates: const [
               S.delegate,
               GlobalMaterialLocalizations.delegate,

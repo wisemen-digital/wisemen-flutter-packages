@@ -36,7 +36,7 @@ void main() {
     );
     await snap(settings: SnaptestSettings(blockText: false, includeDeviceFrame: true, devices: Devices.android.all));
 
-    expect(find.text('Hello, John Doe'), findsAny);
+    expect(find.text('John Doe'), findsAny);
 
     handle.dispose();
   });

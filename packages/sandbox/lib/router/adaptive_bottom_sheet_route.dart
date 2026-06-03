@@ -24,7 +24,7 @@ class AdaptiveBottomSheetRoute<R> extends CustomRoute {
          customRouteBuilder: <T>(BuildContext context, Widget child, AutoRoutePage<T> page) {
            if (isIos) {
              return CupertinoSheetRoute<T>(
-               builder: (_) => MediaQuery.removePadding(
+               scrollableBuilder: (context, controller) => MediaQuery.removePadding(
                  removeTop: true,
                  context: context,
                  child: child,
