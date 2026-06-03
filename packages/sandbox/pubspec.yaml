@@ -10,6 +10,7 @@ workspace:
   - packages/network
   - packages/database
   - packages/repository
+  - packages/generated_network
 dependencies:
   # Flutter
   flutter:
@@ -27,7 +28,8 @@ dependencies:
   wisewidgetslibrary: ^2.1.5
   wise_nav_bar: ^0.0.3
   wiseclient: ^2.0.4
-  wise_zitadel_login: ^0.0.2
+  wise_zitadel_login: 
+    path: ../wise_zitadel_login
   wise_theming: ^1.0.0
   
  # Riverpod
@@ -50,6 +52,7 @@ dependencies:
   intl: ^0.20.2
   flutter_dotenv: ^6.0.0
   cupertino_calendar_picker: ^2.2.6
+  opentelemetry: ^0.18.11
 
 dev_dependencies: 
   # Code generation

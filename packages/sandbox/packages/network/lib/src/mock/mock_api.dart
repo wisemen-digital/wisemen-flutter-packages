@@ -1,8 +1,8 @@
 import 'package:fresh/src/fresh.dart';
-import 'package:openapi/src/services/services.dart';
 import 'package:wiseclient/src/token_model/oauth_token.dart';
 
 import '../api.dart';
+import '../services/services.dart';
 import 'services/services.dart';
 
 class MockApi extends SandboxApi {
@@ -10,7 +10,8 @@ class MockApi extends SandboxApi {
   UserService get userService => MockUserService();
 
   @override
-  Stream<AuthenticationStatus> get authenticationStatus => Stream.value(AuthenticationStatus.authenticated);
+  Stream<AuthenticationStatus> get authenticationStatus =>
+      Stream.value(AuthenticationStatus.authenticated);
 
   @override
   Future<void> clearToken() {

@@ -1,6 +1,6 @@
 import 'package:built_collection/built_collection.dart';
+import 'package:network/src/services/user_service.dart';
 import 'package:openapi/openapi.dart';
-import 'package:openapi/src/services/user_service.dart';
 
 class MockUserService implements UserService {
   @override

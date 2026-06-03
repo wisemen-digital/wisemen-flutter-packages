@@ -51,6 +51,7 @@ app.*.map.json
 lib/generated
 *.g.dart
 .fvm
+packages/generated_network
 
 # mason
 .mason

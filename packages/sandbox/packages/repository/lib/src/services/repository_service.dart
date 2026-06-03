@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:database/database.dart';
 import 'package:native_dio_adapter/native_dio_adapter.dart';
-import 'package:openapi/openapi.dart';
+import 'package:network/network.dart';
 import 'package:wiseclient/wiseclient.dart';
 
 class RepositoryService {
@@ -14,7 +14,7 @@ class RepositoryService {
     required String authUrl,
     required String clientId,
     required VoidCallback onLogout,
-  }) : api = Openapi(
+  }) : api = NetworkApi(
          client: WiseClient(
            options: WiseOptions.base(url: baseUrl),
            useNativeAdapter: true,

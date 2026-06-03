@@ -1,5 +1,4 @@
-import '../api.dart';
-import '../model/view_me_response.dart';
+import 'package:openapi/openapi.dart';
 
 abstract interface class UserService {
   Future<ViewMeResponse> getMe();

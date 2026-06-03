@@ -39,3 +39,9 @@ pubspec.lock
 
 # Mac
 .DS_Store
+
+# openapi-generator files
+.openapi-generator/
+doc/
+lib/src/model/
+lib/src/api/
