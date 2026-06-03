@@ -23,18 +23,12 @@ dependencies:
     path: packages/repository
 
   # Wisemen
-  wisecore:
-    path: ../wisecore
-  wisewidgetslibrary:
-    path: ../wisewidgetslibrary
-  wise_nav_bar:
-    path: ../wise_nav_bar
-  wiseclient: 
-    path: ../wiseclient
-  wise_zitadel_login:
-    path: ../wise_zitadel_login
-  wise_theming:
-    path: ../wise_theming
+  wisecore: ^2.2.11
+  wisewidgetslibrary: ^2.1.5
+  wise_nav_bar: ^0.0.3
+  wiseclient: ^2.0.4
+  wise_zitadel_login: ^0.0.2
+  wise_theming: ^1.0.0
   
  # Riverpod
   riverpod_annotation: ^4.0.0
