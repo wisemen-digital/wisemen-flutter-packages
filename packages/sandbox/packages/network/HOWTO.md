@@ -13,5 +13,7 @@ Fix naming issues
 4. dart fix --apply
 5. dart format .
 
+Create interfaces and mocked models where necessary (used by repository service)
+
 # Options/improvements
 client.dart file generated to use the api.dart file
