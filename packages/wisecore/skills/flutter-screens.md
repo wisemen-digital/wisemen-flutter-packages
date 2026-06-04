@@ -160,7 +160,7 @@ class ItemsScreen extends ConsumerWidget {
         const ItemsAppBar(),
         const SliverToBoxAdapter(child: gapHM),
         SliverPadding(
-          padding: const EdgeInsets.symmetric(vertical: Sizes.s),
+          padding: padVS,
           sliver: SliverToBoxAdapter(
             child: Column(
               children: [
@@ -232,7 +232,7 @@ class ItemsFilterScreen {
       stickyActionBar: Material(
         color: context.bgColor.secondary,
         child: Padding(
-          padding: const EdgeInsets.all(Sizes.m),
+          padding: padM,
           child: PrimaryButton(
             text: S.of(context).applyFilter,
             onPressed: () {
@@ -248,7 +248,7 @@ class ItemsFilterScreen {
       mainContentSliversBuilder: (context) => [
         const SliverToBoxAdapter(
           child: Padding(
-            padding: EdgeInsets.all(Sizes.m),
+            padding: padM,
             child: FiltersContent(),
           ),
         ),
