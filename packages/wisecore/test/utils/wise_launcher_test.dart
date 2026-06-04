@@ -4,7 +4,9 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 import 'package:wisecore/src/utils/wise_launcher.dart';
 
-class MockUrlLauncherPlatform extends Mock with MockPlatformInterfaceMixin implements UrlLauncherPlatform {}
+class MockUrlLauncherPlatform extends Mock
+    with MockPlatformInterfaceMixin
+    implements UrlLauncherPlatform {}
 
 class FakeLaunchOptions extends Fake implements LaunchOptions {}
 
@@ -53,7 +55,8 @@ void main() {
       ).called(1);
     });
 
-    test('launchUrl calls onCannotLaunchUrl when canLaunchUrl is false', () async {
+    test('launchUrl calls onCannotLaunchUrl when canLaunchUrl is false',
+        () async {
       final testUri = Uri.parse('https://example.com');
       when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnFalse);
 
@@ -90,7 +93,8 @@ void main() {
     });
 
     test('launchEmail calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any())).thenAnswer(returnTrue);
+      when(() => mockUrlLauncher.launchUrl(any(), any()))
+          .thenAnswer(returnTrue);
 
       await WiseLauncher.launchEmail(
         email: 'test@example.com',
@@ -98,7 +102,8 @@ void main() {
         body: 'Test Body',
       );
 
-      final captured = verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
+      final captured =
+          verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
 
       final uri = captured.first as String;
 
@@ -106,7 +111,8 @@ void main() {
     });
 
     test('launchPhone calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any())).thenAnswer(returnTrue);
+      when(() => mockUrlLauncher.launchUrl(any(), any()))
+          .thenAnswer(returnTrue);
 
       await WiseLauncher.launchPhone(phoneNr: '123456');
 
@@ -119,7 +125,8 @@ void main() {
     });
 
     test('launchMap calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any())).thenAnswer(returnTrue);
+      when(() => mockUrlLauncher.launchUrl(any(), any()))
+          .thenAnswer(returnTrue);
 
       await WiseLauncher.launchMap(name: 'Test Place');
 
