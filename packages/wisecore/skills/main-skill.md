@@ -13,13 +13,13 @@ This is a Flutter application following a **feature-based clean architecture** w
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        UI Layer                              │
+│                        UI Layer                             │
 │    (Screens, Widgets, Providers)                            │
 ├─────────────────────────────────────────────────────────────┤
-│                    Repository Layer                          │
+│                    Repository Layer                         │
 │    (Data orchestration, caching, stream management)         │
 ├─────────────────────────────────────────────────────────────┤
-│              Network Layer          Database Layer           │
+│              Network Layer          Database Layer          │
 │    (Services, DTOs, Mappers)    (DAOs, Tables, Models)      │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -117,17 +117,21 @@ class MyDTO implements BaseDTO {
 
 ## Specialized Instructions
 
-The following instruction files provide detailed guidance for specific areas. They are automatically loaded when working with matching files:
+The following files provide detailed guidance for specific areas. **IMPORTANT**: Read the relevant file before working in that area.
 
-| Area | Instruction File | Applies To |
-|------|------------------|------------|
-| Project Structure | `project-structure.instructions.md` | `lib/**` |
-| Feature Structure | `feature-structure.instructions.md` | `lib/features/**` |
-| State Management | `providers.instructions.md` | `**/*provider*.dart` |
-| Domain Models | `models.instructions.md` | `lib/**/models/**` |
-| Repositories | `repositories.instructions.md` | `**/*repository*.dart` |
-| Network Layer | `network.instructions.md` | `lib/network/**` |
-| Database Layer | `database.instructions.md` | `lib/database/**` |
+@.claude/skills/wisecore_database.md
+@.claude/skills/wisecore_flutter-managers.md
+@.claude/skills/wisecore_flutter-router.md
+@.claude/skills/wisecore_flutter-screens.md
+@.claude/skills/wisecore_flutter-theming.md
+@.claude/skills/wisecore_flutter-widgets.md
+@.claude/skills/wisecore_feature-structure.md
+@.claude/skills/wisecore_models.md
+@.claude/skills/wisecore_network.md
+@.claude/skills/wisecore_project-structure.md
+@.claude/skills/wisecore_providers.md
+@.claude/skills/wisecore_repositories.md
+
 
 ## Build Commands
 

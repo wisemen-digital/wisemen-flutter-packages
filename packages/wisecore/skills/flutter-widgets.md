@@ -145,25 +145,69 @@ class PrimaryButton extends StatelessWidget {
       label: semanticLabel ?? text,
       button: true,
       enabled: !isDisabled,
-      child: InkWell(
-        onTap: isDisabled || isLoading ? null : onPressed,
-        child: Ink(
-          decoration: BoxDecoration(
-            color: isDisabled
-                ? context.bgColor.disabledSubtle
-                : context.fgColor.brandPrimary,
-            borderRadius: BorderRadius.circular(SIZE.height),
-          ),
-          child: Center(
-            child: isLoading
-                ? const CircularProgressIndicator()
-                : Text(text, style: context.button),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: isDisabled || isLoading ? null : onPressed,
+          child: Ink(
+            decoration: BoxDecoration(
+              color: isDisabled
+                  ? context.bgColor.disabledSubtle
+                  : context.fgColor.brandPrimary,
+              borderRadius: BorderRadius.circular(SIZE.height),
+            ),
+            child: Center(
+              child: isLoading
+                  ? const CircularProgressIndicator()
+                  : Text(text, style: context.button),
+            ),
           ),
         ),
       ),
     );
   }
 }
+```
+
+## Clickable Widgets
+
+Most clickable widgets should use `InkWell`. The correct widget tree is:
+`Material(type: MaterialType.transparency)` → `InkWell` → `Ink`
+
+- **InkWell over GestureDetector** — `InkWell` provides the Material ink splash; `GestureDetector` does not.
+- **Ink over Container** — `Ink` respects the Material layer so the splash paints correctly. A bare `Container` clips the splash.
+- **Material parent required** — `InkWell` needs a `Material` ancestor to render its splash. Wrap with `Material(type: MaterialType.transparency)` when the widget's own background comes from `Ink`'s decoration (or from an ancestor). Only omit `MaterialType.transparency` when `Material` itself provides the background color (see `FlatIconButton`).
+- **GestureDetector for non-ink interactions** — Use `GestureDetector` only for non-ink interactions, e.g., drag gestures, long press, etc.
+
+```dart
+// DO — transparent Material lets Ink own the background color
+Material(
+  type: MaterialType.transparency,
+  child: InkWell(
+    onTap: onTap,
+    borderRadius: radS,
+    child: Ink(
+      decoration: BoxDecoration(
+        color: context.bgColor.secondary,
+        borderRadius: radS,
+      ),
+      child: Padding(padding: padM, child: content),
+    ),
+  ),
+)
+
+// DO — non-transparent Material when it owns the background
+Material(
+  color: context.bgColor.secondary,
+  borderRadius: radS,
+  child: InkWell(onTap: onTap, child: Padding(padding: padM, child: content)),
+)
+
+// DON'T — GestureDetector has no ink splash
+GestureDetector(onTap: onTap, child: Container(...))
+
+// DON'T — Container inside InkWell clips the splash
+InkWell(onTap: onTap, child: Container(color: context.bgColor.secondary, child: ...))
 ```
 
 ## App Bar Widget Pattern
@@ -219,29 +263,34 @@ class ItemListTile extends StatelessWidget {
     return Semantics(
       label: item.name,
       button: onTap != null,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: radS,
-        child: Padding(
-          padding: padM,
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: context.bgColor.brandPrimary,
-                child: Icon(item.icon, color: context.fgColor.brandPrimary),
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: radS,
+          child: Ink(
+            child: Padding(
+              padding: padM,
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: context.bgColor.brandPrimary,
+                    child: Icon(item.icon, color: context.fgColor.brandPrimary),
+                  ),
+                  gapWM,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.name, style: context.normal),
+                        Text(item.type.label, style: context.label),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, color: context.fgColor.tertiary),
+                ],
               ),
-              gapWM,
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(item.name, style: context.normal),
-                    Text(item.type.label, style: context.label),
-                  ],
-                ),
-              ),
-              Icon(Icons.chevron_right, color: context.fgColor.tertiary),
-            ],
+            ),
           ),
         ),
       ),
@@ -334,6 +383,7 @@ class FlatIconButton extends StatelessWidget {
       label: semanticLabel,
       button: true,
       child: Material(
+        // Material owns the background color here, so no MaterialType.transparency
         color: backgroundColor ?? context.bgColor.secondary,
         borderRadius: radS,
         child: InkWell(
@@ -375,3 +425,6 @@ export 'text_field.dart';
 8. **Single responsibility** — Each widget should do one thing well
 9. **Use Consumer selectively** — Only use `ConsumerWidget` when Riverpod is needed
 10. **Document public API** — Add doc comments for public widgets
+11. **Use InkWell for taps** — Always prefer `InkWell` over `GestureDetector` for clickable widgets
+12. **Ink over Container** — Use `Ink` (not `Container`) as the direct child of `InkWell` when decoration or color is needed
+13. **Material parent** — `InkWell` requires a `Material` ancestor; wrap with `Material(type: MaterialType.transparency)` unless `Material` itself provides the background color

@@ -67,8 +67,7 @@ enum TemperatureUnit {
   fahrenheit,
 
   /// Kelvin unit
-  kelvin
-  ;
+  kelvin;
 
   /// Symbol representation of the temperature unit
   String get symbol {
