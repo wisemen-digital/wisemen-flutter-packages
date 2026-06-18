@@ -87,16 +87,24 @@ void main(List<String> arguments) async {
 
           // 5. Copy the file to every selected platform's directory
           for (final agent in selectedAgents) {
-            // Special case: copilot-instructions.md goes to .github/ root
-            if (agent == 'copilot' && fileName == 'copilot-instructions.md') {
-              final githubDir = Directory('.github');
-              if (!githubDir.existsSync()) {
-                githubDir.createSync(recursive: true);
+            // Special case: main-skill.md is placed as a root config file per platform
+            if (fileName == 'main-skill.md') {
+              if (agent == 'copilot') {
+                final githubDir = Directory('.github');
+                if (!githubDir.existsSync()) {
+                  githubDir.createSync(recursive: true);
+                }
+                final destFile = File('.github/copilot-instructions.md');
+                entity.copySync(destFile.path);
+                copiedCount++;
+                print(
+                    '  -> Copied $fileName to .github/copilot-instructions.md');
+              } else if (agent == 'claude-code') {
+                final destFile = File('CLAUDE.md');
+                entity.copySync(destFile.path);
+                copiedCount++;
+                print('  -> Copied $fileName to CLAUDE.md');
               }
-              final destFile = File('.github/copilot-instructions.md');
-              entity.copySync(destFile.path);
-              copiedCount++;
-              print('  -> Copied $fileName to .github/copilot-instructions.md');
               continue;
             }
 

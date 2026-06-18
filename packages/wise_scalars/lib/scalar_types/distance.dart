@@ -73,8 +73,7 @@ enum DistanceUnit {
   yards(isMetric: false, size: _UnitSize.m),
 
   /// Miles unit
-  miles(isMetric: false, size: _UnitSize.l)
-  ;
+  miles(isMetric: false, size: _UnitSize.l);
 
   const DistanceUnit({required this.isMetric, required _UnitSize size})
     : _size = size;

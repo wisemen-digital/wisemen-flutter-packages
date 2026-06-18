@@ -164,6 +164,51 @@ class AuthState extends _$AuthState {
 }
 ```
 
+## Provider Lifecycle & Auto-Disposal
+
+Riverpod auto-disposes any provider that has no active listeners. If a provider is only ever accessed with `ref.read` and never watched, it is disposed as soon as the current build finishes. The next call to its notifier creates a **fresh instance**, silently discarding all prior state.
+
+```dart
+// BAD — provider is never watched; Riverpod disposes it after the build finishes.
+// Calling .reset() creates a fresh FiltersNotifier with no prior state.
+@override
+Widget build(BuildContext context, WidgetRef ref) {
+  return ElevatedButton(
+    onPressed: () => ref.read(MyProviders.filters.notifier).reset(),
+    child: const Text('Reset'),
+  );
+}
+```
+
+**Fix 1 — watch in `build` (preferred for feature-scoped providers):**
+
+```dart
+@override
+Widget build(BuildContext context, WidgetRef ref) {
+  ref.watch(MyProviders.filters); // keeps provider alive while widget is mounted
+  return ElevatedButton(
+    onPressed: () => ref.read(MyProviders.filters.notifier).reset(),
+    child: const Text('Reset'),
+  );
+}
+```
+
+State is discarded when the widget is unmounted — which is usually the right behavior for a screen-scoped provider.
+
+**Fix 2 — `keepAlive` (for global/cross-feature providers):**
+
+```dart
+@Riverpod(keepAlive: true)
+class FiltersNotifier extends _$FiltersNotifier { ... }
+```
+
+Use this when the provider must survive navigation (auth status, shopping cart, app-wide settings). Avoid it for feature-scoped providers — kept-alive providers never release memory.
+
+| Scenario | Fix |
+|----------|-----|
+| Provider state must survive while the screen is visible | `ref.watch` in `build` |
+| Provider state must survive across navigation/app session | `@Riverpod(keepAlive: true)` |
+
 ## Loading State Mixin Pattern
 
 Use `LoadingStreamProvider` from core for providers that need loading state management with refresh functionality:
@@ -257,7 +302,7 @@ dart run build_runner watch --delete-conflicting-outputs
 3. **Use static accessor class** — cleaner imports and discoverability
 4. **Prefer `ref.watch` over `ref.read`** — except in callbacks/methods
 5. **Add refresh methods** — for pull-to-refresh and manual updates
-6. **Use `keepAlive: true` sparingly** — only for global state (auth, settings)
+6. **Watch or keepAlive to prevent auto-disposal** — a provider with no active listeners is auto-disposed; calling its methods then creates a fresh instance with no prior state. Fix: `ref.watch` in `build` for feature-scoped providers, `@Riverpod(keepAlive: true)` for global state
 
 ## Common Provider Types Summary
 
