@@ -1,3 +1,9 @@
+## 2.2.12
+
+- Improved AI skills script
+- Improved clickable widgets skills
+- Improved provider skills
+
 ## 2.2.11
 
 - Fixed skills naming
