@@ -1,30 +1,25 @@
-import 'dart:convert';
-
 import 'package:objective_c/objective_c.dart' as objc;
 
-import 'item_span.dart';
-import 'wise_text_bindings.dart' as bindings;
-import 'wise_text_classifier.dart';
+import '../models/models.dart';
+import 'classifier.dart';
 
 /// iOS implementation of [WiseTextClassifier] backed by the swiftgen-generated
-/// [bindings.SwiftTextClassifier], which wraps `NSDataDetector`.
+/// [SwiftTextClassifier], which wraps `NSDataDetector`.
 class WiseTextClassifierIos implements WiseTextClassifier {
-  WiseTextClassifierIos() : _native = bindings.SwiftTextClassifier();
+  /// Creates [WiseTextClassifierIos] instance with native swiftgen generated [SwiftTextClassifier]
+  WiseTextClassifierIos() : _native = SwiftTextClassifier();
 
-  final bindings.SwiftTextClassifier _native;
+  final SwiftTextClassifier _native;
 
   @override
-  List<ItemSpan> classifyText(String text) {
-    final json = _native
-        .classifyTextWithText(text.toNSString())
-        .toDartString();
+  Future<List<ItemSpan>> classifyText(String text) async {
+    // The native side returns the detected ranges packed as little blocks of
+    // three 32-bit ints — (start, length, typeCode) — in an NSData buffer.
+    // Dart already holds the source string, so it rebuilds the full span list
+    // (including the plain-text gaps) from those offsets.
+    final data = _native.classifyTextWithText(text.toNSString());
+    final triples = data.toList().buffer.asInt32List();
 
-    final decoded = jsonDecode(json);
-    if (decoded is! List) return [];
-
-    return decoded
-        .whereType<Map<String, dynamic>>()
-        .map(ItemSpan.fromJson)
-        .toList(growable: false);
+    return ItemSpan.spansFromRanges(text, triples);
   }
 }

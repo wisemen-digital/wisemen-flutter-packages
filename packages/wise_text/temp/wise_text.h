@@ -303,13 +303,19 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #if defined(__OBJC__)
 
 @class NSString;
+@class NSData;
 SWIFT_CLASS("_TtC9wise_text19SwiftTextClassifier")
 @interface SwiftTextClassifier : NSObject
-/// Classifies <code>text</code> and returns a JSON array of spans as a String.
-/// A JSON string is used as the bridge type because it maps cleanly to a
-/// Dart <code>String</code> over the FFI/Objective-C interop layer; the Dart side
-/// decodes it into typed models.
-- (NSString * _Nonnull)classifyTextWithText:(NSString * _Nonnull)text SWIFT_WARN_UNUSED_RESULT;
+/// Classifies <code>text</code> and returns the detected ranges packed as
+/// (start, length, typeCode) Int32 triples in a <code>Data</code> buffer.
+/// Raw bytes are used as the bridge type because they map cheaply to a Dart
+/// <code>NSData</code> over the FFI/Objective-C interop layer without any string
+/// encoding. Only the <em>detected</em> ranges are reported; the Dart side already
+/// holds the source string and rebuilds the plain-text gaps from these
+/// offsets. Offsets are UTF-16 code-unit based (<code>NSString</code> length), which
+/// matches Dart <code>String</code> indexing. On any failure an empty buffer is
+/// returned, which the Dart side renders as a single plain-text span.
+- (NSData * _Nonnull)classifyTextWithText:(NSString * _Nonnull)text SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 

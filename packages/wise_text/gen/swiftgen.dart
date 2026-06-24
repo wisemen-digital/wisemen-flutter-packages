@@ -22,30 +22,25 @@ Future<void> main() async {
   await SwiftGenerator(
     target: await Target.iOSArm64Latest(),
     inputs: [
-      ObjCCompatibleSwiftFileInput(
-        files: [Uri.file('ios/Classes/SwiftTextClassifier.swift')],
-      ),
+      ObjCCompatibleSwiftFileInput(files: [Uri.file('ios/wise_text/Sources/wise_text/SwiftTextClassifier.swift')]),
     ],
     include: (swift2objc.Declaration d) => d.name == 'SwiftTextClassifier',
     output: Output(
       // Must match the module the plugin's Swift compiles into, which for a
       // Flutter plugin is the plugin name.
       module: 'wise_text',
-      dartFile: Uri.file('lib/src/classifier/wise_text_bindings.dart'),
+      dartFile: Uri.file('lib/src/classifier/swift_text_classifier.dart'),
       // Generated Objective-C stubs; placed under ios/Classes so the podspec
       // (source_files: 'Classes/**/*') compiles them into the plugin.
-      objectiveCFile: Uri.file('ios/Classes/WiseTextBindings.m'),
-      preamble: '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
+      objectiveCFile: Uri.file('ios/wise_text/Sources/wise_text/SwiftTextClassifier.m'),
+      preamble:
+          '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
           '// ignore_for_file: type=lint, unused_element, unused_field\n',
     ),
     ffigen: FfiGeneratorOptions(
       objectiveC: fg.ObjectiveC(
-        externalVersions: fg.ExternalVersions(
-          ios: fg.Versions(min: Version(15, 0, 0)),
-        ),
-        interfaces: fg.Interfaces(
-          include: (decl) => decl.originalName == 'SwiftTextClassifier',
-        ),
+        externalVersions: fg.ExternalVersions(ios: fg.Versions(min: Version(15, 0, 0))),
+        interfaces: fg.Interfaces(include: (decl) => decl.originalName == 'SwiftTextClassifier'),
       ),
     ),
   ).generate(logger: logger, tempDirectory: Uri.directory('temp'));

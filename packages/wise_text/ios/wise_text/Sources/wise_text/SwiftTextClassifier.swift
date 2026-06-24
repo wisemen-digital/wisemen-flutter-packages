@@ -1,34 +1,22 @@
 import Foundation
 
-/// A span of classified text. `text` is the matched substring, `type` is one of
-/// the supported detector types ("date", "address", "link", "phoneNumber",
-/// "transitInformation") or "text" for the plain runs in between, and
-/// `rawValue` is a normalized representation of the match.
-struct ItemSpan: Codable {
-    let text: String
-    let type: String
-}
-
 @objc public class SwiftTextClassifier: NSObject {
-    /// Classifies `text` and returns a JSON array of spans as a String.
+    /// Classifies `text` and returns the detected ranges packed as
+    /// (start, length, typeCode) Int32 triples in a `Data` buffer.
     ///
-    /// A JSON string is used as the bridge type because it maps cleanly to a
-    /// Dart `String` over the FFI/Objective-C interop layer; the Dart side
-    /// decodes it into typed models.
-    @objc public func classifyText(text: String) -> String {
-        let spans = classify(text)
-        guard
-            let data = try? JSONEncoder().encode(spans),
-            let json = String(data: data, encoding: .utf8)
-        else {
-            // Fall back to a single plain-text span so callers always get
-            // valid JSON back.
-            return Self.fallbackJSON(for: text)
-        }
-        return json
+    /// Raw bytes are used as the bridge type because they map cheaply to a Dart
+    /// `NSData` over the FFI/Objective-C interop layer without any string
+    /// encoding. Only the *detected* ranges are reported; the Dart side already
+    /// holds the source string and rebuilds the plain-text gaps from these
+    /// offsets. Offsets are UTF-16 code-unit based (`NSString` length), which
+    /// matches Dart `String` indexing. On any failure an empty buffer is
+    /// returned, which the Dart side renders as a single plain-text span.
+    @objc public func classifyText(text: String) -> Data {
+        let triples = classify(text)
+        return triples.withUnsafeBytes { Data($0) }
     }
 
-    private func classify(_ text: String) -> [ItemSpan] {
+    private func classify(_ text: String) -> [Int32] {
         // NSDataDetector is a specialized NSRegularExpression subclass and only
         // supports the "data" checking types below. The other CheckingType
         // cases (.quote, .dash, .replacement, .correction, .regularExpression)
@@ -41,63 +29,37 @@ struct ItemSpan: Codable {
         ]
 
         guard let detector = try? NSDataDetector(types: types.rawValue) else {
-            return [ItemSpan(text: text, type: "text")]
+            return []
         }
 
         let nsText = text as NSString
         let fullRange = NSRange(location: 0, length: nsText.length)
         let matches = detector.matches(in: text, options: [], range: fullRange)
 
-        var spans: [ItemSpan] = []
-        var cursor = 0
+        var triples: [Int32] = []
+        triples.reserveCapacity(matches.count * 3)
 
         for match in matches {
-            // Emit the plain text between the previous match and this one.
-            if match.range.location > cursor {
-                let gap = NSRange(location: cursor, length: match.range.location - cursor)
-                let gapText = nsText.substring(with: gap)
-                spans.append(ItemSpan(text: gapText, type: "text"))
-            }
-
-            let matchText = nsText.substring(with: match.range)
-            spans.append(
-                ItemSpan(
-                    text: matchText,
-                    type: Self.typeName(for: match),
-                )
-            )
-
-            cursor = match.range.location + match.range.length
+            guard let code = Self.typeCode(for: match) else { continue }
+            triples.append(Int32(match.range.location))
+            triples.append(Int32(match.range.length))
+            triples.append(code)
         }
 
-        // Emit any trailing plain text after the last match.
-        if cursor < nsText.length {
-            let tail = NSRange(location: cursor, length: nsText.length - cursor)
-            let tailText = nsText.substring(with: tail)
-            spans.append(ItemSpan(text: tailText, type: "text"))
-        }
-
-        return spans
+        return triples
     }
 
-    /// Maps a match's result type to a stable string identifier.
-    private static func typeName(for match: NSTextCheckingResult) -> String {
+    /// Maps a match's result type to a stable integer identifier shared with the
+    /// Dart side (`WiseTextItemType.fromCode`). Returns nil for unsupported types.
+    private static func typeCode(for match: NSTextCheckingResult) -> Int32? {
         switch match.resultType {
-        case .date: return "date"
-        case .address: return "address"
-        case .link: return "link"
-        case .phoneNumber: return "phoneNumber"
-        default: return "text"
+        case .date: return 0
+        case .address: return 1
+        case .link:
+            // A `mailto:` link is reported to Dart as an email rather than a URL.
+            return match.url?.scheme?.lowercased() == "mailto" ? 3 : 2
+        case .phoneNumber: return 4
+        default: return nil
         }
-    }
-
-    /// Builds a valid single-span JSON document for the fallback path.
-    private static func fallbackJSON(for text: String) -> String {
-        let span = ItemSpan(text: text, type: "text")
-        if let data = try? JSONEncoder().encode([span]),
-           let json = String(data: data, encoding: .utf8) {
-            return json
-        }
-        return "[]"
     }
 }

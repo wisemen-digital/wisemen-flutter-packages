@@ -140,17 +140,22 @@ extension type SwiftTextClassifier._(objc.ObjCObject object$)
 }
 
 extension SwiftTextClassifier$Methods on SwiftTextClassifier {
-  /// Classifies <code>text</code> and returns a JSON array of spans as a String.
-  /// A JSON string is used as the bridge type because it maps cleanly to a
-  /// Dart <code>String</code> over the FFI/Objective-C interop layer; the Dart side
-  /// decodes it into typed models.
-  objc.NSString classifyTextWithText(objc.NSString text) {
+  /// Classifies <code>text</code> and returns the detected ranges packed as
+  /// (start, length, typeCode) Int32 triples in a <code>Data</code> buffer.
+  /// Raw bytes are used as the bridge type because they map cheaply to a Dart
+  /// <code>NSData</code> over the FFI/Objective-C interop layer without any string
+  /// encoding. Only the <em>detected</em> ranges are reported; the Dart side already
+  /// holds the source string and rebuilds the plain-text gaps from these
+  /// offsets. Offsets are UTF-16 code-unit based (<code>NSString</code> length), which
+  /// matches Dart <code>String</code> indexing. On any failure an empty buffer is
+  /// returned, which the Dart side renders as a single plain-text span.
+  objc.NSData classifyTextWithText(objc.NSString text) {
     final $ret = _objc_msgSend_1sotr3r(
       object$.ref.pointer,
       _sel_classifyTextWithText_,
       text.ref.pointer,
     );
-    return objc.NSString.fromPointer($ret, retain: true, release: true);
+    return objc.NSData.fromPointer($ret, retain: true, release: true);
   }
 
   /// init

@@ -3,5 +3,8 @@
 /// (`TextClassifier` on Android)
 library;
 
-export 'src/classifier/item_span.dart';
-export 'src/classifier/wise_text_classifier.dart';
+export 'package:styled_text/styled_text.dart';
+
+export 'src/classifier/classifier.dart';
+export 'src/models/models.dart';
+export 'src/widget/widget.dart';
