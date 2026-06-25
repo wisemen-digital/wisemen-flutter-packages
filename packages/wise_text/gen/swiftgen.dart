@@ -34,8 +34,8 @@ Future<void> main() async {
       // (source_files: 'Classes/**/*') compiles them into the plugin.
       objectiveCFile: Uri.file('ios/wise_text/Sources/wise_text/SwiftTextClassifier.m'),
       preamble:
-          '// GENERATED CODE - DO NOT MODIFY BY HAND\n'
-          '// ignore_for_file: type=lint, unused_element, unused_field\n',
+          '// ignore_for_file: type=lint\n'
+          '// coverage:ignore-file\n',
     ),
     ffigen: FfiGeneratorOptions(
       objectiveC: fg.ObjectiveC(

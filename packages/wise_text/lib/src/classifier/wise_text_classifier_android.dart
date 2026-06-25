@@ -5,9 +5,9 @@ import '../models/models.dart';
 import 'classifier.dart';
 import 'wise_text_classifier_android.g.dart';
 
-/// Android implementation of [WiseTextClassifier] backed by the jnigen-generated
+/// Android implementation of [WiseTextClassifierInterface] backed by the jnigen-generated
 /// [WiseTextPlugin], which wraps the platform `TextClassifier`.
-class WiseTextClassifierAndroid implements WiseTextClassifier {
+class WiseTextClassifierAndroid implements WiseTextClassifierInterface {
   /// Creates [WiseTextClassifierAndroid] instance with native [WiseTextPlugin] using jni's context
   WiseTextClassifierAndroid() {
     final context = jnif.androidApplicationContext;

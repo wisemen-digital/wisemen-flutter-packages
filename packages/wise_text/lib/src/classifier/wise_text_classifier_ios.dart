@@ -3,9 +3,9 @@ import 'package:objective_c/objective_c.dart' as objc;
 import '../models/models.dart';
 import 'classifier.dart';
 
-/// iOS implementation of [WiseTextClassifier] backed by the swiftgen-generated
+/// iOS implementation of [WiseTextClassifierInterface] backed by the swiftgen-generated
 /// [SwiftTextClassifier], which wraps `NSDataDetector`.
-class WiseTextClassifierIos implements WiseTextClassifier {
+class WiseTextClassifierIos implements WiseTextClassifierInterface {
   /// Creates [WiseTextClassifierIos] instance with native swiftgen generated [SwiftTextClassifier]
   WiseTextClassifierIos() : _native = SwiftTextClassifier();
 

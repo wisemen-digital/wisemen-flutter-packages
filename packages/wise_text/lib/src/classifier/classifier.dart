@@ -1,3 +1,4 @@
+export 'no_op_text_classifier.dart';
 export 'swift_text_classifier.dart';
 export 'wise_text_classifier.dart';
 export 'wise_text_classifier_android.dart';

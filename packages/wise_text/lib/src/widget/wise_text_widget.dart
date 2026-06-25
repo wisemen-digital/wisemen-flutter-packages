@@ -25,6 +25,7 @@ class WiseTextWidget extends StatefulWidget {
     this.textHeightBehavior,
     this.selectable = false,
     this.classified = false,
+    this.classifier,
   });
 
   /// The text to display in this widget. The text must be valid xml.
@@ -55,6 +56,11 @@ class WiseTextWidget extends StatefulWidget {
 
   /// Decides wether to classify text using [WiseTextClassifier]
   final bool classified;
+
+  /// Defaults to a platform-backed [WiseTextClassifier] when omitted. Provide a
+  /// custom instance of [WiseTextClassifierInterface] to control classification
+  /// yourself
+  final WiseTextClassifierInterface? classifier;
 
   /// Default text style.
   final TextStyle? style;
@@ -123,7 +129,7 @@ class _WiseTextWidgetState extends State<WiseTextWidget> {
   Future<String> processText() async {
     if (widget.classified) {
       try {
-        final classifiedItems = await WiseTextClassifier.classify(widget.text);
+        final classifiedItems = await WiseTextClassifier(classifier: widget.classifier).classify(widget.text);
         return classifiedItems.map((e) => e.tag).join();
       } catch (e) {
         return widget.text;

@@ -70,7 +70,4 @@ class ItemSpan {
 
   @override
   int get hashCode => Object.hash(text, type);
-
-  @override
-  String toString() => 'ItemSpan(text: $text, type: ${type.name})';
 }

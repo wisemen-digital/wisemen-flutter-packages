@@ -34,6 +34,9 @@ Future<void> main() async {
           structure: OutputStructure.singleFile,
         ),
       ),
+      preamble:
+          '// ignore_for_file: type=lint\n'
+          '// coverage:ignore-file\n',
       // Builds the example app to compile the plugin and collect its full
       // classpath (the plugin's own classes + the Android SDK). This is how the
       // Kotlin `WiseTextPlugin` class and types like Context/TextClassifier are
