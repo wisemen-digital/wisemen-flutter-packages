@@ -22,7 +22,11 @@ Future<void> main() async {
   await SwiftGenerator(
     target: await Target.iOSArm64Latest(),
     inputs: [
-      ObjCCompatibleSwiftFileInput(files: [Uri.file('ios/wise_text/Sources/wise_text/SwiftTextClassifier.swift')]),
+      ObjCCompatibleSwiftFileInput(
+        files: [
+          Uri.file('ios/wise_text/Sources/wise_text/SwiftTextClassifier.swift'),
+        ],
+      ),
     ],
     include: (swift2objc.Declaration d) => d.name == 'SwiftTextClassifier',
     output: Output(
@@ -32,15 +36,21 @@ Future<void> main() async {
       dartFile: Uri.file('lib/src/classifier/swift_text_classifier.dart'),
       // Generated Objective-C stubs; placed under ios/Classes so the podspec
       // (source_files: 'Classes/**/*') compiles them into the plugin.
-      objectiveCFile: Uri.file('ios/wise_text/Sources/wise_text/SwiftTextClassifier.m'),
+      objectiveCFile: Uri.file(
+        'ios/wise_text/Sources/wise_text/SwiftTextClassifier.m',
+      ),
       preamble:
           '// ignore_for_file: type=lint\n'
           '// coverage:ignore-file\n',
     ),
     ffigen: FfiGeneratorOptions(
       objectiveC: fg.ObjectiveC(
-        externalVersions: fg.ExternalVersions(ios: fg.Versions(min: Version(15, 0, 0))),
-        interfaces: fg.Interfaces(include: (decl) => decl.originalName == 'SwiftTextClassifier'),
+        externalVersions: fg.ExternalVersions(
+          ios: fg.Versions(min: Version(15, 0, 0)),
+        ),
+        interfaces: fg.Interfaces(
+          include: (decl) => decl.originalName == 'SwiftTextClassifier',
+        ),
       ),
     ),
   ).generate(logger: logger, tempDirectory: Uri.directory('temp'));

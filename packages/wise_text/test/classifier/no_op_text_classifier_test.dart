@@ -9,7 +9,10 @@ void main() {
       final spans = await classifier.classifyText('Call 555-1234 on Monday');
 
       expect(spans, [
-        const ItemSpan(text: 'Call 555-1234 on Monday', type: WiseTextItemType.text),
+        const ItemSpan(
+          text: 'Call 555-1234 on Monday',
+          type: WiseTextItemType.text,
+        ),
       ]);
     });
 

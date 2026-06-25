@@ -50,23 +50,36 @@ class ItemSpan {
 
       // Emit the plain text between the previous match and this one.
       if (start > cursor) {
-        spans.add(ItemSpan(text: source.substring(cursor, start), type: WiseTextItemType.text));
+        spans.add(
+          ItemSpan(
+            text: source.substring(cursor, start),
+            type: WiseTextItemType.text,
+          ),
+        );
       }
 
-      spans.add(ItemSpan(text: source.substring(start, start + length), type: WiseTextItemType.fromCode(code)));
+      spans.add(
+        ItemSpan(
+          text: source.substring(start, start + length),
+          type: WiseTextItemType.fromCode(code),
+        ),
+      );
       cursor = start + length;
     }
 
     // Emit any trailing plain text after the last match.
     if (cursor < source.length) {
-      spans.add(ItemSpan(text: source.substring(cursor), type: WiseTextItemType.text));
+      spans.add(
+        ItemSpan(text: source.substring(cursor), type: WiseTextItemType.text),
+      );
     }
 
     return List.unmodifiable(spans);
   }
 
   @override
-  bool operator ==(Object other) => other is ItemSpan && other.text == text && other.type == type;
+  bool operator ==(Object other) =>
+      other is ItemSpan && other.text == text && other.type == type;
 
   @override
   int get hashCode => Object.hash(text, type);

@@ -30,7 +30,9 @@ Future<void> main() async {
     Config(
       outputConfig: OutputConfig(
         dartConfig: DartCodeOutputConfig(
-          path: packageRoot.resolve('lib/src/classifier/wise_text_classifier_android.g.dart'),
+          path: packageRoot.resolve(
+            'lib/src/classifier/wise_text_classifier_android.g.dart',
+          ),
           structure: OutputStructure.singleFile,
         ),
       ),
@@ -41,7 +43,10 @@ Future<void> main() async {
       // classpath (the plugin's own classes + the Android SDK). This is how the
       // Kotlin `WiseTextPlugin` class and types like Context/TextClassifier are
       // resolved.
-      androidSdkConfig: AndroidSdkConfig(addGradleDeps: true, androidExample: 'example/'),
+      androidSdkConfig: AndroidSdkConfig(
+        addGradleDeps: true,
+        androidExample: 'example/',
+      ),
       classes: ['com.example.wise_text.WiseTextPlugin'],
     ),
   );

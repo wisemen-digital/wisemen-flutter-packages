@@ -129,7 +129,9 @@ class _WiseTextWidgetState extends State<WiseTextWidget> {
   Future<String> processText() async {
     if (widget.classified) {
       try {
-        final classifiedItems = await WiseTextClassifier(classifier: widget.classifier).classify(widget.text);
+        final classifiedItems = await WiseTextClassifier(
+          classifier: widget.classifier,
+        ).classify(widget.text);
         return classifiedItems.map((e) => e.tag).join();
       } catch (e) {
         return widget.text;

@@ -25,7 +25,12 @@ void main() {
 
       final spans = ItemSpan.spansFromRanges(source, triples);
 
-      expect(spans.map((s) => s.type).toList(), [WiseTextItemType.text, WiseTextItemType.phoneNumber, WiseTextItemType.text, WiseTextItemType.date]);
+      expect(spans.map((s) => s.type).toList(), [
+        WiseTextItemType.text,
+        WiseTextItemType.phoneNumber,
+        WiseTextItemType.text,
+        WiseTextItemType.date,
+      ]);
       // Concatenating the spans reproduces the original input.
       expect(spans.map((s) => s.text).join(), source);
     });
@@ -45,7 +50,9 @@ void main() {
     test('no ranges yields a single text span covering the whole input', () {
       final spans = ItemSpan.spansFromRanges('just text', const []);
 
-      expect(spans, [const ItemSpan(text: 'just text', type: WiseTextItemType.text)]);
+      expect(spans, [
+        const ItemSpan(text: 'just text', type: WiseTextItemType.text),
+      ]);
     });
 
     test('empty input yields no spans', () {
@@ -56,7 +63,10 @@ void main() {
       const source = 'Monday works';
       final spans = ItemSpan.spansFromRanges(source, [0, 6, 0]);
 
-      expect(spans, [const ItemSpan(text: 'Monday', type: WiseTextItemType.date), const ItemSpan(text: ' works', type: WiseTextItemType.text)]);
+      expect(spans, [
+        const ItemSpan(text: 'Monday', type: WiseTextItemType.date),
+        const ItemSpan(text: ' works', type: WiseTextItemType.text),
+      ]);
     });
 
     test('skips overlapping, backwards, or out-of-range triples', () {
@@ -66,7 +76,10 @@ void main() {
 
       final spans = ItemSpan.spansFromRanges(source, triples);
 
-      expect(spans, [const ItemSpan(text: 'ab', type: WiseTextItemType.link), const ItemSpan(text: 'cdef', type: WiseTextItemType.text)]);
+      expect(spans, [
+        const ItemSpan(text: 'ab', type: WiseTextItemType.link),
+        const ItemSpan(text: 'cdef', type: WiseTextItemType.text),
+      ]);
     });
 
     test('ignores a trailing partial triple', () {
@@ -76,7 +89,10 @@ void main() {
 
       final spans = ItemSpan.spansFromRanges(source, triples);
 
-      expect(spans, [const ItemSpan(text: 'ab', type: WiseTextItemType.link), const ItemSpan(text: 'cdef', type: WiseTextItemType.text)]);
+      expect(spans, [
+        const ItemSpan(text: 'ab', type: WiseTextItemType.link),
+        const ItemSpan(text: 'cdef', type: WiseTextItemType.text),
+      ]);
     });
   });
 
@@ -125,11 +141,32 @@ void main() {
     });
 
     test('classified spans are wrapped in uppercase xml tags', () {
-      expect(const ItemSpan(text: 'Monday', type: WiseTextItemType.date).tag, '<DATE>Monday</DATE>');
-      expect(const ItemSpan(text: '1 Main St', type: WiseTextItemType.address).tag, '<ADDRESS>1 Main St</ADDRESS>');
-      expect(const ItemSpan(text: 'https://pub.dev/', type: WiseTextItemType.link).tag, '<LINK>https://pub.dev/</LINK>');
-      expect(const ItemSpan(text: 'test@mail.com', type: WiseTextItemType.email).tag, '<EMAIL>test@mail.com</EMAIL>');
-      expect(const ItemSpan(text: '555-1234', type: WiseTextItemType.phoneNumber).tag, '<PHONENUMBER>555-1234</PHONENUMBER>');
+      expect(
+        const ItemSpan(text: 'Monday', type: WiseTextItemType.date).tag,
+        '<DATE>Monday</DATE>',
+      );
+      expect(
+        const ItemSpan(text: '1 Main St', type: WiseTextItemType.address).tag,
+        '<ADDRESS>1 Main St</ADDRESS>',
+      );
+      expect(
+        const ItemSpan(
+          text: 'https://pub.dev/',
+          type: WiseTextItemType.link,
+        ).tag,
+        '<LINK>https://pub.dev/</LINK>',
+      );
+      expect(
+        const ItemSpan(text: 'test@mail.com', type: WiseTextItemType.email).tag,
+        '<EMAIL>test@mail.com</EMAIL>',
+      );
+      expect(
+        const ItemSpan(
+          text: '555-1234',
+          type: WiseTextItemType.phoneNumber,
+        ).tag,
+        '<PHONENUMBER>555-1234</PHONENUMBER>',
+      );
     });
 
     test('tagName uppercases the enum name', () {

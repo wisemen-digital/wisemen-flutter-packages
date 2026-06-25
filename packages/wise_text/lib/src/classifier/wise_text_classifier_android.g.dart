@@ -98,7 +98,9 @@ extension WiseTextPlugin$$Methods on WiseTextPlugin {
               jni$_.JniResult Function(
                 jni$_.Pointer<jni$_.Void>,
                 jni$_.JMethodIDPtr,
-                jni$_.VarArgs<(jni$_.Pointer<jni$_.Void>, jni$_.Pointer<jni$_.Void>)>,
+                jni$_.VarArgs<
+                  (jni$_.Pointer<jni$_.Void>, jni$_.Pointer<jni$_.Void>)
+                >,
               )
             >
           >('globalEnv_CallObjectMethod')

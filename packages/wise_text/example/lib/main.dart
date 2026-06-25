@@ -25,11 +25,21 @@ class MyApp extends StatelessWidget {
                   classified: true,
                   textAlign: TextAlign.center,
                   tags: {
-                    WiseTextItemType.date.tagName: StyledTextTag(style: TextStyle(color: Colors.red)),
-                    WiseTextItemType.phoneNumber.tagName: StyledTextTag(style: TextStyle(color: Colors.green)),
-                    WiseTextItemType.email.tagName: StyledTextTag(style: TextStyle(color: Colors.blue)),
-                    WiseTextItemType.link.tagName: StyledTextTag(style: TextStyle(color: Colors.purple)),
-                    WiseTextItemType.address.tagName: StyledTextTag(style: TextStyle(color: Colors.orange)),
+                    WiseTextItemType.date.tagName: StyledTextTag(
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    WiseTextItemType.phoneNumber.tagName: StyledTextTag(
+                      style: TextStyle(color: Colors.green),
+                    ),
+                    WiseTextItemType.email.tagName: StyledTextTag(
+                      style: TextStyle(color: Colors.blue),
+                    ),
+                    WiseTextItemType.link.tagName: StyledTextTag(
+                      style: TextStyle(color: Colors.purple),
+                    ),
+                    WiseTextItemType.address.tagName: StyledTextTag(
+                      style: TextStyle(color: Colors.orange),
+                    ),
                   },
                 ),
               ],
