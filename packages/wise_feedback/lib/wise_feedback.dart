@@ -5,3 +5,4 @@ export 'src/models/feedback_exception.dart';
 export 'src/models/feedback_report.dart';
 export 'src/models/feedback_result.dart';
 export 'src/models/feedback_status.dart';
+export 'src/transport/feedback_transport.dart';
