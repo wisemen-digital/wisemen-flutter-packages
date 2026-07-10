@@ -1,4 +1,7 @@
 /// In-app bug reporting for Flutter that files reports as Linear issues.
 library wise_feedback;
 
-// Exports are added by later tasks.
+export 'src/models/feedback_exception.dart';
+export 'src/models/feedback_report.dart';
+export 'src/models/feedback_result.dart';
+export 'src/models/feedback_status.dart';
