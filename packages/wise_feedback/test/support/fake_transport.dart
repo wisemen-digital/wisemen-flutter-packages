@@ -1,27 +1,34 @@
+import 'dart:async';
 import 'package:wise_feedback/wise_feedback.dart';
 
-/// A fake transport for testing that records calls and returns configured results.
 class FakeTransport implements FeedbackTransport {
-  /// Creates a fake transport with an optional configured [result].
-  FakeTransport({FeedbackResult? result})
-      : _result = result ?? const FeedbackResult();
+  FakeTransport({
+    this.result = const FeedbackResult(issueId: 'FAKE-1'),
+    this.throwError,
+    this.autoComplete = true,
+  });
 
-  final FeedbackResult _result;
-  final List<FeedbackReport> _sentReports = [];
+  final FeedbackResult result;
+  final Object? throwError;
 
-  /// Whether [send] was called at least once.
-  bool get sendWasCalled => _sentReports.isNotEmpty;
+  /// When false, [send] returns a future you complete manually via [complete].
+  final bool autoComplete;
 
-  /// The number of times [send] was called.
-  int get sendCallCount => _sentReports.length;
-
-  /// The last report that was sent, or null if [send] was never called.
-  FeedbackReport? get lastReport =>
-      _sentReports.isNotEmpty ? _sentReports.last : null;
+  final List<FeedbackReport> sent = <FeedbackReport>[];
+  Completer<FeedbackResult>? _pending;
 
   @override
-  Future<FeedbackResult> send(FeedbackReport report) async {
-    _sentReports.add(report);
-    return _result;
+  Future<FeedbackResult> send(FeedbackReport report) {
+    sent.add(report);
+    if (throwError != null) {
+      return Future<FeedbackResult>.error(throwError!);
+    }
+    if (autoComplete) {
+      return Future<FeedbackResult>.value(result);
+    }
+    return (_pending = Completer<FeedbackResult>()).future;
   }
+
+  /// Completes a pending (non-auto) submission.
+  void complete() => _pending?.complete(result);
 }
