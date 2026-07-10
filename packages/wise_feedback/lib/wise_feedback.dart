@@ -6,3 +6,4 @@ export 'src/models/feedback_report.dart';
 export 'src/models/feedback_result.dart';
 export 'src/models/feedback_status.dart';
 export 'src/transport/feedback_transport.dart';
+export 'src/transport/linear_direct_transport.dart';
