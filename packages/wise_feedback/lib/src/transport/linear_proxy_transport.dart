@@ -19,7 +19,8 @@ typedef AuthHeadersProvider = Future<Map<String, String>> Function();
 /// app's own auth via `authHeadersProvider`.
 ///
 /// Request: `multipart/form-data` with `title`, `description`, `metadata`
-/// (JSON string) fields and a `screenshot` (image/png) file part.
+/// (JSON string), `priority` (int), and — when set — `category` and `reporter`
+/// (JSON) fields, plus a `screenshot` (image/png) file part.
 /// Response: 2xx JSON `{ "issueId": "...", "issueUrl": "..." }`.
 class LinearProxyTransport implements FeedbackTransport {
   /// Creates a proxy transport targeting [endpoint].
@@ -37,10 +38,12 @@ class LinearProxyTransport implements FeedbackTransport {
 
   @override
   Future<FeedbackResult> send(FeedbackReport report) async {
+    final reporter = report.reporter;
     final request = http.MultipartRequest('POST', _endpoint)
       ..fields['title'] = report.title
       ..fields['description'] = report.description
       ..fields['metadata'] = jsonEncode(report.metadata)
+      ..fields['priority'] = report.priority.linearValue.toString()
       ..files.add(
         http.MultipartFile.fromBytes(
           'screenshot',
@@ -48,6 +51,16 @@ class LinearProxyTransport implements FeedbackTransport {
           filename: 'feedback.png',
         ),
       );
+    if (report.category case final String category) {
+      request.fields['category'] = category;
+    }
+    if (reporter != null && !reporter.isEmpty) {
+      request.fields['reporter'] = jsonEncode(<String, String?>{
+        'id': reporter.id,
+        'name': reporter.name,
+        'email': reporter.email,
+      });
+    }
 
     if (_authHeadersProvider != null) {
       final Map<String, String> authHeaders;

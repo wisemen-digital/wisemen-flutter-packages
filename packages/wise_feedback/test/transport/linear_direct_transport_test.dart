@@ -192,5 +192,70 @@ void main() {
         throwsA(isA<FeedbackException>()),
       );
     });
+
+    test('renders context and maps priority into issueCreate', () async {
+      Map<String, dynamic>? issueVars;
+      final client = MockClient((request) async {
+        if (request.method == 'PUT') {
+          return http.Response('', 200);
+        }
+        final body = jsonDecode(request.body) as Map<String, dynamic>;
+        final query = body['query'] as String;
+        if (query.contains('fileUpload')) {
+          return http.Response(
+            jsonEncode({
+              'data': {
+                'fileUpload': {
+                  'uploadFile': {
+                    'uploadUrl': 'https://uploads.example/put',
+                    'assetUrl': 'https://assets.example/a.png',
+                    'headers': <dynamic>[],
+                  },
+                },
+              },
+            }),
+            200,
+          );
+        }
+        issueVars = body['variables'] as Map<String, dynamic>;
+        return http.Response(
+          jsonEncode({
+            'data': {
+              'issueCreate': {
+                'success': true,
+                'issue': {'id': 'i', 'url': 'u'},
+              },
+            },
+          }),
+          200,
+        );
+      });
+
+      final report = FeedbackReport(
+        title: 'Bug',
+        description: 'broke',
+        screenshotPng: Uint8List.fromList([1]),
+        reporter: const FeedbackReporter(name: 'Ann', email: 'a@b.c'),
+        priority: FeedbackPriority.high,
+        category: 'Bug',
+        metadata: const {'appVersion': '1.2.3', 'navigation': '/a → /b'},
+      );
+
+      await LinearDirectTransport(
+        token: 't',
+        teamId: 'team',
+        httpClient: client,
+      ).send(report);
+
+      expect(issueVars?['priority'], FeedbackPriority.high.linearValue);
+      final description = issueVars?['description'] as String;
+      expect(description, contains('Reported by'));
+      expect(description, contains('a@b.c'));
+      expect(description, contains('**Category:** Bug'));
+      expect(description, contains('**Priority:** High'));
+      expect(description, contains('appVersion'));
+      expect(description, contains('Recent screens'));
+      expect(description, contains('/a → /b'));
+    });
   });
 }
