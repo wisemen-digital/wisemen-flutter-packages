@@ -18,7 +18,9 @@ void main() {
     final client = MockClient((request) async {
       captured = request;
       return http.Response(
-        jsonEncode({'issueId': 'PRX-9', 'issueUrl': 'https://linear.app/x/PRX-9'}),
+        jsonEncode(
+          {'issueId': 'PRX-9', 'issueUrl': 'https://linear.app/x/PRX-9'},
+        ),
         201,
       );
     });

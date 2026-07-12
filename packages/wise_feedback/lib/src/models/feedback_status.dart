@@ -25,7 +25,8 @@ class FeedbackStatus {
   const FeedbackStatus.idle() : this._(FeedbackSubmissionState.idle);
 
   /// Submission started.
-  const FeedbackStatus.submitting() : this._(FeedbackSubmissionState.submitting);
+  const FeedbackStatus.submitting()
+      : this._(FeedbackSubmissionState.submitting);
 
   /// Submission succeeded with [result].
   const FeedbackStatus.success(FeedbackResult result)

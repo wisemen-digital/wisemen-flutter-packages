@@ -75,8 +75,8 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       'filename': 'feedback.png',
       'size': size,
     });
-    final uploadFile = (data['fileUpload'] as Map<String, dynamic>?)?['uploadFile']
-        as Map<String, dynamic>?;
+    final uploadFile = (data['fileUpload']
+        as Map<String, dynamic>?)?['uploadFile'] as Map<String, dynamic>?;
     final uploadUrl = uploadFile?['uploadUrl'] as String?;
     final assetUrl = uploadFile?['assetUrl'] as String?;
     if (uploadUrl == null || assetUrl == null) {
@@ -87,7 +87,11 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       final map = h as Map<String, dynamic>;
       headers[map['key'] as String] = map['value'] as String;
     }
-    return _UploadTarget(uploadUrl: uploadUrl, assetUrl: assetUrl, headers: headers);
+    return _UploadTarget(
+      uploadUrl: uploadUrl,
+      assetUrl: assetUrl,
+      headers: headers,
+    );
   }
 
   Future<void> _uploadScreenshot(_UploadTarget target, List<int> bytes) async {
@@ -106,7 +110,10 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     }
   }
 
-  Future<FeedbackResult> _createIssue(FeedbackReport report, String assetUrl) async {
+  Future<FeedbackResult> _createIssue(
+    FeedbackReport report,
+    String assetUrl,
+  ) async {
     final description = '${report.description}\n\n![screenshot]($assetUrl)';
     final data = await _graphql(_issueCreateMutation, <String, dynamic>{
       'title': report.title,
@@ -114,8 +121,8 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       'teamId': _teamId,
       'projectId': _projectId,
     });
-    final issue =
-        (data['issueCreate'] as Map<String, dynamic>?)?['issue'] as Map<String, dynamic>?;
+    final issue = (data['issueCreate'] as Map<String, dynamic>?)?['issue']
+        as Map<String, dynamic>?;
     return FeedbackResult(
       issueId: issue?['id'] as String?,
       issueUrl: issue?['url'] as String?,
@@ -134,7 +141,9 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
           'Authorization': _token,
           'Content-Type': 'application/json',
         },
-        body: jsonEncode(<String, dynamic>{'query': query, 'variables': variables}),
+        body: jsonEncode(
+          <String, dynamic>{'query': query, 'variables': variables},
+        ),
       );
     } on Object catch (e) {
       throw FeedbackException('Network error contacting Linear.', cause: e);

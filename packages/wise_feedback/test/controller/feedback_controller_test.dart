@@ -12,7 +12,8 @@ FeedbackReport _report() => FeedbackReport(
 
 void main() {
   test('submit transitions idle -> submitting -> success', () async {
-    final transport = FakeTransport(result: const FeedbackResult(issueId: 'C-1'));
+    final transport =
+        FakeTransport(result: const FeedbackResult(issueId: 'C-1'));
     final controller = FeedbackController(transport);
     final states = <FeedbackSubmissionState>[controller.value.state];
     controller.addListener(() => states.add(controller.value.state));

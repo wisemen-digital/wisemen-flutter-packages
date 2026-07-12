@@ -28,3 +28,6 @@ wise_review:
 wise_text:
   - '.github/actions/**'
   - 'packages/wise_text/**'
+wise_feedback:
+  - '.github/actions/**'
+  - 'packages/wise_feedback/**'

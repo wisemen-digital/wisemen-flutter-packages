@@ -43,8 +43,12 @@ class LinearFeedback extends StatefulWidget {
 
   /// Returns the nearest [FeedbackController].
   static FeedbackController of(BuildContext context) {
-    final scope = context.dependOnInheritedWidgetOfExactType<_LinearFeedbackScope>();
-    assert(scope != null, 'LinearFeedback.of() called with no LinearFeedback ancestor.');
+    final scope =
+        context.dependOnInheritedWidgetOfExactType<_LinearFeedbackScope>();
+    assert(
+      scope != null,
+      'LinearFeedback.of() called with no LinearFeedback ancestor.',
+    );
     return scope!.controller;
   }
 
@@ -53,7 +57,8 @@ class LinearFeedback extends StatefulWidget {
 }
 
 class _LinearFeedbackState extends State<LinearFeedback> {
-  late final FeedbackController _controller = FeedbackController(widget.transport);
+  late final FeedbackController _controller =
+      FeedbackController(widget.transport);
 
   @override
   void initState() {
@@ -86,14 +91,16 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       feedbackBuilder: (context, onSubmit, scrollController) => FeedbackForm(
         theme: widget.theme,
         status: _controller,
-        onSubmit: (description, {extras}) => onSubmit(description, extras: extras),
+        onSubmit: (description, {extras}) =>
+            onSubmit(description, extras: extras),
       ),
       child: Builder(
         builder: (betterFeedbackContext) {
           // Bind the actual "show" action now that we have a context under
           // BetterFeedback.
           _controller.bindShow(
-            () => BetterFeedback.of(betterFeedbackContext).show(_handleUserFeedback),
+            () => BetterFeedback.of(betterFeedbackContext)
+                .show(_handleUserFeedback),
           );
           var wrapped = widget.child;
           for (final trigger in widget.triggers) {
