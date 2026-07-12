@@ -12,7 +12,8 @@ FeedbackReport _report() => FeedbackReport(
     );
 
 void main() {
-  test('runs fileUpload -> PUT -> issueCreate and returns issue info', () async {
+  test('runs fileUpload -> PUT -> issueCreate and returns issue info',
+      () async {
     final calls = <String>[];
     final client = MockClient((request) async {
       if (request.method == 'POST') {
@@ -42,13 +43,19 @@ void main() {
           calls.add('issueCreate');
           final vars = body['variables'] as Map<String, dynamic>;
           expect(vars['title'], 'Save crashes');
-          expect(vars['description'] as String, contains('https://assets.example/a.png'));
+          expect(
+            vars['description'] as String,
+            contains('https://assets.example/a.png'),
+          );
           return http.Response(
             jsonEncode({
               'data': {
                 'issueCreate': {
                   'success': true,
-                  'issue': {'id': 'iss_1', 'url': 'https://linear.app/x/issue/ABC-1'},
+                  'issue': {
+                    'id': 'iss_1',
+                    'url': 'https://linear.app/x/issue/ABC-1',
+                  },
                 },
               },
             }),
@@ -79,10 +86,15 @@ void main() {
     expect(result.issueUrl, 'https://linear.app/x/issue/ABC-1');
   });
 
-  test('throws FeedbackException when fileUpload returns no upload url', () async {
+  test('throws FeedbackException when fileUpload returns no upload url',
+      () async {
     final client = MockClient(
       (request) async => http.Response(
-        jsonEncode({'data': {'fileUpload': {'uploadFile': null}}}),
+        jsonEncode({
+          'data': {
+            'fileUpload': {'uploadFile': null},
+          },
+        }),
         200,
       ),
     );

@@ -25,3 +25,6 @@ wise_scalars:
 wise_review:
   - '.github/**'
   - 'packages/wise_review/**'
+wise_feedback:
+  - '.github/**'
+  - 'packages/wise_feedback/**'
