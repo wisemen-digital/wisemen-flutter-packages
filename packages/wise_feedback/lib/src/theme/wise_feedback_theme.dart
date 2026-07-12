@@ -14,6 +14,8 @@ class WiseFeedbackTheme {
     this.titleHint = 'Title',
     this.descriptionHint = 'Description',
     this.submitLabel = 'Report bug',
+    this.priorityLabel = 'Priority',
+    this.categoryLabel = 'Category',
     this.successMessage = 'Bug reported. Thanks!',
     this.genericErrorMessage = 'Something went wrong. Please try again.',
   });
@@ -29,6 +31,12 @@ class WiseFeedbackTheme {
 
   /// Text on the submit button.
   final String submitLabel;
+
+  /// Label for the priority selector.
+  final String priorityLabel;
+
+  /// Label for the category selector.
+  final String categoryLabel;
 
   /// Confirmation shown after a report is filed successfully.
   final String successMessage;

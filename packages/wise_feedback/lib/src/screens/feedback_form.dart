@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
 import '../theme/wise_feedback_theme.dart';
 
@@ -28,10 +29,15 @@ class FeedbackForm extends StatefulWidget {
     required this.theme,
     required this.status,
     this.scrollController,
+    this.showPriority = false,
+    this.categories,
     super.key,
   });
 
-  /// Called with the description and `{'title': ...}` extras on submit.
+  /// Called with the description and extras on submit.
+  ///
+  /// The extras map carries `title`, and — when the respective field is shown —
+  /// `priority` (a [FeedbackPriority] name) and `category`.
   final FeedbackFormSubmit onSubmit;
 
   /// Visual configuration.
@@ -47,6 +53,12 @@ class FeedbackForm extends StatefulWidget {
   /// is short or the keyboard is open.
   final ScrollController? scrollController;
 
+  /// Whether to show a priority selector.
+  final bool showPriority;
+
+  /// Category options to offer, or null to hide the category selector.
+  final List<String>? categories;
+
   @override
   State<FeedbackForm> createState() => _FeedbackFormState();
 }
@@ -54,6 +66,8 @@ class FeedbackForm extends StatefulWidget {
 class _FeedbackFormState extends State<FeedbackForm> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  FeedbackPriority _priority = FeedbackPriority.none;
+  String? _category;
 
   @override
   void dispose() {
@@ -67,7 +81,11 @@ class _FeedbackFormState extends State<FeedbackForm> {
     // reflected through `status`, so nothing here has to change local state.
     await widget.onSubmit(
       _descriptionController.text,
-      extras: {'title': _titleController.text},
+      extras: <String, dynamic>{
+        'title': _titleController.text,
+        if (widget.showPriority) 'priority': _priority.name,
+        if (_category != null) 'category': _category,
+      },
     );
   }
 
@@ -112,6 +130,39 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     border: const OutlineInputBorder(),
                   ),
                 ),
+                if (widget.showPriority)
+                  DropdownButtonFormField<FeedbackPriority>(
+                    key: const Key('wise_feedback_priority'),
+                    initialValue: _priority,
+                    decoration: InputDecoration(
+                      labelText: theme.priorityLabel,
+                      border: const OutlineInputBorder(),
+                    ),
+                    items: [
+                      for (final priority in FeedbackPriority.values)
+                        DropdownMenuItem(
+                          value: priority,
+                          child: Text(priority.label),
+                        ),
+                    ],
+                    onChanged: (value) => setState(
+                      () => _priority = value ?? FeedbackPriority.none,
+                    ),
+                  ),
+                if (widget.categories case final List<String> categories)
+                  DropdownButtonFormField<String>(
+                    key: const Key('wise_feedback_category'),
+                    initialValue: _category,
+                    decoration: InputDecoration(
+                      labelText: theme.categoryLabel,
+                      border: const OutlineInputBorder(),
+                    ),
+                    items: [
+                      for (final category in categories)
+                        DropdownMenuItem(value: category, child: Text(category)),
+                    ],
+                    onChanged: (value) => setState(() => _category = value),
+                  ),
                 if (errorText != null)
                   Row(
                     key: const Key('wise_feedback_error'),

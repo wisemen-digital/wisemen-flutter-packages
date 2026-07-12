@@ -82,6 +82,62 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
     });
 
+    testWidgets('forwards selected priority and category in extras',
+        (tester) async {
+      Map<String, dynamic>? gotExtras;
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              status: status,
+              showPriority: true,
+              categories: const ['Bug', 'Idea'],
+              onSubmit: (description, {extras}) async {
+                gotExtras = extras;
+                return null;
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('wise_feedback_priority')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('High').last);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('wise_feedback_category')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Idea').last);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('wise_feedback_submit')));
+      await tester.pump();
+
+      expect(gotExtras?['priority'], 'high');
+      expect(gotExtras?['category'], 'Idea');
+    });
+
+    testWidgets('hides priority and category by default', (tester) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              status: status,
+              onSubmit: (description, {extras}) async => null,
+            ),
+          ),
+        ),
+      );
+      expect(find.byKey(const Key('wise_feedback_priority')), findsNothing);
+      expect(find.byKey(const Key('wise_feedback_category')), findsNothing);
+    });
+
     testWidgets('does not overflow in a short sheet with the keyboard open',
         (tester) async {
       final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
