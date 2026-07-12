@@ -10,17 +10,22 @@ FeedbackReport _report() => FeedbackReport(
     );
 
 void main() {
-  test('FakeTransport records sent reports and returns its result', () async {
-    final transport =
-        FakeTransport(result: const FeedbackResult(issueId: 'X-1'));
-    final result = await transport.send(_report());
-    expect(transport.sent, hasLength(1));
-    expect(result.issueId, 'X-1');
-  });
+  group('FakeTransport', () {
+    test('FakeTransport records sent reports and returns its result', () async {
+      final transport =
+          FakeTransport(result: const FeedbackResult(issueId: 'X-1'));
+      final result = await transport.send(_report());
+      expect(transport.sent, hasLength(1));
+      expect(result.issueId, 'X-1');
+    });
 
-  test('FakeTransport throws when configured to', () async {
-    final transport =
-        FakeTransport(throwError: const FeedbackException('nope'));
-    expect(() => transport.send(_report()), throwsA(isA<FeedbackException>()));
+    test('FakeTransport throws when configured to', () async {
+      final transport =
+          FakeTransport(throwError: const FeedbackException('nope'));
+      expect(
+        () => transport.send(_report()),
+        throwsA(isA<FeedbackException>()),
+      );
+    });
   });
 }
