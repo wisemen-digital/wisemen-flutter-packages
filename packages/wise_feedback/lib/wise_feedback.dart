@@ -1,6 +1,7 @@
 /// In-app bug reporting for Flutter that files reports as Linear issues.
 library wise_feedback;
 
+export 'src/metadata/metadata.dart';
 export 'src/models/models.dart';
 export 'src/screens/screens.dart';
 export 'src/theme/theme.dart';
