@@ -121,11 +121,15 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       'teamId': _teamId,
       'projectId': _projectId,
     });
-    final issue = (data['issueCreate'] as Map<String, dynamic>?)?['issue']
-        as Map<String, dynamic>?;
+    final issueCreate = data['issueCreate'] as Map<String, dynamic>?;
+    final success = issueCreate?['success'] as bool?;
+    final issue = issueCreate?['issue'] as Map<String, dynamic>?;
+    if (success != true || issue == null) {
+      throw const FeedbackException('Linear did not create the issue.');
+    }
     return FeedbackResult(
-      issueId: issue?['id'] as String?,
-      issueUrl: issue?['url'] as String?,
+      issueId: issue['id'] as String?,
+      issueUrl: issue['url'] as String?,
     );
   }
 
@@ -151,7 +155,12 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw FeedbackException('Linear returned status ${response.statusCode}.');
     }
-    final decoded = jsonDecode(response.body) as Map<String, dynamic>;
+    final Map<String, dynamic> decoded;
+    try {
+      decoded = jsonDecode(response.body) as Map<String, dynamic>;
+    } on Object catch (e) {
+      throw FeedbackException('Invalid response from Linear.', cause: e);
+    }
     if (decoded['errors'] != null) {
       throw FeedbackException('Linear GraphQL error: ${decoded['errors']}');
     }

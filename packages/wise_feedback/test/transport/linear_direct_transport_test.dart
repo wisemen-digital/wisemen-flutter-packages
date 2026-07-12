@@ -106,6 +106,55 @@ void main() {
     expect(() => transport.send(_report()), throwsA(isA<FeedbackException>()));
   });
 
+  test('throws FeedbackException when issueCreate reports success: false',
+      () async {
+    final client = MockClient((request) async {
+      if (request.method == 'POST') {
+        final body = jsonDecode(request.body) as Map<String, dynamic>;
+        final query = body['query'] as String;
+        if (query.contains('fileUpload')) {
+          return http.Response(
+            jsonEncode({
+              'data': {
+                'fileUpload': {
+                  'uploadFile': {
+                    'uploadUrl': 'https://uploads.example/put',
+                    'assetUrl': 'https://assets.example/a.png',
+                    'headers': <dynamic>[],
+                  },
+                },
+              },
+            }),
+            200,
+          );
+        }
+        if (query.contains('issueCreate')) {
+          return http.Response(
+            jsonEncode({
+              'data': {
+                'issueCreate': {
+                  'success': false,
+                  'issue': null,
+                },
+              },
+            }),
+            200,
+          );
+        }
+      }
+      if (request.method == 'PUT') {
+        return http.Response('', 200);
+      }
+      return http.Response('unexpected', 500);
+    });
+    final transport = LinearDirectTransport(
+      token: 't',
+      teamId: 'team',
+      httpClient: client,
+    );
+    expect(() => transport.send(_report()), throwsA(isA<FeedbackException>()));
+  });
+
   test('throws FeedbackException when the PUT upload fails', () async {
     final client = MockClient((request) async {
       if (request.method == 'POST') {

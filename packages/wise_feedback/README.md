@@ -21,6 +21,23 @@ LinearFeedback(
 
 Open the flow from anywhere: `LinearFeedback.of(context).show();`
 
+### Tracking submission progress
+
+The feedback overlay (and its built-in form) is dismissed as soon as a report
+is submitted, so its own spinner never has time to show anything meaningful.
+Surface submission progress, success, and errors yourself by listening to
+`onStatusChanged`, which receives a `FeedbackStatus` for each state change:
+
+```dart
+LinearFeedback(
+  transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
+  onStatusChanged: (status) {
+    // Show a snackbar/toast based on status.state, status.result, status.error.
+  },
+  child: MyApp(),
+);
+```
+
 ### Security of the no-backend path
 
 `LinearDirectTransport` ships the token inside your app binary, which is
