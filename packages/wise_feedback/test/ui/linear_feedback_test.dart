@@ -72,5 +72,54 @@ void main() {
       expect(transport.sent.single.description, 'E2E desc');
       expect(transport.sent.single.screenshotPng, isNotEmpty);
     });
+
+    testWidgets('keeps the sheet open and shows the error when submit fails',
+        (tester) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final transport = FakeTransport(
+        throwError: const FeedbackException('Could not authenticate.'),
+      );
+
+      await tester.pumpWidget(
+        LinearFeedback(
+          transport: transport,
+          child: MaterialApp(
+            home: Scaffold(
+              body: Builder(
+                builder: (context) => ElevatedButton(
+                  key: const Key('open'),
+                  onPressed: () => LinearFeedback.of(context).show(),
+                  child: const Text('open'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('open')));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(
+        find.byKey(const Key('wise_feedback_description')),
+        'broken',
+      );
+      await tester.tap(find.byKey(const Key('wise_feedback_submit')));
+      await tester.runAsync(() async {
+        for (var i = 0; i < 20; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
+      });
+      await tester.pump();
+
+      // Submission was attempted, but the sheet stayed open and shows the error.
+      expect(transport.sent, hasLength(1));
+      expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
+      expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);
+      expect(find.text('Could not authenticate.'), findsWidgets);
+    });
   });
 }

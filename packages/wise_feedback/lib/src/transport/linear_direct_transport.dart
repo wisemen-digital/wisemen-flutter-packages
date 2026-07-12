@@ -150,10 +150,21 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
         ),
       );
     } on Object catch (e) {
-      throw FeedbackException('Network error contacting Linear.', cause: e);
+      throw FeedbackException(
+        'Could not reach Linear. Check your connection and try again.',
+        cause: e,
+      );
+    }
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw const FeedbackException(
+        'Could not authenticate with Linear. Check the API token.',
+      );
     }
     if (response.statusCode < 200 || response.statusCode >= 300) {
-      throw FeedbackException('Linear returned status ${response.statusCode}.');
+      throw FeedbackException(
+        'Linear returned an unexpected response (status '
+        '${response.statusCode}).',
+      );
     }
     final Map<String, dynamic> decoded;
     try {
@@ -162,7 +173,9 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       throw FeedbackException('Invalid response from Linear.', cause: e);
     }
     if (decoded['errors'] != null) {
-      throw FeedbackException('Linear GraphQL error: ${decoded['errors']}');
+      throw const FeedbackException(
+        'Linear rejected the report. Please try again.',
+      );
     }
     final data = decoded['data'] as Map<String, dynamic>?;
     if (data == null) {

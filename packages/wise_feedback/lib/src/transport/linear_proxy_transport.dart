@@ -59,15 +59,22 @@ class LinearProxyTransport implements FeedbackTransport {
       streamed = await _http.send(request);
     } on Object catch (e) {
       throw FeedbackException(
-        'Network error contacting feedback endpoint.',
+        'Could not reach the feedback service. Check your connection and try '
+        'again.',
         cause: e,
       );
     }
     final response = await http.Response.fromStream(streamed);
 
+    if (response.statusCode == 401 || response.statusCode == 403) {
+      throw const FeedbackException(
+        'Not authorized to send feedback. Please sign in and try again.',
+      );
+    }
     if (response.statusCode < 200 || response.statusCode >= 300) {
       throw FeedbackException(
-        'Feedback endpoint returned status ${response.statusCode}.',
+        'The feedback service returned an unexpected response (status '
+        '${response.statusCode}).',
       );
     }
 

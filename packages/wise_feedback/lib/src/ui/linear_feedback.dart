@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
 
 import '../controller/feedback_controller.dart';
+import '../models/feedback_exception.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_status.dart';
 import '../transport/feedback_transport.dart';
@@ -37,8 +40,10 @@ class LinearFeedback extends StatefulWidget {
   /// Visual configuration for the built-in form.
   final WiseFeedbackTheme theme;
 
-  /// Optional callback fired whenever submission status changes (e.g. to show
-  /// your own snackbar/toast).
+  /// Optional callback fired whenever submission status changes.
+  ///
+  /// The package already shows a built-in success/error toast; use this to add
+  /// your own handling (analytics, a custom snackbar, navigation, ...).
   final void Function(FeedbackStatus status)? onStatusChanged;
 
   /// Returns the nearest [FeedbackController].
@@ -60,6 +65,13 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   late final FeedbackController _controller =
       FeedbackController(widget.transport);
 
+  /// A context above the feedback sheet, used to host toast overlays that must
+  /// outlive the sheet (e.g. the success toast shown as the sheet closes).
+  BuildContext? _overlayContext;
+
+  /// Pending auto-dismiss timers for visible toasts, cancelled on dispose.
+  final Set<Timer> _toastTimers = <Timer>{};
+
   @override
   void initState() {
     super.initState();
@@ -70,10 +82,19 @@ class _LinearFeedbackState extends State<LinearFeedback> {
 
   @override
   void dispose() {
+    for (final timer in _toastTimers) {
+      timer.cancel();
+    }
+    _toastTimers.clear();
     _controller.dispose();
     super.dispose();
   }
 
+  /// Maps the captured [feedback] to a [FeedbackReport] and submits it.
+  ///
+  /// On failure this rethrows so the `feedback` package skips its automatic
+  /// `hide()` and the sheet stays open for the user to retry. The submit
+  /// wrapper in [build] catches the error.
   Future<void> _handleUserFeedback(UserFeedback feedback) async {
     final title = (feedback.extra?['title'] as String?) ?? '';
     await _controller.submit(
@@ -83,6 +104,79 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         screenshotPng: feedback.screenshot,
       ),
     );
+    final status = _controller.value;
+    if (status.state == FeedbackSubmissionState.failure) {
+      final error = status.error;
+      if (error is FeedbackException) {
+        throw error;
+      }
+      throw FeedbackException('Failed to send the report.', cause: error);
+    }
+  }
+
+  /// Drives one submission: triggers capture + send via [packageOnSubmit],
+  /// shows a toast, and returns `null` on success or an error message on
+  /// failure (which the form renders inline while staying open).
+  Future<String?> _submit(
+    OnSubmit packageOnSubmit,
+    String description,
+    Map<String, dynamic>? extras,
+  ) async {
+    try {
+      await packageOnSubmit(description, extras: extras);
+      _showToast(widget.theme.successMessage, isError: false);
+      return null;
+    } on Object catch (error) {
+      final message = error is FeedbackException
+          ? error.message
+          : widget.theme.genericErrorMessage;
+      _showToast(message, isError: true);
+      return message;
+    }
+  }
+
+  void _showToast(String message, {required bool isError}) {
+    final overlayContext = _overlayContext;
+    if (overlayContext == null) {
+      return;
+    }
+    final overlay = Overlay.maybeOf(overlayContext);
+    if (overlay == null) {
+      return;
+    }
+    late final OverlayEntry entry;
+    Timer? timer;
+    var removed = false;
+    void remove() {
+      if (removed) {
+        return;
+      }
+      removed = true;
+      if (timer != null) {
+        timer.cancel();
+        _toastTimers.remove(timer);
+      }
+      entry.remove();
+    }
+
+    entry = OverlayEntry(
+      builder: (context) {
+        final bottom = MediaQuery.of(context).viewPadding.bottom + 24;
+        return Positioned(
+          left: 16,
+          right: 16,
+          bottom: bottom,
+          child: _FeedbackToast(
+            message: message,
+            isError: isError,
+            onDismiss: remove,
+          ),
+        );
+      },
+    );
+    overlay.insert(entry);
+    timer = Timer(const Duration(seconds: 4), remove);
+    _toastTimers.add(timer);
   }
 
   @override
@@ -91,13 +185,15 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       feedbackBuilder: (context, onSubmit, scrollController) => FeedbackForm(
         theme: widget.theme,
         status: _controller,
+        scrollController: scrollController,
         onSubmit: (description, {extras}) =>
-            onSubmit(description, extras: extras),
+            _submit(onSubmit, description, extras),
       ),
       child: Builder(
         builder: (betterFeedbackContext) {
-          // Bind the actual "show" action now that we have a context under
-          // BetterFeedback.
+          // Bind the "show" action and capture a stable context above the
+          // sheet for toasts, now that we're under BetterFeedback.
+          _overlayContext = betterFeedbackContext;
           _controller.bindShow(
             () => BetterFeedback.of(betterFeedbackContext)
                 .show(_handleUserFeedback),
@@ -108,6 +204,60 @@ class _LinearFeedbackState extends State<LinearFeedback> {
           }
           return _LinearFeedbackScope(controller: _controller, child: wrapped);
         },
+      ),
+    );
+  }
+}
+
+/// A self-contained toast rendered in the feedback overlay.
+///
+/// The overlay above the app has no [Directionality] or [Material], so both
+/// are provided here.
+class _FeedbackToast extends StatelessWidget {
+  const _FeedbackToast({
+    required this.message,
+    required this.isError,
+    required this.onDismiss,
+  });
+
+  final String message;
+  final bool isError;
+  final VoidCallback onDismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    return Directionality(
+      textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
+      child: Material(
+        color: Colors.transparent,
+        child: GestureDetector(
+          onTap: onDismiss,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color:
+                  isError ? const Color(0xFFD32F2F) : const Color(0xFF2E7D32),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  isError ? Icons.error_outline : Icons.check_circle_outline,
+                  color: Colors.white,
+                  size: 20,
+                ),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    message,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

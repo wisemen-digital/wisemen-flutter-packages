@@ -9,6 +9,8 @@ class WiseFeedbackTheme {
     this.titleHint = 'Title',
     this.descriptionHint = 'Description',
     this.submitLabel = 'Report bug',
+    this.successMessage = 'Bug reported. Thanks!',
+    this.genericErrorMessage = 'Something went wrong. Please try again.',
   });
 
   /// Accent color for the submit button and focused fields.
@@ -25,4 +27,10 @@ class WiseFeedbackTheme {
 
   /// Text on the submit button.
   final String submitLabel;
+
+  /// Confirmation shown after a report is filed successfully.
+  final String successMessage;
+
+  /// Fallback message shown when submission fails without a specific reason.
+  final String genericErrorMessage;
 }
