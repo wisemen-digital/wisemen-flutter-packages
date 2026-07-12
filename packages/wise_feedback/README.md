@@ -18,6 +18,39 @@ LinearFeedback(
 );
 ```
 
+## What gets attached
+
+By default every report includes **device, OS and app-version metadata**. Add a
+navigator observer for a **breadcrumb of recent screens**, identify the
+**reporter**, and let users pick a **priority** (mapped to Linear's priority) and
+**category**. All of it is rendered into a `## Context` section on the Linear
+issue.
+
+```dart
+final feedbackObserver = WiseFeedbackNavigatorObserver();
+
+LinearFeedback(
+  transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
+
+  // Recent screens — also add feedbackObserver to MaterialApp.navigatorObservers.
+  navigatorObserver: feedbackObserver,
+
+  // Who reported it (resolved at submit time; async-friendly).
+  reporter: () => FeedbackReporter(id: user.id, email: user.email),
+
+  // Extra custom fields.
+  metadataBuilder: () => {'tier': user.tier, 'flag.newNav': 'on'},
+
+  // Form selectors.
+  showPriority: true, // default
+  categories: const ['Bug', 'Idea', 'Question'],
+
+  // collectDeviceInfo: false, // opt out of automatic device metadata
+
+  child: MyApp(),
+);
+```
+
 ### Tracking submission progress
 
 The feedback overlay (and its built-in form) is dismissed as soon as a report
