@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/feedback_exception.dart';
+import '../models/feedback_priority.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_result.dart';
 import 'feedback_transport.dart';
@@ -49,8 +50,8 @@ mutation FileUpload($contentType: String!, $filename: String!, $size: Int!) {
 ''';
 
   static const String _issueCreateMutation = r'''
-mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $projectId: String) {
-  issueCreate(input: {title: $title, description: $description, teamId: $teamId, projectId: $projectId}) {
+mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $projectId: String, $priority: Int) {
+  issueCreate(input: {title: $title, description: $description, teamId: $teamId, projectId: $projectId, priority: $priority}) {
     success
     issue { id url }
   }
@@ -114,12 +115,12 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     FeedbackReport report,
     String assetUrl,
   ) async {
-    final description = '${report.description}\n\n![screenshot]($assetUrl)';
     final data = await _graphql(_issueCreateMutation, <String, dynamic>{
       'title': report.title,
-      'description': description,
+      'description': _renderBody(report, assetUrl),
       'teamId': _teamId,
       'projectId': _projectId,
+      'priority': report.priority.linearValue,
     });
     final issueCreate = data['issueCreate'] as Json?;
     final success = issueCreate?['success'] as bool?;
@@ -131,6 +132,53 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       issueId: issue['id'] as String?,
       issueUrl: issue['url'] as String?,
     );
+  }
+
+  /// Builds the issue body: the user's text, a `## Context` section rendering
+  /// reporter/category/priority/environment/navigation, then the screenshot.
+  String _renderBody(FeedbackReport report, String assetUrl) {
+    final buffer = StringBuffer(report.description);
+    final context = <String>[];
+
+    final reporter = report.reporter;
+    if (reporter != null && !reporter.isEmpty) {
+      final named = <String?>[reporter.name, reporter.email]
+          .whereType<String>()
+          .where((value) => value.isNotEmpty)
+          .toList();
+      final who = named.isNotEmpty ? named.join(' · ') : (reporter.id ?? '');
+      if (who.isNotEmpty) {
+        context.add('**Reported by:** $who');
+      }
+    }
+    if (report.category case final String category) {
+      context.add('**Category:** $category');
+    }
+    if (report.priority != FeedbackPriority.none) {
+      context.add('**Priority:** ${report.priority.label}');
+    }
+
+    final environment = report.metadata.entries
+        .where((entry) => entry.key != 'navigation')
+        .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
+        .toList();
+    final navigation = report.metadata['navigation'];
+
+    if (context.isNotEmpty || environment.isNotEmpty || navigation != null) {
+      buffer.write('\n\n## Context\n');
+      if (context.isNotEmpty) {
+        buffer.write('${context.join('\n')}\n');
+      }
+      if (environment.isNotEmpty) {
+        buffer.write('\n**Environment**\n${environment.join('\n')}\n');
+      }
+      if (navigation != null) {
+        buffer.write('\n**Recent screens:** $navigation\n');
+      }
+    }
+
+    buffer.write('\n\n![screenshot]($assetUrl)');
+    return buffer.toString();
   }
 
   Future<Json> _graphql(
