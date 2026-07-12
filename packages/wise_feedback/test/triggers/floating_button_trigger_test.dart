@@ -26,5 +26,31 @@ void main() {
       await tester.pump();
       expect(shown, 1);
     });
+
+    testWidgets(
+        'renders and fires when mounted above the app '
+        '(no MaterialApp/Directionality ancestor)', (tester) async {
+      final controller = FeedbackController(FakeTransport());
+      var shown = 0;
+      controller.bindShow(() => shown++);
+
+      // Reproduces the real placement: LinearFeedback wraps the app, so the
+      // trigger sits above MaterialApp with only a MediaQuery in scope (as
+      // BetterFeedback provides) — no Directionality and no Material.
+      await tester.pumpWidget(
+        MediaQuery(
+          data: const MediaQueryData(),
+          child: Builder(
+            builder: (context) => const FloatingButtonTrigger()
+                .wrap(context, controller, const SizedBox.expand()),
+          ),
+        ),
+      );
+
+      expect(tester.takeException(), isNull);
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
+      await tester.pump();
+      expect(shown, 1);
+    });
   });
 }
