@@ -193,7 +193,7 @@ void main() {
       );
     });
 
-    test('renders context and maps priority into issueCreate', () async {
+    test('uses the report body verbatim and maps priority', () async {
       Map<String, dynamic>? issueVars;
       final client = MockClient((request) async {
         if (request.method == 'PUT') {
@@ -231,14 +231,13 @@ void main() {
         );
       });
 
+      // The template renders the body; the transport passes it through and
+      // appends the screenshot.
       final report = FeedbackReport(
         title: 'Bug',
-        description: 'broke',
+        description: '## Current Situation\nbroke',
         screenshotPng: Uint8List.fromList([1]),
-        reporter: const FeedbackReporter(name: 'Ann', email: 'a@b.c'),
         priority: FeedbackPriority.high,
-        category: 'Bug',
-        metadata: const {'appVersion': '1.2.3', 'navigation': '/a → /b'},
       );
 
       await LinearDirectTransport(
@@ -249,13 +248,11 @@ void main() {
 
       expect(issueVars?['priority'], FeedbackPriority.high.linearValue);
       final description = issueVars?['description'] as String;
-      expect(description, contains('Reported by'));
-      expect(description, contains('a@b.c'));
-      expect(description, contains('**Category:** Bug'));
-      expect(description, contains('**Priority:** High'));
-      expect(description, contains('appVersion'));
-      expect(description, contains('Recent screens'));
-      expect(description, contains('/a → /b'));
+      expect(description, contains('## Current Situation\nbroke'));
+      expect(
+        description,
+        contains('![screenshot](https://assets.example/a.png)'),
+      );
     });
   });
 }

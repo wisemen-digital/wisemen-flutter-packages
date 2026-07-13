@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+- Configurable issue templates via `FeedbackTemplate`: the template defines the
+  form's fields and renders the issue body.
+- `DefaultFeedbackTemplate` preserves the previous behavior (single description
+  + context section).
+- `BugReportTemplate`: structured **Current Situation** / **Desired Situation**
+  inputs, **Steps to Reproduce** filled from the navigation breadcrumb, and
+  **Context** (environment, reporter, date & time) filled automatically.
+- `FeedbackReport` now carries `fields` and `createdAt`.
+
 ## 0.2.0
 
 - Automatic device/app/OS metadata attached to every report

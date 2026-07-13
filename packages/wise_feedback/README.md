@@ -51,6 +51,39 @@ LinearFeedback(
 );
 ```
 
+## Issue templates
+
+The form's fields and the rendered issue body are driven by a
+`FeedbackTemplate`. The default (`DefaultFeedbackTemplate`) is a single
+description plus a context section. Use `BugReportTemplate` for a structured
+bug report, or subclass `FeedbackTemplate` for your own:
+
+```dart
+LinearFeedback(
+  transport: ...,
+  template: const BugReportTemplate(), // Current/Desired + auto Steps/Context
+  navigatorObserver: feedbackObserver, // fills "Steps to Reproduce"
+  reporter: () => FeedbackReporter(email: user.email), // fills "Account or user"
+  metadataBuilder: () => {'environment': env}, // fills "Environment or url"
+  child: MyApp(),
+);
+```
+
+`BugReportTemplate` renders:
+
+```markdown
+## Current Situation
+…
+## Desired Situation
+…
+## Steps to Reproduce
+1. …
+## Context
+Environment or url: …
+Account or user: …
+Date & Time: …
+```
+
 ### Tracking submission progress
 
 The feedback overlay (and its built-in form) is dismissed as soon as a report
