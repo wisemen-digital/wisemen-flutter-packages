@@ -49,5 +49,31 @@ void main() {
       await tester.pump();
       expect(shown, 1);
     });
+
+    testWidgets('hides the button while the feedback sheet is open',
+        (tester) async {
+      final controller = FeedbackController(FakeTransport());
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Builder(
+              builder: (context) => const FloatingButtonTrigger()
+                  .wrap(context, controller, const Placeholder()),
+            ),
+          ),
+        ),
+      );
+
+      expect(find.byKey(const Key('wise_feedback_fab')), findsOneWidget);
+
+      controller.isVisible.value = true;
+      await tester.pump();
+      expect(find.byKey(const Key('wise_feedback_fab')), findsNothing);
+
+      controller.isVisible.value = false;
+      await tester.pump();
+      expect(find.byKey(const Key('wise_feedback_fab')), findsOneWidget);
+    });
   });
 }

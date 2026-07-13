@@ -15,6 +15,12 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
   final FeedbackTransport _transport;
   void Function()? _showHandler;
 
+  /// Whether the feedback UI is currently open.
+  ///
+  /// Maintained by `LinearFeedback`; triggers listen to it (e.g. the floating
+  /// button hides itself while the sheet is open).
+  final ValueNotifier<bool> isVisible = ValueNotifier<bool>(false);
+
   /// Wires the action that opens the feedback UI. Called by `LinearFeedback`.
   // ignore: use_setters_to_change_properties
   void bindShow(void Function() handler) => _showHandler = handler;
@@ -32,5 +38,11 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
     } on Object catch (e) {
       value = FeedbackStatus.failure(e);
     }
+  }
+
+  @override
+  void dispose() {
+    isVisible.dispose();
+    super.dispose();
   }
 }

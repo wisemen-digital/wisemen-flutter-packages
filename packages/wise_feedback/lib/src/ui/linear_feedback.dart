@@ -72,6 +72,10 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   /// Pending auto-dismiss timers for visible toasts, cancelled on dispose.
   final Set<Timer> _toastTimers = <Timer>{};
 
+  /// The feedback sheet's controller, whose visibility we mirror onto
+  /// [_controller] so triggers can react (e.g. hide the floating button).
+  Listenable? _feedbackNotifier;
+
   @override
   void initState() {
     super.initState();
@@ -82,12 +86,32 @@ class _LinearFeedbackState extends State<LinearFeedback> {
 
   @override
   void dispose() {
+    _feedbackNotifier?.removeListener(_syncVisibility);
     for (final timer in _toastTimers) {
       timer.cancel();
     }
     _toastTimers.clear();
     _controller.dispose();
     super.dispose();
+  }
+
+  /// Starts mirroring the feedback sheet's visibility onto the controller.
+  void _bindVisibility(BuildContext context) {
+    final notifier = BetterFeedback.of(context);
+    if (identical(_feedbackNotifier, notifier)) {
+      return;
+    }
+    _feedbackNotifier?.removeListener(_syncVisibility);
+    _feedbackNotifier = notifier;
+    notifier.addListener(_syncVisibility);
+  }
+
+  void _syncVisibility() {
+    final context = _overlayContext;
+    if (!mounted || context == null) {
+      return;
+    }
+    _controller.isVisible.value = BetterFeedback.of(context).isVisible;
   }
 
   /// Maps the captured [feedback] to a [FeedbackReport] and submits it.
@@ -194,6 +218,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
           // Bind the "show" action and capture a stable context above the
           // sheet for toasts, now that we're under BetterFeedback.
           _overlayContext = betterFeedbackContext;
+          _bindVisibility(betterFeedbackContext);
           _controller.bindShow(
             () => BetterFeedback.of(betterFeedbackContext)
                 .show(_handleUserFeedback),

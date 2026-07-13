@@ -52,7 +52,17 @@ class FloatingButtonTrigger extends FeedbackTrigger {
       ),
     );
 
-    final overlay = Stack(children: [child, button]);
+    // Hide the button while the feedback sheet is open.
+    final overlay = Stack(
+      children: [
+        child,
+        ValueListenableBuilder<bool>(
+          valueListenable: controller.isVisible,
+          builder: (context, isVisible, _) =>
+              isVisible ? const SizedBox.shrink() : button,
+        ),
+      ],
+    );
 
     // Mounted above the app's [MaterialApp] there is also no [Directionality]
     // in scope, which the [Stack] alignment and the button both require. Only
