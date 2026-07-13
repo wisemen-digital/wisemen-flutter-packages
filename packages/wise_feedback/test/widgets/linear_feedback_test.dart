@@ -39,12 +39,17 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('wise_feedback_title')), findsOneWidget);
+      expect(
+        find.byKey(const Key('wise_feedback_field_description')),
+        findsOneWidget,
+      );
+
       await tester.enterText(
         find.byKey(const Key('wise_feedback_title')),
         'E2E title',
       );
       await tester.enterText(
-        find.byKey(const Key('wise_feedback_description')),
+        find.byKey(const Key('wise_feedback_field_description')),
         'E2E desc',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
@@ -57,7 +62,8 @@ void main() {
 
       expect(transport.sent, hasLength(1));
       expect(transport.sent.single.title, 'E2E title');
-      expect(transport.sent.single.description, 'E2E desc');
+      expect(transport.sent.single.fields['description'], 'E2E desc');
+      expect(transport.sent.single.description, contains('E2E desc'));
       expect(transport.sent.single.screenshotPng, isNotEmpty);
     });
 
@@ -81,7 +87,7 @@ void main() {
       await tester.tap(find.byKey(const Key('wise_feedback_fab')));
       await tester.pumpAndSettle();
       await tester.enterText(
-        find.byKey(const Key('wise_feedback_description')),
+        find.byKey(const Key('wise_feedback_field_description')),
         'broken',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
@@ -164,7 +170,7 @@ void main() {
       await tester.tap(find.byKey(const Key('wise_feedback_fab')));
       await tester.pumpAndSettle();
       await tester.enterText(
-        find.byKey(const Key('wise_feedback_description')),
+        find.byKey(const Key('wise_feedback_field_description')),
         'E2E desc',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
@@ -203,7 +209,7 @@ void main() {
       await tester.tap(find.byKey(const Key('wise_feedback_fab')));
       await tester.pumpAndSettle();
       await tester.enterText(
-        find.byKey(const Key('wise_feedback_description')),
+        find.byKey(const Key('wise_feedback_field_description')),
         'ctx',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));

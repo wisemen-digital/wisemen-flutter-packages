@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 
+const _fields = [FeedbackField(key: 'description', label: 'Description')];
+
 void main() {
   group('FeedbackForm', () {
-    testWidgets('submitting the form forwards title and description', (
+    testWidgets('submitting forwards the title and field values', (
       tester,
     ) async {
-      String? gotDescription;
       Map<String, dynamic>? gotExtras;
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
@@ -17,8 +18,8 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
+              fields: _fields,
               onSubmit: (description, {extras}) async {
-                gotDescription = description;
                 gotExtras = extras;
               },
             ),
@@ -31,14 +32,15 @@ void main() {
         'My title',
       );
       await tester.enterText(
-        find.byKey(const Key('wise_feedback_description')),
+        find.byKey(const Key('wise_feedback_field_description')),
         'My description',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
       await tester.pump();
 
-      expect(gotDescription, 'My description');
       expect(gotExtras?['title'], 'My title');
+      final fields = gotExtras?['fields'] as Map<String, String>;
+      expect(fields['description'], 'My description');
     });
 
     testWidgets('shows a progress indicator while submitting', (tester) async {
@@ -49,6 +51,7 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
+              fields: _fields,
               onSubmit: (description, {extras}) async {},
             ),
           ),
@@ -67,6 +70,7 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
+              fields: _fields,
               onSubmit: (description, {extras}) async {},
             ),
           ),
@@ -85,6 +89,33 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
     });
 
+    testWidgets('renders a field per template field', (tester) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              status: status,
+              fields: const [
+                FeedbackField(key: 'currentSituation', label: 'Current'),
+                FeedbackField(key: 'desiredSituation', label: 'Desired'),
+              ],
+              onSubmit: (description, {extras}) async {},
+            ),
+          ),
+        ),
+      );
+      expect(
+        find.byKey(const Key('wise_feedback_field_currentSituation')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('wise_feedback_field_desiredSituation')),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('forwards selected priority and category in extras', (
       tester,
     ) async {
@@ -97,6 +128,7 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
+              fields: _fields,
               showPriority: true,
               categories: const ['Bug', 'Idea'],
               onSubmit: (description, {extras}) async {
@@ -132,6 +164,7 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
+              fields: _fields,
               onSubmit: (description, {extras}) async {},
             ),
           ),
@@ -157,6 +190,7 @@ void main() {
                 child: FeedbackForm(
                   theme: const WiseFeedbackTheme(),
                   status: status,
+                  fields: _fields,
                   onSubmit: (description, {extras}) async {},
                 ),
               ),
