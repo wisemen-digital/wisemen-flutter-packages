@@ -180,7 +180,7 @@ void main() {
             200,
           );
         }
-        return http.Response('denied', 403); // PUT fails
+        return http.Response('denied', 403);
       });
       final transport = LinearDirectTransport(
         token: 't',

@@ -34,9 +34,6 @@ void main() {
       var shown = 0;
       controller.bindShow(() => shown++);
 
-      // Reproduces the real placement: LinearFeedback wraps the app, so the
-      // trigger sits above MaterialApp with only a MediaQuery in scope (as
-      // BetterFeedback provides) — no Directionality and no Material.
       await tester.pumpWidget(
         MediaQuery(
           data: const MediaQueryData(),

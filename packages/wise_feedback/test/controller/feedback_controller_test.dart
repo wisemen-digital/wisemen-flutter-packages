@@ -35,7 +35,7 @@ void main() {
       final transport = FakeTransport(throwError: const FeedbackException('x'));
       final controller = FeedbackController(transport);
 
-      await controller.submit(_report()); // must not throw
+      await controller.submit(_report());
 
       expect(controller.value.state, FeedbackSubmissionState.failure);
       expect(controller.value.error, isA<FeedbackException>());

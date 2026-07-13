@@ -42,9 +42,7 @@ void main() {
         captured.headers['content-type'],
         startsWith('multipart/form-data'),
       );
-      // Field values appear in the multipart body. The body also contains raw
-      // PNG bytes, so it is decoded leniently rather than via `captured.body`
-      // (which is strict UTF-8 and would throw a FormatException).
+      // Decoded leniently: the multipart body also holds raw (non-UTF-8) PNG.
       final bodyText = utf8.decode(captured.bodyBytes, allowMalformed: true);
       expect(bodyText, contains('Proxy title'));
       expect(bodyText, contains('Proxy desc'));
