@@ -14,7 +14,7 @@ dependencies:
 ```dart
 LinearFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
-  triggers: const [ShakeTrigger(), FloatingButtonTrigger()],
+  triggers: const [FloatingButtonTrigger()],
   child: MyApp(),
 );
 ```
@@ -87,7 +87,6 @@ Non-2xx responses are surfaced as a `FeedbackException`.
 
 ## Triggers
 
-- `ShakeTrigger()` — shake the device.
 - `FloatingButtonTrigger()` — a tappable button overlaid on the app.
 - Or open manually: `LinearFeedback.of(context).show()`.
 
