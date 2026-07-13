@@ -29,9 +29,11 @@ dependencies:
     path: ../wisewidgetslibrary
   wise_nav_bar: ^0.0.3
   wiseclient: ^2.0.4
-  wise_zitadel_login: 
+  wise_zitadel_login:
     path: ../wise_zitadel_login
   wise_theming: ^1.0.0
+  wise_feedback:
+    path: ../wise_feedback
   
  # Riverpod
   riverpod_annotation: ^4.0.0
@@ -56,6 +58,9 @@ dependencies:
 
   # Logging
   talker_flutter: ^5.1.16
+
+  # Native dialogs (wise_feedback demo)
+  flutter_platform_alert: ^0.8.0
 
   # Storage
   shared_preferences: ^2.5.3
