@@ -152,6 +152,30 @@ void main() {
       expect(gotExtras?['category'], 'Idea');
     });
 
+    testWidgets('header shows the title and close button fires onClose',
+        (tester) async {
+      var closed = 0;
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(sheetTitle: 'Give feedback'),
+              status: status,
+              fields: _fields,
+              onClose: () => closed++,
+              onSubmit: (description, {extras}) async {},
+            ),
+          ),
+        ),
+      );
+
+      expect(find.text('Give feedback'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('wise_feedback_close')));
+      await tester.pump();
+      expect(closed, 1);
+    });
+
     testWidgets('hides priority and category by default', (tester) async {
       final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
