@@ -7,9 +7,7 @@ void main() {
   group('LinearFeedback', () {
     testWidgets('of(context) returns the controller and show opens the form',
         (tester) async {
-      // BetterFeedback's default sheet is draggable and opens at 25% of the
-      // screen height. The default 800x600 test surface is too short for our
-      // two-field form to fit without dragging, so use a taller surface.
+      // Taller surface so the form fits without dragging the sheet.
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -34,18 +32,15 @@ void main() {
         ),
       );
 
-      // Programmatic open via of(context).show()
       await tester.tap(find.byKey(const Key('open')));
       await tester.pumpAndSettle();
 
-      // The built-in form fields are visible.
       expect(find.byKey(const Key('wise_feedback_title')), findsOneWidget);
       expect(
         find.byKey(const Key('wise_feedback_description')),
         findsOneWidget,
       );
 
-      // Fill and submit.
       await tester.enterText(
         find.byKey(const Key('wise_feedback_title')),
         'E2E title',
@@ -55,10 +50,8 @@ void main() {
         'E2E desc',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
-      // `feedback`'s screenshot capture uses RenderRepaintBoundary.toImage(),
-      // which completes on a real engine callback rather than a fake timer, so
-      // pumpAndSettle() alone never observes it. Drive real pumps inside
-      // runAsync() until the submission's Future resolves.
+      // Screenshot capture resolves on a real engine callback, so pump under
+      // runAsync() rather than pumpAndSettle().
       await tester.runAsync(() async {
         for (var i = 0; i < 20; i++) {
           await tester.pump(const Duration(milliseconds: 100));
@@ -66,7 +59,6 @@ void main() {
         }
       });
 
-      // The transport received a mapped report.
       expect(transport.sent, hasLength(1));
       expect(transport.sent.single.title, 'E2E title');
       expect(transport.sent.single.description, 'E2E desc');
@@ -115,7 +107,6 @@ void main() {
       });
       await tester.pump();
 
-      // Submission was attempted, but the sheet stayed open and shows the error.
       expect(transport.sent, hasLength(1));
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
       expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);

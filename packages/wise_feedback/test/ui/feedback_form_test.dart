@@ -76,7 +76,6 @@ void main() {
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
       await tester.pump();
 
-      // The error is displayed and the form (submit button) is still present.
       expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);
       expect(find.text('Could not send it.'), findsOneWidget);
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
@@ -88,14 +87,11 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: MediaQuery(
-            // Simulate an open keyboard eating most of the height.
             data: const MediaQueryData(
               viewInsets: EdgeInsets.only(bottom: 300),
             ),
             child: Scaffold(
               body: SizedBox(
-                // A deliberately short sheet that the un-scrolled content would
-                // overflow.
                 height: 220,
                 child: FeedbackForm(
                   theme: const WiseFeedbackTheme(),
@@ -108,7 +104,6 @@ void main() {
         ),
       );
 
-      // No RenderFlex overflow was thrown, and the content scrolls.
       expect(tester.takeException(), isNull);
       expect(find.byType(SingleChildScrollView), findsOneWidget);
     });

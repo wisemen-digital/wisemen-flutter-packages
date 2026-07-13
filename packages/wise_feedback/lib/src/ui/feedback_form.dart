@@ -68,8 +68,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
       _descriptionController.text,
       extras: {'title': _titleController.text},
     );
-    // On success the sheet closes and this widget is unmounted; only surface
-    // an error, and only while still mounted.
+    // On success the sheet closes (this widget unmounts); only show errors.
     if (error != null && mounted) {
       setState(() => _errorText = error);
     }
