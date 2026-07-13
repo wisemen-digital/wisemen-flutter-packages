@@ -103,20 +103,39 @@ class _FeedbackFormState extends State<FeedbackForm> {
   Widget build(BuildContext context) {
     final theme = widget.theme;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    // Everything lives in one scroll view driven by the sheet's
+    // scrollController (with always-scrollable physics) so the whole surface —
+    // grabber, header and fields — can drag the sheet.
     return ColoredBox(
       color: theme.backgroundColor,
-      child: Column(
-        children: [
-          _Header(
-            theme: theme,
-            status: widget.status,
-            onClose: widget.onClose,
-            onSubmit: _submit,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: widget.scrollController,
-              padding: EdgeInsets.fromLTRB(16, 4, 16, 16 + bottomInset),
+      child: SingleChildScrollView(
+        controller: widget.scrollController,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.only(bottom: 16 + bottomInset),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 4),
+              child: Center(
+                child: Container(
+                  width: 36,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: const Color(0x33000000),
+                    borderRadius: BorderRadius.circular(100),
+                  ),
+                ),
+              ),
+            ),
+            _Header(
+              theme: theme,
+              status: widget.status,
+              onClose: widget.onClose,
+              onSubmit: _submit,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -209,8 +228,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
