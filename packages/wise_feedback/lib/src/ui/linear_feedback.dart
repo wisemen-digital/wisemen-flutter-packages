@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
 
@@ -10,6 +8,7 @@ import '../models/feedback_status.dart';
 import '../transport/feedback_transport.dart';
 import '../triggers/feedback_trigger.dart';
 import 'feedback_form.dart';
+import 'feedback_toast.dart';
 import 'wise_feedback_theme.dart';
 
 /// Mount once near the app root to enable in-app bug reporting.
@@ -69,8 +68,9 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   /// outlive the sheet (e.g. the success toast shown as the sheet closes).
   BuildContext? _overlayContext;
 
-  /// Pending auto-dismiss timers for visible toasts, cancelled on dispose.
-  final Set<Timer> _toastTimers = <Timer>{};
+  /// Shows and auto-dismisses the built-in success/error toasts.
+  late final FeedbackToastPresenter _toasts =
+      FeedbackToastPresenter(() => _overlayContext);
 
   /// The feedback sheet's controller, whose visibility we mirror onto
   /// [_controller] so triggers can react (e.g. hide the floating button).
@@ -87,10 +87,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   @override
   void dispose() {
     _feedbackNotifier?.removeListener(_syncVisibility);
-    for (final timer in _toastTimers) {
-      timer.cancel();
-    }
-    _toastTimers.clear();
+    _toasts.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -148,59 +145,15 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   ) async {
     try {
       await packageOnSubmit(description, extras: extras);
-      _showToast(widget.theme.successMessage, isError: false);
+      _toasts.show(widget.theme.successMessage, isError: false);
       return null;
     } catch (error) {
       final message = error is FeedbackException
           ? error.message
           : widget.theme.genericErrorMessage;
-      _showToast(message, isError: true);
+      _toasts.show(message, isError: true);
       return message;
     }
-  }
-
-  void _showToast(String message, {required bool isError}) {
-    final overlayContext = _overlayContext;
-    if (overlayContext == null) {
-      return;
-    }
-    final overlay = Overlay.maybeOf(overlayContext);
-    if (overlay == null) {
-      return;
-    }
-    late final OverlayEntry entry;
-    Timer? timer;
-    var removed = false;
-    void remove() {
-      if (removed) {
-        return;
-      }
-      removed = true;
-      if (timer != null) {
-        timer.cancel();
-        _toastTimers.remove(timer);
-      }
-      entry.remove();
-    }
-
-    entry = OverlayEntry(
-      builder: (context) {
-        final bottom = MediaQuery.of(context).viewPadding.bottom + 24;
-        return Positioned(
-          left: 16,
-          right: 16,
-          bottom: bottom,
-          child: _FeedbackToast(
-            message: message,
-            isError: isError,
-            onDismiss: remove,
-          ),
-        );
-      },
-    );
-    overlay.insert(entry);
-    timer = Timer(const Duration(seconds: 4), remove);
-    _toastTimers.add(timer);
   }
 
   @override
@@ -229,60 +182,6 @@ class _LinearFeedbackState extends State<LinearFeedback> {
           }
           return _LinearFeedbackScope(controller: _controller, child: wrapped);
         },
-      ),
-    );
-  }
-}
-
-/// A self-contained toast rendered in the feedback overlay.
-///
-/// The overlay above the app has no [Directionality] or [Material], so both
-/// are provided here.
-class _FeedbackToast extends StatelessWidget {
-  const _FeedbackToast({
-    required this.message,
-    required this.isError,
-    required this.onDismiss,
-  });
-
-  final String message;
-  final bool isError;
-  final VoidCallback onDismiss;
-
-  @override
-  Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: Directionality.maybeOf(context) ?? TextDirection.ltr,
-      child: Material(
-        color: Colors.transparent,
-        child: GestureDetector(
-          onTap: onDismiss,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color:
-                  isError ? const Color(0xFFD32F2F) : const Color(0xFF2E7D32),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  isError ? Icons.error_outline : Icons.check_circle_outline,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    message,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
