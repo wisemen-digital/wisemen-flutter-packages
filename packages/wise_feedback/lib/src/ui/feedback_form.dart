@@ -77,9 +77,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
-    final mediaQuery = MediaQuery.of(context);
-    final bottomInset =
-        mediaQuery.viewInsets.bottom + mediaQuery.viewPadding.bottom;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom +
+        MediaQuery.viewPaddingOf(context).bottom;
     return ColoredBox(
       color: theme.backgroundColor,
       child: SingleChildScrollView(

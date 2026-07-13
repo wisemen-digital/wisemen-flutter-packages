@@ -149,7 +149,7 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
           <String, dynamic>{'query': query, 'variables': variables},
         ),
       );
-    } on Object catch (e) {
+    } catch (e) {
       throw FeedbackException(
         'Could not reach Linear. Check your connection and try again.',
         cause: e,
@@ -169,7 +169,7 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     final Map<String, dynamic> decoded;
     try {
       decoded = jsonDecode(response.body) as Map<String, dynamic>;
-    } on Object catch (e) {
+    } catch (e) {
       throw FeedbackException('Invalid response from Linear.', cause: e);
     }
     if (decoded['errors'] != null) {

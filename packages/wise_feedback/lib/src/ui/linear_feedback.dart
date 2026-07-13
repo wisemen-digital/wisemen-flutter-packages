@@ -150,7 +150,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       await packageOnSubmit(description, extras: extras);
       _showToast(widget.theme.successMessage, isError: false);
       return null;
-    } on Object catch (error) {
+    } catch (error) {
       final message = error is FeedbackException
           ? error.message
           : widget.theme.genericErrorMessage;
