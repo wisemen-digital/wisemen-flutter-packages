@@ -3,5 +3,7 @@ library wise_feedback;
 
 export 'src/controller/controller.dart';
 export 'src/models/models.dart';
+export 'src/screens/screens.dart';
+export 'src/theme/theme.dart';
 export 'src/transport/transport.dart';
-export 'src/ui/ui.dart';
+export 'src/widgets/widgets.dart';

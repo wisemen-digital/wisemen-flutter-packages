@@ -7,11 +7,11 @@ import '../controller/feedback_controller.dart';
 import '../models/feedback_exception.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_status.dart';
+import '../screens/feedback_form.dart';
+import '../theme/wise_feedback_theme.dart';
 import '../transport/feedback_transport.dart';
 import 'feedback_button.dart';
-import 'feedback_form.dart';
 import 'feedback_toast.dart';
-import 'wise_feedback_theme.dart';
 
 /// Mount once near the app root to enable in-app bug reporting.
 ///

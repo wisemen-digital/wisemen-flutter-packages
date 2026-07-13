@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../models/feedback_status.dart';
-import 'wise_feedback_theme.dart';
+import '../theme/wise_feedback_theme.dart';
 
 /// Wisemen accent used for the submit button.
 const Color _kAccent = Color(0xFF009687);
