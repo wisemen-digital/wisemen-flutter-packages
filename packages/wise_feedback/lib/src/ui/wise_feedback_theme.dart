@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Visual configuration for the built-in feedback form.
+/// Text and surface configuration for the built-in feedback form.
+///
+/// Styling is intentionally opinionated (Wisemen defaults); only the surface
+/// [backgroundColor] and the display strings are configurable. The strings are
+/// placeholders pending localization in a follow-up.
 class WiseFeedbackTheme {
   /// Creates a theme. All parameters have sensible defaults.
   const WiseFeedbackTheme({
-    this.primaryColor = const Color(0xFF009687),
     this.backgroundColor = Colors.white,
     this.titleHint = 'Title',
     this.descriptionHint = 'Description',
@@ -12,9 +15,6 @@ class WiseFeedbackTheme {
     this.successMessage = 'Bug reported. Thanks!',
     this.genericErrorMessage = 'Something went wrong. Please try again.',
   });
-
-  /// Accent color for the submit button and focused fields.
-  final Color primaryColor;
 
   /// Background color of the form surface.
   final Color backgroundColor;

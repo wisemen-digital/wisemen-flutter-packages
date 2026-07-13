@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import '../models/feedback_status.dart';
 import 'wise_feedback_theme.dart';
 
+/// Wisemen accent used for the submit button.
+const Color _kAccent = Color(0xFF009687);
+
 /// Callback invoked when the user submits the form.
 ///
 /// Matches the `feedback` package's submit signature: [description] is the
@@ -136,7 +139,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 return FilledButton(
                   key: const Key('wise_feedback_submit'),
                   style: FilledButton.styleFrom(
-                    backgroundColor: theme.primaryColor,
+                    backgroundColor: _kAccent,
                   ),
                   onPressed: status.isSubmitting ? null : _submit,
                   child: status.isSubmitting
