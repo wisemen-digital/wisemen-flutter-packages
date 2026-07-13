@@ -14,8 +14,6 @@ dependencies:
     sdk: flutter
   # Screenshot capture + feedback overlay
   feedback: ">=3.2.0 <4.0.0"
-  # Optional shake-to-report trigger
-  shake: ">=3.0.0 <4.0.0"
   # Transport HTTP + GraphQL-over-HTTP
   http: ">=1.2.0 <2.0.0"
 

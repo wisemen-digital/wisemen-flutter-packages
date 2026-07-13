@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../controller/feedback_controller.dart';
 
-/// A composable way to open the feedback UI (shake, floating button, ...).
+/// A composable way to open the feedback UI (e.g., floating button).
 ///
 /// Each trigger wraps its child widget, optionally adding UI or behavior,
 /// and uses the given controller to open the feedback flow.
