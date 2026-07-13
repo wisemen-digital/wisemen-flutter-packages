@@ -48,7 +48,7 @@ class LinearProxyTransport implements FeedbackTransport {
       final Map<String, String> authHeaders;
       try {
         authHeaders = await _authHeadersProvider();
-      } on Object catch (e) {
+      } catch (e) {
         throw FeedbackException('Failed to resolve auth headers.', cause: e);
       }
       request.headers.addAll(authHeaders);
@@ -57,7 +57,7 @@ class LinearProxyTransport implements FeedbackTransport {
     final http.StreamedResponse streamed;
     try {
       streamed = await _http.send(request);
-    } on Object catch (e) {
+    } catch (e) {
       throw FeedbackException(
         'Could not reach the feedback service. Check your connection and try '
         'again.',
@@ -84,7 +84,7 @@ class LinearProxyTransport implements FeedbackTransport {
     final Map<String, dynamic> decoded;
     try {
       decoded = jsonDecode(response.body) as Map<String, dynamic>;
-    } on Object catch (e) {
+    } catch (e) {
       throw FeedbackException(
         'Invalid response from the feedback endpoint.',
         cause: e,

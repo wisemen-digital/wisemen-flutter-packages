@@ -35,7 +35,7 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
     try {
       final result = await _transport.send(report);
       value = FeedbackStatus.success(result);
-    } on Object catch (e) {
+    } catch (e) {
       value = FeedbackStatus.failure(e);
     }
   }
