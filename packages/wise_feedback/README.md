@@ -14,12 +14,9 @@ dependencies:
 ```dart
 LinearFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
-  triggers: const [FloatingButtonTrigger()],
   child: MyApp(),
 );
 ```
-
-Open the flow from anywhere: `LinearFeedback.of(context).show();`
 
 ### Tracking submission progress
 
@@ -85,10 +82,23 @@ Plus any headers from `authHeadersProvider` (your app's own auth).
 
 Non-2xx responses are surfaced as a `FeedbackException`.
 
-## Triggers
+## Opening the flow
 
-- `FloatingButtonTrigger()` — a tappable button overlaid on the app.
-- Or open manually: `LinearFeedback.of(context).show()`.
+`LinearFeedback` overlays a built-in button on top of `child` and shows it by
+default. Tapping it opens the feedback flow; the button hides itself again
+while the sheet is open. Set `showButton: false` to hide it (for example if
+you want to trigger feedback from your own UI instead):
+
+```dart
+LinearFeedback(
+  transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
+  showButton: false,
+  child: MyApp(),
+);
+```
+
+Use `buttonAlignment` and `buttonBackgroundColor` to reposition or restyle the
+built-in button.
 
 ## License
 
