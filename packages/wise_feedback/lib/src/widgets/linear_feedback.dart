@@ -282,6 +282,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         fields: widget.template.fields,
         showPriority: widget.showPriority,
         categories: widget.categories,
+        onClose: () => BetterFeedback.of(context).hide(),
         onSubmit: (values) => _submit(onSubmit, values),
       ),
       child: Builder(

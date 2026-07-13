@@ -4,13 +4,21 @@ import '../models/feedback_exception.dart';
 
 /// Text and surface configuration for the built-in feedback form.
 ///
-/// Styling is intentionally opinionated (Wisemen defaults); only the surface
-/// [backgroundColor] and the display strings are configurable. The strings are
-/// placeholders pending localization in a follow-up.
+/// Defaults follow a modern, Crispy-style design: labelled inputs with a soft
+/// border and 16px corners, and an indigo brand accent.
 class WiseFeedbackTheme {
   /// Creates a theme. All parameters have sensible defaults.
   const WiseFeedbackTheme({
+    this.primaryColor = const Color(0xFF4F46E5),
     this.backgroundColor = Colors.white,
+    this.fieldFillColor = Colors.white,
+    this.fieldBorderColor = const Color(0xFFE3E8EF),
+    this.labelColor = const Color(0xFF364152),
+    this.textColor = const Color(0xFF121926),
+    this.hintColor = const Color(0xFF9AA4B2),
+    this.iconButtonColor = const Color(0xFFEEF2F6),
+    this.fieldRadius = 16,
+    this.sheetTitle = 'Report a bug',
     this.titleHint = 'Title',
     this.descriptionHint = 'Description',
     this.submitLabel = 'Report bug',
@@ -20,8 +28,35 @@ class WiseFeedbackTheme {
     this.genericErrorMessage = 'Something went wrong. Please try again.',
   });
 
+  /// Accent color: submit button, focused field cursor.
+  final Color primaryColor;
+
   /// Background color of the form surface.
   final Color backgroundColor;
+
+  /// Fill color of input boxes.
+  final Color fieldFillColor;
+
+  /// Border color of input boxes.
+  final Color fieldBorderColor;
+
+  /// Color of field labels.
+  final Color labelColor;
+
+  /// Color of entered text.
+  final Color textColor;
+
+  /// Color of placeholder/hint text.
+  final Color hintColor;
+
+  /// Background of the circular close (and neutral icon) buttons.
+  final Color iconButtonColor;
+
+  /// Corner radius of input boxes.
+  final double fieldRadius;
+
+  /// Title shown in the sheet header.
+  final String sheetTitle;
 
   /// Placeholder/label for the title field.
   final String titleHint;
