@@ -6,6 +6,8 @@
   actions, labelled inputs in soft-bordered 16px-radius boxes, and an indigo
   brand accent. All colors, radius and labels are themeable via
   `WiseFeedbackTheme`.
+- Added a drag handle (grabber) and made the whole form surface (grabber,
+  header, fields) drag the sheet.
 
 ## 0.3.0
 
