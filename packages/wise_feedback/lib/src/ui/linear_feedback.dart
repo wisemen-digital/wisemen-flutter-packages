@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
 
@@ -6,24 +8,26 @@ import '../models/feedback_exception.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_status.dart';
 import '../transport/feedback_transport.dart';
-import '../triggers/feedback_trigger.dart';
+import 'feedback_button.dart';
 import 'feedback_form.dart';
 import 'feedback_toast.dart';
 import 'wise_feedback_theme.dart';
 
 /// Mount once near the app root to enable in-app bug reporting.
 ///
-/// Wraps [child] with the screenshot capture layer, mounts [triggers], and
-/// files reports through [transport]. Open the flow from anywhere below this
-/// widget with `LinearFeedback.of(context).show()`.
+/// Wraps [child] with the screenshot capture layer, overlays a built-in
+/// button (unless [showButton] is false), and files reports through
+/// [transport].
 class LinearFeedback extends StatefulWidget {
   /// Creates the wrapper.
   const LinearFeedback({
     required this.transport,
     required this.child,
-    this.triggers = const [],
     this.theme = const WiseFeedbackTheme(),
     this.onStatusChanged,
+    this.showButton = true,
+    this.buttonAlignment = Alignment.bottomRight,
+    this.buttonBackgroundColor = Colors.black,
     super.key,
   });
 
@@ -33,28 +37,20 @@ class LinearFeedback extends StatefulWidget {
   /// The app (or subtree) to wrap.
   final Widget child;
 
-  /// Triggers that can open the feedback flow.
-  final List<FeedbackTrigger> triggers;
-
-  /// Visual configuration for the built-in form.
+  /// Text/surface configuration for the built-in form.
   final WiseFeedbackTheme theme;
 
   /// Optional callback fired whenever submission status changes.
-  ///
-  /// The package already shows a built-in success/error toast; use this to add
-  /// your own handling (analytics, a custom snackbar, navigation, ...).
   final void Function(FeedbackStatus status)? onStatusChanged;
 
-  /// Returns the nearest [FeedbackController].
-  static FeedbackController of(BuildContext context) {
-    final scope =
-        context.dependOnInheritedWidgetOfExactType<_LinearFeedbackScope>();
-    assert(
-      scope != null,
-      'LinearFeedback.of() called with no LinearFeedback ancestor.',
-    );
-    return scope!.controller;
-  }
+  /// Whether to overlay the built-in feedback button.
+  final bool showButton;
+
+  /// Where the built-in button sits over the app.
+  final Alignment buttonAlignment;
+
+  /// Background color of the built-in button.
+  final Color buttonBackgroundColor;
 
   @override
   State<LinearFeedback> createState() => _LinearFeedbackState();
@@ -63,17 +59,10 @@ class LinearFeedback extends StatefulWidget {
 class _LinearFeedbackState extends State<LinearFeedback> {
   late final FeedbackController _controller =
       FeedbackController(widget.transport);
-
-  /// A context above the feedback sheet, used to host toast overlays that must
-  /// outlive the sheet (e.g. the success toast shown as the sheet closes).
-  BuildContext? _overlayContext;
-
-  /// Shows and auto-dismisses the built-in success/error toasts.
   late final FeedbackToastPresenter _toasts =
       FeedbackToastPresenter(() => _overlayContext);
 
-  /// The feedback sheet's controller, whose visibility we mirror onto
-  /// [_controller] so triggers can react (e.g. hide the floating button).
+  BuildContext? _overlayContext;
   Listenable? _feedbackNotifier;
 
   @override
@@ -92,7 +81,6 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     super.dispose();
   }
 
-  /// Starts mirroring the feedback sheet's visibility onto the controller.
   void _bindVisibility(BuildContext context) {
     final notifier = BetterFeedback.of(context);
     if (identical(_feedbackNotifier, notifier)) {
@@ -111,11 +99,6 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     _controller.isVisible.value = BetterFeedback.of(context).isVisible;
   }
 
-  /// Maps the captured [feedback] to a [FeedbackReport] and submits it.
-  ///
-  /// On failure this rethrows so the `feedback` package skips its automatic
-  /// `hide()` and the sheet stays open for the user to retry. The submit
-  /// wrapper in [build] catches the error.
   Future<void> _handleUserFeedback(UserFeedback feedback) async {
     final title = (feedback.extra?['title'] as String?) ?? '';
     await _controller.submit(
@@ -135,9 +118,6 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     }
   }
 
-  /// Drives one submission: triggers capture + send via [packageOnSubmit],
-  /// shows a toast, and returns `null` on success or an error message on
-  /// failure (which the form renders inline while staying open).
   Future<String?> _submit(
     OnSubmit packageOnSubmit,
     String description,
@@ -168,31 +148,32 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       ),
       child: Builder(
         builder: (betterFeedbackContext) {
-          // Bind the "show" action and capture a stable context above the
-          // sheet for toasts, now that we're under BetterFeedback.
           _overlayContext = betterFeedbackContext;
           _bindVisibility(betterFeedbackContext);
           _controller.bindShow(
             () => BetterFeedback.of(betterFeedbackContext)
                 .show(_handleUserFeedback),
           );
-          var wrapped = widget.child;
-          for (final trigger in widget.triggers) {
-            wrapped = trigger.wrap(betterFeedbackContext, _controller, wrapped);
+          if (!widget.showButton) {
+            return widget.child;
           }
-          return _LinearFeedbackScope(controller: _controller, child: wrapped);
+          return Stack(
+            children: [
+              widget.child,
+              ValueListenableBuilder<bool>(
+                valueListenable: _controller.isVisible,
+                builder: (context, isVisible, _) => isVisible
+                    ? const SizedBox.shrink()
+                    : FeedbackButton(
+                        alignment: widget.buttonAlignment,
+                        backgroundColor: widget.buttonBackgroundColor,
+                        onPressed: _controller.show,
+                      ),
+              ),
+            ],
+          );
         },
       ),
     );
   }
-}
-
-class _LinearFeedbackScope extends InheritedWidget {
-  const _LinearFeedbackScope({required this.controller, required super.child});
-
-  final FeedbackController controller;
-
-  @override
-  bool updateShouldNotify(_LinearFeedbackScope oldWidget) =>
-      oldWidget.controller != controller;
 }

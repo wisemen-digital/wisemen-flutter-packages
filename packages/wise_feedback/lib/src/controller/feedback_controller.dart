@@ -17,11 +17,12 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
 
   /// Whether the feedback UI is currently open.
   ///
-  /// Maintained by `LinearFeedback`; triggers listen to it (e.g. the floating
-  /// button hides itself while the sheet is open).
+  /// Maintained by `LinearFeedback`, which hides the built-in button while
+  /// the sheet is open.
   final ValueNotifier<bool> isVisible = ValueNotifier<bool>(false);
 
-  /// Wires the action that opens the feedback UI. Called by `LinearFeedback`.
+  /// Wires the action that opens the feedback UI. Called internally by
+  /// `LinearFeedback`.
   // ignore: use_setters_to_change_properties
   void bindShow(void Function() handler) => _showHandler = handler;
 

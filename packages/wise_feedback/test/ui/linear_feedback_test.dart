@@ -5,9 +5,8 @@ import '../support/fake_transport.dart';
 
 void main() {
   group('LinearFeedback', () {
-    testWidgets('of(context) returns the controller and show opens the form',
+    testWidgets('the built-in button opens the form and submits',
         (tester) async {
-      // Taller surface so the form fits without dragging the sheet.
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -17,30 +16,14 @@ void main() {
       await tester.pumpWidget(
         LinearFeedback(
           transport: transport,
-          triggers: const [FloatingButtonTrigger()],
-          child: MaterialApp(
-            home: Scaffold(
-              body: Builder(
-                builder: (context) => ElevatedButton(
-                  key: const Key('open'),
-                  onPressed: () => LinearFeedback.of(context).show(),
-                  child: const Text('open'),
-                ),
-              ),
-            ),
-          ),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
       );
 
-      await tester.tap(find.byKey(const Key('open')));
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
       await tester.pumpAndSettle();
 
       expect(find.byKey(const Key('wise_feedback_title')), findsOneWidget);
-      expect(
-        find.byKey(const Key('wise_feedback_description')),
-        findsOneWidget,
-      );
-
       await tester.enterText(
         find.byKey(const Key('wise_feedback_title')),
         'E2E title',
@@ -50,8 +33,6 @@ void main() {
         'E2E desc',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
-      // Screenshot capture resolves on a real engine callback, so pump under
-      // runAsync() rather than pumpAndSettle().
       await tester.runAsync(() async {
         for (var i = 0; i < 20; i++) {
           await tester.pump(const Duration(milliseconds: 100));
@@ -77,23 +58,12 @@ void main() {
       await tester.pumpWidget(
         LinearFeedback(
           transport: transport,
-          child: MaterialApp(
-            home: Scaffold(
-              body: Builder(
-                builder: (context) => ElevatedButton(
-                  key: const Key('open'),
-                  onPressed: () => LinearFeedback.of(context).show(),
-                  child: const Text('open'),
-                ),
-              ),
-            ),
-          ),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
       );
 
-      await tester.tap(find.byKey(const Key('open')));
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
       await tester.pumpAndSettle();
-
       await tester.enterText(
         find.byKey(const Key('wise_feedback_description')),
         'broken',
@@ -111,6 +81,25 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
       expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);
       expect(find.text('Could not authenticate.'), findsWidgets);
+    });
+
+    testWidgets('hides the built-in button while the sheet is open',
+        (tester) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        LinearFeedback(
+          transport: FakeTransport(),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
+        ),
+      );
+
+      expect(find.byKey(const Key('wise_feedback_fab')), findsOneWidget);
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('wise_feedback_fab')), findsNothing);
     });
   });
 }
