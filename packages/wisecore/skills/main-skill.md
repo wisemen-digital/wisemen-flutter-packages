@@ -41,6 +41,7 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Use barrel exports (`feature.dart`) to expose public APIs
 - Follow the single responsibility principle
 - Keep files focused and small
+- Catch errors with `catch (e)` or `catch (e, stackTrace)` — never `on Object catch (e)` (identical, just noisier). Use `on SpecificType` only when handling that type specifically, and capture the stack trace when logging or forwarding the error
 
 ### Naming Conventions
 
@@ -168,3 +169,10 @@ flutter analyze
 - `drift_dev` — Drift code generation
 - `auto_route_generator` — Route code generation
 - `build_runner` — Code generation runner
+
+### Adding Dependencies
+
+Prefer pure-Dart / lightweight packages. Weigh native plugins carefully — they
+add build time, platform-support gaps (some are unsupported on older or
+non-standard devices), and permission requirements. Don't pull in a native
+dependency for a nice-to-have.
