@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.5.0
+
+- Renamed the entry widget `LinearFeedback` → `WiseFeedback` (the transport was
+  already pluggable; the widget name no longer implies Linear).
+- Localized the built-in form and toasts in **English, Dutch and French**. The
+  feedback UI follows the device locale by default; override with the new
+  `WiseFeedback(locale: ...)`. Issue bodies sent to the tracker stay English.
+- `WiseFeedbackTheme` is now visual-only: the text fields (`sheetTitle`,
+  `titleHint`, `descriptionHint`, `submitLabel`, `priorityLabel`, `categoryLabel`,
+  `successMessage`, `genericErrorMessage`) were removed; wording now comes from
+  localization.
+- `FeedbackField.label` is now optional; built-in template fields resolve a
+  localized label, and consumers provide labels (and translations) for their own
+  custom fields.
+
 ## 0.4.0
 
 - Modernized form UI (Crispy design): a header with circular close/submit

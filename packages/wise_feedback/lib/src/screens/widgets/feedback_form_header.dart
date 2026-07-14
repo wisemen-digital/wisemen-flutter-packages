@@ -13,6 +13,7 @@ class FeedbackFormHeader extends StatelessWidget {
   /// Creates the header.
   const FeedbackFormHeader({
     required this.theme,
+    required this.title,
     required this.status,
     required this.onClose,
     required this.onSubmit,
@@ -21,6 +22,9 @@ class FeedbackFormHeader extends StatelessWidget {
 
   /// Visual configuration.
   final WiseFeedbackTheme theme;
+
+  /// Localized title shown in the centre of the header.
+  final String title;
 
   /// Submission state driving the submit button.
   final ValueListenable<FeedbackStatus> status;
@@ -46,7 +50,7 @@ class FeedbackFormHeader extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              theme.sheetTitle,
+              title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,

@@ -17,17 +17,19 @@ class BugReportTemplate extends FeedbackTemplate {
   /// [datePattern] is an `intl` [DateFormat] pattern used for the "Date & Time"
   /// line.
   const BugReportTemplate({
-    this.currentSituationLabel = 'Current Situation',
-    this.desiredSituationLabel = 'Desired Situation',
+    this.currentSituationLabel,
+    this.desiredSituationLabel,
     this.environmentKeys = const ['environment', 'flavor'],
     this.datePattern = 'yyyy-MM-dd HH:mm',
   });
 
-  /// Label for the current-situation field.
-  final String currentSituationLabel;
+  /// Label for the current-situation field, or null to use the localized
+  /// default.
+  final String? currentSituationLabel;
 
-  /// Label for the desired-situation field.
-  final String desiredSituationLabel;
+  /// Label for the desired-situation field, or null to use the localized
+  /// default.
+  final String? desiredSituationLabel;
 
   /// Metadata keys checked in order to fill "Environment or url".
   final List<String> environmentKeys;

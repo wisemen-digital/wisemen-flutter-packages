@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:wise_feedback/generated/l10n.dart';
 
+import '../models/feedback_exception.dart';
 import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
 import '../template/feedback_field.dart';
@@ -98,6 +100,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
+    final l10n = WiseFeedbackLocalizations.of(context);
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return ColoredBox(
       color: theme.backgroundColor,
@@ -111,6 +114,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
             FeedbackSheetGrabber(theme: theme),
             FeedbackFormHeader(
               theme: theme,
+              title: l10n.sheetTitle,
               status: widget.status,
               onClose: widget.onClose,
               onSubmit: _submit,
@@ -123,7 +127,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 children: [
                   FeedbackLabeledField(
                     theme: theme,
-                    label: theme.titleHint,
+                    label: l10n.titleFieldLabel,
                     child: FeedbackTextInput(
                       theme: theme,
                       controller: _titleController,
@@ -134,7 +138,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     FeedbackLabeledField(
                       theme: theme,
-                      label: field.label,
+                      label: _fieldLabel(field, l10n),
                       child: FeedbackTextInput(
                         theme: theme,
                         controller: _fieldControllers[field.key]!,
@@ -148,14 +152,14 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     FeedbackLabeledField(
                       theme: theme,
-                      label: theme.priorityLabel,
+                      label: l10n.priorityLabel,
                       child: FeedbackDropdown<FeedbackPriority>(
                         theme: theme,
                         value: _priority,
                         fieldKey: const Key('wise_feedback_priority'),
                         items: {
                           for (final priority in FeedbackPriority.values)
-                            priority: priority.label,
+                            priority: _priorityLabel(priority, l10n),
                         },
                         onChanged: (value) => setState(
                           () => _priority = value ?? FeedbackPriority.none,
@@ -167,12 +171,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     FeedbackLabeledField(
                       theme: theme,
-                      label: theme.categoryLabel,
+                      label: l10n.categoryLabel,
                       child: FeedbackDropdown<String>(
                         theme: theme,
                         value: _category,
                         fieldKey: const Key('wise_feedback_category'),
-                        hint: theme.categoryLabel,
+                        hint: l10n.categoryLabel,
                         items: {for (final c in categories) c: c},
                         onChanged: (value) => setState(() => _category = value),
                       ),
@@ -183,7 +187,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     builder: (context, status, _) => status is FeedbackFailure
                         ? FeedbackErrorMessage(
                             theme: theme,
-                            message: theme.messageForError(status.error),
+                            message: _errorMessage(status.error, l10n),
                           )
                         : const SizedBox.shrink(),
                   ),
@@ -194,5 +198,49 @@ class _FeedbackFormState extends State<FeedbackForm> {
         ),
       ),
     );
+  }
+}
+
+/// The message shown for a failed submission: the exception's own text when it
+/// carries one, otherwise the localized fallback.
+String _errorMessage(Object error, WiseFeedbackLocalizations l10n) =>
+    error is FeedbackException ? error.message : l10n.genericError;
+
+/// Resolves the display label for [field]: an explicit label wins, otherwise a
+/// localized default for known built-in keys, otherwise the raw key.
+String _fieldLabel(FeedbackField field, WiseFeedbackLocalizations l10n) {
+  final explicit = field.label;
+  if (explicit != null) {
+    return explicit;
+  }
+  switch (field.key) {
+    case 'description':
+      return l10n.fieldDescription;
+    case 'currentSituation':
+      return l10n.fieldCurrentSituation;
+    case 'desiredSituation':
+      return l10n.fieldDesiredSituation;
+    default:
+      return field.key;
+  }
+}
+
+/// The localized display name for a priority option (the form selector only;
+/// the issue body uses [FeedbackPriority.label], which stays English).
+String _priorityLabel(
+  FeedbackPriority priority,
+  WiseFeedbackLocalizations l10n,
+) {
+  switch (priority) {
+    case FeedbackPriority.none:
+      return l10n.priorityNone;
+    case FeedbackPriority.urgent:
+      return l10n.priorityUrgent;
+    case FeedbackPriority.high:
+      return l10n.priorityHigh;
+    case FeedbackPriority.medium:
+      return l10n.priorityMedium;
+    case FeedbackPriority.low:
+      return l10n.priorityLow;
   }
 }
