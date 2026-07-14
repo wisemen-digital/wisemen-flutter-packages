@@ -211,7 +211,7 @@ void main() {
 
   group('localization', () {
     testWidgets('renders Dutch strings under nl locale', (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         localizedApp(
           locale: const Locale('nl'),
@@ -232,7 +232,7 @@ void main() {
     });
 
     testWidgets('renders French sheet title under fr locale', (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         localizedApp(
           locale: const Locale('fr'),
@@ -250,7 +250,7 @@ void main() {
 
     testWidgets('explicit field label overrides the localized default',
         (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         localizedApp(
           locale: const Locale('nl'),
