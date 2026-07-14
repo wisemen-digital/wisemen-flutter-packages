@@ -16,7 +16,7 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
 
   /// Whether the feedback UI is currently open.
   ///
-  /// Maintained by `LinearFeedback`, which hides the built-in button while
+  /// Maintained by `WiseFeedback`, which hides the built-in button while
   /// the sheet is open.
   final ValueNotifier<bool> isVisible = ValueNotifier(false);
 

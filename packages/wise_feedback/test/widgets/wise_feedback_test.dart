@@ -17,7 +17,7 @@ Route<void> _route(String name) => PageRouteBuilder<void>(
 );
 
 void main() {
-  group('LinearFeedback', () {
+  group('WiseFeedback', () {
     testWidgets('the built-in button opens the form and submits', (
       tester,
     ) async {
@@ -29,7 +29,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           transport: transport,
           child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
@@ -78,7 +78,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           transport: transport,
           child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
@@ -113,7 +113,7 @@ void main() {
       addTearDown(tester.view.reset);
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           transport: FakeTransport(),
           child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
@@ -133,7 +133,7 @@ void main() {
       addTearDown(tester.view.reset);
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           transport: FakeTransport(),
           child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
@@ -141,7 +141,7 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_fab')), findsOneWidget);
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           showButton: false,
           transport: FakeTransport(),
           child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
@@ -161,7 +161,7 @@ void main() {
       );
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           transport: transport,
           child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
         ),
@@ -197,7 +197,7 @@ void main() {
         ..didPush(_route('/settings'), null);
 
       await tester.pumpWidget(
-        LinearFeedback(
+        WiseFeedback(
           transport: transport,
           metadataCollector: _FakeCollector(),
           navigatorObserver: observer,
