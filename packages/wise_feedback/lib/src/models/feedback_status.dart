@@ -21,13 +21,6 @@ enum FeedbackSubmissionState {
 class FeedbackStatus {
   const FeedbackStatus._(this.state, {this.result, this.error});
 
-  /// Nothing happening.
-  const FeedbackStatus.idle() : this._(FeedbackSubmissionState.idle);
-
-  /// Submission started.
-  const FeedbackStatus.submitting()
-      : this._(FeedbackSubmissionState.submitting);
-
   /// Submission succeeded with [result].
   const FeedbackStatus.success(FeedbackResult result)
       : this._(FeedbackSubmissionState.success, result: result);
@@ -35,6 +28,14 @@ class FeedbackStatus {
   /// Submission failed with [error].
   const FeedbackStatus.failure(Object error)
       : this._(FeedbackSubmissionState.failure, error: error);
+
+  /// Nothing happening.
+  static const FeedbackStatus idle =
+      FeedbackStatus._(FeedbackSubmissionState.idle);
+
+  /// A submission is in flight.
+  static const FeedbackStatus submitting =
+      FeedbackStatus._(FeedbackSubmissionState.submitting);
 
   /// The current lifecycle state.
   final FeedbackSubmissionState state;

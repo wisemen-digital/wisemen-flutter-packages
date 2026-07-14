@@ -4,11 +4,11 @@ import 'package:wise_feedback/wise_feedback.dart';
 void main() {
   group('FeedbackStatus', () {
     test('idle is not submitting', () {
-      expect(const FeedbackStatus.idle().isSubmitting, isFalse);
+      expect(FeedbackStatus.idle.isSubmitting, isFalse);
     });
 
     test('submitting reports isSubmitting', () {
-      expect(const FeedbackStatus.submitting().isSubmitting, isTrue);
+      expect(FeedbackStatus.submitting.isSubmitting, isTrue);
     });
 
     test('success carries a result', () {
