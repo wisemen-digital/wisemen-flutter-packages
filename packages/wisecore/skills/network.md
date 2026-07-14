@@ -351,3 +351,4 @@ dart run build_runner build --delete-conflicting-outputs
 4. **Separate read/write DTOs** — if request shape differs from response
 5. **Test mappers** — ensure all fields are correctly transformed
 6. **Use snake_case in JSON** — `fieldRename: FieldRename.snake`
+7. **Never embed third-party secrets in the app** — the app binary is decompilable, so any API key shipped in it can be extracted. Route third-party integrations through your own backend so their credentials stay server-side; the client should only ever carry the user's own session token (via the protected client)

@@ -366,3 +366,4 @@ export 'items_screen.dart';
 6. **Consistent spacing** — Use `SizeUtils.bottomSpacing()` for safe area padding
 7. **Barrel exports** — Always export from `screens.dart`
 8. **Use theme extensions** — Access colors via `context.bgColor`, `context.textColor`
+9. **Scope MediaQuery reads** — Prefer `MediaQuery.sizeOf(context)`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf` over `MediaQuery.of(context)`, which rebuilds the screen on *every* metric change (rotation, keyboard, text scale). Screens that read insets or size do this constantly
