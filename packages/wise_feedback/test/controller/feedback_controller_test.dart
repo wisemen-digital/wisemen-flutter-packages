@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wise_feedback/src/controller/feedback_controller.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 import '../support/fake_transport.dart';
 
