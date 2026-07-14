@@ -216,5 +216,25 @@ void main() {
       expect(report.metadata['navigation'], '/home → /settings');
       expect(report.reporter?.email, 'me@x.com');
     });
+
+    testWidgets('forwards the locale override to the form', (tester) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final transport = FakeTransport();
+
+      await tester.pumpWidget(
+        WiseFeedback(
+          transport: transport,
+          locale: const Locale('nl'),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Een bug melden'), findsOneWidget);
+    });
   });
 }

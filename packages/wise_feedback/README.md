@@ -6,13 +6,13 @@ In-app bug reporting for Flutter. Capture a screenshot + title + description and
 
 ```yaml
 dependencies:
-  wise_feedback: ^0.1.0
+  wise_feedback: ^0.5.0
 ```
 
 ## Quick start (no backend)
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   child: MyApp(),
 );
@@ -29,7 +29,7 @@ issue.
 ```dart
 final feedbackObserver = WiseFeedbackNavigatorObserver();
 
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
 
   // Recent screens — also add feedbackObserver to MaterialApp.navigatorObservers.
@@ -51,6 +51,30 @@ LinearFeedback(
 );
 ```
 
+## Localization
+
+The built-in form and its success/error toasts are localized in **English,
+Dutch and French**. The feedback UI follows the **device** locale automatically —
+no setup required. To force a locale, pass `locale`:
+
+```dart
+WiseFeedback(
+  transport: ...,
+  locale: const Locale('nl'), // force Dutch; omit to follow the device
+  child: MyApp(),
+);
+```
+
+Notes:
+- The **issue body** sent to your tracker stays in English regardless of locale,
+  so your team sees consistent headings.
+- Labels for your own custom `FeedbackField`s and `categories` are passed through
+  as-is — translate those in your app.
+- The feedback layer sits above `MaterialApp`, so "device locale" really means
+  the **device's** locale — not your app's in-app language switcher. If users
+  can switch language without changing the device locale, forward that choice
+  via `WiseFeedback(locale: appLocale)`.
+
 ## Issue templates
 
 The form's fields and the rendered issue body are driven by a
@@ -59,7 +83,7 @@ description plus a context section. Use `BugReportTemplate` for a structured
 bug report, or subclass `FeedbackTemplate` for your own:
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: ...,
   template: const BugReportTemplate(), // Current/Desired + auto Steps/Context
   navigatorObserver: feedbackObserver, // fills "Steps to Reproduce"
@@ -92,7 +116,7 @@ Surface submission progress, success, and errors yourself by listening to
 `onStatusChanged`, which receives a `FeedbackStatus` for each state change:
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   onStatusChanged: (status) {
     switch (status) {
@@ -125,7 +149,7 @@ the backend proxy below.
 ## Backend proxy (token stays off the device)
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearProxyTransport(
     endpoint: Uri.parse('https://api.myapp.com/feedback'),
     authHeadersProvider: () async => {'Authorization': 'Bearer ${await mySession.token()}'},
@@ -158,13 +182,13 @@ Non-2xx responses are surfaced as a `FeedbackException`.
 
 ## Opening the flow
 
-`LinearFeedback` overlays a built-in button on top of `child` and shows it by
+`WiseFeedback` overlays a built-in button on top of `child` and shows it by
 default. Tapping it opens the feedback flow; the button hides itself again
 while the sheet is open. Set `showButton: false` to hide it (for example if
 you want to trigger feedback from your own UI instead):
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   showButton: false,
   child: MyApp(),

@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "sheetTitle": "Report a bug",
+  "titleFieldLabel": "Title",
+  "priorityLabel": "Priority",
+  "categoryLabel": "Category",
+  "successMessage": "Bug reported. Thanks!",
+  "genericError": "Something went wrong. Please try again.",
+  "priorityNone": "None",
+  "priorityUrgent": "Urgent",
+  "priorityHigh": "High",
+  "priorityMedium": "Medium",
+  "priorityLow": "Low",
+  "fieldDescription": "Description",
+  "fieldCurrentSituation": "Current Situation",
+  "fieldDesiredSituation": "Desired Situation"
+}

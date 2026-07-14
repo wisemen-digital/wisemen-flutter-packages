@@ -1,0 +1,17 @@
+{
+  "@@locale": "nl",
+  "sheetTitle": "Een bug melden",
+  "titleFieldLabel": "Titel",
+  "priorityLabel": "Prioriteit",
+  "categoryLabel": "Categorie",
+  "successMessage": "Bug gemeld. Bedankt!",
+  "genericError": "Er is iets misgegaan. Probeer het opnieuw.",
+  "priorityNone": "Geen",
+  "priorityUrgent": "Urgent",
+  "priorityHigh": "Hoog",
+  "priorityMedium": "Gemiddeld",
+  "priorityLow": "Laag",
+  "fieldDescription": "Omschrijving",
+  "fieldCurrentSituation": "Huidige situatie",
+  "fieldDesiredSituation": "Gewenste situatie"
+}

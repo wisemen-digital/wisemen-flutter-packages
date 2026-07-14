@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../models/feedback_exception.dart';
-
-/// Text and surface configuration for the built-in feedback form.
+/// Visual configuration for the built-in feedback form.
 ///
 /// Defaults follow a modern, Crispy-style design: labelled inputs with a soft
-/// border and 16px corners, and an indigo brand accent.
+/// border and 16px corners, and an indigo brand accent. All user-facing text is
+/// localized via the package's localizations, not configured here.
 class WiseFeedbackTheme {
   /// Creates a theme. All parameters have sensible defaults.
   const WiseFeedbackTheme({
@@ -18,17 +17,9 @@ class WiseFeedbackTheme {
     this.hintColor = const Color(0xFF9AA4B2),
     this.iconButtonColor = const Color(0xFFEEF2F6),
     this.fieldRadius = 16,
-    this.sheetTitle = 'Report a bug',
-    this.titleHint = 'Title',
-    this.descriptionHint = 'Description',
-    this.submitLabel = 'Report bug',
-    this.priorityLabel = 'Priority',
-    this.categoryLabel = 'Category',
-    this.successMessage = 'Bug reported. Thanks!',
-    this.genericErrorMessage = 'Something went wrong. Please try again.',
   });
 
-  /// Accent color: submit button, focused field cursor.
+  /// Accent color for the submit button and focused fields.
   final Color primaryColor;
 
   /// Background color of the form surface.
@@ -54,33 +45,4 @@ class WiseFeedbackTheme {
 
   /// Corner radius of input boxes.
   final double fieldRadius;
-
-  /// Title shown in the sheet header.
-  final String sheetTitle;
-
-  /// Placeholder/label for the title field.
-  final String titleHint;
-
-  /// Placeholder/label for the description field.
-  final String descriptionHint;
-
-  /// Text on the submit button.
-  final String submitLabel;
-
-  /// Label for the priority selector.
-  final String priorityLabel;
-
-  /// Label for the category selector.
-  final String categoryLabel;
-
-  /// Confirmation shown after a report is filed successfully.
-  final String successMessage;
-
-  /// Fallback message shown when submission fails without a specific reason.
-  final String genericErrorMessage;
-
-  /// The user-facing message for a failed submission: the [FeedbackException]'s
-  /// own message when available, otherwise [genericErrorMessage].
-  String messageForError(Object error) =>
-      error is FeedbackException ? error.message : genericErrorMessage;
 }

@@ -11,16 +11,18 @@ class BugReportTemplate extends FeedbackTemplate {
   /// [environmentKeys] are the `metadata` keys checked, in order, to fill the
   /// "Environment or url" line (defaults to `environment`, then `flavor`).
   const BugReportTemplate({
-    this.currentSituationLabel = 'Current Situation',
-    this.desiredSituationLabel = 'Desired Situation',
+    this.currentSituationLabel,
+    this.desiredSituationLabel,
     this.environmentKeys = const ['environment', 'flavor'],
   });
 
-  /// Label for the current-situation field.
-  final String currentSituationLabel;
+  /// Label for the current-situation field, or null to use the localized
+  /// default.
+  final String? currentSituationLabel;
 
-  /// Label for the desired-situation field.
-  final String desiredSituationLabel;
+  /// Label for the desired-situation field, or null to use the localized
+  /// default.
+  final String? desiredSituationLabel;
 
   /// Metadata keys checked in order to fill "Environment or url".
   final List<String> environmentKeys;
