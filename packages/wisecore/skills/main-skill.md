@@ -172,7 +172,4 @@ flutter analyze
 
 ### Adding Dependencies
 
-Prefer pure-Dart / lightweight packages. Weigh native plugins carefully — they
-add build time, platform-support gaps (some are unsupported on older or
-non-standard devices), and permission requirements. Don't pull in a native
-dependency for a nice-to-have.
+Prefer pure-Dart / lightweight packages by default. Native plugins cost build time, have platform-support gaps (unsupported on some older or non-standard devices), and need permissions — so weigh that against the benefit rather than avoiding them reflexively. Be strictest for general-purpose packages reused across projects; within a single app, use a native plugin when it's genuinely the best option — just not for a nice-to-have.
