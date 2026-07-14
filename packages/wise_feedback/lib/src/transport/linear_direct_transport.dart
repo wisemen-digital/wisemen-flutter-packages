@@ -6,6 +6,7 @@ import '../models/feedback_exception.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_result.dart';
 import 'feedback_transport.dart';
+import 'http_utils.dart';
 
 /// A [FeedbackTransport] that talks to the Linear GraphQL API directly.
 ///
@@ -75,8 +76,7 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       'filename': 'feedback.png',
       'size': size,
     });
-    final uploadFile = (data['fileUpload']
-        as Map<String, dynamic>?)?['uploadFile'] as Map<String, dynamic>?;
+    final uploadFile = (data['fileUpload'] as Json?)?['uploadFile'] as Json?;
     final uploadUrl = uploadFile?['uploadUrl'] as String?;
     final assetUrl = uploadFile?['assetUrl'] as String?;
     if (uploadUrl == null || assetUrl == null) {
@@ -84,7 +84,7 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     }
     final headers = <String, String>{};
     for (final h in (uploadFile?['headers'] as List<dynamic>? ?? <dynamic>[])) {
-      final map = h as Map<String, dynamic>;
+      final map = h as Json;
       headers[map['key'] as String] = map['value'] as String;
     }
     return _UploadTarget(
@@ -103,7 +103,7 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       },
       body: bytes,
     );
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+    if (!response.isSuccessful) {
       throw FeedbackException(
         'Screenshot upload failed with status ${response.statusCode}.',
       );
@@ -121,9 +121,9 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       'teamId': _teamId,
       'projectId': _projectId,
     });
-    final issueCreate = data['issueCreate'] as Map<String, dynamic>?;
+    final issueCreate = data['issueCreate'] as Json?;
     final success = issueCreate?['success'] as bool?;
-    final issue = issueCreate?['issue'] as Map<String, dynamic>?;
+    final issue = issueCreate?['issue'] as Json?;
     if (success != true || issue == null) {
       throw const FeedbackException('Linear did not create the issue.');
     }
@@ -133,9 +133,9 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     );
   }
 
-  Future<Map<String, dynamic>> _graphql(
+  Future<Json> _graphql(
     String query,
-    Map<String, dynamic> variables,
+    Json variables,
   ) async {
     final http.Response response;
     try {
@@ -160,15 +160,15 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
         'Could not authenticate with Linear. Check the API token.',
       );
     }
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+    if (!response.isSuccessful) {
       throw FeedbackException(
         'Linear returned an unexpected response (status '
         '${response.statusCode}).',
       );
     }
-    final Map<String, dynamic> decoded;
+    final Json decoded;
     try {
-      decoded = jsonDecode(response.body) as Map<String, dynamic>;
+      decoded = jsonDecode(response.body) as Json;
     } catch (e) {
       throw FeedbackException('Invalid response from Linear.', cause: e);
     }
@@ -177,7 +177,7 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
         'Linear rejected the report. Please try again.',
       );
     }
-    final data = decoded['data'] as Map<String, dynamic>?;
+    final data = decoded['data'] as Json?;
     if (data == null) {
       throw const FeedbackException('Linear response contained no data.');
     }

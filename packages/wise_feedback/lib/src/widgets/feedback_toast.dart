@@ -72,6 +72,9 @@ class FeedbackToastPresenter {
   /// [_overlayContext] (the context may not exist yet at construction time).
   FeedbackToastPresenter(this._overlayContext);
 
+  /// How long a toast stays visible before it auto-dismisses.
+  static const Duration _visibleDuration = Duration(seconds: 4);
+
   final BuildContext? Function() _overlayContext;
   final Set<Timer> _timers = <Timer>{};
 
@@ -116,7 +119,7 @@ class FeedbackToastPresenter {
       },
     );
     overlay.insert(entry);
-    timer = Timer(const Duration(seconds: 4), remove);
+    timer = Timer(_visibleDuration, remove);
     _timers.add(timer);
   }
 
