@@ -68,10 +68,10 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   @override
   void initState() {
     super.initState();
-    if (widget.onStatusChanged != null) {
-      _controller.addListener(() => widget.onStatusChanged!(_controller.value));
-    }
+    _controller.addListener(_notifyStatus);
   }
+
+  void _notifyStatus() => widget.onStatusChanged?.call(_controller.value);
 
   @override
   void dispose() {

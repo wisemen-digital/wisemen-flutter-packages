@@ -101,5 +101,62 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byKey(const Key('wise_feedback_fab')), findsNothing);
     });
+
+    testWidgets('shows the built-in button only when showButton is true',
+        (tester) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        LinearFeedback(
+          transport: FakeTransport(),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
+        ),
+      );
+      expect(find.byKey(const Key('wise_feedback_fab')), findsOneWidget);
+
+      await tester.pumpWidget(
+        LinearFeedback(
+          showButton: false,
+          transport: FakeTransport(),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
+        ),
+      );
+      expect(find.byKey(const Key('wise_feedback_fab')), findsNothing);
+    });
+
+    testWidgets('shows the success toast after a successful submit',
+        (tester) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final transport =
+          FakeTransport(result: const FeedbackResult(issueId: 'E2E-1'));
+
+      await tester.pumpWidget(
+        LinearFeedback(
+          transport: transport,
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const Key('wise_feedback_description')),
+        'E2E desc',
+      );
+      await tester.tap(find.byKey(const Key('wise_feedback_submit')));
+      await tester.runAsync(() async {
+        for (var i = 0; i < 20; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
+      });
+
+      expect(transport.sent, hasLength(1));
+      expect(find.text('Bug reported. Thanks!'), findsWidgets);
+    });
   });
 }

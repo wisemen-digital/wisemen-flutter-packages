@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:wise_feedback/wise_feedback.dart';
+import 'package:wise_feedback/src/widgets/feedback_toast.dart';
 
 void main() {
   testWidgets('FeedbackToast renders message and fires onDismiss on tap',
