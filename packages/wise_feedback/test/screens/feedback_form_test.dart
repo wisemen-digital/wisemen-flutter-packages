@@ -85,7 +85,7 @@ void main() {
     testWidgets('forwards selected priority and category in extras',
         (tester) async {
       Map<String, dynamic>? gotExtras;
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -97,7 +97,6 @@ void main() {
               categories: const ['Bug', 'Idea'],
               onSubmit: (description, {extras}) async {
                 gotExtras = extras;
-                return null;
               },
             ),
           ),
@@ -122,14 +121,14 @@ void main() {
     });
 
     testWidgets('hides priority and category by default', (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
-              onSubmit: (description, {extras}) async => null,
+              onSubmit: (description, {extras}) async {},
             ),
           ),
         ),
