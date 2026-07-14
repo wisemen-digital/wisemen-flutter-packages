@@ -155,7 +155,7 @@ void main() {
     testWidgets('header shows the title and close button fires onClose',
         (tester) async {
       var closed = 0;
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
