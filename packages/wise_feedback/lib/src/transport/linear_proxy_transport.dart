@@ -6,6 +6,11 @@ import '../models/feedback_exception.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_result.dart';
 import 'feedback_transport.dart';
+import 'http_utils.dart';
+
+/// Resolves the headers used to authenticate a feedback request (e.g. the
+/// app's own bearer token), evaluated at submit time.
+typedef AuthHeadersProvider = Future<Map<String, String>> Function();
 
 /// A [FeedbackTransport] that POSTs the report to an HTTPS endpoint you own.
 ///
@@ -20,14 +25,14 @@ class LinearProxyTransport implements FeedbackTransport {
   /// Creates a proxy transport targeting [endpoint].
   LinearProxyTransport({
     required Uri endpoint,
-    Future<Map<String, String>> Function()? authHeadersProvider,
+    AuthHeadersProvider? authHeadersProvider,
     http.Client? httpClient,
   })  : _endpoint = endpoint,
         _authHeadersProvider = authHeadersProvider,
         _http = httpClient ?? http.Client();
 
   final Uri _endpoint;
-  final Future<Map<String, String>> Function()? _authHeadersProvider;
+  final AuthHeadersProvider? _authHeadersProvider;
   final http.Client _http;
 
   @override
@@ -71,7 +76,7 @@ class LinearProxyTransport implements FeedbackTransport {
         'Not authorized to send feedback. Please sign in and try again.',
       );
     }
-    if (response.statusCode < 200 || response.statusCode >= 300) {
+    if (!response.isSuccessful) {
       throw FeedbackException(
         'The feedback service returned an unexpected response (status '
         '${response.statusCode}).',
@@ -81,9 +86,9 @@ class LinearProxyTransport implements FeedbackTransport {
     if (response.body.isEmpty) {
       return const FeedbackResult();
     }
-    final Map<String, dynamic> decoded;
+    final Json decoded;
     try {
-      decoded = jsonDecode(response.body) as Map<String, dynamic>;
+      decoded = jsonDecode(response.body) as Json;
     } catch (e) {
       throw FeedbackException(
         'Invalid response from the feedback endpoint.',
