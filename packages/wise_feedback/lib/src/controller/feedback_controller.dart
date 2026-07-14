@@ -9,33 +9,36 @@ import '../transport/feedback_transport.dart';
 /// Exposes state as a [ValueListenable] of [FeedbackStatus]; no state
 /// management framework is required by consumers.
 class FeedbackController extends ValueNotifier<FeedbackStatus> {
-  /// Creates a controller that submits through `transport`.
-  FeedbackController(this._transport) : super(const FeedbackStatus.idle());
+  /// Creates a controller that submits through the given `transport`.
+  FeedbackController(this._transport) : super(FeedbackStatus.idle);
 
   final FeedbackTransport _transport;
-  void Function()? _showHandler;
+  VoidCallback? _showHandler;
 
   /// Whether the feedback UI is currently open.
   ///
   /// Maintained by `LinearFeedback`, which hides the built-in button while
   /// the sheet is open.
-  final ValueNotifier<bool> isVisible = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> isVisible = ValueNotifier(false);
 
   /// Wires the action that opens the feedback UI. Called internally by
   /// `LinearFeedback`.
   // ignore: use_setters_to_change_properties
-  void bindShow(void Function() handler) => _showHandler = handler;
+  void bindShow(VoidCallback handler) {
+    _showHandler = handler;
+  }
 
   /// Opens the feedback UI, if a handler has been bound.
-  void show() => _showHandler?.call();
+  void show() {
+    _showHandler?.call();
+  }
 
   /// Submits [report]. Updates [value] through submitting → success/failure.
   /// Never throws; failures are reported via [value].
   Future<void> submit(FeedbackReport report) async {
-    value = const FeedbackStatus.submitting();
+    value = FeedbackStatus.submitting;
     try {
-      final result = await _transport.send(report);
-      value = FeedbackStatus.success(result);
+      value = FeedbackStatus.success(await _transport.send(report));
     } catch (e) {
       value = FeedbackStatus.failure(e);
     }

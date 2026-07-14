@@ -41,7 +41,7 @@ class LinearFeedback extends StatefulWidget {
   final WiseFeedbackTheme theme;
 
   /// Optional callback fired whenever submission status changes.
-  final void Function(FeedbackStatus status)? onStatusChanged;
+  final ValueChanged<FeedbackStatus>? onStatusChanged;
 
   /// Whether to overlay the built-in feedback button.
   final bool showButton;

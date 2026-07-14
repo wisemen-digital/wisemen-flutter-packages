@@ -8,7 +8,7 @@ void main() {
         (tester) async {
       String? gotDescription;
       Map<String, dynamic>? gotExtras;
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
 
       await tester.pumpWidget(
         MaterialApp(
@@ -42,8 +42,7 @@ void main() {
     });
 
     testWidgets('shows a progress indicator while submitting', (tester) async {
-      final status =
-          ValueNotifier<FeedbackStatus>(const FeedbackStatus.submitting());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.submitting);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -60,7 +59,7 @@ void main() {
 
     testWidgets('shows the error inline and stays open when submit fails',
         (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -83,7 +82,7 @@ void main() {
 
     testWidgets('does not overflow in a short sheet with the keyboard open',
         (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(const FeedbackStatus.idle());
+      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
         MaterialApp(
           home: MediaQuery(
