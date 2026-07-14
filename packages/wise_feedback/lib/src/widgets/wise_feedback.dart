@@ -23,9 +23,9 @@ import 'feedback_toast.dart';
 /// Wraps [child] with the screenshot capture layer, overlays a built-in
 /// button (unless [showButton] is false), and files reports through
 /// [transport].
-class LinearFeedback extends StatefulWidget {
+class WiseFeedback extends StatefulWidget {
   /// Creates the wrapper.
-  const LinearFeedback({
+  const WiseFeedback({
     required this.transport,
     required this.child,
     this.theme = const WiseFeedbackTheme(),
@@ -96,10 +96,10 @@ class LinearFeedback extends StatefulWidget {
   final FeedbackTemplate template;
 
   @override
-  State<LinearFeedback> createState() => _LinearFeedbackState();
+  State<WiseFeedback> createState() => _WiseFeedbackState();
 }
 
-class _LinearFeedbackState extends State<LinearFeedback> {
+class _WiseFeedbackState extends State<WiseFeedback> {
   late final FeedbackController _controller =
       FeedbackController(widget.transport);
   final FeedbackToastPresenter _toasts = FeedbackToastPresenter();
