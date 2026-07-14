@@ -42,6 +42,9 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Follow the single responsibility principle
 - Keep files focused and small
 - Catch errors with `catch (e)` or `catch (e, stackTrace)` — never `on Object catch (e)` (identical, just noisier). Use `on SpecificType` only when handling that type specifically, and capture the stack trace when logging or forwarding the error
+- Model payload-less states as `static const` singletons, not const constructors (`FeedbackStatus.idle`, not `FeedbackStatus.idle()`). Keep constructors only for variants that carry data
+- Use Flutter's callback typedefs — `VoidCallback` for `void Function()`, `ValueChanged<T>` for `void Function(T)` — instead of writing the raw function type
+- Give void, side-effecting methods a block body (`{ … }`), not `=>`. An arrow returns its expression, so `void f() => _x = v;` silently returns the assigned value into `void` — a statement body reads as "does", not "returns"
 
 ### Naming Conventions
 
