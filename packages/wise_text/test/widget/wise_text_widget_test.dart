@@ -54,7 +54,8 @@ void main() {
   Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 
   /// The single [StyledText] rendered by the widget under test.
-  StyledText styledTextOf(WidgetTester tester) => tester.widget<StyledText>(find.byType(StyledText));
+  StyledText styledTextOf(WidgetTester tester) =>
+      tester.widget<StyledText>(find.byType(StyledText));
 
   group('WiseTextWidget without classification', () {
     testWidgets('renders the raw text and never calls the classifier', (
