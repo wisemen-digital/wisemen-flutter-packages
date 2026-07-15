@@ -33,6 +33,13 @@ dev_dependencies:
       ref: main
       path: pkgs/jnigen
 
+dependency_overrides:
+  jni_util:
+    git:
+      url: https://github.com/dart-lang/native.git
+      ref: main
+      path: pkgs/jni_util
+
 flutter:
   plugin:
     platforms:
