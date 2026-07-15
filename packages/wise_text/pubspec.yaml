@@ -1,6 +1,6 @@
 name: wise_text
 description: "Text widget with auto classification and rich text support using styled_text. Using NSDataDetector on iOS and TextClassifier on Android"
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_text
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_text
 
