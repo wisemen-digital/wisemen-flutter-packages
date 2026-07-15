@@ -11,6 +11,7 @@ on:
       - "wise_theming-v*"
       - "wise_review-v*"
       - "wise_scalars-v*"
+      - "wise_text-v*"
 jobs:
   publish:
     permissions:
