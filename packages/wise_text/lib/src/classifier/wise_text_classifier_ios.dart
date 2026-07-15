@@ -22,4 +22,9 @@ class WiseTextClassifierIos implements WiseTextClassifierInterface {
 
     return ItemSpan.spansFromRanges(text, triples);
   }
+
+  @override
+  void dispose() {
+    _native.release();
+  }
 }

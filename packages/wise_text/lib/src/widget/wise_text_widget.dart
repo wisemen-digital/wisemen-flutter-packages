@@ -126,12 +126,20 @@ class WiseTextWidget extends StatefulWidget {
 }
 
 class _WiseTextWidgetState extends State<WiseTextWidget> {
+  late WiseTextClassifier classifier;
+  late Future<String> classifiedText;
+
+  @override
+  void initState() {
+    super.initState();
+    classifier = WiseTextClassifier(classifier: widget.classifier);
+    classifiedText = processText();
+  }
+
   Future<String> processText() async {
     if (widget.classified) {
       try {
-        final classifiedItems = await WiseTextClassifier(
-          classifier: widget.classifier,
-        ).classify(widget.text);
+        final classifiedItems = await classifier.classify(widget.text);
         return classifiedItems.map((e) => e.tag).join();
       } catch (e) {
         return widget.text;
@@ -142,9 +150,29 @@ class _WiseTextWidgetState extends State<WiseTextWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant WiseTextWidget oldWidget) {
+    final changedClassifier = oldWidget.classifier != widget.classifier;
+    if (oldWidget.text != widget.text ||
+        oldWidget.classified != widget.classified ||
+        changedClassifier) {
+      if (changedClassifier) {
+        classifier = WiseTextClassifier(classifier: widget.classifier);
+      }
+      classifiedText = processText();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    classifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
-      future: processText(),
+      future: classifiedText,
       initialData: widget.text,
       builder: (context, snapshot) {
         if (widget.selectable) {

@@ -26,6 +26,9 @@ class WiseTextClassifier {
   /// returned as [WiseTextItemType.text] spans so concatenating every
   /// [ItemSpan.text] reproduces the original [text].
   Future<List<ItemSpan>> classify(String text) => instance.classifyText(text);
+
+  /// Disposes of native references used by FFI classes
+  void dispose() => instance.dispose();
 }
 
 /// Classifies text into typed [ItemSpan]s (dates, addresses, links and phone
@@ -33,4 +36,7 @@ class WiseTextClassifier {
 abstract interface class WiseTextClassifierInterface {
   /// Instance's classifier function used by iOS and Android implementations
   Future<List<ItemSpan>> classifyText(String text);
+
+  /// Dispose used FFI elements on platforms
+  void dispose();
 }

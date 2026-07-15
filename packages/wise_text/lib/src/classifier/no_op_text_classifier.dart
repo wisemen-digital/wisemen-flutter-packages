@@ -7,4 +7,7 @@ class NoOpTextClassifier implements WiseTextClassifierInterface {
   Future<List<ItemSpan>> classifyText(String text) {
     return Future.value([ItemSpan(text: text, type: WiseTextItemType.text)]);
   }
+
+  @override
+  void dispose() {}
 }

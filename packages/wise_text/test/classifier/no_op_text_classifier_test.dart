@@ -37,5 +37,9 @@ void main() {
 
       expect(spans.map((s) => s.text).join(), source);
     });
+
+    test('dispose call succeeds and is a void', () {
+      expect(classifier.dispose, returnsNormally);
+    });
   });
 }

@@ -21,6 +21,9 @@ class _StubClassifier implements WiseTextClassifierInterface {
     lastText = text;
     return spans;
   }
+
+  @override
+  void dispose() {}
 }
 
 /// A classifier whose [classifyText] always fails, to exercise the fallback.
@@ -29,6 +32,9 @@ class _ThrowingClassifier implements WiseTextClassifierInterface {
   Future<List<ItemSpan>> classifyText(String text) async {
     throw Exception('classification failed');
   }
+
+  @override
+  void dispose() {}
 }
 
 /// A classifier that only completes when the test tells it to, so the pending
@@ -38,6 +44,9 @@ class _DeferredClassifier implements WiseTextClassifierInterface {
 
   @override
   Future<List<ItemSpan>> classifyText(String text) => completer.future;
+
+  @override
+  void dispose() {}
 }
 
 void main() {
@@ -45,8 +54,7 @@ void main() {
   Widget wrap(Widget child) => MaterialApp(home: Scaffold(body: child));
 
   /// The single [StyledText] rendered by the widget under test.
-  StyledText styledTextOf(WidgetTester tester) =>
-      tester.widget<StyledText>(find.byType(StyledText));
+  StyledText styledTextOf(WidgetTester tester) => tester.widget<StyledText>(find.byType(StyledText));
 
   group('WiseTextWidget without classification', () {
     testWidgets('renders the raw text and never calls the classifier', (
@@ -68,9 +76,12 @@ void main() {
     ) async {
       await tester.pumpWidget(
         wrap(
-          const WiseTextWidget(
+          WiseTextWidget(
             'Plain text',
             maxLines: 2,
+            classifier: _StubClassifier([
+              const ItemSpan(text: 'Plain text', type: WiseTextItemType.text),
+            ]),
             textAlign: TextAlign.center,
           ),
         ),
@@ -160,7 +171,15 @@ void main() {
       tester,
     ) async {
       await tester.pumpWidget(
-        wrap(const WiseTextWidget('Plain text', selectable: true)),
+        wrap(
+          WiseTextWidget(
+            'Plain text',
+            selectable: true,
+            classifier: _StubClassifier([
+              const ItemSpan(text: 'Plain text', type: WiseTextItemType.text),
+            ]),
+          ),
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -190,6 +209,95 @@ void main() {
       expect(stub.callCount, 1);
       expect(styledTextOf(tester).text, '<DATE>Monday</DATE>');
       expect(styledTextOf(tester).selectable, isTrue);
+    });
+  });
+
+  group('WiseTextWidget update widget', () {
+    testWidgets('renders the widget again when text changes', (
+      tester,
+    ) async {
+      final stub = _StubClassifier(const [
+        ItemSpan(text: 'Monday', type: WiseTextItemType.date),
+      ]);
+
+      await tester.pumpWidget(
+        wrap(WiseTextWidget('First', classified: true, classifier: stub)),
+      );
+      await tester.pumpAndSettle();
+      expect(stub.callCount, 1);
+
+      await tester.pumpWidget(
+        wrap(WiseTextWidget('Second', classified: true, classifier: stub)),
+      );
+      await tester.pumpAndSettle();
+
+      expect(stub.callCount, 2);
+      expect(stub.lastText, 'Second');
+      expect(styledTextOf(tester).text, '<DATE>Monday</DATE>');
+    });
+
+    testWidgets('does not classify when irrelevant parameter changes', (
+      tester,
+    ) async {
+      final stub = _StubClassifier(const [
+        ItemSpan(text: 'Same text', type: WiseTextItemType.text),
+      ]);
+
+      await tester.pumpWidget(
+        wrap(
+          WiseTextWidget(
+            'Same text',
+            maxLines: 1,
+            classified: true,
+            classifier: stub,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.pumpWidget(
+        wrap(
+          WiseTextWidget(
+            'Same text',
+            maxLines: 3,
+            classified: true,
+            classifier: stub,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // The widget rebuilt with the new layout, but did not reclassify.
+      expect(styledTextOf(tester).maxLines, 3);
+      expect(stub.callCount, 1);
+    });
+
+    testWidgets('reclassifies with the new classifier when it changes', (
+      tester,
+    ) async {
+      final first = _StubClassifier(const [
+        ItemSpan(text: 'Monday', type: WiseTextItemType.date),
+      ]);
+      final second = _StubClassifier(const [
+        ItemSpan(text: 'Monday', type: WiseTextItemType.text),
+      ]);
+
+      await tester.pumpWidget(
+        wrap(WiseTextWidget('Monday', classified: true, classifier: first)),
+      );
+      await tester.pumpAndSettle();
+      expect(first.callCount, 1);
+      expect(styledTextOf(tester).text, '<DATE>Monday</DATE>');
+
+      await tester.pumpWidget(
+        wrap(WiseTextWidget('Monday', classified: true, classifier: second)),
+      );
+      await tester.pumpAndSettle();
+
+      // The same text is reclassified by the new classifier, not the old one.
+      expect(first.callCount, 1);
+      expect(second.callCount, 1);
+      expect(styledTextOf(tester).text, 'Monday');
     });
   });
 }
