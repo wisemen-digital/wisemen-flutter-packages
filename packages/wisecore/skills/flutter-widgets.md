@@ -46,6 +46,45 @@ lib/features/
         └── [item]_card.dart          # Card widget
 ```
 
+## Widget API Design
+
+How a widget exposes itself matters as much as what it renders.
+
+- **Widgets are classes, not functions.** Expose behavior as a widget that
+  takes a `child`, never as a function that wraps a widget
+  (e.g. `Widget wrap(BuildContext context, Controller c, Widget child)`).
+  Function-based widget APIs sit outside the element tree, can't be `const`,
+  and are awkward to compose and test. If a component augments a subtree,
+  it *is* a widget with a `child`.
+
+- **Own state locally; avoid global lookups.** Create state where it's used —
+  a field or `initState` in the owning widget's `State`. Reach for an
+  `InheritedWidget` / `.of(context)` lookup only when many descendants you
+  don't control must read the same state. A scope lookup is not a substitute
+  for passing a value down one or two levels.
+
+- **Expose only what varies.** Keep the public constructor small. Add a
+  parameter for a genuine per-use-site difference, not for everything that
+  *could* be configurable — an opinionated component with sensible defaults
+  is easier to use correctly than a wall of optional knobs.
+
+```dart
+// DON'T — function-based wrapper API
+abstract class FeedbackTrigger {
+  Widget wrap(BuildContext context, FeedbackController controller, Widget child);
+}
+
+// DO — a widget that takes a child and augments it
+class FeedbackOverlay extends StatefulWidget {
+  const FeedbackOverlay({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  State<FeedbackOverlay> createState() => _FeedbackOverlayState();
+}
+```
+
 ## Basic Widget Pattern
 
 Use `StatelessWidget` for simple widgets without state or Riverpod.
@@ -428,3 +467,6 @@ export 'text_field.dart';
 11. **Use InkWell for taps** — Always prefer `InkWell` over `GestureDetector` for clickable widgets
 12. **Ink over Container** — Use `Ink` (not `Container`) as the direct child of `InkWell` when decoration or color is needed
 13. **Material parent** — `InkWell` requires a `Material` ancestor; wrap with `Material(type: MaterialType.transparency)` unless `Material` itself provides the background color
+14. **Consume the theme; don't re-configure it** — Pull colors from `context.bgColor`, `context.fgColor`, etc. (see the theming skill). Don't add per-widget color/style parameters that duplicate the theme, and never hardcode hex colors like `Color(0xFFD32F2F)`
+15. **Scope MediaQuery reads** — Use the property accessor for what you read (`MediaQuery.sizeOf`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf`, `.textScalerOf`), not `MediaQuery.of(context)`, which rebuilds the widget on *every* metric change
+16. **Widgets take a `child`, not a builder function** — See "Widget API Design"; expose composition through a `child`, and own state locally rather than via `.of(context)` scope lookups

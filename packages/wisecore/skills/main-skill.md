@@ -41,6 +41,10 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Use barrel exports (`feature.dart`) to expose public APIs
 - Follow the single responsibility principle
 - Keep files focused and small
+- Catch errors with `catch (e)` or `catch (e, stackTrace)` — never `on Object catch (e)` (identical, just noisier). Use `on SpecificType` only when handling that type specifically, and capture the stack trace when logging or forwarding the error
+- Model payload-less states as `static const` singletons, not const constructors (`FeedbackStatus.idle`, not `FeedbackStatus.idle()`). Keep constructors only for variants that carry data
+- Use Flutter's callback typedefs — `VoidCallback` for `void Function()`, `ValueChanged<T>` for `void Function(T)` — instead of writing the raw function type
+- Give void, side-effecting methods a block body (`{ … }`), not `=>`. An arrow returns its expression, so `void f() => _x = v;` silently returns the assigned value into `void` — a statement body reads as "does", not "returns"
 
 ### Naming Conventions
 
@@ -168,3 +172,7 @@ flutter analyze
 - `drift_dev` — Drift code generation
 - `auto_route_generator` — Route code generation
 - `build_runner` — Code generation runner
+
+### Adding Dependencies
+
+Prefer pure-Dart / lightweight packages by default. Native plugins cost build time, have platform-support gaps (unsupported on some older or non-standard devices), and need permissions — so weigh that against the benefit rather than avoiding them reflexively. Be strictest for general-purpose packages reused across projects; within a single app, use a native plugin when it's genuinely the best option — just not for a nice-to-have.
