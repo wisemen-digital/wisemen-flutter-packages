@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 void main() {
@@ -20,19 +19,19 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageTransition on Android without currentRoute', (
+  testWidgets('Returns PageRouteBuilder on Android without currentRoute', (
     tester,
   ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
     final route = platformRoute<dynamic>(route: testWidget);
-    expect(route, isA<PageTransition<dynamic>>());
-    expect((route as PageTransition).type, PageTransitionType.rightToLeft);
+    expect(route, isA<PageRouteBuilder<dynamic>>());
+    expect((route as PageRouteBuilder).opaque, isFalse);
 
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageTransition on Android with currentRoute', (
+  testWidgets('Returns PageRouteBuilder on Android with currentRoute', (
     tester,
   ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -41,11 +40,8 @@ void main() {
       route: testWidget,
       currentRoute: currentWidget,
     );
-    expect(route, isA<PageTransition<dynamic>>());
-    expect(
-      (route as PageTransition).type,
-      PageTransitionType.rightToLeftJoined,
-    );
+    expect(route, isA<PageRouteBuilder<dynamic>>());
+    expect((route as PageRouteBuilder).opaque, isFalse);
 
     debugDefaultTargetPlatformOverride = null;
   });

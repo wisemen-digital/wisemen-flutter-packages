@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
-/// PlatformRoute with MaterialPageRoute, PageTransition and CupertinoPageRoute
+/// PlatformRoute with MaterialPageRoute, PageRouteBuilder and CupertinoPageRoute
 Route<T> platformRoute<T>({
   required Widget route,
   Widget? currentRoute,
@@ -21,16 +20,39 @@ Route<T> platformRoute<T>({
 
   switch (defaultTargetPlatform) {
     case TargetPlatform.android:
-      return PageTransition(
-        child: route,
-        childCurrent: currentRoute,
-        type: currentRoute != null
-            ? PageTransitionType.rightToLeftJoined
-            : PageTransitionType.rightToLeft,
-        fullscreenDialog: fullscreenDialog,
+      return PageRouteBuilder<T>(
         settings: settings,
-        duration: const Duration(milliseconds: 250),
-        reverseDuration: const Duration(milliseconds: 250),
+        fullscreenDialog: fullscreenDialog,
+        opaque: false,
+        transitionDuration: const Duration(milliseconds: 250),
+        reverseTransitionDuration: const Duration(milliseconds: 250),
+        pageBuilder: (context, animation, secondaryAnimation) => route,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final slideIn = SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          );
+
+          if (currentRoute == null) {
+            return slideIn;
+          }
+
+          return Stack(
+            children: [
+              SlideTransition(
+                position: Tween<Offset>(
+                  begin: Offset.zero,
+                  end: const Offset(-1, 0),
+                ).animate(animation),
+                child: currentRoute,
+              ),
+              slideIn,
+            ],
+          );
+        },
       );
 
     case TargetPlatform.iOS:

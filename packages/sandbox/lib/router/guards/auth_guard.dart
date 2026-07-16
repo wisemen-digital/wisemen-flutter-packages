@@ -24,7 +24,8 @@ class AuthGuard extends AutoRouteGuard {
         resolver.next();
       case AuthenticationStatus.unauthenticated:
       case AuthenticationStatus.authenticated:
-        resolver.redirect(const DashboardRouter());
+        router.push(const DashboardRouter());
+        resolver.next(false);
     }
   }
 }

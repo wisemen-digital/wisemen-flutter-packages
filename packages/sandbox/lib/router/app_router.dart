@@ -33,6 +33,11 @@ class AppRouter extends RootStackRouter {
         AdaptiveRoute(page: EmptyRoute.page),
       ],
     ),
+    AdaptiveRoute(
+      path: '/bidirectional-calendar-demo',
+      page: BiDirectionalCalendarDemoScreenRoute.page,
+      title: (context, data) => 'Bi-directional calendar demo',
+    ),
     //mason: insert auto route
   ];
 }

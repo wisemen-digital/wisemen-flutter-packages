@@ -27,8 +27,8 @@ dependencies:
     path: ../wiseclient
   
  # Riverpod
-  riverpod_annotation: ^2.3.5
-  hooks_riverpod: ^2.5.1
+  riverpod_annotation: ^4.0.0
+  hooks_riverpod: ^3.3.1
 
   # UI
   modal_bottom_sheet: ^3.0.0
@@ -48,7 +48,7 @@ dependencies:
   flutter_native_splash: ^2.4.1
 
   # Logging
-  talker_flutter: ^4.3.4
+  talker_flutter: ^5.1.16
 
   flutter_platform_alert:
     path: ../../../wise-packages/flutter_platform_alert
@@ -59,10 +59,10 @@ dev_dependencies:
   build_runner: ^2.4.9
 
   # Riverpod
-  riverpod_generator: ^2.4.0
+  riverpod_generator: ^4.0.0
 
   # Routing
-  auto_route_generator: ^9.0.0
+  auto_route_generator: ^10.4.0
   
   # Data
   json_serializable: ^6.6.1
@@ -72,10 +72,6 @@ dev_dependencies:
   
   # Flavors
   flutter_flavorizr: ^2.1.6
-  
-  # Linting
-  riverpod_lint: ^2.6.3
-  custom_lint: ^0.7.5
 
 # flavors
 flavorizr:

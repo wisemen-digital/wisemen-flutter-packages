@@ -28,6 +28,6 @@ class SettingsRepositoryImpl implements SettingsRepository {
 }
 
 @riverpod
-SettingsRepositoryImpl settingsRepositoryImpl(Ref ref) {
+SettingsRepository settingsRepositoryImpl(Ref ref) {
   return SettingsRepositoryImpl(ref);
 }

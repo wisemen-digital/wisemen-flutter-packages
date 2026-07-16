@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
@@ -58,6 +59,17 @@ class OtherSettingsScreen extends ConsumerWidget {
                 inactiveColor: Theme.of(context).colorScheme.secondary,
                 value: ref.watch(switchValueProvider),
                 onChanged: ref.read(switchValueProvider.notifier).changeValue,
+              ),
+              PlatformAnimatedButton(
+                onPressed: () {
+                  context.router.push(
+                    const BiDirectionalCalendarDemoScreenRoute(),
+                  );
+                },
+                child: Text(
+                  'Bi-directional calendar demo',
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
               ),
               const SizedBox(
                 height: 1000,

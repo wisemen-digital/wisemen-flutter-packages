@@ -1,6 +1,6 @@
 name: wisewidgetslibrary
 description: Wisemen widgets library containing platform specific widgets and other commonly useful widgets.
-version: 2.1.4
+version: 2.1.5
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisewidgetslibrary
 repository: https://github.com/wisemen-digital/flutter-widgets-library/packages/wisewidgetslibrary
 
@@ -26,7 +26,6 @@ dependencies:
   easy_infinite_pagination: ">=0.0.6 <1.0.0"
     
   # Animations
-  page_transition: ^2.2.1
   flutter_animate: ">=4.5.2 <5.0.0"
 
   # Conditional wrap
