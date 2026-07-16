@@ -68,19 +68,17 @@ class FeedbackToast extends StatelessWidget {
 /// Owns the overlay entries and their timers so the host widget's `State` does
 /// not have to. Call [dispose] to cancel pending timers.
 class FeedbackToastPresenter {
-  /// Creates a presenter that resolves its overlay host lazily via
-  /// [_overlayContext] (the context may not exist yet at construction time).
-  FeedbackToastPresenter(this._overlayContext);
+  /// Creates a presenter.
+  FeedbackToastPresenter();
 
   /// How long a toast stays visible before it auto-dismisses.
   static const Duration _visibleDuration = Duration(seconds: 4);
 
-  final BuildContext? Function() _overlayContext;
   final Set<Timer> _timers = <Timer>{};
 
-  /// Inserts a toast into the overlay; auto-dismisses after 4 seconds.
-  void show(String message, {required bool isError}) {
-    final context = _overlayContext();
+  /// Inserts a toast into the [Overlay] above [context]; auto-dismisses after
+  /// 4 seconds. No-ops if [context] is null or has no ambient overlay.
+  void show(BuildContext? context, String message, {required bool isError}) {
     if (context == null) {
       return;
     }

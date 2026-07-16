@@ -15,14 +15,14 @@ void main() {
       const status = FeedbackStatus.success(
         FeedbackResult(issueId: 'ABC-1'),
       );
-      expect(status.state, FeedbackSubmissionState.success);
-      expect(status.result?.issueId, 'ABC-1');
+      expect(status, isA<FeedbackSuccess>());
+      expect((status as FeedbackSuccess).result.issueId, 'ABC-1');
     });
 
     test('failure carries the error', () {
       const status = FeedbackStatus.failure(FeedbackException('boom'));
-      expect(status.state, FeedbackSubmissionState.failure);
-      expect(status.error, isA<FeedbackException>());
+      expect(status, isA<FeedbackFailure>());
+      expect((status as FeedbackFailure).error, isA<FeedbackException>());
     });
   });
 }

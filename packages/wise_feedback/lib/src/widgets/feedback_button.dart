@@ -19,10 +19,10 @@ class FeedbackButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   /// Where the button sits over the app.
-  final Alignment alignment;
+  final AlignmentGeometry alignment;
 
   /// Padding between the button and the screen edges.
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
 
   /// Button background color.
   final Color backgroundColor;

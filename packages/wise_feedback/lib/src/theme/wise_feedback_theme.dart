@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../models/feedback_exception.dart';
+
 /// Text and surface configuration for the built-in feedback form.
 ///
 /// Styling is intentionally opinionated (Wisemen defaults); only the surface
@@ -33,4 +35,9 @@ class WiseFeedbackTheme {
 
   /// Fallback message shown when submission fails without a specific reason.
   final String genericErrorMessage;
+
+  /// The user-facing message for a failed submission: the [FeedbackException]'s
+  /// own message when available, otherwise [genericErrorMessage].
+  String messageForError(Object error) =>
+      error is FeedbackException ? error.message : genericErrorMessage;
 }

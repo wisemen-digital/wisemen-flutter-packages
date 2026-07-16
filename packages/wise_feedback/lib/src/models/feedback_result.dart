@@ -4,6 +4,15 @@ class FeedbackResult {
   /// return issue identifiers.
   const FeedbackResult({this.issueId, this.issueUrl});
 
+  /// Builds a result from the proxy backend's JSON body
+  /// (`{"issueId": ..., "issueUrl": ...}`); missing fields decode to `null`.
+  factory FeedbackResult.fromJson(Map<String, dynamic> json) {
+    return FeedbackResult(
+      issueId: json['issueId'] as String?,
+      issueUrl: json['issueUrl'] as String?,
+    );
+  }
+
   /// The created Linear issue id, if known.
   final String? issueId;
 

@@ -95,9 +95,6 @@ class LinearProxyTransport implements FeedbackTransport {
         cause: e,
       );
     }
-    return FeedbackResult(
-      issueId: decoded['issueId'] as String?,
-      issueUrl: decoded['issueUrl'] as String?,
-    );
+    return FeedbackResult.fromJson(decoded);
   }
 }

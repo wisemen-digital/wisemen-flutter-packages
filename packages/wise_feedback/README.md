@@ -29,7 +29,15 @@ Surface submission progress, success, and errors yourself by listening to
 LinearFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   onStatusChanged: (status) {
-    // Show a snackbar/toast based on status.state, status.result, status.error.
+    switch (status) {
+      case FeedbackIdle():
+      case FeedbackSubmitting():
+        break;
+      case FeedbackSuccess(:final result):
+        // Show a confirmation, e.g. with result.issueUrl.
+      case FeedbackFailure(:final error):
+        // Show an error based on `error`.
+    }
   },
   child: MyApp(),
 );
