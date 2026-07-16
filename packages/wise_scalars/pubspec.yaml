@@ -6,8 +6,8 @@ repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages
 
 environment:
   sdk: ">=3.10.0 <4.0.0"
+  flutter: '>=3.19.5'
 resolution: workspace
-
 dependencies:
   collection: ^1.19.1
   flutter:

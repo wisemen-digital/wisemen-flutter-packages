@@ -5,7 +5,8 @@ homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/w
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_theming
 
 environment:
-  sdk: ">=3.6.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: '>=3.19.5'
 resolution: workspace
 dependencies:
   # Flutter
