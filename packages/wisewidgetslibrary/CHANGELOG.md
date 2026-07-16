@@ -1,5 +1,7 @@
 ## 2.1.5
 
+* Added `BiDirectionalPagedList<T>` that pages both backward and forward from an anchor point, each direction driven by its own `InfiniteScrollController` (e.g. a calendar list that opens on today and pages into the past or future)
+* Replaced the `page_transition` dependency in `platformRoute` with an equivalent `PageRouteBuilder`-based implementation (the pinned `page_transition` version no longer compiled against current Flutter)
 * Added Swift Package Manager support
 
 ## 2.1.4
