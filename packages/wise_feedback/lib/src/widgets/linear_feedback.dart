@@ -12,6 +12,7 @@ import '../models/feedback_report.dart';
 import '../models/feedback_reporter.dart';
 import '../models/feedback_status.dart';
 import '../screens/feedback_form.dart';
+import '../template/feedback_template.dart';
 import '../theme/wise_feedback_theme.dart';
 import '../transport/feedback_transport.dart';
 import 'feedback_button.dart';
@@ -39,6 +40,7 @@ class LinearFeedback extends StatefulWidget {
     this.metadataBuilder,
     this.showPriority = true,
     this.categories,
+    this.template = const DefaultFeedbackTemplate(),
     super.key,
   });
 
@@ -86,6 +88,12 @@ class LinearFeedback extends StatefulWidget {
 
   /// Category options to offer in the form, or null to hide the selector.
   final List<String>? categories;
+
+  /// Defines the form's fields and how the issue body is rendered.
+  ///
+  /// Defaults to [DefaultFeedbackTemplate]. Use `BugReportTemplate` or a custom
+  /// [FeedbackTemplate] for a structured layout.
+  final FeedbackTemplate template;
 
   @override
   State<LinearFeedback> createState() => _LinearFeedbackState();
@@ -139,16 +147,23 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     final extra = feedback.extra ?? const <String, dynamic>{};
     final metadata = await _collectMetadata();
     final reporter = await _resolveReporter();
+    final fields = (extra['fields'] as Map?)?.map(
+          (key, value) => MapEntry(key.toString(), value.toString()),
+        ) ??
+        const <String, String>{};
+    final report = FeedbackReport(
+      title: (extra['title'] as String?) ?? '',
+      description: '',
+      screenshotPng: feedback.screenshot,
+      metadata: metadata,
+      fields: fields,
+      reporter: reporter,
+      priority: _priorityFromName(extra['priority'] as String?),
+      category: extra['category'] as String?,
+      createdAt: DateTime.now(),
+    );
     await _controller.submit(
-      FeedbackReport(
-        title: (extra['title'] as String?) ?? '',
-        description: feedback.text,
-        screenshotPng: feedback.screenshot,
-        metadata: metadata,
-        reporter: reporter,
-        priority: _priorityFromName(extra['priority'] as String?),
-        category: extra['category'] as String?,
-      ),
+      report.copyWith(description: widget.template.buildBody(report)),
     );
     final status = _controller.value;
     if (status is FeedbackFailure) {
@@ -244,6 +259,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         theme: widget.theme,
         status: _controller,
         scrollController: scrollController,
+        fields: widget.template.fields,
         showPriority: widget.showPriority,
         categories: widget.categories,
         onSubmit: (description, {extras}) =>

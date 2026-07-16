@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
+import '../template/feedback_field.dart';
 import '../theme/wise_feedback_theme.dart';
 
 /// Wisemen accent used for the submit button.
@@ -10,8 +11,9 @@ const Color _kAccent = Color(0xFF009687);
 
 /// Callback invoked when the user submits the form.
 ///
-/// Matches the `feedback` package's submit signature: [description] is the
-/// primary text and [extras] carries the title under key `title`.
+/// The extras map carries `title`, `fields` (a `Map<String, String>` of the
+/// template field values), and — when shown — `priority` (a [FeedbackPriority]
+/// name) and `category`.
 ///
 /// The form reflects the outcome through its `status` listenable rather than
 /// this future's result: on [FeedbackSuccess] the sheet is dismissed, on
@@ -21,23 +23,22 @@ typedef FeedbackFormSubmit = Future<void> Function(
   Map<String, dynamic>? extras,
 });
 
-/// The built-in title + description form shown over the screenshot.
+/// The built-in feedback form: a title, the template's fields, and optional
+/// priority/category selectors.
 class FeedbackForm extends StatefulWidget {
   /// Creates the form.
   const FeedbackForm({
     required this.onSubmit,
     required this.theme,
     required this.status,
+    required this.fields,
     this.scrollController,
     this.showPriority = false,
     this.categories,
     super.key,
   });
 
-  /// Called with the description and extras on submit.
-  ///
-  /// The extras map carries `title`, and — when the respective field is shown —
-  /// `priority` (a [FeedbackPriority] name) and `category`.
+  /// Called with the field values (in extras) on submit.
   final FeedbackFormSubmit onSubmit;
 
   /// Visual configuration.
@@ -46,11 +47,10 @@ class FeedbackForm extends StatefulWidget {
   /// Submission state used to show progress and disable the button.
   final ValueListenable<FeedbackStatus> status;
 
+  /// The template's editable fields, rendered below the title.
+  final List<FeedbackField> fields;
+
   /// Scroll controller supplied by the surrounding draggable sheet.
-  ///
-  /// Wiring it into the scroll view keeps the sheet's drag-to-resize gesture
-  /// working and lets the content scroll instead of overflowing when the sheet
-  /// is short or the keyboard is open.
   final ScrollController? scrollController;
 
   /// Whether to show a priority selector.
@@ -65,24 +65,33 @@ class FeedbackForm extends StatefulWidget {
 
 class _FeedbackFormState extends State<FeedbackForm> {
   final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  late final Map<String, TextEditingController> _fieldControllers = {
+    for (final field in widget.fields) field.key: TextEditingController(),
+  };
   FeedbackPriority _priority = FeedbackPriority.none;
   String? _category;
 
   @override
   void dispose() {
     _titleController.dispose();
-    _descriptionController.dispose();
+    for (final controller in _fieldControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
   Future<void> _submit() async {
     // The outcome (success dismisses the sheet, failure shows inline below) is
     // reflected through `status`, so nothing here has to change local state.
+    final fieldValues = <String, String>{
+      for (final entry in _fieldControllers.entries)
+        entry.key: entry.value.text,
+    };
     await widget.onSubmit(
-      _descriptionController.text,
+      '',
       extras: <String, dynamic>{
         'title': _titleController.text,
+        'fields': fieldValues,
         if (widget.showPriority) 'priority': _priority.name,
         if (_category != null) 'category': _category,
       },
@@ -119,17 +128,19 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     border: const OutlineInputBorder(),
                   ),
                 ),
-                TextField(
-                  key: const Key('wise_feedback_description'),
-                  controller: _descriptionController,
-                  textCapitalization: TextCapitalization.sentences,
-                  minLines: 2,
-                  maxLines: 4,
-                  decoration: InputDecoration(
-                    labelText: theme.descriptionHint,
-                    border: const OutlineInputBorder(),
+                for (final field in widget.fields)
+                  TextField(
+                    key: Key('wise_feedback_field_${field.key}'),
+                    controller: _fieldControllers[field.key],
+                    textCapitalization: TextCapitalization.sentences,
+                    minLines: field.minLines,
+                    maxLines: field.maxLines,
+                    decoration: InputDecoration(
+                      labelText: field.label,
+                      border: const OutlineInputBorder(),
+                      alignLabelWithHint: true,
+                    ),
                   ),
-                ),
                 if (widget.showPriority)
                   DropdownButtonFormField<FeedbackPriority>(
                     key: const Key('wise_feedback_priority'),

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/feedback_exception.dart';
-import '../models/feedback_priority.dart';
 import '../models/feedback_report.dart';
 import '../models/feedback_result.dart';
 import 'feedback_transport.dart';
@@ -134,52 +133,9 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     );
   }
 
-  /// Builds the issue body: the user's text, a `## Context` section rendering
-  /// reporter/category/priority/environment/navigation, then the screenshot.
-  String _renderBody(FeedbackReport report, String assetUrl) {
-    final buffer = StringBuffer(report.description);
-    final context = <String>[];
-
-    final reporter = report.reporter;
-    if (reporter != null && !reporter.isEmpty) {
-      final named = <String?>[reporter.name, reporter.email]
-          .whereType<String>()
-          .where((value) => value.isNotEmpty)
-          .toList();
-      final who = named.isNotEmpty ? named.join(' · ') : (reporter.id ?? '');
-      if (who.isNotEmpty) {
-        context.add('**Reported by:** $who');
-      }
-    }
-    if (report.category case final String category) {
-      context.add('**Category:** $category');
-    }
-    if (report.priority != FeedbackPriority.none) {
-      context.add('**Priority:** ${report.priority.label}');
-    }
-
-    final environment = report.metadata.entries
-        .where((entry) => entry.key != 'navigation')
-        .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
-        .toList();
-    final navigation = report.metadata['navigation'];
-
-    if (context.isNotEmpty || environment.isNotEmpty || navigation != null) {
-      buffer.write('\n\n## Context\n');
-      if (context.isNotEmpty) {
-        buffer.write('${context.join('\n')}\n');
-      }
-      if (environment.isNotEmpty) {
-        buffer.write('\n**Environment**\n${environment.join('\n')}\n');
-      }
-      if (navigation != null) {
-        buffer.write('\n**Recent screens:** $navigation\n');
-      }
-    }
-
-    buffer.write('\n\n![screenshot]($assetUrl)');
-    return buffer.toString();
-  }
+  /// Appends the uploaded screenshot to the template-rendered body.
+  String _renderBody(FeedbackReport report, String assetUrl) =>
+      '${report.description}\n\n![screenshot]($assetUrl)';
 
   Future<Json> _graphql(
     String query,
