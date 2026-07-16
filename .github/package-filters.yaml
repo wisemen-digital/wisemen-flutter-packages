@@ -2,26 +2,26 @@
 
 # Packages
 wise_nav_bar:
-  - '.github/**' 
+  - '.github/actions/**'
   - 'packages/wise_nav_bar/**'
 wise_zitadel_login:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wise_zitadel_login/**'
 wiseclient:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wiseclient/**'
 wisecore:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wisecore/**'
 wisewidgetslibrary:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wisewidgetslibrary/**'
 wise_theming:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wise_theming/**'
 wise_scalars:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wise_scalars/**'
 wise_review:
-  - '.github/**'
+  - '.github/actions/**'
   - 'packages/wise_review/**'
