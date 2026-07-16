@@ -37,8 +37,6 @@ class RepositoryService {
            refreshErrorHandler: (e, stackTrace) async {
              if (e is DioException && [401].contains(e.response?.statusCode)) {
                onLogout();
-             } else {
-               // Don't log out
              }
            },
          ),

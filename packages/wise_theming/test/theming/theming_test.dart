@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_theming/src/colors/colors.dart';
@@ -266,8 +267,7 @@ void main() {
           successPrimary: Color(0xFF00EE00),
         );
 
-        final updatedTheme =
-            lightTheme.copyWith(textColors: newTextColors) as WiseTheme;
+        final updatedTheme = lightTheme.copyWith(textColors: newTextColors) as WiseTheme;
 
         expect(updatedTheme.textColors, newTextColors);
         expect(updatedTheme.identifier, lightTheme.identifier);
@@ -321,16 +321,14 @@ void main() {
     });
 
     group('asThemeData', () {
-      test('should generate ThemeData with correct brightness for light theme',
-          () {
+      test('should generate ThemeData with correct brightness for light theme', () {
         final themeData = lightTheme.asThemeData(TargetPlatform.android);
 
         expect(themeData.brightness, Brightness.light);
         expect(themeData.colorScheme.brightness, Brightness.light);
       });
 
-      test('should generate ThemeData with correct brightness for dark theme',
-          () {
+      test('should generate ThemeData with correct brightness for dark theme', () {
         final themeData = darkTheme.asThemeData(TargetPlatform.android);
 
         expect(themeData.brightness, Brightness.dark);
@@ -359,16 +357,14 @@ void main() {
         test('should use Cupertino font for iOS', () {
           final themeData = lightTheme.asThemeData(TargetPlatform.iOS);
 
-          expect(themeData.textTheme.bodyLarge?.fontFamily,
-              'CupertinoSystemDisplay');
+          expect(themeData.textTheme.bodyLarge?.fontFamily, 'CupertinoSystemDisplay');
           expect(themeData.splashFactory, NoSplash.splashFactory);
         });
 
         test('should use Cupertino font for macOS', () {
           final themeData = lightTheme.asThemeData(TargetPlatform.macOS);
 
-          expect(themeData.textTheme.bodyLarge?.fontFamily,
-              'CupertinoSystemDisplay');
+          expect(themeData.textTheme.bodyLarge?.fontFamily, 'CupertinoSystemDisplay');
           expect(themeData.splashFactory, NoSplash.splashFactory);
         });
 
@@ -381,16 +377,12 @@ void main() {
 
         test('should use RobotoFlex font for other platforms', () {
           final themeDataLinux = lightTheme.asThemeData(TargetPlatform.linux);
-          final themeDataWindows =
-              lightTheme.asThemeData(TargetPlatform.windows);
-          final themeDataFuchsia =
-              lightTheme.asThemeData(TargetPlatform.fuchsia);
+          final themeDataWindows = lightTheme.asThemeData(TargetPlatform.windows);
+          final themeDataFuchsia = lightTheme.asThemeData(TargetPlatform.fuchsia);
 
           expect(themeDataLinux.textTheme.bodyLarge?.fontFamily, 'RobotoFlex');
-          expect(
-              themeDataWindows.textTheme.bodyLarge?.fontFamily, 'RobotoFlex');
-          expect(
-              themeDataFuchsia.textTheme.bodyLarge?.fontFamily, 'RobotoFlex');
+          expect(themeDataWindows.textTheme.bodyLarge?.fontFamily, 'RobotoFlex');
+          expect(themeDataFuchsia.textTheme.bodyLarge?.fontFamily, 'RobotoFlex');
         });
       });
 
@@ -399,13 +391,9 @@ void main() {
           final themeData = lightTheme.asThemeData(TargetPlatform.android);
 
           expect(themeData.pageTransitionsTheme, isNotNull);
-          expect(
-              themeData.pageTransitionsTheme.builders[TargetPlatform.android],
-              isA<FadeForwardsPageTransitionsBuilder>());
-          expect(themeData.pageTransitionsTheme.builders[TargetPlatform.iOS],
-              isA<CupertinoPageTransitionsBuilder>());
-          expect(themeData.pageTransitionsTheme.builders[TargetPlatform.macOS],
-              isA<CupertinoPageTransitionsBuilder>());
+          expect(themeData.pageTransitionsTheme.builders[TargetPlatform.android], isA<FadeForwardsPageTransitionsBuilder>());
+          expect(themeData.pageTransitionsTheme.builders[TargetPlatform.iOS], isA<CupertinoPageTransitionsBuilder>());
+          expect(themeData.pageTransitionsTheme.builders[TargetPlatform.macOS], isA<CupertinoPageTransitionsBuilder>());
         });
       });
 
@@ -454,15 +442,11 @@ void main() {
           final themeData = lightTheme.asThemeData(TargetPlatform.iOS);
           final cupertinoTheme = themeData.cupertinoOverrideTheme;
 
-          expect(
-              cupertinoTheme?.primaryColor, mockForegroundColors.brandPrimary);
-          expect(cupertinoTheme?.primaryContrastingColor,
-              mockTextColors.primaryOnBrand);
-          expect(
-              cupertinoTheme?.barBackgroundColor, mockBackgroundColors.primary);
+          expect(cupertinoTheme?.primaryColor, mockForegroundColors.brandPrimary);
+          expect(cupertinoTheme?.primaryContrastingColor, mockTextColors.primaryOnBrand);
+          expect(cupertinoTheme?.barBackgroundColor, mockBackgroundColors.primary);
           expect(cupertinoTheme?.brightness, lightTheme.themeType.brightness);
-          expect(cupertinoTheme?.scaffoldBackgroundColor,
-              mockBackgroundColors.primary);
+          expect(cupertinoTheme?.scaffoldBackgroundColor, mockBackgroundColors.primary);
         });
       });
     });

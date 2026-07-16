@@ -60,12 +60,7 @@ Future<DateTime?> showPlatformDatePicker({
                           borderRadius: BorderRadius.circular(25),
                           child: Text(
                             S.of(context).ok,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'CupertinoSystemDisplay',
-                              fontSize: 15,
-                              color: context.foregroundColors.primary.computeLuminance() > 0.5 ? Colors.black : Colors.white,
-                            ),
+                            style: context.body.copyWith(fontWeight: FontWeight.bold, fontSize: 15, color: context.textColors.primary),
                           ),
                           onPressed: () => Navigator.of(context).pop(newDate ?? DateTime.now()),
                         ),

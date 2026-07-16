@@ -7,6 +7,7 @@ import 'package:repository/repository.dart';
 import 'package:sandbox/app.dart';
 import 'package:sandbox/router/app_router.gr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wise_theming/wise_theming.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
 import 'package:wisecore/wisecore.dart';
 
@@ -51,9 +52,9 @@ Future<void> initMain(Flavor flavor) async {
               applicationId: F.zitadelAppId,
               organizationId: F.zitadelOrganizationId,
               buttonOptions: WiseZitadelButtonOptions(
-                color: (context) => Colors.white,
-                buttonTextStyle: (context) => const TextStyle(
-                  color: Colors.black,
+                color: (context) => context.backgroundColors.primary,
+                buttonTextStyle: (context) => context.body.copyWith(
+                  color: context.foregroundColors.primary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
