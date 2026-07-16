@@ -1,0 +1,14 @@
+name: network
+version: 1.0.0
+description: OpenAPI API client
+homepage: homepage
+publish_to: none
+
+environment:
+  sdk: '>=3.10.0 <4.0.0'
+resolution: workspace
+dependencies:
+  dio: '^5.7.0'
+  wiseclient: ^2.0.4
+  openapi:
+    path: ../generated_network

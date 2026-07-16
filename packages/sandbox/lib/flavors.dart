@@ -1,9 +1,6 @@
-enum Flavor {
-  DEVELOPMENT,
-  STAGING,
-  QA,
-  PRODUCTION,
-}
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+enum Flavor { DEVELOPMENT, STAGING, QA, PRODUCTION }
 
 class F {
   static Flavor? appFlavor;
@@ -11,72 +8,27 @@ class F {
   static String get appName {
     switch (appFlavor) {
       case Flavor.DEVELOPMENT:
-        return 'Sanbox Development';
+        return 'Sandbox Development';
       case Flavor.STAGING:
-        return 'Sanbox Staging';
+        return 'Sandbox Staging';
       case Flavor.QA:
-        return 'Sanbox QA';
+        return 'Sandbox QA';
       case Flavor.PRODUCTION:
-        return 'Sanbox';
+        return 'Sandbox';
       default:
-        return 'Sanbox';
+        return 'Sandbox';
     }
   }
 
-  static String get baseUrl {
-    switch (appFlavor) {
-      case Flavor.DEVELOPMENT:
-      case Flavor.STAGING:
-      case Flavor.QA:
-      case Flavor.PRODUCTION:
-      case null:
-        return 'https://jsonplaceholder.typicode.com/';
-    }
-  }
+  static String get baseUrl => dotenv.get('BASE_URL');
 
-  static String get clientId {
-    switch (appFlavor) {
-      case Flavor.DEVELOPMENT:
-      case Flavor.STAGING:
-      case Flavor.QA:
-      case Flavor.PRODUCTION:
-      case null:
-        return 'null';
-    }
-  }
+  static String get zitadelBaseUrl => dotenv.get('AUTH_BASE_URL');
 
-  static String get clientSecret {
-    switch (appFlavor) {
-      case Flavor.DEVELOPMENT:
-      case Flavor.STAGING:
-      case Flavor.QA:
-      case Flavor.PRODUCTION:
-      case null:
-        return 'null';
-    }
-  }
+  static String get clientId => dotenv.get('CLIENT_ID');
 
-  static String? get onesignalKey {
-    switch (appFlavor) {
-      case Flavor.DEVELOPMENT:
-      case Flavor.STAGING:
-      case Flavor.QA:
-      case Flavor.PRODUCTION:
-      case null:
-        return null;
-    }
-  }
+  static String get zitadelAppId => dotenv.get('AUTH_APPLICATION_ID');
 
-  static String? get sentryDsn {
-    switch (appFlavor) {
-      case Flavor.DEVELOPMENT:
-      case Flavor.STAGING:
-      case Flavor.QA:
-      case Flavor.PRODUCTION:
-      case null:
-        return null;
-    }
-  }
+  static String get zitadelOrganizationId => dotenv.get('AUTH_ORGANIZATION_ID');
 
   static String? get bannerName {
     switch (appFlavor) {
@@ -90,6 +42,21 @@ class F {
         return null;
       default:
         return null;
+    }
+  }
+
+  static String get bundleId {
+    switch (appFlavor) {
+      case Flavor.DEVELOPMENT:
+        return 'com.wisemen.app.development';
+      case Flavor.STAGING:
+        return 'com.wisemen.app.staging';
+      case Flavor.QA:
+        return 'com.wisemen.app.qa';
+      case Flavor.PRODUCTION:
+        return 'com.wisemen.app';
+      default:
+        return 'com.wisemen.app.development';
     }
   }
 

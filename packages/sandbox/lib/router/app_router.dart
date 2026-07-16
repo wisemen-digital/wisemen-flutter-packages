@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sandbox/router/guards/auth_guard.dart';
+import 'package:wise_zitadel_login/wise_zitadel_login.dart';
 
 import 'app_router.gr.dart';
 
@@ -9,30 +10,19 @@ class AppRouter extends RootStackRouter {
   late Ref ref;
 
   late final List<AutoRoute> routes = [
-    AdaptiveRoute(
+    CustomRoute(
       path: '/',
       page: SplashScreenRoute.page,
-      initial: true,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
       guards: [
         AuthGuard(ref: ref),
       ],
     ),
-    AdaptiveRoute(
-      page: DashboardRouter.page,
-      children: [
-        AdaptiveRoute(
-          path: 'settings',
-          page: SettingsScreenRoute.page,
-          title: (context, data) => 'Settings',
-        ),
-        AdaptiveRoute(
-          path: 'other-settings',
-          page: OtherSettingsScreenRoute.page,
-          title: (context, data) => 'Other settings',
-        ),
-        AdaptiveRoute(page: EmptyRoute.page),
-      ],
+    CustomRoute(
+      page: WiseLoginScreenRoute.page,
+      transitionsBuilder: TransitionsBuilders.noTransition,
     ),
+    AdaptiveRoute(page: SettingsScreenRoute.page),
     //mason: insert auto route
   ];
 }

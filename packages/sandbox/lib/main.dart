@@ -1,55 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:repository/repository.dart';
 import 'package:sandbox/app.dart';
-import 'package:sandbox/feature_init_util.dart';
+import 'package:sandbox/router/app_router.gr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:wisecore/wisecore.dart';
+import 'package:wise_theming/wise_theming.dart';
+import 'package:wise_zitadel_login/wise_zitadel_login.dart';
+import 'package:wisecore/wisecore.dart';
 
 import 'flavors.dart';
+import 'utils/utils.dart';
 
 Future<void> initMain(Flavor flavor) async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await dotenv.load();
 
   F.appFlavor = flavor;
 
-  // Set portrait orientation
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
-
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(statusBarBrightness: Brightness.dark),
-  );
-
   await clearSecureStorage();
-
-  // if (!F.onesignalKey.isNullOrEmpty) {
-  //   try {
-  //     OneSignal.initialize(F.onesignalKey!);
-  //   } catch (e) {
-  //     debugPrint(e.toString());
-  //   }
-  // }
-  // if (!kDebugMode && !F.sentryDsn.isNullOrEmpty) {
-  //   await SentryFlutter.init(
-  //     (options) {
-  //       options
-  //         ..dsn = F.sentryDsn
-  //         ..environment = F.name.toLowerCase();
-  //     },
-  //   );
-  // }
 
   initFeatures();
 
+  final RepositoryService repository;
+  if (flavor == Flavor.DEVELOPMENT) {
+    repository = RepositoryService.mock();
+  } else {
+    repository = RepositoryService(
+      baseUrl: F.baseUrl,
+      authUrl: F.zitadelBaseUrl,
+      clientId: F.clientId,
+      onLogout: () {},
+    );
+  }
+
+  final sharedPrefs = await SharedPreferences.getInstance();
+
   runApp(
     UncontrolledProviderScope(
-      container: ProviderContainer(),
+      container: ProviderContainer(
+        overrides: [
+          appRepositoryServiceProvider.overrideWithValue(repository),
+          sharedPreferencesProvider.overrideWithValue(sharedPrefs),
+          wiseZitadelOptionsProvider.overrideWithValue(
+            WiseZitadelOptions(
+              zitadelBaseUrl: F.zitadelBaseUrl,
+              bundleId: F.bundleId,
+              applicationId: F.zitadelAppId,
+              organizationId: F.zitadelOrganizationId,
+              buttonOptions: WiseZitadelButtonOptions(
+                color: (context) => context.backgroundColors.primary,
+                buttonTextStyle: (context) => context.body.copyWith(
+                  color: context.foregroundColors.primary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onLoginSuccess: (router, ref, token) async {
+                if (token == null) {
+                  return;
+                }
+                await ref.read(appRepositoryServiceProvider).setToken(token);
+                router.replace(const SettingsScreenRoute());
+              },
+              supportedTypes: [
+                const ZitadelLoginType(
+                  buttonText: 'Internal',
+                  iconSvgString: '',
+                  idp: '',
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
       child: const App(),
     ),
   );

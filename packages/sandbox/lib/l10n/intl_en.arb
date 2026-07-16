@@ -1,10 +1,15 @@
 {
-  "appName": "Sanbox",
+  "@@locale": "en",
+  "appName": "Sandbox",
   "ok": "Okay",
   "back": "Back",
   "save": "Save",
   "close": "Close",
   "cancel": "Cancel",
   "search": "Search",
-  "networkErrorSomethingWentWrong": "Something went wrong, please try again later."
+  "networkErrorSomethingWentWrong": "Something went wrong, please try again later.",
+  "description": "Description",
+  "reportDamage": "Report damage",
+  "date": "Date",
+  "time": "Time"
 }
