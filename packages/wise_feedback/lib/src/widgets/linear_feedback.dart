@@ -47,7 +47,7 @@ class LinearFeedback extends StatefulWidget {
   final bool showButton;
 
   /// Where the built-in button sits over the app.
-  final Alignment buttonAlignment;
+  final AlignmentGeometry buttonAlignment;
 
   /// Background color of the built-in button.
   final Color buttonBackgroundColor;
@@ -59,8 +59,7 @@ class LinearFeedback extends StatefulWidget {
 class _LinearFeedbackState extends State<LinearFeedback> {
   late final FeedbackController _controller =
       FeedbackController(widget.transport);
-  late final FeedbackToastPresenter _toasts =
-      FeedbackToastPresenter(() => _overlayContext);
+  final FeedbackToastPresenter _toasts = FeedbackToastPresenter();
 
   BuildContext? _overlayContext;
   Listenable? _feedbackNotifier;
@@ -109,7 +108,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       ),
     );
     final status = _controller.value;
-    if (status.state == FeedbackSubmissionState.failure) {
+    if (status is FeedbackFailure) {
       final error = status.error;
       if (error is FeedbackException) {
         throw error;
@@ -118,21 +117,24 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     }
   }
 
-  Future<String?> _submit(
+  Future<void> _submit(
     OnSubmit packageOnSubmit,
     String description,
     Map<String, dynamic>? extras,
   ) async {
     try {
       await packageOnSubmit(description, extras: extras);
-      _toasts.show(widget.theme.successMessage, isError: false);
-      return null;
+      _toasts.show(
+        _overlayContext,
+        widget.theme.successMessage,
+        isError: false,
+      );
     } catch (error) {
-      final message = error is FeedbackException
-          ? error.message
-          : widget.theme.genericErrorMessage;
-      _toasts.show(message, isError: true);
-      return message;
+      _toasts.show(
+        _overlayContext,
+        widget.theme.messageForError(error),
+        isError: true,
+      );
     }
   }
 

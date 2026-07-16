@@ -29,7 +29,11 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
   }
 
   /// Opens the feedback UI, if a handler has been bound.
+  ///
+  /// Resets to [FeedbackStatus.idle] first so a failure from a previous
+  /// session does not surface as a stale error when the form reopens.
   void show() {
+    value = FeedbackStatus.idle;
     _showHandler?.call();
   }
 

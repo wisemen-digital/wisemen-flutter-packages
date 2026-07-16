@@ -19,7 +19,6 @@ void main() {
               onSubmit: (description, {extras}) async {
                 gotDescription = description;
                 gotExtras = extras;
-                return null;
               },
             ),
           ),
@@ -49,7 +48,7 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
-              onSubmit: (description, {extras}) async => null,
+              onSubmit: (description, {extras}) async {},
             ),
           ),
         ),
@@ -57,7 +56,7 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('shows the error inline and stays open when submit fails',
+    testWidgets('shows the error inline when the status is a failure',
         (tester) async {
       final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
       await tester.pumpWidget(
@@ -66,13 +65,16 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
-              onSubmit: (description, {extras}) async => 'Could not send it.',
+              onSubmit: (description, {extras}) async {},
             ),
           ),
         ),
       );
 
-      await tester.tap(find.byKey(const Key('wise_feedback_submit')));
+      expect(find.byKey(const Key('wise_feedback_error')), findsNothing);
+
+      status.value =
+          const FeedbackStatus.failure(FeedbackException('Could not send it.'));
       await tester.pump();
 
       expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);
@@ -95,7 +97,7 @@ void main() {
                 child: FeedbackForm(
                   theme: const WiseFeedbackTheme(),
                   status: status,
-                  onSubmit: (description, {extras}) async => null,
+                  onSubmit: (description, {extras}) async {},
                 ),
               ),
             ),

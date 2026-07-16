@@ -17,17 +17,17 @@ void main() {
       final transport =
           FakeTransport(result: const FeedbackResult(issueId: 'C-1'));
       final controller = FeedbackController(transport);
-      final states = <FeedbackSubmissionState>[controller.value.state];
-      controller.addListener(() => states.add(controller.value.state));
+      final states = <Type>[controller.value.runtimeType];
+      controller.addListener(() => states.add(controller.value.runtimeType));
 
       await controller.submit(_report());
 
       expect(states, [
-        FeedbackSubmissionState.idle,
-        FeedbackSubmissionState.submitting,
-        FeedbackSubmissionState.success,
+        FeedbackIdle,
+        FeedbackSubmitting,
+        FeedbackSuccess,
       ]);
-      expect(controller.value.result?.issueId, 'C-1');
+      expect((controller.value as FeedbackSuccess).result.issueId, 'C-1');
       expect(transport.sent, hasLength(1));
     });
 
@@ -38,8 +38,11 @@ void main() {
 
       await controller.submit(_report());
 
-      expect(controller.value.state, FeedbackSubmissionState.failure);
-      expect(controller.value.error, isA<FeedbackException>());
+      expect(controller.value, isA<FeedbackFailure>());
+      expect(
+        (controller.value as FeedbackFailure).error,
+        isA<FeedbackException>(),
+      );
     });
 
     test('show invokes the bound handler', () {
@@ -58,7 +61,7 @@ void main() {
       expect(controller.value.isSubmitting, isTrue);
       transport.complete();
       await future;
-      expect(controller.value.state, FeedbackSubmissionState.success);
+      expect(controller.value, isA<FeedbackSuccess>());
     });
   });
 }

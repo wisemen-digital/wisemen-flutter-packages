@@ -16,3 +16,13 @@
 - Extracted the submission toast into its own `FeedbackToast` /
   `FeedbackToastPresenter` classes.
 - Reorganized `src/ui` into `src/screens`, `src/widgets`, and `src/theme`.
+- `FeedbackStatus` is now a sealed class (`FeedbackIdle`, `FeedbackSubmitting`,
+  `FeedbackSuccess`, `FeedbackFailure`) instead of an enum + class; removed
+  `FeedbackSubmissionState`. `onStatusChanged` consumers can `switch` over it.
+- The built-in form now surfaces submission errors through its status
+  listenable rather than a local `setState`; `FeedbackFormSubmit` returns
+  `Future<void>`.
+- `FeedbackButton.padding`/`alignment` accept `EdgeInsetsGeometry`/
+  `AlignmentGeometry` (directional support), as does
+  `LinearFeedback.buttonAlignment`.
+- Added `FeedbackResult.fromJson`.

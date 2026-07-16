@@ -12,10 +12,10 @@ const Color _kAccent = Color(0xFF009687);
 /// Matches the `feedback` package's submit signature: [description] is the
 /// primary text and [extras] carries the title under key `title`.
 ///
-/// Returns `null` when the report was filed successfully (the form is then
-/// dismissed), or a human-readable error message when it failed — in which
-/// case the form stays open and shows the message so the user can retry.
-typedef FeedbackFormSubmit = Future<String?> Function(
+/// The form reflects the outcome through its `status` listenable rather than
+/// this future's result: on [FeedbackSuccess] the sheet is dismissed, on
+/// [FeedbackFailure] it stays open and shows the error inline.
+typedef FeedbackFormSubmit = Future<void> Function(
   String description, {
   Map<String, dynamic>? extras,
 });
@@ -54,7 +54,6 @@ class FeedbackForm extends StatefulWidget {
 class _FeedbackFormState extends State<FeedbackForm> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
-  String? _errorText;
 
   @override
   void dispose() {
@@ -64,17 +63,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
   }
 
   Future<void> _submit() async {
-    if (_errorText != null) {
-      setState(() => _errorText = null);
-    }
-    final error = await widget.onSubmit(
+    // The outcome (success dismisses the sheet, failure shows inline below) is
+    // reflected through `status`, so nothing here has to change local state.
+    await widget.onSubmit(
       _descriptionController.text,
       extras: {'title': _titleController.text},
     );
-    // On success the sheet closes (this widget unmounts); only show errors.
-    if (error != null && mounted) {
-      setState(() => _errorText = error);
-    }
   }
 
   @override
@@ -86,76 +80,79 @@ class _FeedbackFormState extends State<FeedbackForm> {
       color: theme.backgroundColor,
       child: SingleChildScrollView(
         controller: widget.scrollController,
-        padding: EdgeInsets.fromLTRB(16, 16, 16, 16 + bottomInset),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              key: const Key('wise_feedback_title'),
-              controller: _titleController,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                labelText: theme.titleHint,
-                border: const OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              key: const Key('wise_feedback_description'),
-              controller: _descriptionController,
-              textCapitalization: TextCapitalization.sentences,
-              minLines: 2,
-              maxLines: 4,
-              decoration: InputDecoration(
-                labelText: theme.descriptionHint,
-                border: const OutlineInputBorder(),
-              ),
-            ),
-            if (_errorText case final String error) ...[
-              const SizedBox(height: 12),
-              Row(
-                key: const Key('wise_feedback_error'),
-                children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Color(0xFFD32F2F),
-                    size: 18,
+        padding: const EdgeInsets.all(16).copyWith(bottom: 16 + bottomInset),
+        child: ValueListenableBuilder<FeedbackStatus>(
+          valueListenable: widget.status,
+          builder: (context, status, _) {
+            final errorText = status is FeedbackFailure
+                ? theme.messageForError(status.error)
+                : null;
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 12,
+              children: [
+                TextField(
+                  key: const Key('wise_feedback_title'),
+                  controller: _titleController,
+                  textCapitalization: TextCapitalization.sentences,
+                  decoration: InputDecoration(
+                    labelText: theme.titleHint,
+                    border: const OutlineInputBorder(),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      error,
-                      style: const TextStyle(color: Color(0xFFD32F2F)),
+                ),
+                TextField(
+                  key: const Key('wise_feedback_description'),
+                  controller: _descriptionController,
+                  textCapitalization: TextCapitalization.sentences,
+                  minLines: 2,
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    labelText: theme.descriptionHint,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+                if (errorText != null)
+                  Row(
+                    key: const Key('wise_feedback_error'),
+                    spacing: 8,
+                    children: [
+                      const Icon(
+                        Icons.error_outline,
+                        color: Color(0xFFD32F2F),
+                        size: 18,
+                      ),
+                      Expanded(
+                        child: Text(
+                          errorText,
+                          style: const TextStyle(color: Color(0xFFD32F2F)),
+                        ),
+                      ),
+                    ],
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: FilledButton(
+                    key: const Key('wise_feedback_submit'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: _kAccent,
                     ),
+                    onPressed: status.isSubmitting ? null : _submit,
+                    child: status.isSubmitting
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(theme.submitLabel),
                   ),
-                ],
-              ),
-            ],
-            const SizedBox(height: 16),
-            ValueListenableBuilder<FeedbackStatus>(
-              valueListenable: widget.status,
-              builder: (context, status, _) {
-                return FilledButton(
-                  key: const Key('wise_feedback_submit'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: _kAccent,
-                  ),
-                  onPressed: status.isSubmitting ? null : _submit,
-                  child: status.isSubmitting
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(theme.submitLabel),
-                );
-              },
-            ),
-          ],
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
