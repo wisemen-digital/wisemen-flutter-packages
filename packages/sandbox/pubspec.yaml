@@ -25,7 +25,8 @@ dependencies:
 
   # Wisemen
   wisecore: ^2.2.11
-  wisewidgetslibrary: ^2.1.5
+  wisewidgetslibrary:
+    path: ../wisewidgetslibrary
   wise_nav_bar: ^0.0.3
   wiseclient: ^2.0.4
   wise_zitadel_login: 

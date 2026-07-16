@@ -11,12 +11,10 @@ class BiDirectionalCalendarDemoScreen extends StatefulWidget {
   const BiDirectionalCalendarDemoScreen({super.key});
 
   @override
-  State<BiDirectionalCalendarDemoScreen> createState() =>
-      _BiDirectionalCalendarDemoScreenState();
+  State<BiDirectionalCalendarDemoScreen> createState() => _BiDirectionalCalendarDemoScreenState();
 }
 
-class _BiDirectionalCalendarDemoScreenState
-    extends State<BiDirectionalCalendarDemoScreen> {
+class _BiDirectionalCalendarDemoScreenState extends State<BiDirectionalCalendarDemoScreen> {
   final _repository = _CalendarDemoRepository();
   final List<DateTime> _backwardDays = [];
   final List<DateTime> _forwardDays = [];
@@ -96,9 +94,7 @@ class _DayTile extends StatelessWidget {
 
   bool get _isToday {
     final now = DateTime.now();
-    return date.year == now.year &&
-        date.month == now.month &&
-        date.day == now.day;
+    return date.year == now.year && date.month == now.month && date.day == now.day;
   }
 
   String get _formatted {
@@ -150,9 +146,7 @@ class _CalendarDemoRepository {
 
     return List<DateTime>.generate(daysPerPage, (index) {
       final dayOffset = page * daysPerPage + index;
-      return isFuture
-          ? startOfToday.add(Duration(days: dayOffset))
-          : startOfToday.subtract(Duration(days: dayOffset + 1));
+      return isFuture ? startOfToday.add(Duration(days: dayOffset)) : startOfToday.subtract(Duration(days: dayOffset + 1));
     });
   }
 }
@@ -163,11 +157,11 @@ class _DaysController extends InfiniteScrollController<int> {
     required this.isFuture,
     required this.onItemsFetched,
   }) : super(
-          initialData: const _DaysPageMeta(
-            next: 0,
-            pageSize: _CalendarDemoRepository.daysPerPage,
-          ),
-        );
+         initialData: const _DaysPageMeta(
+           next: 0,
+           pageSize: _CalendarDemoRepository.daysPerPage,
+         ),
+       );
 
   final _CalendarDemoRepository repository;
   final bool isFuture;

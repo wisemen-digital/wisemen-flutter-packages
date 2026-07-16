@@ -3,7 +3,7 @@ analyzer:
     invalid_annotation_target: ignore
   plugins: 
     - custom_lint
-  exclude: [build/**, lib/**.g.dart, lib/generated/**, packages/**.g.dart, packages/**.drift.dart, packages/generated_network/**]
+  exclude: [build/**, lib/**.g.dart, lib/generated/**, packages/**.g.dart, packages/**.drift.dart]
 
 custom_lint:
   rules:
