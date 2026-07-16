@@ -1,6 +1,6 @@
 name: wise_feedback
 description: In-app bug reporting for Flutter that files a screenshot, title and description as a Linear issue, via a pluggable transport (direct token or backend proxy).
-version: 0.1.0
+version: 0.2.0
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/tree/main/packages/wise_feedback
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/tree/main/packages/wise_feedback
 
@@ -16,6 +16,9 @@ dependencies:
   feedback: ">=3.2.0 <4.0.0"
   # Transport HTTP + GraphQL-over-HTTP
   http: ">=1.2.0 <2.0.0"
+  # Automatic report metadata
+  device_info_plus: ">=11.0.0 <14.0.0"
+  package_info_plus: ">=8.0.0 <11.0.0"
 
 dev_dependencies:
   # Static analysis & linting

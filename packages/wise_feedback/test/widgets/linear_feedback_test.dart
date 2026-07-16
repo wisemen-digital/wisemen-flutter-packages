@@ -3,6 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 import '../support/fake_transport.dart';
 
+class _FakeCollector implements MetadataCollector {
+  @override
+  Future<Map<String, String>> collect() async =>
+      {'platform': 'test', 'appVersion': '9.9'};
+}
+
+Route<void> _route(String name) => PageRouteBuilder<void>(
+      settings: RouteSettings(name: name),
+      pageBuilder: (_, __, ___) => const SizedBox(),
+    );
+
 void main() {
   group('LinearFeedback', () {
     testWidgets('the built-in button opens the form and submits',
@@ -157,6 +168,47 @@ void main() {
 
       expect(transport.sent, hasLength(1));
       expect(find.text('Bug reported. Thanks!'), findsWidgets);
+    });
+
+    testWidgets('attaches metadata, navigation and reporter to the report',
+        (tester) async {
+      tester.view.physicalSize = const Size(1200, 4000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      final transport = FakeTransport();
+      final observer = WiseFeedbackNavigatorObserver()
+        ..didPush(_route('/home'), null)
+        ..didPush(_route('/settings'), null);
+
+      await tester.pumpWidget(
+        LinearFeedback(
+          transport: transport,
+          metadataCollector: _FakeCollector(),
+          navigatorObserver: observer,
+          reporter: () => const FeedbackReporter(email: 'me@x.com'),
+          child: const MaterialApp(home: Scaffold(body: SizedBox.expand())),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('wise_feedback_fab')));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const Key('wise_feedback_description')),
+        'ctx',
+      );
+      await tester.tap(find.byKey(const Key('wise_feedback_submit')));
+      await tester.runAsync(() async {
+        for (var i = 0; i < 20; i++) {
+          await tester.pump(const Duration(milliseconds: 100));
+          await Future<void>.delayed(const Duration(milliseconds: 20));
+        }
+      });
+
+      final report = transport.sent.single;
+      expect(report.metadata['platform'], 'test');
+      expect(report.metadata['appVersion'], '9.9');
+      expect(report.metadata['navigation'], '/home → /settings');
+      expect(report.reporter?.email, 'me@x.com');
     });
   });
 }

@@ -4,8 +4,12 @@ import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
 
 import '../controller/feedback_controller.dart';
+import '../metadata/metadata_collector.dart';
+import '../metadata/wise_feedback_navigator_observer.dart';
 import '../models/feedback_exception.dart';
+import '../models/feedback_priority.dart';
 import '../models/feedback_report.dart';
+import '../models/feedback_reporter.dart';
 import '../models/feedback_status.dart';
 import '../screens/feedback_form.dart';
 import '../theme/wise_feedback_theme.dart';
@@ -28,6 +32,13 @@ class LinearFeedback extends StatefulWidget {
     this.showButton = true,
     this.buttonAlignment = Alignment.bottomRight,
     this.buttonBackgroundColor = Colors.black,
+    this.collectDeviceInfo = true,
+    this.metadataCollector,
+    this.navigatorObserver,
+    this.reporter,
+    this.metadataBuilder,
+    this.showPriority = true,
+    this.categories,
     super.key,
   });
 
@@ -52,6 +63,30 @@ class LinearFeedback extends StatefulWidget {
   /// Background color of the built-in button.
   final Color buttonBackgroundColor;
 
+  /// Whether to attach automatic device/app/OS metadata to each report.
+  final bool collectDeviceInfo;
+
+  /// Overrides the metadata collector. Defaults to [DeviceMetadataCollector]
+  /// when [collectDeviceInfo] is true.
+  final MetadataCollector? metadataCollector;
+
+  /// The navigation observer whose breadcrumb trail is attached to reports.
+  ///
+  /// Add the same instance to your app's `navigatorObservers`.
+  final WiseFeedbackNavigatorObserver? navigatorObserver;
+
+  /// Resolves the current reporter (e.g. the signed-in user) at submit time.
+  final FutureOr<FeedbackReporter?> Function()? reporter;
+
+  /// Supplies extra custom metadata (feature flags, tenant, ...) at submit time.
+  final FutureOr<Map<String, String>> Function()? metadataBuilder;
+
+  /// Whether the form shows a priority selector. Defaults to true.
+  final bool showPriority;
+
+  /// Category options to offer in the form, or null to hide the selector.
+  final List<String>? categories;
+
   @override
   State<LinearFeedback> createState() => _LinearFeedbackState();
 }
@@ -60,6 +95,8 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   late final FeedbackController _controller =
       FeedbackController(widget.transport);
   final FeedbackToastPresenter _toasts = FeedbackToastPresenter();
+  late final DeviceMetadataCollector _defaultCollector =
+      DeviceMetadataCollector();
 
   BuildContext? _overlayContext;
   Listenable? _feedbackNotifier;
@@ -99,12 +136,18 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   }
 
   Future<void> _handleUserFeedback(UserFeedback feedback) async {
-    final title = (feedback.extra?['title'] as String?) ?? '';
+    final extra = feedback.extra ?? const <String, dynamic>{};
+    final metadata = await _collectMetadata();
+    final reporter = await _resolveReporter();
     await _controller.submit(
       FeedbackReport(
-        title: title,
+        title: (extra['title'] as String?) ?? '',
         description: feedback.text,
         screenshotPng: feedback.screenshot,
+        metadata: metadata,
+        reporter: reporter,
+        priority: _priorityFromName(extra['priority'] as String?),
+        category: extra['category'] as String?,
       ),
     );
     final status = _controller.value;
@@ -115,6 +158,62 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       }
       throw FeedbackException('Failed to send the report.', cause: error);
     }
+  }
+
+  /// Runs [body], swallowing any error (metadata collection must never block a
+  /// submission).
+  Future<T?> _guard<T>(Future<T> Function() body) async {
+    try {
+      return await body();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<Map<String, Object?>> _collectMetadata() async {
+    final metadata = <String, Object?>{};
+
+    final collector = widget.metadataCollector ??
+        (widget.collectDeviceInfo ? _defaultCollector : null);
+    if (collector != null) {
+      final collected = await _guard(collector.collect);
+      if (collected != null) {
+        metadata.addAll(collected);
+      }
+    }
+
+    final builder = widget.metadataBuilder;
+    if (builder != null) {
+      final custom = await _guard(() async => builder());
+      if (custom != null) {
+        metadata.addAll(custom);
+      }
+    }
+
+    final observer = widget.navigatorObserver;
+    if (observer != null && observer.breadcrumbs.isNotEmpty) {
+      metadata['navigation'] = observer.breadcrumbs.join(' → ');
+    }
+
+    return metadata;
+  }
+
+  Future<FeedbackReporter?> _resolveReporter() async {
+    final builder = widget.reporter;
+    if (builder == null) {
+      return null;
+    }
+    return _guard<FeedbackReporter?>(() async => builder());
+  }
+
+  FeedbackPriority _priorityFromName(String? name) {
+    if (name == null) {
+      return FeedbackPriority.none;
+    }
+    return FeedbackPriority.values.firstWhere(
+      (priority) => priority.name == name,
+      orElse: () => FeedbackPriority.none,
+    );
   }
 
   Future<void> _submit(
@@ -145,6 +244,8 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         theme: widget.theme,
         status: _controller,
         scrollController: scrollController,
+        showPriority: widget.showPriority,
+        categories: widget.categories,
         onSubmit: (description, {extras}) =>
             _submit(onSubmit, description, extras),
       ),

@@ -62,5 +62,33 @@ void main() {
         throwsA(isA<FeedbackException>()),
       );
     });
+
+    test('sends priority, category and reporter fields', () async {
+      late http.Request captured;
+      final client = MockClient((request) async {
+        captured = request;
+        return http.Response('{}', 200);
+      });
+
+      await LinearProxyTransport(
+        endpoint: Uri.parse('https://api.myapp.com/feedback'),
+        httpClient: client,
+      ).send(
+        FeedbackReport(
+          title: 't',
+          description: 'd',
+          screenshotPng: Uint8List.fromList([1]),
+          priority: FeedbackPriority.urgent,
+          category: 'Idea',
+          reporter: const FeedbackReporter(email: 'me@x.com'),
+        ),
+      );
+
+      final body = utf8.decode(captured.bodyBytes, allowMalformed: true);
+      expect(body, contains('name="priority"'));
+      expect(body, contains(FeedbackPriority.urgent.linearValue.toString()));
+      expect(body, contains('Idea'));
+      expect(body, contains('me@x.com'));
+    });
   });
 }

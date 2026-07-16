@@ -25,5 +25,30 @@ void main() {
       );
       expect(report.metadata['route'], '/home');
     });
+
+    test('reporter, priority and category default to empty/none', () {
+      final report = FeedbackReport(
+        title: 't',
+        description: 'd',
+        screenshotPng: Uint8List(0),
+      );
+      expect(report.reporter, isNull);
+      expect(report.priority, FeedbackPriority.none);
+      expect(report.category, isNull);
+    });
+
+    test('reporter, priority and category are retained when provided', () {
+      final report = FeedbackReport(
+        title: 't',
+        description: 'd',
+        screenshotPng: Uint8List(0),
+        reporter: const FeedbackReporter(email: 'a@b.c'),
+        priority: FeedbackPriority.high,
+        category: 'Bug',
+      );
+      expect(report.reporter?.email, 'a@b.c');
+      expect(report.priority, FeedbackPriority.high);
+      expect(report.category, 'Bug');
+    });
   });
 }
