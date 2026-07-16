@@ -26,18 +26,21 @@ void main() {
       const button = CancelDialogButton(text: 'Cancel');
       expect(button.text, 'Cancel');
       expect(button.type, DialogButtonOption.cancel);
+      expect(button, isA<DialogButton>());
     });
 
     test('DestructiveDialogButton has correct type', () {
       const button = DestructiveDialogButton(text: 'Delete');
       expect(button.text, 'Delete');
       expect(button.type, DialogButtonOption.destructive);
+      expect(button, isA<DialogButton>());
     });
 
     test('NormalDialogButton has correct type', () {
       const button = NormalDialogButton(text: 'OK');
       expect(button.text, 'OK');
       expect(button.type, DialogButtonOption.normal);
+      expect(button, isA<DialogButton>());
     });
 
     test('CustomDialogButton has correct type and text', () {
@@ -47,6 +50,7 @@ void main() {
       );
       expect(button.text, 'Custom');
       expect(button.type, DialogButtonOption.destructive);
+      expect(button, isA<DialogButton>());
     });
   });
 }
