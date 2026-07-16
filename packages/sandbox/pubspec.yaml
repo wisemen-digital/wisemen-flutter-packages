@@ -15,13 +15,13 @@ dependencies:
   cupertino_icons: ^1.0.2
 
   # Wisemen
-  wisecore:
-    path: ../wisecore
   wisewidgetslibrary:
     path: ../wisewidgetslibrary
   wise_nav_bar:
     path: ../wise_nav_bar
-  
+  wise_feedback:
+    path: ../wise_feedback
+
   # Networking
   wiseclient: 
     path: ../wiseclient
@@ -48,10 +48,9 @@ dependencies:
   flutter_native_splash: ^2.4.1
 
   # Logging
-  talker_flutter: ^4.3.4
+  talker_flutter: ^5.1.16
 
-  flutter_platform_alert:
-    path: ../../../wise-packages/flutter_platform_alert
+  flutter_platform_alert: ^0.8.0
   shared_preferences: ^2.5.3
 
 dev_dependencies: 
