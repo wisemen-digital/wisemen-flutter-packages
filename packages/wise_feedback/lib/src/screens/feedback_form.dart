@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:wise_feedback/generated/l10n.dart';
 
+import '../models/feedback_exception.dart';
 import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
 import '../template/feedback_field.dart';
@@ -102,6 +104,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
+    final l10n = WiseFeedbackLocalizations.of(context);
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     // Everything lives in one scroll view driven by the sheet's
     // scrollController (with always-scrollable physics) so the whole surface —
@@ -130,6 +133,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
             ),
             _Header(
               theme: theme,
+              title: l10n.sheetTitle,
               status: widget.status,
               onClose: widget.onClose,
               onSubmit: _submit,
@@ -142,7 +146,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 children: [
                   _LabeledField(
                     theme: theme,
-                    label: theme.titleHint,
+                    label: l10n.titleFieldLabel,
                     child: _input(
                       theme,
                       _titleController,
@@ -153,7 +157,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     _LabeledField(
                       theme: theme,
-                      label: field.label,
+                      label: _fieldLabel(field, l10n),
                       child: _input(
                         theme,
                         _fieldControllers[field.key]!,
@@ -167,14 +171,14 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     _LabeledField(
                       theme: theme,
-                      label: theme.priorityLabel,
+                      label: l10n.priorityLabel,
                       child: _dropdown<FeedbackPriority>(
                         theme: theme,
                         value: _priority,
                         fieldKey: const Key('wise_feedback_priority'),
                         items: {
                           for (final priority in FeedbackPriority.values)
-                            priority: priority.label,
+                            priority: _priorityLabel(priority, l10n),
                         },
                         onChanged: (value) => setState(
                           () => _priority = value ?? FeedbackPriority.none,
@@ -186,12 +190,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     _LabeledField(
                       theme: theme,
-                      label: theme.categoryLabel,
+                      label: l10n.categoryLabel,
                       child: _dropdown<String>(
                         theme: theme,
                         value: _category,
                         fieldKey: const Key('wise_feedback_category'),
-                        hint: theme.categoryLabel,
+                        hint: l10n.categoryLabel,
                         items: {for (final c in categories) c: c},
                         onChanged: (value) => setState(() => _category = value),
                       ),
@@ -216,7 +220,9 @@ class _FeedbackFormState extends State<FeedbackForm> {
                             const SizedBox(width: 8),
                             Expanded(
                               child: Text(
-                                theme.messageForError(status.error),
+                                status.error is FeedbackException
+                                    ? (status.error as FeedbackException).message
+                                    : l10n.genericError,
                                 style: const TextStyle(color: Color(0xFFD32F2F)),
                               ),
                             ),
@@ -297,12 +303,14 @@ class _FeedbackFormState extends State<FeedbackForm> {
 class _Header extends StatelessWidget {
   const _Header({
     required this.theme,
+    required this.title,
     required this.status,
     required this.onClose,
     required this.onSubmit,
   });
 
   final WiseFeedbackTheme theme;
+  final String title;
   final ValueListenable<FeedbackStatus> status;
   final VoidCallback? onClose;
   final VoidCallback onSubmit;
@@ -322,7 +330,7 @@ class _Header extends StatelessWidget {
           ),
           Expanded(
             child: Text(
-              theme.sheetTitle,
+              title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 20,
@@ -431,5 +439,44 @@ class _LabeledField extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+/// Resolves the display label for [field]: an explicit label wins, otherwise a
+/// localized default for known built-in keys, otherwise the raw key.
+String _fieldLabel(FeedbackField field, WiseFeedbackLocalizations l10n) {
+  final explicit = field.label;
+  if (explicit != null) {
+    return explicit;
+  }
+  switch (field.key) {
+    case 'description':
+      return l10n.fieldDescription;
+    case 'currentSituation':
+      return l10n.fieldCurrentSituation;
+    case 'desiredSituation':
+      return l10n.fieldDesiredSituation;
+    default:
+      return field.key;
+  }
+}
+
+/// The localized display name for a priority option (the form selector only;
+/// the issue body uses [FeedbackPriority.label], which stays English).
+String _priorityLabel(
+  FeedbackPriority priority,
+  WiseFeedbackLocalizations l10n,
+) {
+  switch (priority) {
+    case FeedbackPriority.none:
+      return l10n.priorityNone;
+    case FeedbackPriority.urgent:
+      return l10n.priorityUrgent;
+    case FeedbackPriority.high:
+      return l10n.priorityHigh;
+    case FeedbackPriority.medium:
+      return l10n.priorityMedium;
+    case FeedbackPriority.low:
+      return l10n.priorityLow;
   }
 }

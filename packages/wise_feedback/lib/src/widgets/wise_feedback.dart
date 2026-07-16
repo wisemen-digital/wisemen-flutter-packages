@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
+import 'package:wise_feedback/generated/l10n.dart';
 
 import '../controller/feedback_controller.dart';
 import '../metadata/metadata_collector.dart';
@@ -23,9 +24,9 @@ import 'feedback_toast.dart';
 /// Wraps [child] with the screenshot capture layer, overlays a built-in
 /// button (unless [showButton] is false), and files reports through
 /// [transport].
-class LinearFeedback extends StatefulWidget {
+class WiseFeedback extends StatefulWidget {
   /// Creates the wrapper.
-  const LinearFeedback({
+  const WiseFeedback({
     required this.transport,
     required this.child,
     this.theme = const WiseFeedbackTheme(),
@@ -41,6 +42,7 @@ class LinearFeedback extends StatefulWidget {
     this.showPriority = true,
     this.categories,
     this.template = const DefaultFeedbackTemplate(),
+    this.locale,
     super.key,
   });
 
@@ -95,11 +97,15 @@ class LinearFeedback extends StatefulWidget {
   /// [FeedbackTemplate] for a structured layout.
   final FeedbackTemplate template;
 
+  /// Overrides the locale of the feedback UI (form + toasts). When null, the
+  /// feedback UI follows the device locale. Localized in en/nl/fr.
+  final Locale? locale;
+
   @override
-  State<LinearFeedback> createState() => _LinearFeedbackState();
+  State<WiseFeedback> createState() => _WiseFeedbackState();
 }
 
-class _LinearFeedbackState extends State<LinearFeedback> {
+class _WiseFeedbackState extends State<WiseFeedback> {
   late final FeedbackController _controller =
       FeedbackController(widget.transport);
   final FeedbackToastPresenter _toasts = FeedbackToastPresenter();
@@ -236,17 +242,20 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     String description,
     Map<String, dynamic>? extras,
   ) async {
+    final l10n = WiseFeedbackLocalizations.of(_overlayContext!);
     try {
       await packageOnSubmit(description, extras: extras);
       _toasts.show(
         _overlayContext,
-        widget.theme.successMessage,
+        l10n.successMessage,
         isError: false,
       );
     } catch (error) {
+      final message =
+          error is FeedbackException ? error.message : l10n.genericError;
       _toasts.show(
         _overlayContext,
-        widget.theme.messageForError(error),
+        message,
         isError: true,
       );
     }
@@ -255,6 +264,8 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   @override
   Widget build(BuildContext context) {
     return BetterFeedback(
+      localeOverride: widget.locale,
+      localizationsDelegates: const [WiseFeedbackLocalizations.delegate],
       feedbackBuilder: (context, onSubmit, scrollController) => FeedbackForm(
         theme: widget.theme,
         status: _controller,

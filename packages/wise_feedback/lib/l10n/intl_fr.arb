@@ -1,0 +1,17 @@
+{
+  "@@locale": "fr",
+  "sheetTitle": "Signaler un bug",
+  "titleFieldLabel": "Titre",
+  "priorityLabel": "Priorité",
+  "categoryLabel": "Catégorie",
+  "successMessage": "Bug signalé. Merci !",
+  "genericError": "Une erreur s'est produite. Veuillez réessayer.",
+  "priorityNone": "Aucune",
+  "priorityUrgent": "Urgent",
+  "priorityHigh": "Élevée",
+  "priorityMedium": "Moyenne",
+  "priorityLow": "Faible",
+  "fieldDescription": "Description",
+  "fieldCurrentSituation": "Situation actuelle",
+  "fieldDesiredSituation": "Situation souhaitée"
+}

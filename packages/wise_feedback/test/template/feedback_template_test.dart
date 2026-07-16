@@ -93,4 +93,23 @@ void main() {
       expect(body, contains('_No navigation recorded._'));
     });
   });
+
+  group('built-in templates leave labels null for localization', () {
+    test('DefaultFeedbackTemplate description field has no hardcoded label',
+        () {
+      const template = DefaultFeedbackTemplate();
+      expect(template.fields.single.key, 'description');
+      expect(template.fields.single.label, isNull);
+    });
+
+    test('BugReportTemplate situation fields have no hardcoded labels', () {
+      const template = BugReportTemplate();
+      expect(template.fields.map((f) => f.label), everyElement(isNull));
+    });
+
+    test('explicit label overrides the null default', () {
+      const template = DefaultFeedbackTemplate(descriptionLabel: 'Details');
+      expect(template.fields.single.label, 'Details');
+    });
+  });
 }

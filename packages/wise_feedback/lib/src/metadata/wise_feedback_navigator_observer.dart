@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 /// A [NavigatorObserver] that records a breadcrumb of recently visited routes.
 ///
 /// Add it to your app's `navigatorObservers` and pass the same instance to
-/// `LinearFeedback(navigatorObserver: ...)`. The trail is attached to reports
+/// `WiseFeedback(navigatorObserver: ...)`. The trail is attached to reports
 /// so triagers can see where the user was.
 class WiseFeedbackNavigatorObserver extends NavigatorObserver {
   /// Creates the observer, keeping at most [maxEntries] recent route names.

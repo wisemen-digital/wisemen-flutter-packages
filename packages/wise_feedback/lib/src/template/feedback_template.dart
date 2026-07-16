@@ -22,10 +22,11 @@ abstract class FeedbackTemplate {
 /// screens. Preserves the package's original issue format.
 class DefaultFeedbackTemplate extends FeedbackTemplate {
   /// Creates the default template.
-  const DefaultFeedbackTemplate({this.descriptionLabel = 'Description'});
+  const DefaultFeedbackTemplate({this.descriptionLabel});
 
-  /// Label for the single description field.
-  final String descriptionLabel;
+  /// Label for the single description field, or null to use the localized
+  /// default.
+  final String? descriptionLabel;
 
   @override
   List<FeedbackField> get fields => [
