@@ -40,7 +40,7 @@ void main() {
 
       await WiseLauncher.launchUrl(
         url: testUri.toString(),
-        onCannotLaunchUrl: () {
+        onCannotLaunchUrl: (e) {
           callbackCalled = true;
         },
       );
@@ -64,7 +64,7 @@ void main() {
 
       await WiseLauncher.launchUrl(
         url: testUri.toString(),
-        onCannotLaunchUrl: () {
+        onCannotLaunchUrl: (e) {
           callbackCalled = true;
         },
       );
@@ -82,7 +82,7 @@ void main() {
 
       await WiseLauncher.launchUrl(
         url: testUri,
-        onCannotLaunchUrl: () {
+        onCannotLaunchUrl: (e) {
           callbackCalled = true;
         },
       );

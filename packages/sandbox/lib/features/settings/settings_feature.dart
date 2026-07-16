@@ -1,12 +1,12 @@
-import 'package:riverpod/misc.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'settings.dart';
 
 class SettingsFeature {
-  static late ProviderBase<SettingsRepository> settingsRepository;
+  static late Provider<SettingsRepository> settingsRepository;
 
   static void init({
-    required ProviderBase<SettingsRepository> repository,
+    required Provider<SettingsRepository> repository,
   }) {
     settingsRepository = repository;
   }

@@ -25,6 +25,7 @@
 		B53B29FE13782685047F08C7 /* qaDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = B322A869309916A11CAD127B /* qaDebug.xcconfig */; };
 		B588235545BBBABD9B10084A /* qaProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 5CB6C5C9BEC915176DA42590 /* qaProfile.xcconfig */; };
 		DBB33E4EC5127A7DAE212D8A /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F1724853C67B976887C274 /* Pods_Runner.framework */; };
+		DE673D042FCF39BE0016DC8B /* FlutterGeneratedPluginSwiftPackage in Frameworks */ = {isa = PBXBuildFile; productRef = DE673D032FCF39BE0016DC8B /* FlutterGeneratedPluginSwiftPackage */; };
 		DF981E18E991583FB845FAF9 /* productionProfile.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7EE23E71C587A246DB0EE472 /* productionProfile.xcconfig */; };
 		FD88B76C13EF3F84E41CA1EC /* developmentDebug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = BB7C69BAF2AA95D876E8C5EB /* developmentDebug.xcconfig */; };
 /* End PBXBuildFile section */
@@ -96,6 +97,7 @@
 		F1CFC3351279464FCF2C6F78 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		F84684952D5D136265FDD70D /* Pods-Runner.release-staging.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-staging.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-staging.xcconfig"; sourceTree = "<group>"; };
 		FF99B6985559E2CEE380DF1C /* productionRelease.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = productionRelease.xcconfig; path = Flutter/productionRelease.xcconfig; sourceTree = "<group>"; };
+		78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = FlutterGeneratedPluginSwiftPackage; path = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBB33E4EC5127A7DAE212D8A /* Pods_Runner.framework in Frameworks */,
+				DE673D042FCF39BE0016DC8B /* FlutterGeneratedPluginSwiftPackage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +132,7 @@
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
+				78E0A7A72DC9AD7400C4905E /* FlutterGeneratedPluginSwiftPackage */,
 				3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */,
 				9740EEB21CF90195004384FC /* Debug.xcconfig */,
 				7AFA3C8E1D35360C0083082E /* Release.xcconfig */,
@@ -204,7 +208,6 @@
 				C27CDBE74A565281A1080A5A /* Pods-Runner.profile-production.xcconfig */,
 				C4E358E6AB48E8437719E6EE /* Pods-Runner.release-production.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -279,6 +282,9 @@
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
+			packageReferences = (
+				DE673D022FCF39BE0016DC8B /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */,
+			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -572,7 +578,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 2RD56AY5U5;
+				DEVELOPMENT_TEAM = 4WWYG6TC54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -1404,7 +1410,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 2RD56AY5U5;
+				DEVELOPMENT_TEAM = 4WWYG6TC54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -1414,6 +1420,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = wisemen.sandbox;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1428,7 +1435,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 2RD56AY5U5;
+				DEVELOPMENT_TEAM = 4WWYG6TC54;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
@@ -1448,8 +1455,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5D95E93D1911511F77ECC22F /* Pods-Runner.debug-development.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = JF4JXY8D87;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-development";
 		};
@@ -1457,6 +1466,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8D2A5E84C8692C67BE4BC152 /* Pods-Runner.profile-development.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = JF4JXY8D87;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
 			};
@@ -1466,6 +1476,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 30C10777BDBF30904ECE0831 /* Pods-Runner.release-development.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = JF4JXY8D87;
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
 			};
@@ -1477,6 +1488,7 @@
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-staging";
 		};
@@ -1504,6 +1516,7 @@
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-qa";
 		};
@@ -1531,6 +1544,7 @@
 			buildSettings = {
 				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				PRODUCT_NAME = Runner;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 			};
 			name = "Debug-production";
 		};
@@ -1853,6 +1867,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		DE673D022FCF39BE0016DC8B /* XCLocalSwiftPackageReference "FlutterGeneratedPluginSwiftPackage" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DE673D032FCF39BE0016DC8B /* FlutterGeneratedPluginSwiftPackage */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FlutterGeneratedPluginSwiftPackage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 97C146E61CF9000F007C117D /* Project object */;
 }

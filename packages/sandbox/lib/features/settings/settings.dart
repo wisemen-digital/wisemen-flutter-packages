@@ -1,6 +1,6 @@
-export 'controllers/controllers.dart';
 export 'models/models.dart';
 export 'providers/providers.dart';
 export 'repositories/repositories.dart';
+export 'screens/screens.dart';
 export 'settings_feature.dart';
-export 'views/views.dart';
+export 'widgets/widgets.dart';
