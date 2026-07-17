@@ -52,17 +52,17 @@ class PlatformSliverAppBar extends PlatformWidget {
     this.enableBackgroundFilterBlur = true,
     this.centerTitle = false,
     this.transitionBetweenRoutes = true,
-  })  : title = Text(
-          title,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        largeTitle = _buildLargeTitleWidget(
-          title,
-          androidLargeTitlePadding,
-          androidLargeTitleStyle,
-          bottom,
-        );
+  }) : title = Text(
+         title,
+         maxLines: 1,
+         overflow: TextOverflow.ellipsis,
+       ),
+       largeTitle = _buildLargeTitleWidget(
+         title,
+         androidLargeTitlePadding,
+         androidLargeTitleStyle,
+         bottom,
+       );
 
   /// Title widget of the navigation bar.
   /// Usually a [Text] widget that describes the content on the screen.

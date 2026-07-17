@@ -30,32 +30,37 @@ class PlatformWidgetMock
 
 void main() {
   group('PlatformAppBar', () {
-    testWidgets('createMaterialWidget returns AppBar',
-        (WidgetTester tester) async {
+    testWidgets('createMaterialWidget returns AppBar', (
+      WidgetTester tester,
+    ) async {
       const platformAppBar = PlatformAppBar(
         title: Text('Title'),
       );
 
-      final materialWidget = platformAppBar
-          .createMaterialWidget(tester.element(find.byType(Container)));
+      final materialWidget = platformAppBar.createMaterialWidget(
+        tester.element(find.byType(Container)),
+      );
 
       expect(materialWidget, isA<AppBar>());
     });
 
-    testWidgets('createCupertinoWidget returns CupertinoNavigationBar',
-        (WidgetTester tester) async {
+    testWidgets('createCupertinoWidget returns CupertinoNavigationBar', (
+      WidgetTester tester,
+    ) async {
       const platformAppBar = PlatformAppBar(
         title: Text('Title'),
       );
 
-      final cupertinoWidget = platformAppBar
-          .createCupertinoWidget(tester.element(find.byType(Container)));
+      final cupertinoWidget = platformAppBar.createCupertinoWidget(
+        tester.element(find.byType(Container)),
+      );
 
       expect(cupertinoWidget, isA<CupertinoNavigationBar>());
     });
 
-    testWidgets('creates Material AppBar with actions',
-        (WidgetTester tester) async {
+    testWidgets('creates Material AppBar with actions', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -71,8 +76,9 @@ void main() {
       expect(find.byType(IconButton), findsOneWidget);
     });
 
-    testWidgets('creates CupertinoNavigationBar with actions',
-        (WidgetTester tester) async {
+    testWidgets('creates CupertinoNavigationBar with actions', (
+      WidgetTester tester,
+    ) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       await tester.pumpWidget(
@@ -92,8 +98,9 @@ void main() {
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('creates Material AppBar with backgroundColor',
-        (WidgetTester tester) async {
+    testWidgets('creates Material AppBar with backgroundColor', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -108,8 +115,9 @@ void main() {
       expect(appBar.backgroundColor, Colors.red);
     });
 
-    testWidgets('creates CupertinoNavigationBar with backgroundColor',
-        (WidgetTester tester) async {
+    testWidgets('creates CupertinoNavigationBar with backgroundColor', (
+      WidgetTester tester,
+    ) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       await tester.pumpWidget(
@@ -123,15 +131,17 @@ void main() {
           ),
         ),
       );
-      final navBar = tester
-          .widget<CupertinoNavigationBar>(find.byType(CupertinoNavigationBar));
+      final navBar = tester.widget<CupertinoNavigationBar>(
+        find.byType(CupertinoNavigationBar),
+      );
       expect(navBar.backgroundColor, Colors.red);
 
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('creates Material AppBar with brightness',
-        (WidgetTester tester) async {
+    testWidgets('creates Material AppBar with brightness', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -146,8 +156,9 @@ void main() {
       expect(appBar.systemOverlayStyle?.statusBarBrightness, Brightness.dark);
     });
 
-    testWidgets('creates CupertinoNavigationBar with brightness',
-        (WidgetTester tester) async {
+    testWidgets('creates CupertinoNavigationBar with brightness', (
+      WidgetTester tester,
+    ) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       await tester.pumpWidget(
@@ -161,15 +172,17 @@ void main() {
           ),
         ),
       );
-      final navBar = tester
-          .widget<CupertinoNavigationBar>(find.byType(CupertinoNavigationBar));
+      final navBar = tester.widget<CupertinoNavigationBar>(
+        find.byType(CupertinoNavigationBar),
+      );
       expect(navBar.brightness, Brightness.dark);
 
       debugDefaultTargetPlatformOverride = null;
     });
 
-    testWidgets('creates Material AppBar with bottom widget',
-        (WidgetTester tester) async {
+    testWidgets('creates Material AppBar with bottom widget', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -187,8 +200,9 @@ void main() {
       expect(appBar.bottom?.preferredSize.height, 50.0);
     });
 
-    testWidgets('creates CupertinoNavigationBar with bottom widget',
-        (WidgetTester tester) async {
+    testWidgets('creates CupertinoNavigationBar with bottom widget', (
+      WidgetTester tester,
+    ) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
 
       await tester.pumpWidget(
@@ -205,8 +219,9 @@ void main() {
           ),
         ),
       );
-      final navBar = tester
-          .widget<CupertinoNavigationBar>(find.byType(CupertinoNavigationBar));
+      final navBar = tester.widget<CupertinoNavigationBar>(
+        find.byType(CupertinoNavigationBar),
+      );
       expect(navBar.bottom?.preferredSize.height, 50.0);
 
       debugDefaultTargetPlatformOverride = null;
