@@ -17,21 +17,22 @@ class FakeRef extends Fake implements MutationTarget {
     // ignore: unrelated_type_equality_checks
     if (provider == wiseZitadelOptionsProvider) {
       return WiseZitadelOptions(
-        applicationId: '',
-        zitadelBaseUrl: '',
-        bundleId: '',
-        organizationId: '',
-        supportedTypes: [type],
-        onLoginSuccess: (router, ref, token) {
-          if (token != null) {
-            loginCalls++;
-          }
-        },
-        buttonOptions: WiseZitadelButtonOptions(
-          color: (_) => const Color(0xFFFF9000),
-          buttonTextStyle: (_) => const TextStyle(),
-        ),
-      ) as T;
+            applicationId: '',
+            zitadelBaseUrl: '',
+            bundleId: '',
+            organizationId: '',
+            supportedTypes: [type],
+            onLoginSuccess: (router, ref, token) {
+              if (token != null) {
+                loginCalls++;
+              }
+            },
+            buttonOptions: WiseZitadelButtonOptions(
+              color: (_) => const Color(0xFFFF9000),
+              buttonTextStyle: (_) => const TextStyle(),
+            ),
+          )
+          as T;
     }
     throw UnimplementedError();
   }
@@ -40,17 +41,18 @@ class FakeRef extends Fake implements MutationTarget {
     // ignore: unrelated_type_equality_checks
     if (provider == wiseZitadelOptionsProvider) {
       return WiseZitadelOptions(
-        applicationId: '',
-        zitadelBaseUrl: '',
-        bundleId: '',
-        organizationId: '',
-        supportedTypes: [type],
-        onLoginSuccess: (router, ref, token) {},
-        buttonOptions: WiseZitadelButtonOptions(
-          color: (_) => const Color(0xFFFF9000),
-          buttonTextStyle: (_) => const TextStyle(),
-        ),
-      ) as T;
+            applicationId: '',
+            zitadelBaseUrl: '',
+            bundleId: '',
+            organizationId: '',
+            supportedTypes: [type],
+            onLoginSuccess: (router, ref, token) {},
+            buttonOptions: WiseZitadelButtonOptions(
+              color: (_) => const Color(0xFFFF9000),
+              buttonTextStyle: (_) => const TextStyle(),
+            ),
+          )
+          as T;
     }
     throw UnimplementedError();
   }

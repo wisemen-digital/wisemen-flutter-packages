@@ -36,8 +36,9 @@ extension ColorExtensions on Color {
   Color lighten(double amount) {
     assert(amount >= 0 && amount <= 1, 'Amount must be between 0.0 and 1.0');
     final hsl = HSLColor.fromColor(this);
-    final lightened =
-        hsl.withLightness(hsl.lightness + (1 - hsl.lightness) * amount);
+    final lightened = hsl.withLightness(
+      hsl.lightness + (1 - hsl.lightness) * amount,
+    );
     return lightened.toColor();
   }
 }

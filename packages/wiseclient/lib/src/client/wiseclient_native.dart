@@ -15,16 +15,15 @@ WiseClient createClient({
   Iterable<Interceptor>? replacementInterceptors,
   void Function(Object, StackTrace)? refreshErrorHandler,
   TokenStorage<OAuthToken>? tokenStorage,
-}) =>
-    NativeWiseClient(
-      wiseInterceptors: wiseInterceptors,
-      baseOptions: options,
-      refreshFunction: refreshFunction,
-      useNativeAdapter: useNativeAdapter,
-      interceptorsToAdd: interceptorsToAdd,
-      replacementInterceptors: replacementInterceptors,
-      tokenStorage: tokenStorage,
-    );
+}) => NativeWiseClient(
+  wiseInterceptors: wiseInterceptors,
+  baseOptions: options,
+  refreshFunction: refreshFunction,
+  useNativeAdapter: useNativeAdapter,
+  interceptorsToAdd: interceptorsToAdd,
+  replacementInterceptors: replacementInterceptors,
+  tokenStorage: tokenStorage,
+);
 
 /// Implements [DioForNative] for native
 base class NativeWiseClient extends DioForNative with WiseClient {
@@ -39,8 +38,9 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     TokenStorage<OAuthToken>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter =
-        useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
+    httpClientAdapter = useNativeAdapter
+        ? NativeAdapter()
+        : IOHttpClientAdapter();
     if (replacementInterceptors != null) {
       interceptors.addAll(
         replacementInterceptors,

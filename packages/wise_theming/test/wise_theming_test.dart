@@ -284,78 +284,86 @@ void main() {
         );
       });
 
-      test('lightTheme should return light theme when selected theme is set',
-          () {
-        final themeData = theming.lightTheme;
+      test(
+        'lightTheme should return light theme when selected theme is set',
+        () {
+          final themeData = theming.lightTheme;
 
-        expect(themeData, isNotNull);
-        expect(themeData?.brightness, Brightness.light);
-        expect(themeData?.extensions[WiseTheme], lightTheme);
-      });
-
-      test('darkTheme should return current theme when selected theme is set',
-          () {
-        final themeData = theming.darkTheme;
-
-        expect(themeData, isNotNull);
-        // _getThemeByType returns current value (lightTheme) when value is not null
-        expect(themeData?.brightness, Brightness.light);
-        expect(themeData?.extensions[WiseTheme], lightTheme);
-      });
+          expect(themeData, isNotNull);
+          expect(themeData?.brightness, Brightness.light);
+          expect(themeData?.extensions[WiseTheme], lightTheme);
+        },
+      );
 
       test(
-          'lightContrastTheme should return current theme when selected theme is set',
-          () {
-        final themeData = theming.lightContrastTheme;
+        'darkTheme should return current theme when selected theme is set',
+        () {
+          final themeData = theming.darkTheme;
 
-        expect(themeData, isNotNull);
-        // _getThemeByType returns current value (lightTheme) when value is not null
-        expect(themeData?.brightness, Brightness.light);
-        expect(themeData?.extensions[WiseTheme], lightTheme);
-      });
-
-      test(
-          'darkContrastTheme should return current theme when selected theme is set',
-          () {
-        final themeData = theming.darkContrastTheme;
-
-        expect(themeData, isNotNull);
-        // _getThemeByType returns current value (lightTheme) when value is not null
-        expect(themeData?.brightness, Brightness.light);
-        expect(themeData?.extensions[WiseTheme], lightTheme);
-      });
+          expect(themeData, isNotNull);
+          // _getThemeByType returns current value (lightTheme) when value is not null
+          expect(themeData?.brightness, Brightness.light);
+          expect(themeData?.extensions[WiseTheme], lightTheme);
+        },
+      );
 
       test(
-          'should return null themes when no selected theme and no fallback available',
-          () {
-        final themingNoThemes = WiseTheming(
-          supportedThemes: [lightTheme], // Only light theme, no dark theme
-          targetPlatform: TargetPlatform.android,
-        );
+        'lightContrastTheme should return current theme when selected theme is set',
+        () {
+          final themeData = theming.lightContrastTheme;
 
-        expect(themingNoThemes.darkTheme, isNull);
-        expect(themingNoThemes.lightContrastTheme, isNull);
-        expect(themingNoThemes.darkContrastTheme, isNull);
-      });
+          expect(themeData, isNotNull);
+          // _getThemeByType returns current value (lightTheme) when value is not null
+          expect(themeData?.brightness, Brightness.light);
+          expect(themeData?.extensions[WiseTheme], lightTheme);
+        },
+      );
 
       test(
-          'should fallback to first available theme of correct type when no selected theme',
-          () {
-        final themingNoSelected = WiseTheming(
-          supportedThemes: mockSupportedThemes,
-          targetPlatform: TargetPlatform.android,
-        );
+        'darkContrastTheme should return current theme when selected theme is set',
+        () {
+          final themeData = theming.darkContrastTheme;
 
-        final lightThemeData = themingNoSelected.lightTheme;
-        final darkThemeData = themingNoSelected.darkTheme;
-        final lightContrastThemeData = themingNoSelected.lightContrastTheme;
-        final darkContrastThemeData = themingNoSelected.darkContrastTheme;
+          expect(themeData, isNotNull);
+          // _getThemeByType returns current value (lightTheme) when value is not null
+          expect(themeData?.brightness, Brightness.light);
+          expect(themeData?.extensions[WiseTheme], lightTheme);
+        },
+      );
 
-        expect(lightThemeData, isNotNull);
-        expect(darkThemeData, isNotNull);
-        expect(lightContrastThemeData, isNotNull);
-        expect(darkContrastThemeData, isNotNull);
-      });
+      test(
+        'should return null themes when no selected theme and no fallback available',
+        () {
+          final themingNoThemes = WiseTheming(
+            supportedThemes: [lightTheme], // Only light theme, no dark theme
+            targetPlatform: TargetPlatform.android,
+          );
+
+          expect(themingNoThemes.darkTheme, isNull);
+          expect(themingNoThemes.lightContrastTheme, isNull);
+          expect(themingNoThemes.darkContrastTheme, isNull);
+        },
+      );
+
+      test(
+        'should fallback to first available theme of correct type when no selected theme',
+        () {
+          final themingNoSelected = WiseTheming(
+            supportedThemes: mockSupportedThemes,
+            targetPlatform: TargetPlatform.android,
+          );
+
+          final lightThemeData = themingNoSelected.lightTheme;
+          final darkThemeData = themingNoSelected.darkTheme;
+          final lightContrastThemeData = themingNoSelected.lightContrastTheme;
+          final darkContrastThemeData = themingNoSelected.darkContrastTheme;
+
+          expect(lightThemeData, isNotNull);
+          expect(darkThemeData, isNotNull);
+          expect(lightContrastThemeData, isNotNull);
+          expect(darkContrastThemeData, isNotNull);
+        },
+      );
 
       test('themeMode should return correct ThemeMode', () {
         var result = theming.setCurrentTheme('light-theme');
@@ -498,8 +506,9 @@ void main() {
       );
     });
 
-    testWidgets('wiseTheme should return WiseTheme from context',
-        (tester) async {
+    testWidgets('wiseTheme should return WiseTheme from context', (
+      tester,
+    ) async {
       late WiseTheme contextTheme;
 
       await tester.pumpWidget(
@@ -517,8 +526,9 @@ void main() {
       expect(contextTheme, testTheme);
     });
 
-    testWidgets('should throw assertion when no WiseTheme in context',
-        (tester) async {
+    testWidgets('should throw assertion when no WiseTheme in context', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           theme: ThemeData(), // No WiseTheme extension
@@ -532,8 +542,9 @@ void main() {
       );
     });
 
-    testWidgets('backgroundColors should return BackgroundColors',
-        (tester) async {
+    testWidgets('backgroundColors should return BackgroundColors', (
+      tester,
+    ) async {
       late BackgroundColors contextBackgroundColors;
 
       await tester.pumpWidget(
@@ -569,8 +580,9 @@ void main() {
       expect(contextBorderColors, testTheme.borderColors);
     });
 
-    testWidgets('foregroundColors should return ForegroundColors',
-        (tester) async {
+    testWidgets('foregroundColors should return ForegroundColors', (
+      tester,
+    ) async {
       late ForegroundColors contextForegroundColors;
 
       await tester.pumpWidget(
@@ -755,8 +767,9 @@ void main() {
       );
     });
 
-    testWidgets('title should return title style with primary text color',
-        (tester) async {
+    testWidgets('title should return title style with primary text color', (
+      tester,
+    ) async {
       late TextStyle contextTitle;
 
       await tester.pumpWidget(
@@ -774,57 +787,63 @@ void main() {
       expect(contextTitle.fontSize, AppStyles.title.fontSize);
       expect(contextTitle.fontWeight, AppStyles.title.fontWeight);
       expect(contextTitle.height, AppStyles.title.height);
-      expect(contextTitle.color,
-          const Color(0xFF123456)); // testTheme.textColors.primary
-    });
-
-    testWidgets('headline should return headline style with primary text color',
-        (tester) async {
-      late TextStyle contextHeadline;
-
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: testTheme.asThemeData(TargetPlatform.android),
-          home: Builder(
-            builder: (context) {
-              contextHeadline = context.headline;
-              return Container();
-            },
-          ),
-        ),
-      );
-
-      expect(contextHeadline.fontSize, AppStyles.headline.fontSize);
-      expect(contextHeadline.fontWeight, AppStyles.headline.fontWeight);
-      expect(contextHeadline.height, AppStyles.headline.height);
-      expect(contextHeadline.color, const Color(0xFF123456));
+      expect(
+        contextTitle.color,
+        const Color(0xFF123456),
+      ); // testTheme.textColors.primary
     });
 
     testWidgets(
-        'subHeadline should return subHeadline style with primary text color',
-        (tester) async {
-      late TextStyle contextSubHeadline;
+      'headline should return headline style with primary text color',
+      (tester) async {
+        late TextStyle contextHeadline;
 
-      await tester.pumpWidget(
-        MaterialApp(
-          theme: testTheme.asThemeData(TargetPlatform.android),
-          home: Builder(
-            builder: (context) {
-              contextSubHeadline = context.subHeadline;
-              return Container();
-            },
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: testTheme.asThemeData(TargetPlatform.android),
+            home: Builder(
+              builder: (context) {
+                contextHeadline = context.headline;
+                return Container();
+              },
+            ),
           ),
-        ),
-      );
+        );
 
-      expect(contextSubHeadline.fontSize, AppStyles.subHeadline.fontSize);
-      expect(contextSubHeadline.fontWeight, AppStyles.subHeadline.fontWeight);
-      expect(contextSubHeadline.height, AppStyles.subHeadline.height);
-      expect(contextSubHeadline.color, const Color(0xFF123456));
-    });
+        expect(contextHeadline.fontSize, AppStyles.headline.fontSize);
+        expect(contextHeadline.fontWeight, AppStyles.headline.fontWeight);
+        expect(contextHeadline.height, AppStyles.headline.height);
+        expect(contextHeadline.color, const Color(0xFF123456));
+      },
+    );
 
-    testWidgets('body should return body style with primary text color',
-        (tester) async {
+    testWidgets(
+      'subHeadline should return subHeadline style with primary text color',
+      (tester) async {
+        late TextStyle contextSubHeadline;
+
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: testTheme.asThemeData(TargetPlatform.android),
+            home: Builder(
+              builder: (context) {
+                contextSubHeadline = context.subHeadline;
+                return Container();
+              },
+            ),
+          ),
+        );
+
+        expect(contextSubHeadline.fontSize, AppStyles.subHeadline.fontSize);
+        expect(contextSubHeadline.fontWeight, AppStyles.subHeadline.fontWeight);
+        expect(contextSubHeadline.height, AppStyles.subHeadline.height);
+        expect(contextSubHeadline.color, const Color(0xFF123456));
+      },
+    );
+
+    testWidgets('body should return body style with primary text color', (
+      tester,
+    ) async {
       late TextStyle contextBody;
 
       await tester.pumpWidget(
@@ -845,8 +864,9 @@ void main() {
       expect(contextBody.color, const Color(0xFF123456));
     });
 
-    testWidgets('input should return input style with primary text color',
-        (tester) async {
+    testWidgets('input should return input style with primary text color', (
+      tester,
+    ) async {
       late TextStyle contextInput;
 
       await tester.pumpWidget(

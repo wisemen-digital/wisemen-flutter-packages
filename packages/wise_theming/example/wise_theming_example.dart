@@ -40,10 +40,7 @@ class ExampleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'Wise Theming Example',
-          style: context.title,
-        ),
+        title: Text('Wise Theming Example', style: context.title),
         backgroundColor: context.backgroundColors.brandPrimary,
         foregroundColor: context.textColors.primaryOnBrand,
       ),
@@ -54,41 +51,35 @@ class ExampleScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             spacing: 12,
             children: [
-              Text(
-                'Choose Theme:',
-                style: context.headline,
-              ),
+              Text('Choose Theme:', style: context.headline),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: theming.supportedThemes
-                    .map((theme) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: ElevatedButton(
-                            onPressed: () => _switchTheme(theme.identifier),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: context.wiseTheme.identifier ==
-                                      theme.identifier
-                                  ? context.foregroundColors.brandPrimary
-                                  : context.backgroundColors.secondary,
-                              foregroundColor: context.wiseTheme.identifier ==
-                                      theme.identifier
-                                  ? context.textColors.primaryOnBrand
-                                  : context.textColors.primary,
-                              side: BorderSide(
-                                  color: context.borderColors.primary),
-                            ),
-                            child: Text(
-                              theme.identifier,
-                              style: context.body,
+                    .map(
+                      (theme) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: ElevatedButton(
+                          onPressed: () => _switchTheme(theme.identifier),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                context.wiseTheme.identifier == theme.identifier
+                                ? context.foregroundColors.brandPrimary
+                                : context.backgroundColors.secondary,
+                            foregroundColor:
+                                context.wiseTheme.identifier == theme.identifier
+                                ? context.textColors.primaryOnBrand
+                                : context.textColors.primary,
+                            side: BorderSide(
+                              color: context.borderColors.primary,
                             ),
                           ),
-                        ))
+                          child: Text(theme.identifier, style: context.body),
+                        ),
+                      ),
+                    )
                     .toList(),
               ),
-              Text(
-                'Theme Colors:',
-                style: context.headline,
-              ),
+              Text('Theme Colors:', style: context.headline),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -127,8 +118,9 @@ class ExampleScreen extends StatelessWidget {
                         ),
                         Text(
                           'Error',
-                          style: context.body
-                              .copyWith(color: context.textColors.errorPrimary),
+                          style: context.body.copyWith(
+                            color: context.textColors.errorPrimary,
+                          ),
                         ),
                         SizedBox.shrink(),
                         Container(
@@ -142,7 +134,8 @@ class ExampleScreen extends StatelessWidget {
                         Text(
                           'Warning',
                           style: context.body.copyWith(
-                              color: context.textColors.warningPrimary),
+                            color: context.textColors.warningPrimary,
+                          ),
                         ),
                         SizedBox.shrink(),
                         Container(
@@ -156,7 +149,8 @@ class ExampleScreen extends StatelessWidget {
                         Text(
                           'Success',
                           style: context.body.copyWith(
-                              color: context.textColors.successPrimary),
+                            color: context.textColors.successPrimary,
+                          ),
                         ),
                       ],
                     ),
@@ -165,8 +159,10 @@ class ExampleScreen extends StatelessWidget {
               ),
               Text(
                 'Utility Colors:',
-                style: context.body
-                    .copyWith(fontSize: 16, fontWeight: FontWeight.w600),
+                style: context.body.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -210,10 +206,7 @@ class _UtilityColorSample extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 4),
-        Text(
-          name,
-          style: context.body.copyWith(fontSize: 12),
-        ),
+        Text(name, style: context.body.copyWith(fontSize: 12)),
       ],
     );
   }

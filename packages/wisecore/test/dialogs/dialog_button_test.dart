@@ -8,13 +8,15 @@ void main() {
       expect(DialogButtonOption.cancel.iosStyle, IosButtonStyle.cancel);
     });
 
-    test('DialogButtonOption.destructive maps to IosButtonStyle.destructive',
-        () {
-      expect(
-        DialogButtonOption.destructive.iosStyle,
-        IosButtonStyle.destructive,
-      );
-    });
+    test(
+      'DialogButtonOption.destructive maps to IosButtonStyle.destructive',
+      () {
+        expect(
+          DialogButtonOption.destructive.iosStyle,
+          IosButtonStyle.destructive,
+        );
+      },
+    );
 
     test('DialogButtonOption.normal maps to IosButtonStyle.normal', () {
       expect(DialogButtonOption.normal.iosStyle, IosButtonStyle.normal);

@@ -6,8 +6,9 @@ import 'package:wisecore/src/extensions/scroll_extensions.dart';
 
 void main() {
   group('ScrollExtensions', () {
-    testWidgets('scrollToBottom should scroll to the bottom of the list',
-        (WidgetTester tester) async {
+    testWidgets('scrollToBottom should scroll to the bottom of the list', (
+      WidgetTester tester,
+    ) async {
       final controller = ScrollController();
       await tester.pumpWidget(
         MaterialApp(
@@ -30,8 +31,9 @@ void main() {
       expect(controller.offset, controller.position.maxScrollExtent);
     });
 
-    testWidgets('scrollToTop should scroll to the top of the list',
-        (WidgetTester tester) async {
+    testWidgets('scrollToTop should scroll to the top of the list', (
+      WidgetTester tester,
+    ) async {
       final controller = ScrollController();
       await tester.pumpWidget(
         MaterialApp(

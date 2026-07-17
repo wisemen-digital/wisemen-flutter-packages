@@ -16,15 +16,14 @@ WiseClient createClient({
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
   TokenStorage<OAuthToken>? tokenStorage,
-}) =>
-    WebWiseClient(
-      wiseInterceptors: wiseInterceptors,
-      baseOptions: options,
-      refreshFunction: refreshFunction,
-      interceptorsToAdd: interceptorsToAdd,
-      replacementInterceptors: replacementInterceptors,
-      tokenStorage: tokenStorage,
-    );
+}) => WebWiseClient(
+  wiseInterceptors: wiseInterceptors,
+  baseOptions: options,
+  refreshFunction: refreshFunction,
+  interceptorsToAdd: interceptorsToAdd,
+  replacementInterceptors: replacementInterceptors,
+  tokenStorage: tokenStorage,
+);
 
 /// Implements [DioForBrowser] for native
 base class WebWiseClient extends DioForBrowser with WiseClient {

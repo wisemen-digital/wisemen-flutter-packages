@@ -41,8 +41,9 @@ void main() {
     });
 
     test('launchEmail calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any()))
-          .thenAnswer(returnTrue);
+      when(
+        () => mockUrlLauncher.launchUrl(any(), any()),
+      ).thenAnswer(returnTrue);
 
       await WiseLauncher.launchEmail(
         email: 'test@example.com',
@@ -50,8 +51,9 @@ void main() {
         body: 'Test Body',
       );
 
-      final captured =
-          verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
+      final captured = verify(
+        () => mockUrlLauncher.launchUrl(captureAny(), any()),
+      ).captured;
 
       final uri = captured.first as String;
 
@@ -59,8 +61,9 @@ void main() {
     });
 
     test('launchPhone calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any()))
-          .thenAnswer(returnTrue);
+      when(
+        () => mockUrlLauncher.launchUrl(any(), any()),
+      ).thenAnswer(returnTrue);
 
       await WiseLauncher.launchPhone(phoneNr: '123456');
 
@@ -73,8 +76,9 @@ void main() {
     });
 
     test('launchMap calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any()))
-          .thenAnswer(returnTrue);
+      when(
+        () => mockUrlLauncher.launchUrl(any(), any()),
+      ).thenAnswer(returnTrue);
 
       await WiseLauncher.launchMap(name: 'Test Place');
 
