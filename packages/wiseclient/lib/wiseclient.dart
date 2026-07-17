@@ -5,7 +5,6 @@ export 'package:dio/dio.dart' show DioException, Options;
 export 'package:fresh/fresh.dart'
     show AuthenticationStatus, RevokeTokenException;
 
-export 'src/error_screens/error_screens.dart';
 export 'src/exceptions/exceptions.dart';
 export 'src/interceptors/interceptors.dart';
 export 'src/options.dart';

@@ -1,3 +1,7 @@
+## 2.1.0
+
+- Removed error screens
+
 ## 2.0.4
 
 - Removed `synchronizable` from iOS options in `FreshSecureTokenStorage`
