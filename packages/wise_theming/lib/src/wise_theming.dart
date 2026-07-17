@@ -33,8 +33,8 @@ class WiseTheming extends ValueNotifier<WiseTheme?> {
     required this.supportedThemes,
     required this.targetPlatform,
     WiseTheme? selectedTheme,
-  })  : assert(supportedThemes.isNotEmpty, 'supportedThemes cannot be empty'),
-        super(selectedTheme);
+  }) : assert(supportedThemes.isNotEmpty, 'supportedThemes cannot be empty'),
+       super(selectedTheme);
 
   /// The list of all themes supported by the application.
   final List<WiseTheme> supportedThemes;
@@ -50,7 +50,8 @@ class WiseTheming extends ValueNotifier<WiseTheme?> {
     final newTheme = supportedThemes.firstWhere(
       (theme) => theme.identifier == themeIdentifier,
       orElse: () => throw ArgumentError(
-          'No theme found with identifier: $themeIdentifier'),
+        'No theme found with identifier: $themeIdentifier',
+      ),
     );
     value = newTheme;
     notifyListeners();

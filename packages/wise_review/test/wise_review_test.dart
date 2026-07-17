@@ -53,8 +53,9 @@ void main() {
       expect(prefs.getInt('app_open_count'), 6);
     });
 
-    testWidgets('does not show review when count is below minimum',
-        (WidgetTester tester) async {
+    testWidgets('does not show review when count is below minimum', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 5});
       final prefs = await SharedPreferences.getInstance();
 
@@ -77,8 +78,9 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('respects custom minimumOpenCount',
-        (WidgetTester tester) async {
+    testWidgets('respects custom minimumOpenCount', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 2});
       final prefs = await SharedPreferences.getInstance();
 
@@ -125,8 +127,9 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('updates when canShowReview changes from false to true',
-        (WidgetTester tester) async {
+    testWidgets('updates when canShowReview changes from false to true', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 15});
       final prefs = await SharedPreferences.getInstance();
 
@@ -165,8 +168,9 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('does not trigger when canShowReview stays false',
-        (WidgetTester tester) async {
+    testWidgets('does not trigger when canShowReview stays false', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 15});
       final prefs = await SharedPreferences.getInstance();
 
@@ -206,8 +210,9 @@ void main() {
       expect(find.text('Test Updated'), findsOneWidget);
     });
 
-    testWidgets('initializes with zero count when no previous value',
-        (WidgetTester tester) async {
+    testWidgets('initializes with zero count when no previous value', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
 
@@ -357,8 +362,9 @@ void main() {
       expect(countAfterPause, countBeforePause);
     });
 
-    testWidgets('does not increment on app inactive',
-        (WidgetTester tester) async {
+    testWidgets('does not increment on app inactive', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 5});
       final prefs = await SharedPreferences.getInstance();
 
@@ -414,8 +420,9 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('handles very large minimumOpenCount',
-        (WidgetTester tester) async {
+    testWidgets('handles very large minimumOpenCount', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 100});
       final prefs = await SharedPreferences.getInstance();
 
@@ -438,8 +445,9 @@ void main() {
       expect(find.text('Test'), findsOneWidget);
     });
 
-    testWidgets('handles exact minimumOpenCount threshold',
-        (WidgetTester tester) async {
+    testWidgets('handles exact minimumOpenCount threshold', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 9});
       final prefs = await SharedPreferences.getInstance();
 
@@ -461,8 +469,9 @@ void main() {
       expect(prefs.getInt('app_open_count'), 10);
     });
 
-    testWidgets('handles default minimumOpenCount of 10',
-        (WidgetTester tester) async {
+    testWidgets('handles default minimumOpenCount of 10', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
 
@@ -488,8 +497,9 @@ void main() {
   });
 
   group('WiseReview Integration Tests', () {
-    testWidgets('increments count across multiple widget rebuilds',
-        (WidgetTester tester) async {
+    testWidgets('increments count across multiple widget rebuilds', (
+      WidgetTester tester,
+    ) async {
       SharedPreferences.setMockInitialValues({'app_open_count': 0});
       final prefs = await SharedPreferences.getInstance();
 

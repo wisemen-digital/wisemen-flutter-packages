@@ -37,7 +37,8 @@ class WiseZitadelOptions {
     StackRouter router,
     WidgetRef ref,
     OAuthToken? token,
-  ) onLoginSuccess;
+  )
+  onLoginSuccess;
 
   /// Login button styling options
   final WiseZitadelButtonOptions buttonOptions;

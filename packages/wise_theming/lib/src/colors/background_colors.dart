@@ -164,7 +164,10 @@ class BackgroundColors {
 
   /// Linearly interpolates between two [BackgroundColors] themes.
   static BackgroundColors lerp(
-      BackgroundColors a, BackgroundColors b, double t) {
+    BackgroundColors a,
+    BackgroundColors b,
+    double t,
+  ) {
     return BackgroundColors(
       primary: Color.lerp(a.primary, b.primary, t)!,
       primaryAlt: Color.lerp(a.primaryAlt, b.primaryAlt, t)!,
@@ -187,8 +190,11 @@ class BackgroundColors {
       brandSolid: Color.lerp(a.brandSolid, b.brandSolid, t)!,
       brandSolidHover: Color.lerp(a.brandSolidHover, b.brandSolidHover, t)!,
       brandSection: Color.lerp(a.brandSection, b.brandSection, t)!,
-      brandSectionSubtle:
-          Color.lerp(a.brandSectionSubtle, b.brandSectionSubtle, t)!,
+      brandSectionSubtle: Color.lerp(
+        a.brandSectionSubtle,
+        b.brandSectionSubtle,
+        t,
+      )!,
       errorPrimary: Color.lerp(a.errorPrimary, b.errorPrimary, t)!,
       errorSecondary: Color.lerp(a.errorSecondary, b.errorSecondary, t)!,
       errorSolid: Color.lerp(a.errorSolid, b.errorSolid, t)!,

@@ -79,16 +79,24 @@ class WiseTheme implements ThemeExtension<WiseTheme> {
 
   @override
   ThemeExtension<WiseTheme> lerp(
-      covariant ThemeExtension<WiseTheme>? other, double t) {
+    covariant ThemeExtension<WiseTheme>? other,
+    double t,
+  ) {
     if (other is! WiseTheme) return this;
     return WiseTheme(
       identifier: t < 0.5 ? identifier : other.identifier,
       themeType: t < 0.5 ? themeType : other.themeType,
-      backgroundColors:
-          BackgroundColors.lerp(backgroundColors, other.backgroundColors, t),
+      backgroundColors: BackgroundColors.lerp(
+        backgroundColors,
+        other.backgroundColors,
+        t,
+      ),
       borderColors: BorderColors.lerp(borderColors, other.borderColors, t),
-      foregroundColors:
-          ForegroundColors.lerp(foregroundColors, other.foregroundColors, t),
+      foregroundColors: ForegroundColors.lerp(
+        foregroundColors,
+        other.foregroundColors,
+        t,
+      ),
       textColors: TextColors.lerp(textColors, other.textColors, t),
       utilityColors: UtilityColors.lerp(utilityColors, other.utilityColors, t),
     );

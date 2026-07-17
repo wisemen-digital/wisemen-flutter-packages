@@ -60,15 +60,15 @@ class FloatingCupertinoTabBar extends StatelessWidget
       Radius.circular(_kTabBarHeight),
     ),
     this.indicatorType = TabIndicatorType.none,
-  })  : assert(
-          items.length >= 2,
-          "Tabs need at least 2 items to conform to Apple's HIG",
-        ),
-        assert(
-          0 <= currentIndex && currentIndex < items.length,
-          'Current index must be between 0 and the number of items minus 1, inclusive',
-        ),
-        assert(height >= 0.0, 'Height must be non-negative');
+  }) : assert(
+         items.length >= 2,
+         "Tabs need at least 2 items to conform to Apple's HIG",
+       ),
+       assert(
+         0 <= currentIndex && currentIndex < items.length,
+         'Current index must be between 0 and the number of items minus 1, inclusive',
+       ),
+       assert(height >= 0.0, 'Height must be non-negative');
 
   /// The interactive items laid out within the bottom navigation bar.
   final List<BottomNavigationBarItem> items;
@@ -194,10 +194,9 @@ class FloatingCupertinoTabBar extends StatelessWidget
           data: IconThemeData(color: inactive, size: iconSize),
           child: DefaultTextStyle(
             // Default with the inactive state.
-            style: CupertinoTheme.of(context)
-                .textTheme
-                .tabLabelTextStyle
-                .copyWith(color: inactive),
+            style: CupertinoTheme.of(
+              context,
+            ).textTheme.tabLabelTextStyle.copyWith(color: inactive),
             child: Semantics(
               explicitChildNodes: true,
               child: Row(
@@ -248,8 +247,9 @@ class FloatingCupertinoTabBar extends StatelessWidget
                       tabCount: items.length,
                     ),
                     child: MouseRegion(
-                      cursor:
-                          kIsWeb ? SystemMouseCursors.click : MouseCursor.defer,
+                      cursor: kIsWeb
+                          ? SystemMouseCursors.click
+                          : MouseCursor.defer,
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: onTap == null

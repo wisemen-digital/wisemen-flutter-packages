@@ -5,7 +5,8 @@ homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/w
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisecore
 
 environment:
-  sdk: ">=3.6.0 <4.0.0"
+  sdk: '>=3.10.0 <4.0.0'
+  flutter: '>=3.19.5'
 resolution: workspace
 dependencies:
   # Flutter
@@ -35,8 +36,8 @@ dependencies:
 dev_dependencies:
   # Static analysis & linting
   flutter_lints: ^6.0.0
-  custom_lint: ^0.8.0
-  dependency_validator: ^5.0.2
+  custom_lint: ^0.8.1
+  dependency_validator: ^5.0.5
 
   # Testing
   test: ^1.25.15

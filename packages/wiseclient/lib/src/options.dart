@@ -12,9 +12,8 @@ class WiseOptions extends BaseOptions {
     super.receiveTimeout,
     super.sendTimeout,
     String baseUrl = '',
-    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
     super.extra,
-    super.headers,
     super.responseType,
     super.contentType,
     super.validateStatus,
@@ -25,16 +24,18 @@ class WiseOptions extends BaseOptions {
     super.requestEncoder,
     super.responseDecoder,
     super.listFormat,
+    super.queryParameters,
     String? locale,
-  })  : assert(
-          connectTimeout == null || !connectTimeout.isNegative,
-          'connectTimeout can not be null or empty.',
-        ),
-        assert(
-          baseUrl.isEmpty || Uri.parse(baseUrl).host.isNotEmpty,
-          'baseUrl or baseUrl host can not be empty',
-        ) {
-    this.queryParameters = queryParameters ??
+  }) : assert(
+         connectTimeout == null || !connectTimeout.isNegative,
+         'connectTimeout can not be null or empty.',
+       ),
+       assert(
+         baseUrl.isEmpty || Uri.parse(baseUrl).host.isNotEmpty,
+         'baseUrl or baseUrl host can not be empty',
+       ) {
+    super.headers =
+        headers ??
         (locale == null
             ? {}
             : {
@@ -47,40 +48,40 @@ class WiseOptions extends BaseOptions {
   /// Constructor for [WiseOptions] with base options
   WiseOptions.base({
     String url = '',
-  })  : assert(
-          url.isEmpty || Uri.parse(url).host.isNotEmpty,
-          'baseUrl host can not be empty',
-        ),
-        super(
-          baseUrl: url,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 60),
-          sendTimeout: const Duration(seconds: 120),
-          headers: {
-            HttpHeaders.acceptHeader: 'application/json',
-          },
-        );
+  }) : assert(
+         url.isEmpty || Uri.parse(url).host.isNotEmpty,
+         'baseUrl host can not be empty',
+       ),
+       super(
+         baseUrl: url,
+         connectTimeout: const Duration(seconds: 30),
+         receiveTimeout: const Duration(seconds: 60),
+         sendTimeout: const Duration(seconds: 120),
+         headers: {
+           HttpHeaders.acceptHeader: 'application/json',
+         },
+       );
 
   /// Constructor for [WiseOptions] with locale string and base options
   WiseOptions.baseWithLocale({
     required String locale,
     String url = '',
-  })  : assert(
-          url.isEmpty || Uri.parse(url).host.isNotEmpty,
-          'baseUrl host can not be empty',
-        ),
-        assert(
-          locale.isNotEmpty,
-          'locale has to be a valid locale',
-        ),
-        super(
-          baseUrl: url,
-          connectTimeout: const Duration(seconds: 30),
-          receiveTimeout: const Duration(seconds: 60),
-          sendTimeout: const Duration(seconds: 120),
-          headers: {
-            HttpHeaders.acceptHeader: 'application/json',
-            HttpHeaders.acceptLanguageHeader: locale,
-          },
-        );
+  }) : assert(
+         url.isEmpty || Uri.parse(url).host.isNotEmpty,
+         'baseUrl host can not be empty',
+       ),
+       assert(
+         locale.isNotEmpty,
+         'locale has to be a valid locale',
+       ),
+       super(
+         baseUrl: url,
+         connectTimeout: const Duration(seconds: 30),
+         receiveTimeout: const Duration(seconds: 60),
+         sendTimeout: const Duration(seconds: 120),
+         headers: {
+           HttpHeaders.acceptHeader: 'application/json',
+           HttpHeaders.acceptLanguageHeader: locale,
+         },
+       );
 }

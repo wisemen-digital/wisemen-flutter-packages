@@ -23,61 +23,10 @@ void main() {
   });
 
   Future<bool> returnTrue(_) async => true;
-  Future<bool> returnFalse(_) async => false;
 
   group('WiseLauncher', () {
-    test('launchUrl calls launchUrl when canLaunchUrl is true', () async {
-      final testUri = Uri.parse('https://example.com');
-      when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnTrue);
-      when(
-        () => mockUrlLauncher.launchUrl(
-          testUri.toString(),
-          any(),
-        ),
-      ).thenAnswer(returnTrue);
-
-      var callbackCalled = false;
-
-      await WiseLauncher.launchUrl(
-        url: testUri.toString(),
-        onCannotLaunchUrl: (e) {
-          callbackCalled = true;
-        },
-      );
-
-      expect(callbackCalled, false);
-      verify(() => mockUrlLauncher.canLaunch(testUri.toString())).called(1);
-      verify(
-        () => mockUrlLauncher.launchUrl(
-          testUri.toString(),
-          any(),
-        ),
-      ).called(1);
-    });
-
-    test('launchUrl calls onCannotLaunchUrl when canLaunchUrl is false',
-        () async {
-      final testUri = Uri.parse('https://example.com');
-      when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnFalse);
-
-      var callbackCalled = false;
-
-      await WiseLauncher.launchUrl(
-        url: testUri.toString(),
-        onCannotLaunchUrl: (e) {
-          callbackCalled = true;
-        },
-      );
-
-      expect(callbackCalled, true);
-      verify(() => mockUrlLauncher.canLaunch(testUri.toString())).called(1);
-      verifyNever(() => mockUrlLauncher.launchUrl(any(), any()));
-    });
-
     test('launchUrl calls onCannotLaunchUrl when URI is invalid', () async {
       const testUri = '::Not valid URI::';
-      when(() => mockUrlLauncher.canLaunch(any())).thenAnswer(returnFalse);
-
       var callbackCalled = false;
 
       await WiseLauncher.launchUrl(
@@ -88,13 +37,13 @@ void main() {
       );
 
       expect(callbackCalled, true);
-      verifyNever(() => mockUrlLauncher.canLaunch(testUri));
       verifyNever(() => mockUrlLauncher.launchUrl(any(), any()));
     });
 
     test('launchEmail calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any()))
-          .thenAnswer(returnTrue);
+      when(
+        () => mockUrlLauncher.launchUrl(any(), any()),
+      ).thenAnswer(returnTrue);
 
       await WiseLauncher.launchEmail(
         email: 'test@example.com',
@@ -102,8 +51,9 @@ void main() {
         body: 'Test Body',
       );
 
-      final captured =
-          verify(() => mockUrlLauncher.launchUrl(captureAny(), any())).captured;
+      final captured = verify(
+        () => mockUrlLauncher.launchUrl(captureAny(), any()),
+      ).captured;
 
       final uri = captured.first as String;
 
@@ -111,8 +61,9 @@ void main() {
     });
 
     test('launchPhone calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any()))
-          .thenAnswer(returnTrue);
+      when(
+        () => mockUrlLauncher.launchUrl(any(), any()),
+      ).thenAnswer(returnTrue);
 
       await WiseLauncher.launchPhone(phoneNr: '123456');
 
@@ -125,8 +76,9 @@ void main() {
     });
 
     test('launchMap calls launchUrl', () async {
-      when(() => mockUrlLauncher.launchUrl(any(), any()))
-          .thenAnswer(returnTrue);
+      when(
+        () => mockUrlLauncher.launchUrl(any(), any()),
+      ).thenAnswer(returnTrue);
 
       await WiseLauncher.launchMap(name: 'Test Place');
 

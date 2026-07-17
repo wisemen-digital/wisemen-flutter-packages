@@ -126,13 +126,19 @@ class TextColors {
       tertiaryHover: Color.lerp(a.tertiaryHover, b.tertiaryHover, t)!,
       tertiaryOnBrand: Color.lerp(a.tertiaryOnBrand, b.tertiaryOnBrand, t)!,
       quaternary: Color.lerp(a.quaternary, b.quaternary, t)!,
-      quaternaryOnBrand:
-          Color.lerp(a.quaternaryOnBrand, b.quaternaryOnBrand, t)!,
+      quaternaryOnBrand: Color.lerp(
+        a.quaternaryOnBrand,
+        b.quaternaryOnBrand,
+        t,
+      )!,
       white: Color.lerp(a.white, b.white, t)!,
       disabled: Color.lerp(a.disabled, b.disabled, t)!,
       placeholder: Color.lerp(a.placeholder, b.placeholder, t)!,
-      placeholderSubtle:
-          Color.lerp(a.placeholderSubtle, b.placeholderSubtle, t)!,
+      placeholderSubtle: Color.lerp(
+        a.placeholderSubtle,
+        b.placeholderSubtle,
+        t,
+      )!,
       brandPrimary: Color.lerp(a.brandPrimary, b.brandPrimary, t)!,
       brandSecondary: Color.lerp(a.brandSecondary, b.brandSecondary, t)!,
       brandTertiary: Color.lerp(a.brandTertiary, b.brandTertiary, t)!,

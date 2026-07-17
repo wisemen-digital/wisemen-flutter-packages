@@ -26,8 +26,9 @@ void main() {
     loginCalls = 0;
   });
 
-  testWidgets('WiseLoginScreen with builder has buttons and builder content',
-      (tester) async {
+  testWidgets('WiseLoginScreen with builder has buttons and builder content', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       ProviderScope(
         overrides: [

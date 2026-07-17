@@ -62,7 +62,8 @@ class WiseLoginScreen extends HookConsumerWidget {
                         final isLoading = value == type;
                         return PlatformButton2(
                           color: options.buttonOptions.color(context),
-                          foregroundColor: options.buttonOptions
+                          foregroundColor:
+                              options.buttonOptions
                                   .buttonTextStyle(context)
                                   .color ??
                               Colors.white,
@@ -84,8 +85,9 @@ class WiseLoginScreen extends HookConsumerWidget {
                               Flexible(
                                 child: Text(
                                   type.buttonText,
-                                  style: options.buttonOptions
-                                      .buttonTextStyle(context),
+                                  style: options.buttonOptions.buttonTextStyle(
+                                    context,
+                                  ),
                                 ),
                               ),
                             ],
