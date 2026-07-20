@@ -31,33 +31,33 @@ class FloatingMaterialBottomBar extends StatefulWidget {
     this.enableFeedback,
     this.shape,
     this.indicatorType = TabIndicatorType.none,
-  })  : assert(items.length >= 2, 'There must be at least two items'),
-        assert(
-          items.every((BottomNavigationBarItem item) => item.label != null),
-          'Every item must have a non-null label',
-        ),
-        assert(
-          0 <= currentIndex && currentIndex < items.length,
-          'currentIndex must be in the range [0, items.length - 1]',
-        ),
-        assert(
-          elevation == null || elevation >= 0.0,
-          'elevation must be null or non-negative',
-        ),
-        assert(iconSize >= 0.0, 'iconSize must be non-negative'),
-        assert(
-          selectedItemColor == null || fixedColor == null,
-          'Either selectedItemColor or fixedColor can be specified, but not both',
-        ),
-        assert(
-          selectedFontSize >= 0.0,
-          'selectedFontSize must be non-negative',
-        ),
-        assert(
-          unselectedFontSize >= 0.0,
-          'unselectedFontSize must be non-negative',
-        ),
-        selectedItemColor = selectedItemColor ?? fixedColor;
+  }) : assert(items.length >= 2, 'There must be at least two items'),
+       assert(
+         items.every((BottomNavigationBarItem item) => item.label != null),
+         'Every item must have a non-null label',
+       ),
+       assert(
+         0 <= currentIndex && currentIndex < items.length,
+         'currentIndex must be in the range [0, items.length - 1]',
+       ),
+       assert(
+         elevation == null || elevation >= 0.0,
+         'elevation must be null or non-negative',
+       ),
+       assert(iconSize >= 0.0, 'iconSize must be non-negative'),
+       assert(
+         selectedItemColor == null || fixedColor == null,
+         'Either selectedItemColor or fixedColor can be specified, but not both',
+       ),
+       assert(
+         selectedFontSize >= 0.0,
+         'selectedFontSize must be non-negative',
+       ),
+       assert(
+         unselectedFontSize >= 0.0,
+         'unselectedFontSize must be non-negative',
+       ),
+       selectedItemColor = selectedItemColor ?? fixedColor;
 
   /// Defines the appearance of the button items that are arrayed within the
   /// bottom navigation bar.
@@ -237,12 +237,16 @@ class _BottomNavigationTile extends StatelessWidget {
 
     // The amount that the selected icon is bigger than the unselected icons,
     // (or zero if the selected icon is not bigger than the unselected icons).
-    final double selectedIconDiff =
-        math.max(selectedIconSize - unselectedIconSize, 0);
+    final double selectedIconDiff = math.max(
+      selectedIconSize - unselectedIconSize,
+      0,
+    );
     // The amount that the unselected icons are bigger than the selected icon,
     // (or zero if the unselected icons are not any bigger than the selected icon).
-    final double unselectedIconDiff =
-        math.max(unselectedIconSize - selectedIconSize, 0);
+    final double unselectedIconDiff = math.max(
+      unselectedIconSize - selectedIconSize,
+      0,
+    );
 
     // The effective tool tip message to be shown on the BottomNavigationBarItem.
     final effectiveTooltip = item.tooltip == '' ? null : item.tooltip;
@@ -441,8 +445,11 @@ class _Label extends StatelessWidget {
       ),
     );
 
-    text =
-        Align(alignment: Alignment.bottomCenter, heightFactor: 1, child: text);
+    text = Align(
+      alignment: Alignment.bottomCenter,
+      heightFactor: 1,
+      child: text,
+    );
 
     if (item.label != null) {
       // Do not grow text in bottom navigation bar when we can show a tooltip
@@ -466,8 +473,10 @@ class _FloatingMaterialBottomBarState extends State<FloatingMaterialBottomBar>
   // animation is complete.
   Color? _backgroundColor;
 
-  static final Animatable<double> _flexTween =
-      Tween<double>(begin: 1, end: 1.5);
+  static final Animatable<double> _flexTween = Tween<double>(
+    begin: 1,
+    end: 1.5,
+  );
 
   void _resetState() {
     for (final controller in _controllers) {
@@ -481,13 +490,15 @@ class _FloatingMaterialBottomBarState extends State<FloatingMaterialBottomBar>
     }
     _circles.clear();
 
-    _controllers =
-        List<AnimationController>.generate(widget.items.length, (int index) {
+    _controllers = List<AnimationController>.generate(widget.items.length, (
+      int index,
+    ) {
       return AnimationController(duration: kThemeAnimationDuration, vsync: this)
         ..addListener(_rebuild);
     });
-    _animations =
-        List<CurvedAnimation>.generate(widget.items.length, (int index) {
+    _animations = List<CurvedAnimation>.generate(widget.items.length, (
+      int index,
+    ) {
       return CurvedAnimation(
         parent: _controllers[index],
         curve: Curves.fastOutSlowIn,
@@ -582,10 +593,12 @@ class _FloatingMaterialBottomBarState extends State<FloatingMaterialBottomBar>
     );
 
     final colorTween = ColorTween(
-      begin: widget.unselectedItemColor ??
+      begin:
+          widget.unselectedItemColor ??
           bottomTheme.unselectedItemColor ??
           themeData.unselectedWidgetColor,
-      end: widget.selectedItemColor ??
+      end:
+          widget.selectedItemColor ??
           bottomTheme.selectedItemColor ??
           widget.fixedColor ??
           themeColor,
@@ -597,7 +610,8 @@ class _FloatingMaterialBottomBarState extends State<FloatingMaterialBottomBar>
         if (i == widget.currentIndex) WidgetState.selected,
       };
 
-      final effectiveMouseCursor = WidgetStateProperty.resolveAs<MouseCursor?>(
+      final effectiveMouseCursor =
+          WidgetStateProperty.resolveAs<MouseCursor?>(
             widget.mouseCursor,
             states,
           ) ??
@@ -744,10 +758,14 @@ class _Circle {
     required this.color,
     required TickerProvider vsync,
   }) {
-    controller =
-        AnimationController(duration: kThemeAnimationDuration, vsync: vsync);
-    animation =
-        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+    controller = AnimationController(
+      duration: kThemeAnimationDuration,
+      vsync: vsync,
+    );
+    animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.fastOutSlowIn,
+    );
     controller.forward();
   }
 
@@ -829,8 +847,10 @@ class _RadialPainter extends CustomPainter {
         TextDirection.ltr => circle.horizontalLeadingOffset,
       };
       final center = Offset(leftFraction * size.width, size.height / 2.0);
-      final radiusTween =
-          Tween<double>(begin: 0, end: _maxRadius(center, size));
+      final radiusTween = Tween<double>(
+        begin: 0,
+        end: _maxRadius(center, size),
+      );
       canvas.drawCircle(
         center,
         radiusTween.transform(circle.animation.value),

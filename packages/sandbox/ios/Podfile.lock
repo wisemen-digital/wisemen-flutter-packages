@@ -1,121 +1,29 @@
 PODS:
-  - atlantis-proxyman (1.28.0)
+  - atlantis-proxyman (1.31.0)
   - cupertino_http (0.0.1):
     - Flutter
     - FlutterMacOS
   - Flutter (1.0.0)
-  - flutter_native_splash (2.4.3):
-    - Flutter
-  - flutter_platform_alert (0.0.1):
-    - Flutter
-  - flutter_secure_storage_darwin (10.0.0):
-    - Flutter
-    - FlutterMacOS
-  - objective_c (0.0.1):
-    - Flutter
-  - package_info_plus (0.4.5):
-    - Flutter
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - share_plus (0.0.1):
-    - Flutter
-  - shared_preferences_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
-  - sqflite_darwin (0.0.4):
-    - Flutter
-    - FlutterMacOS
-  - sqlite3 (3.50.1):
-    - sqlite3/common (= 3.50.1)
-  - sqlite3/common (3.50.1)
-  - sqlite3/dbstatvtab (3.50.1):
-    - sqlite3/common
-  - sqlite3/fts5 (3.50.1):
-    - sqlite3/common
-  - sqlite3/math (3.50.1):
-    - sqlite3/common
-  - sqlite3/perf-threadsafe (3.50.1):
-    - sqlite3/common
-  - sqlite3/rtree (3.50.1):
-    - sqlite3/common
-  - sqlite3_flutter_libs (0.0.1):
-    - Flutter
-    - FlutterMacOS
-    - sqlite3 (~> 3.50.1)
-    - sqlite3/dbstatvtab
-    - sqlite3/fts5
-    - sqlite3/math
-    - sqlite3/perf-threadsafe
-    - sqlite3/rtree
-  - wisewidgetslibrary (2.0.0):
-    - Flutter
 
 DEPENDENCIES:
   - atlantis-proxyman
   - cupertino_http (from `.symlinks/plugins/cupertino_http/darwin`)
   - Flutter (from `Flutter`)
-  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
-  - flutter_platform_alert (from `.symlinks/plugins/flutter_platform_alert/ios`)
-  - flutter_secure_storage_darwin (from `.symlinks/plugins/flutter_secure_storage_darwin/darwin`)
-  - objective_c (from `.symlinks/plugins/objective_c/ios`)
-  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
-  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
-  - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
-  - sqlite3_flutter_libs (from `.symlinks/plugins/sqlite3_flutter_libs/darwin`)
-  - wisewidgetslibrary (from `.symlinks/plugins/wisewidgetslibrary/ios`)
 
 SPEC REPOS:
   trunk:
     - atlantis-proxyman
-    - sqlite3
 
 EXTERNAL SOURCES:
   cupertino_http:
     :path: ".symlinks/plugins/cupertino_http/darwin"
   Flutter:
     :path: Flutter
-  flutter_native_splash:
-    :path: ".symlinks/plugins/flutter_native_splash/ios"
-  flutter_platform_alert:
-    :path: ".symlinks/plugins/flutter_platform_alert/ios"
-  flutter_secure_storage_darwin:
-    :path: ".symlinks/plugins/flutter_secure_storage_darwin/darwin"
-  objective_c:
-    :path: ".symlinks/plugins/objective_c/ios"
-  package_info_plus:
-    :path: ".symlinks/plugins/package_info_plus/ios"
-  path_provider_foundation:
-    :path: ".symlinks/plugins/path_provider_foundation/darwin"
-  share_plus:
-    :path: ".symlinks/plugins/share_plus/ios"
-  shared_preferences_foundation:
-    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  sqflite_darwin:
-    :path: ".symlinks/plugins/sqflite_darwin/darwin"
-  sqlite3_flutter_libs:
-    :path: ".symlinks/plugins/sqlite3_flutter_libs/darwin"
-  wisewidgetslibrary:
-    :path: ".symlinks/plugins/wisewidgetslibrary/ios"
 
 SPEC CHECKSUMS:
-  atlantis-proxyman: 89e752a0dd0cd26a59af10ff43cd6be857dbc6cf
+  atlantis-proxyman: 2e8a4432178b7a43dbf74cdf4741d0bb159c725e
   cupertino_http: 94ac07f5ff090b8effa6c5e2c47871d48ab7c86c
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_native_splash: c32d145d68aeda5502d5f543ee38c192065986cf
-  flutter_platform_alert: bf3b5fcd4ac14bd637e20527e9c471633071afd3
-  flutter_secure_storage_darwin: ce237a8775b39723566dc72571190a3769d70468
-  objective_c: 89e720c30d716b036faf9c9684022048eee1eee2
-  package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
-  share_plus: 50da8cb520a8f0f65671c6c6a99b3617ed10a58a
-  shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
-  sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
-  sqlite3: 1d85290c3321153511f6e900ede7a1608718bbd5
-  sqlite3_flutter_libs: e7fc8c9ea2200ff3271f08f127842131746b70e2
-  wisewidgetslibrary: c7c13a0916800ffa2e65a38b3b17aecc4a331ba2
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
 
 PODFILE CHECKSUM: 80894b2c9c8bc0d5ecb416aee06ce09771d3093e
 

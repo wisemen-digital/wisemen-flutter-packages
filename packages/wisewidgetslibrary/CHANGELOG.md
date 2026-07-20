@@ -1,3 +1,7 @@
+## 2.1.5
+
+* Added Swift Package Manager support
+
 ## 2.1.4
 
 * Added `onPageChanged` to the `imageCarousel` so it's caller can respond

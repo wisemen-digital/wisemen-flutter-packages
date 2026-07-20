@@ -3,37 +3,28 @@
 # Packages
 wise_nav_bar:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_nav_bar/**'
 wise_zitadel_login:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_zitadel_login/**'
 wiseclient:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wiseclient/**'
 wisecore:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wisecore/**'
 wisewidgetslibrary:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wisewidgetslibrary/**'
 wise_theming:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_theming/**'
 wise_scalars:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_scalars/**'
 wise_review:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_review/**'
 wise_text:
   - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_text/**'

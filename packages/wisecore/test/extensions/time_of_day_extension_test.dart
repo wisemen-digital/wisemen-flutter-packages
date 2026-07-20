@@ -24,8 +24,9 @@ void main() {
       expect(time.asDouble, 10.5);
     });
 
-    testWidgets('customFormat should format time correctly',
-        (WidgetTester tester) async {
+    testWidgets('customFormat should format time correctly', (
+      WidgetTester tester,
+    ) async {
       const time = TimeOfDay(hour: 10, minute: 30);
       await tester.pumpWidget(
         MaterialApp(

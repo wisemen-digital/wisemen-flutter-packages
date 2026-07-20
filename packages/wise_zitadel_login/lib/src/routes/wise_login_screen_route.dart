@@ -7,13 +7,13 @@ import '../screens/wise_login_screen.dart';
 class WiseLoginScreenRoute extends PageRouteInfo<WiseScreenRouteArgs> {
   /// Constructor for [WiseLoginScreenRoute]
   WiseLoginScreenRoute({List<PageRouteInfo>? children, WidgetBuilder? builder})
-      : super(
-          WiseLoginScreenRoute.name,
-          args: WiseScreenRouteArgs(
-            builder: builder,
-          ),
-          initialChildren: children,
-        );
+    : super(
+        WiseLoginScreenRoute.name,
+        args: WiseScreenRouteArgs(
+          builder: builder,
+        ),
+        initialChildren: children,
+      );
 
   /// Route name
   static const String name = 'WiseLoginScreenRoute';

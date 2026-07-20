@@ -31,16 +31,16 @@ class _TestRouter extends RootStackRouter {
 
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(
-          page: _FirstRoute.page,
-          path: '/',
-          initial: true,
-        ),
-        AutoRoute(
-          page: _SecondRoute.page,
-          path: '/second',
-        ),
-      ];
+    AutoRoute(
+      page: _FirstRoute.page,
+      path: '/',
+      initial: true,
+    ),
+    AutoRoute(
+      page: _SecondRoute.page,
+      path: '/second',
+    ),
+  ];
 }
 
 void main() {
@@ -84,8 +84,9 @@ void main() {
       );
     });
 
-    testWidgets('calls backgroundResume only when the route is top',
-        (tester) async {
+    testWidgets('calls backgroundResume only when the route is top', (
+      tester,
+    ) async {
       await pumpRouter(tester);
 
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);

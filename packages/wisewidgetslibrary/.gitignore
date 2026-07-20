@@ -100,6 +100,8 @@ lib/generated_plugin_registrant.dart
 **/ios/Flutter/flutter_export_environment.sh
 **/ios/ServiceDefinitions.json
 **/ios/Runner/GeneratedPluginRegistrant.*
+.build/
+.swiftpm/
 
 # Exceptions to above rules.
 !**/ios/**/default.mode1v3

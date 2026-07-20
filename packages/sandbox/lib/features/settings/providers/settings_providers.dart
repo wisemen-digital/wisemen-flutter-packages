@@ -1,28 +1,28 @@
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wisecore/wisecore.dart';
 
 import '../settings.dart';
 
 part 'settings_providers.g.dart';
 
 class SettingsProviders {
-  static var themeMode = settingsControllerProvider;
+  static var user = userProviderProvider;
 }
 
 @riverpod
-class ThemeModeStream extends _$ThemeModeStream {
+class UserProvider extends _$UserProvider with LoadingStreamProvider<User?> {
   @override
-  Stream<ThemeMode> build() {
-    return ref.watch(SettingsFeature.settingsRepository).watchThemeMode();
-  }
-}
-
-@riverpod
-class SwitchValue extends _$SwitchValue {
-  @override
-  bool build() {
-    return false;
+  Stream<User?> build() {
+    return ref.watch(SettingsFeature.settingsRepository).user;
   }
 
-  bool changeValue(bool val) => state = val;
+  @override
+  Future<void> onError(Object error, StackTrace stackTrace) async {
+    // to toast
+  }
+
+  @override
+  Future<void> refreshFunction() async {
+    await ref.watch(SettingsFeature.settingsRepository).getMe();
+  }
 }

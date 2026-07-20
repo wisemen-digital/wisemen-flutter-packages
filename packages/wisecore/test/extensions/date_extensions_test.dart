@@ -34,17 +34,19 @@ void main() {
     });
 
     test(
-        'schoolYear should return correct school year for dates before September',
-        () {
-      final date = DateTime(2025, 3, 16);
-      expect(date.schoolYear, '2024 - 2025');
-    });
+      'schoolYear should return correct school year for dates before September',
+      () {
+        final date = DateTime(2025, 3, 16);
+        expect(date.schoolYear, '2024 - 2025');
+      },
+    );
 
     test(
-        'schoolYear should return correct school year for dates from September onwards',
-        () {
-      final date = DateTime(2025, 9, 15);
-      expect(date.schoolYear, '2025 - 2026');
-    });
+      'schoolYear should return correct school year for dates from September onwards',
+      () {
+        final date = DateTime(2025, 9, 15);
+        expect(date.schoolYear, '2025 - 2026');
+      },
+    );
   });
 }

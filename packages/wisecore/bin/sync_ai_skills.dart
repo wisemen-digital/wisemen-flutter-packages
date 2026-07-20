@@ -98,7 +98,8 @@ void main(List<String> arguments) async {
                 entity.copySync(destFile.path);
                 copiedCount++;
                 print(
-                    '  -> Copied $fileName to .github/copilot-instructions.md');
+                  '  -> Copied $fileName to .github/copilot-instructions.md',
+                );
               } else if (agent == 'claude-code') {
                 final destFile = File('CLAUDE.md');
                 entity.copySync(destFile.path);

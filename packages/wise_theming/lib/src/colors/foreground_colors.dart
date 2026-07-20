@@ -119,7 +119,10 @@ class ForegroundColors {
 
   /// Linearly interpolates between two [ForegroundColors] themes.
   static ForegroundColors lerp(
-      ForegroundColors a, ForegroundColors b, double t) {
+    ForegroundColors a,
+    ForegroundColors b,
+    double t,
+  ) {
     return ForegroundColors(
       primary: Color.lerp(a.primary, b.primary, t)!,
       secondary: Color.lerp(a.secondary, b.secondary, t)!,

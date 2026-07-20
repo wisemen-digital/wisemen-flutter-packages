@@ -1,10 +1,11 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
-import 'package:wiseclient/src/error_screens/messages.dart';
 import 'package:wiseclient/src/secure_token_storage/fresh_secure_token_storage.dart';
 import 'package:wiseclient/src/secure_token_storage/map_from_token_extension.dart';
 import 'package:wiseclient/src/secure_token_storage/token_from_string_extension.dart';
@@ -57,6 +58,10 @@ class FakeResponse<T> extends Fake implements Response<T> {}
 
 class FakeDioException extends Fake implements DioException {}
 
+class MockExtendedClient extends Fake implements WiseClient {}
+
+class FakeInterceptor extends Fake implements Interceptor {}
+
 Future<OAuth2Token> emptyRefreshToken(OAuth2Token? _, Dio __) async {
   return MockToken();
 }
@@ -90,9 +95,19 @@ void main() {
       url: 'https://jsonplaceholder.typicode.com/',
       locale: 'en',
     );
+    final wiseBaseOptions = WiseOptions.base(
+      url: 'https://jsonplaceholder.typicode.com/',
+    );
     final awesome = WiseClient(
       wiseInterceptors: WiseInterceptor.values,
       options: wiseOptions,
+      refreshFunction: (token, client) {
+        return Future.value(OAuthToken(accessToken: 'newToken'));
+      },
+    );
+    final awesomeBase = WiseClient(
+      wiseInterceptors: WiseInterceptor.values,
+      options: wiseBaseOptions,
       refreshFunction: (token, client) {
         return Future.value(OAuthToken(accessToken: 'newToken'));
       },
@@ -101,6 +116,32 @@ void main() {
     test('Client is native', () {
       expect(awesome.isWebClient, isFalse);
     });
+
+    test('Client with base options is native', () {
+      expect(awesomeBase.isWebClient, isFalse);
+    });
+
+    test(
+      'WiseOptions sets correct locale query param when empty constructor is used',
+      () {
+        final options = WiseOptions(locale: 'en');
+        expect(options.headers[HttpHeaders.acceptLanguageHeader], 'en');
+      },
+    );
+
+    test(
+      'Can replace client interceptors',
+      () {
+        final interceptor = FakeInterceptor();
+        final client = WiseClient(
+          interceptors: [interceptor],
+          wiseInterceptors: [],
+        );
+        // Dio clients have imply content interceptor so length is 2
+        expect(client.interceptors.length, 2);
+        expect(client.interceptors.contains(interceptor), isTrue);
+      },
+    );
 
     test('isWebClient throws error when not implemented', () {
       expect(
@@ -213,11 +254,13 @@ void main() {
       expect(awesome.cancelToken.isCancelled, isTrue);
     });
 
-    test('resetWiseCancelToken method does not result in a cancelled token ',
-        () {
-      awesome.resetWiseCancelToken();
-      expect(awesome.cancelToken.isCancelled, isFalse);
-    });
+    test(
+      'resetWiseCancelToken method does not result in a cancelled token ',
+      () {
+        awesome.resetWiseCancelToken();
+        expect(awesome.cancelToken.isCancelled, isFalse);
+      },
+    );
 
     test('removeFreshToken method works correctly', () async {
       final mockFresh = MockFresh();
@@ -314,9 +357,27 @@ void main() {
           'expires_in': 100,
           'refresh_token': 'refresh',
           'scope': 'scope',
+          'issued_at': DateTime.now().toIso8601String(),
         },
       );
       expect(token, isA<OAuthToken>());
+    });
+
+    test('Token from snake case without date', () async {
+      final token = OAuthToken.fromSnakeCase(
+        {
+          'access_token': 'token',
+          'token_type': 'bearer',
+          'expires_in': 100,
+          'refresh_token': 'refresh',
+          'scope': 'scope',
+        },
+      );
+      expect(token, isA<OAuthToken>());
+      expect(
+        token.issuedAt?.difference(DateTime.now()),
+        lessThan(const Duration(seconds: 1)),
+      );
     });
 
     test('Token from camel case', () async {
@@ -327,14 +388,33 @@ void main() {
           'expiresIn': 100,
           'refreshToken': 'refresh',
           'scope': 'scope',
+          'issuedAt': DateTime.now().toIso8601String(),
         },
       );
       expect(token, isA<OAuthToken>());
     });
 
+    test('Token from camel case without date', () async {
+      final token = OAuthToken.fromCamelCasing(
+        {
+          'accessToken': 'token',
+          'tokenType': 'bearer',
+          'expiresIn': 100,
+          'refreshToken': 'refresh',
+          'scope': 'scope',
+        },
+      );
+      expect(token, isA<OAuthToken>());
+      expect(
+        token.issuedAt?.difference(DateTime.now()),
+        lessThan(const Duration(seconds: 1)),
+      );
+    });
+
     test('Token from string', () async {
-      const tokenString =
-          '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope"}';
+      final date = DateTime(2017, 5, 12);
+      final tokenString =
+          '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope","issuedAt":"${date.toIso8601String()}"}';
       final token = tokenString.toOAuthToken;
       expect(token, isA<OAuthToken>());
       expect(token.accessToken, 'token');
@@ -342,6 +422,7 @@ void main() {
       expect(token.expiresIn, 100);
       expect(token.refreshToken, 'refresh');
       expect(token.scope, 'scope');
+      expect(token.issuedAt, date);
     });
 
     test('Can set the client token', () async {
@@ -366,8 +447,9 @@ void main() {
         [AuthenticationStatus.authenticated],
       );
 
-      when(() => mockFresh.authenticationStatus)
-          .thenAnswer((_) => authStatusStream);
+      when(
+        () => mockFresh.authenticationStatus,
+      ).thenAnswer((_) => authStatusStream);
 
       expect(
         client.authenticationStatus,
@@ -385,109 +467,6 @@ void main() {
       final exception = UnknownException('Test message');
       expect(exception.message, equals('Test message'));
       expect(() => throw exception, throwsA(isA<UnknownException>()));
-    });
-  });
-
-  group('Error Messages Tests', () {
-    test('getServerErrorTitle returns correct message', () {
-      expect(getServerErrorTitle('nl'), 'Serverfout');
-      expect(getServerErrorTitle('es'), 'Error del servidor');
-      expect(getServerErrorTitle('de'), 'Serverfehler');
-      expect(getServerErrorTitle('fr'), 'Erreur de serveur');
-      expect(getServerErrorTitle('ar'), 'خطأ في الخادم');
-      expect(getServerErrorTitle('ja'), 'サーバーエラー');
-      expect(getServerErrorTitle('unknown'), 'Client error');
-    });
-
-    test('getClientErrorTitle returns correct message', () {
-      expect(getClientErrorTitle('nl'), 'Clientfout');
-      expect(getClientErrorTitle('es'), 'Error del cliente');
-      expect(getClientErrorTitle('de'), 'Clientfehler');
-      expect(getClientErrorTitle('fr'), 'Erreur client');
-      expect(getClientErrorTitle('ar'), 'خطأ في العميل');
-      expect(getClientErrorTitle('ja'), 'クライアントエラー');
-      expect(getClientErrorTitle('unknown'), 'Client error');
-    });
-
-    test('getDetailedClientErrorMessage returns correct message', () {
-      expect(
-        getDetailedClientErrorMessage('en'),
-        'A client error occurred, please try again later',
-      );
-      expect(
-        getDetailedClientErrorMessage('nl'),
-        'Er is een fout opgetreden bij de client, probeer het later opnieuw',
-      );
-      expect(
-        getDetailedClientErrorMessage('es'),
-        'Se produjo un error del cliente, por favor inténtelo de nuevo más tarde',
-      );
-      expect(
-        getDetailedClientErrorMessage('de'),
-        'Es ist ein Clientfehler aufgetreten, bitte versuchen Sie es später erneut',
-      );
-      expect(
-        getDetailedClientErrorMessage('fr'),
-        "Une erreur client s'est produite, veuillez réessayer plus tard",
-      );
-      expect(
-        getDetailedClientErrorMessage('ar'),
-        'حدث خطأ في العميل، يرجى المحاولة مرة أخرى لاحقًا',
-      );
-      expect(
-        getDetailedClientErrorMessage('ja'),
-        'クライアントエラーが発生しました。後でもう一度お試しください',
-      );
-      expect(
-        getDetailedClientErrorMessage('unknown'),
-        'A client error occurred, please try again later',
-      );
-    });
-
-    test('getDetailedServerErrorMesssage returns correct message', () {
-      expect(
-        getDetailedServerErrorMesssage('en'),
-        'A server error occurred, please try again later',
-      );
-      expect(
-        getDetailedServerErrorMesssage('nl'),
-        'Er is een serverfout opgetreden, probeer het later opnieuw',
-      );
-      expect(
-        getDetailedServerErrorMesssage('es'),
-        'Se produjo un error del servidor, por favor inténtelo de nuevo más tarde',
-      );
-      expect(
-        getDetailedServerErrorMesssage('de'),
-        'Es ist ein Serverfehler aufgetreten, bitte versuchen Sie es später erneut',
-      );
-      expect(
-        getDetailedServerErrorMesssage('fr'),
-        "Une erreur de serveur s'est produite, veuillez réessayer plus tard",
-      );
-      expect(
-        getDetailedServerErrorMesssage('ar'),
-        'حدث خطأ في الخادم، يرجى المحاولة مرة أخرى لاحقًا',
-      );
-      expect(
-        getDetailedServerErrorMesssage('ja'),
-        'サーバーエラーが発生しました。後でもう一度お試しください',
-      );
-      expect(
-        getDetailedServerErrorMesssage('unknown'),
-        'A server error occurred, please try again later',
-      );
-    });
-
-    test('getViewFullMessage returns correct message', () {
-      expect(getViewFullMessage('en'), 'View full message');
-      expect(getViewFullMessage('nl'), 'Bekijk volledig bericht');
-      expect(getViewFullMessage('es'), 'Ver mensaje completo');
-      expect(getViewFullMessage('de'), 'Vollständige Nachricht anzeigen');
-      expect(getViewFullMessage('fr'), 'Voir le message complet');
-      expect(getViewFullMessage('ar'), 'عرض الرسالة بالكامل');
-      expect(getViewFullMessage('ja'), '全文を表示');
-      expect(getViewFullMessage('unknown'), 'View full message');
     });
   });
 
@@ -528,14 +507,16 @@ void main() {
     });
 
     group('token', () {
-      test('returns token once it has successfully loaded from storage',
-          () async {
-        final mockToken = MockToken();
-        when(() => tokenStorage.read()).thenAnswer((_) async => mockToken);
-        final freshController = FreshController<OAuth2Token>(tokenStorage);
-        final token = await freshController.token;
-        expect(token, mockToken);
-      });
+      test(
+        'returns token once it has successfully loaded from storage',
+        () async {
+          final mockToken = MockToken();
+          when(() => tokenStorage.read()).thenAnswer((_) async => mockToken);
+          final freshController = FreshController<OAuth2Token>(tokenStorage);
+          final token = await freshController.token;
+          expect(token, mockToken);
+        },
+      );
 
       test('waits for storage read to complete', () async {
         final mockToken = MockToken();
@@ -657,7 +638,7 @@ void main() {
     });
 
     group('close', () {
-      test('shoud close streams', () async {
+      test('should close streams', () async {
         when(() => tokenStorage.read()).thenAnswer((_) async => null);
         when(() => tokenStorage.write(any())).thenAnswer((_) async {});
         final freshController = FreshController<OAuth2Token>(tokenStorage);

@@ -21,7 +21,7 @@ enum AppearanceType {
   tabChange,
 
   /// On app resume from background
-  backgroundResume
+  backgroundResume,
 }
 
 class _AppLifecycleObserver with WidgetsBindingObserver {
@@ -55,8 +55,9 @@ mixin VisibleAwareStateMixin<T extends StatefulWidget> on State<T>
     super.didChangeDependencies();
     // RouterScope exposes the list of provided observers
     // including inherited observers
-    _observer =
-        RouterScope.of(context).firstObserverOfType<VisibleAwareObserver>();
+    _observer = RouterScope.of(
+      context,
+    ).firstObserverOfType<VisibleAwareObserver>();
 
     if (_observer != null) {
       // we subscribe to the observer by passing our
@@ -101,8 +102,10 @@ class VisibleAwareObserver extends AutoRouterObserver {
   /// to [route], e.g. when [route] is covered by another route or when [route]
   /// is popped off the [Navigator] stack.
   void subscribe<T>(VisibleAware routeAware, RouteData<T> route) {
-    final subscribers =
-        _listeners.putIfAbsent(route.key, () => <VisibleAware>{});
+    final subscribers = _listeners.putIfAbsent(
+      route.key,
+      () => <VisibleAware>{},
+    );
     if (subscribers.add(routeAware)) {
       routeAware.onViewDidAppear(AppearanceType.push);
     }

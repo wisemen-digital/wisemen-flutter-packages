@@ -4,6 +4,8 @@
         "cdef",
         "crossingthestreams",
         "PHONENUMBER",
+        "libsqlite",
+        "typesense",
         "uploaders",
         "uppercases",
         "wisemenflutterpackages"
