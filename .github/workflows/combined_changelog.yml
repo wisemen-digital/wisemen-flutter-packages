@@ -41,8 +41,9 @@ jobs:
           commit-message: "chore: update combined changelog"
           title: "chore: update combined changelog"
           body: |
-            Automated weekly combined changelog covering the last
+            Automated weekly run that prepends a new dated section to
+            `COMBINED_CHANGELOG.md`, covering the last
             `${{ github.event.inputs.days || '7' }}` days.
 
             Generated from `.github/package-filters.yaml` by
-            `scripts/generate_combined_changelog.dart`.
+            `scripts/generate_combined_changelog.sh`.
