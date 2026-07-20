@@ -1,0 +1,48 @@
+name: Combined changelog
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC. Uses a 7-day look-back window, so each run
+    # covers the week since the previous run.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Look-back window in days"
+        required: false
+        default: "7"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history is required for the date-window diff
+
+      - name: Generate combined changelog
+        run: |
+          scripts/generate_combined_changelog.sh \
+            --days "${{ github.event.inputs.days || '7' }}" \
+            --out COMBINED_CHANGELOG.md
+
+      - name: Create or update pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: chore/combined-changelog
+          delete-branch: true
+          add-paths: COMBINED_CHANGELOG.md
+          commit-message: "chore: update combined changelog"
+          title: "chore: update combined changelog"
+          body: |
+            Automated weekly combined changelog covering the last
+            `${{ github.event.inputs.days || '7' }}` days.
+
+            Generated from `.github/package-filters.yaml` by
+            `scripts/generate_combined_changelog.dart`.
