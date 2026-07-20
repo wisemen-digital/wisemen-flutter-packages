@@ -1,0 +1,22 @@
+PODS:
+  - Flutter (1.0.0)
+  - wise_text (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - wise_text (from `.symlinks/plugins/wise_text/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  wise_text:
+    :path: ".symlinks/plugins/wise_text/ios"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  wise_text: a5c0c527d4450f02255fd6e338e3a5e9fa45ebdf
+
+PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
+
+COCOAPODS: 1.16.2

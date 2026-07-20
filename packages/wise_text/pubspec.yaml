@@ -1,0 +1,49 @@
+name: wise_text
+description: "Text widget with auto classification and rich text support using styled_text. Using NSDataDetector on iOS and TextClassifier on Android"
+version: 1.0.1
+homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_text
+repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_text
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+resolution: workspace
+
+dependencies:
+  ffi: ^2.2.0
+  flutter:
+    sdk: flutter
+  jni: ^1.0.0
+  jni_flutter: ^1.0.1
+  objective_c: ^9.4.1
+  styled_text: ^9.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  swiftgen: ^0.1.2
+  ffigen: ^20.1.1
+  logging: ^1.3.0
+  pub_semver: ^2.2.0
+  swift2objc: ^0.1.0
+  jnigen:
+    git:
+      url: https://github.com/dart-lang/native.git
+      ref: main
+      path: pkgs/jnigen
+
+dependency_overrides:
+  jni_util:
+    git:
+      url: https://github.com/dart-lang/native.git
+      ref: main
+      path: pkgs/jni_util
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true
+      ios:
+        ffiPlugin: true

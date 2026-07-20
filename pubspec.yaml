@@ -11,6 +11,7 @@ workspace:
   - packages/wise_theming
   - packages/wise_scalars
   - packages/wise_review
+  - packages/wise_text
 dev_dependencies:
   melos: ^7.5.1
   coverage: ^1.11.1
