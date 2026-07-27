@@ -27,9 +27,9 @@ class BugReportTemplate extends FeedbackTemplate {
 
   @override
   List<FeedbackField> get fields => [
-        FeedbackField(key: 'currentSituation', label: currentSituationLabel),
-        FeedbackField(key: 'desiredSituation', label: desiredSituationLabel),
-      ];
+    FeedbackField(key: 'currentSituation', label: currentSituationLabel),
+    FeedbackField(key: 'desiredSituation', label: desiredSituationLabel),
+  ];
 
   @override
   String buildBody(FeedbackReport report) {

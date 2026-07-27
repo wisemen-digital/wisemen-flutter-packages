@@ -29,8 +29,8 @@ class DefaultFeedbackTemplate extends FeedbackTemplate {
 
   @override
   List<FeedbackField> get fields => [
-        FeedbackField(key: 'description', label: descriptionLabel),
-      ];
+    FeedbackField(key: 'description', label: descriptionLabel),
+  ];
 
   @override
   String buildBody(FeedbackReport report) {
@@ -73,10 +73,10 @@ String? formatReporter(FeedbackReport report) {
   if (reporter == null || reporter.isEmpty) {
     return null;
   }
-  final named = <String?>[reporter.name, reporter.email]
-      .whereType<String>()
-      .where((value) => value.isNotEmpty)
-      .toList();
+  final named = <String?>[
+    reporter.name,
+    reporter.email,
+  ].whereType<String>().where((value) => value.isNotEmpty).toList();
   if (named.isNotEmpty) {
     return named.join(' · ');
   }
@@ -85,8 +85,9 @@ String? formatReporter(FeedbackReport report) {
 
 /// Renders `report.metadata` (excluding the `navigation` key) as markdown
 /// bullet lines.
-List<String> renderEnvironmentBullets(FeedbackReport report) =>
-    report.metadata.entries
-        .where((entry) => entry.key != 'navigation')
-        .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
-        .toList();
+List<String> renderEnvironmentBullets(FeedbackReport report) => report
+    .metadata
+    .entries
+    .where((entry) => entry.key != 'navigation')
+    .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
+    .toList();

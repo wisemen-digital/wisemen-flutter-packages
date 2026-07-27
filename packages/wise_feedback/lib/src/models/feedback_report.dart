@@ -55,14 +55,14 @@ class FeedbackReport {
 
   /// Returns a copy with the given fields replaced.
   FeedbackReport copyWith({String? description}) => FeedbackReport(
-        title: title,
-        description: description ?? this.description,
-        screenshotPng: screenshotPng,
-        metadata: metadata,
-        fields: fields,
-        reporter: reporter,
-        priority: priority,
-        category: category,
-        createdAt: createdAt,
-      );
+    title: title,
+    description: description ?? this.description,
+    screenshotPng: screenshotPng,
+    metadata: metadata,
+    fields: fields,
+    reporter: reporter,
+    priority: priority,
+    category: category,
+    createdAt: createdAt,
+  );
 }

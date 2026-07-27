@@ -9,18 +9,17 @@ FeedbackReport _report({
   FeedbackPriority priority = FeedbackPriority.none,
   String? category,
   DateTime? createdAt,
-}) =>
-    FeedbackReport(
-      title: 't',
-      description: '',
-      screenshotPng: Uint8List(0),
-      fields: fields,
-      metadata: metadata,
-      reporter: reporter,
-      priority: priority,
-      category: category,
-      createdAt: createdAt,
-    );
+}) => FeedbackReport(
+  title: 't',
+  description: '',
+  screenshotPng: Uint8List(0),
+  fields: fields,
+  metadata: metadata,
+  reporter: reporter,
+  priority: priority,
+  category: category,
+  createdAt: createdAt,
+);
 
 void main() {
   group('DefaultFeedbackTemplate', () {

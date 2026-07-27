@@ -158,7 +158,8 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     final extra = feedback.extra ?? const <String, dynamic>{};
     final metadata = await _collectMetadata();
     final reporter = await _resolveReporter();
-    final fields = (extra['fields'] as Map?)?.map(
+    final fields =
+        (extra['fields'] as Map?)?.map(
           (key, value) => MapEntry(key.toString(), value.toString()),
         ) ??
         const <String, String>{};
