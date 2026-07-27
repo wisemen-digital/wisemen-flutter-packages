@@ -17,6 +17,12 @@ class FeedbackReport {
     this.category,
   });
 
+  /// [metadata] key under which the navigation breadcrumb is stored.
+  ///
+  /// Transports read this key to render the trail separately from the rest of
+  /// the environment, so producers and consumers must agree on it.
+  static const String navigationKey = 'navigation';
+
   /// Short summary of the issue.
   final String title;
 

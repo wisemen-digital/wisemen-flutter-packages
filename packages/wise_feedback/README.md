@@ -45,7 +45,8 @@ LinearFeedback(
   showPriority: true, // default
   categories: const ['Bug', 'Idea', 'Question'],
 
-  // collectDeviceInfo: false, // opt out of automatic device metadata
+  // Device/OS/app metadata is attached by default. Pass a metadataCollector
+  // returning an empty map to attach nothing.
 
   child: MyApp(),
 );

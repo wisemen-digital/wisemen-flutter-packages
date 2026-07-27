@@ -17,6 +17,12 @@ import '../transport/feedback_transport.dart';
 import 'feedback_button.dart';
 import 'feedback_toast.dart';
 
+/// Resolves the current reporter at submit time, or null when unknown.
+typedef FeedbackReporterResolver = FutureOr<FeedbackReporter?> Function();
+
+/// Supplies extra custom metadata at submit time.
+typedef FeedbackMetadataBuilder = FutureOr<Map<String, String>> Function();
+
 /// Mount once near the app root to enable in-app bug reporting.
 ///
 /// Wraps [child] with the screenshot capture layer, overlays a built-in
@@ -32,7 +38,6 @@ class LinearFeedback extends StatefulWidget {
     this.showButton = true,
     this.buttonAlignment = Alignment.bottomRight,
     this.buttonBackgroundColor = Colors.black,
-    this.collectDeviceInfo = true,
     this.metadataCollector,
     this.navigatorObserver,
     this.reporter,
@@ -63,11 +68,10 @@ class LinearFeedback extends StatefulWidget {
   /// Background color of the built-in button.
   final Color buttonBackgroundColor;
 
-  /// Whether to attach automatic device/app/OS metadata to each report.
-  final bool collectDeviceInfo;
-
-  /// Overrides the metadata collector. Defaults to [DeviceMetadataCollector]
-  /// when [collectDeviceInfo] is true.
+  /// Collects the technical context attached to each report.
+  ///
+  /// Defaults to [DeviceMetadataCollector] (device, OS, app version, locale).
+  /// Pass a collector returning an empty map to attach nothing.
   final MetadataCollector? metadataCollector;
 
   /// The navigation observer whose breadcrumb trail is attached to reports.
@@ -76,10 +80,10 @@ class LinearFeedback extends StatefulWidget {
   final WiseFeedbackNavigatorObserver? navigatorObserver;
 
   /// Resolves the current reporter (e.g. the signed-in user) at submit time.
-  final FutureOr<FeedbackReporter?> Function()? reporter;
+  final FeedbackReporterResolver? reporter;
 
   /// Supplies extra custom metadata (feature flags, tenant, ...) at submit time.
-  final FutureOr<Map<String, String>> Function()? metadataBuilder;
+  final FeedbackMetadataBuilder? metadataBuilder;
 
   /// Whether the form shows a priority selector. Defaults to true.
   final bool showPriority;
@@ -180,14 +184,10 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   Future<Map<String, Object?>> _collectMetadata() async {
     final metadata = <String, Object?>{};
 
-    final collector =
-        widget.metadataCollector ??
-        (widget.collectDeviceInfo ? _defaultCollector : null);
-    if (collector != null) {
-      final collected = await _guard(collector.collect);
-      if (collected != null) {
-        metadata.addAll(collected);
-      }
+    final collector = widget.metadataCollector ?? _defaultCollector;
+    final collected = await _guard(collector.collect);
+    if (collected != null) {
+      metadata.addAll(collected);
     }
 
     final builder = widget.metadataBuilder;
@@ -200,7 +200,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
 
     final observer = widget.navigatorObserver;
     if (observer != null && observer.breadcrumbs.isNotEmpty) {
-      metadata['navigation'] = observer.breadcrumbs.join(' → ');
+      metadata[FeedbackReport.navigationKey] = observer.breadcrumbs.join(' → ');
     }
 
     return metadata;

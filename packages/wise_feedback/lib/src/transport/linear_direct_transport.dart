@@ -159,10 +159,10 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     }
 
     final environment = report.metadata.entries
-        .where((entry) => entry.key != 'navigation')
+        .where((entry) => entry.key != FeedbackReport.navigationKey)
         .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
         .toList();
-    final navigation = report.metadata['navigation'];
+    final navigation = report.metadata[FeedbackReport.navigationKey];
 
     if (context.isNotEmpty || environment.isNotEmpty || navigation != null) {
       buffer.write('\n\n## Context\n');

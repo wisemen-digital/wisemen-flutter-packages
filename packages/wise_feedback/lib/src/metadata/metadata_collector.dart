@@ -33,7 +33,7 @@ class DeviceMetadataCollector implements MetadataCollector {
 
     try {
       metadata['locale'] = PlatformDispatcher.instance.locale.toLanguageTag();
-    } on Object {
+    } catch (_) {
       // Locale unavailable; skip.
     }
 
@@ -41,7 +41,7 @@ class DeviceMetadataCollector implements MetadataCollector {
       final info = await _packageInfoLoader();
       metadata['appVersion'] = info.version;
       metadata['buildNumber'] = info.buildNumber;
-    } on Object {
+    } catch (_) {
       // Package info unavailable (e.g. no platform channel); skip.
     }
 
@@ -70,7 +70,7 @@ class DeviceMetadataCollector implements MetadataCollector {
           // Other platforms: platform name already captured above.
           break;
       }
-    } on Object {
+    } catch (_) {
       // Device info unavailable; skip.
     }
   }
