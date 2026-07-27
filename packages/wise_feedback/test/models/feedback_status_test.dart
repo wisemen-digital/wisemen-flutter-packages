@@ -4,15 +4,15 @@ import 'package:wise_feedback/wise_feedback.dart';
 void main() {
   group('FeedbackStatus', () {
     test('idle is not submitting', () {
-      expect(FeedbackStatus.idle.isSubmitting, isFalse);
+      expect(const FeedbackIdle().isSubmitting, isFalse);
     });
 
     test('submitting reports isSubmitting', () {
-      expect(FeedbackStatus.submitting.isSubmitting, isTrue);
+      expect(const FeedbackSubmitting().isSubmitting, isTrue);
     });
 
     test('success carries a result', () {
-      const status = FeedbackStatus.success(
+      const FeedbackStatus status = FeedbackSuccess(
         FeedbackResult(issueId: 'ABC-1'),
       );
       expect(status, isA<FeedbackSuccess>());
@@ -20,7 +20,7 @@ void main() {
     });
 
     test('failure carries the error', () {
-      const status = FeedbackStatus.failure(FeedbackException('boom'));
+      const FeedbackStatus status = FeedbackFailure(FeedbackException('boom'));
       expect(status, isA<FeedbackFailure>());
       expect((status as FeedbackFailure).error, isA<FeedbackException>());
     });

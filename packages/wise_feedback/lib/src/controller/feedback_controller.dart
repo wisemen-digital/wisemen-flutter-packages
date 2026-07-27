@@ -4,16 +4,15 @@ import '../models/feedback_report.dart';
 import '../models/feedback_status.dart';
 import '../transport/feedback_transport.dart';
 
-/// Owns submission state and the "open feedback UI" action.
+/// Owns the submission state of the feedback flow.
 ///
 /// Exposes state as a [ValueListenable] of [FeedbackStatus]; no state
 /// management framework is required by consumers.
 class FeedbackController extends ValueNotifier<FeedbackStatus> {
   /// Creates a controller that submits through the given `transport`.
-  FeedbackController(this._transport) : super(FeedbackStatus.idle);
+  FeedbackController(this._transport) : super(const FeedbackIdle());
 
   final FeedbackTransport _transport;
-  VoidCallback? _showHandler;
 
   /// Whether the feedback UI is currently open.
   ///
@@ -21,30 +20,22 @@ class FeedbackController extends ValueNotifier<FeedbackStatus> {
   /// the sheet is open.
   final ValueNotifier<bool> isVisible = ValueNotifier(false);
 
-  /// Wires the action that opens the feedback UI. Called internally by
-  /// `LinearFeedback`.
-  // ignore: use_setters_to_change_properties
-  void bindShow(VoidCallback handler) {
-    _showHandler = handler;
-  }
-
-  /// Opens the feedback UI, if a handler has been bound.
+  /// Returns to [FeedbackIdle].
   ///
-  /// Resets to [FeedbackStatus.idle] first so a failure from a previous
-  /// session does not surface as a stale error when the form reopens.
-  void show() {
-    value = FeedbackStatus.idle;
-    _showHandler?.call();
+  /// Called before the form opens so a failure from a previous session does
+  /// not surface as a stale error.
+  void reset() {
+    value = const FeedbackIdle();
   }
 
   /// Submits [report]. Updates [value] through submitting → success/failure.
   /// Never throws; failures are reported via [value].
   Future<void> submit(FeedbackReport report) async {
-    value = FeedbackStatus.submitting;
+    value = const FeedbackSubmitting();
     try {
-      value = FeedbackStatus.success(await _transport.send(report));
+      value = FeedbackSuccess(await _transport.send(report));
     } catch (e) {
-      value = FeedbackStatus.failure(e);
+      value = FeedbackFailure(e);
     }
   }
 

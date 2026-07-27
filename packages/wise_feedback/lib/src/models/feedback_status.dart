@@ -8,18 +8,6 @@ import 'feedback_result.dart';
 sealed class FeedbackStatus {
   const FeedbackStatus();
 
-  /// Submission succeeded with [result].
-  const factory FeedbackStatus.success(FeedbackResult result) = FeedbackSuccess;
-
-  /// Submission failed with [error].
-  const factory FeedbackStatus.failure(Object error) = FeedbackFailure;
-
-  /// Nothing happening.
-  static const FeedbackStatus idle = FeedbackIdle();
-
-  /// A submission is in flight.
-  static const FeedbackStatus submitting = FeedbackSubmitting();
-
   /// Whether a submission is currently in flight.
   bool get isSubmitting => this is FeedbackSubmitting;
 }

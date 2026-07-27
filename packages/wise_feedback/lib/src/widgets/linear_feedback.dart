@@ -57,8 +57,9 @@ class LinearFeedback extends StatefulWidget {
 }
 
 class _LinearFeedbackState extends State<LinearFeedback> {
-  late final FeedbackController _controller =
-      FeedbackController(widget.transport);
+  late final FeedbackController _controller = FeedbackController(
+    widget.transport,
+  );
   final FeedbackToastPresenter _toasts = FeedbackToastPresenter();
 
   BuildContext? _overlayContext;
@@ -96,6 +97,12 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       return;
     }
     _controller.isVisible.value = BetterFeedback.of(context).isVisible;
+  }
+
+  /// Opens the feedback sheet, clearing any error left by a previous session.
+  void _show(BuildContext context) {
+    _controller.reset();
+    BetterFeedback.of(context).show(_handleUserFeedback);
   }
 
   Future<void> _handleUserFeedback(UserFeedback feedback) async {
@@ -152,10 +159,6 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         builder: (betterFeedbackContext) {
           _overlayContext = betterFeedbackContext;
           _bindVisibility(betterFeedbackContext);
-          _controller.bindShow(
-            () => BetterFeedback.of(betterFeedbackContext)
-                .show(_handleUserFeedback),
-          );
           if (!widget.showButton) {
             return widget.child;
           }
@@ -169,7 +172,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
                     : FeedbackButton(
                         alignment: widget.buttonAlignment,
                         backgroundColor: widget.buttonBackgroundColor,
-                        onPressed: _controller.show,
+                        onPressed: () => _show(betterFeedbackContext),
                       ),
               ),
             ],

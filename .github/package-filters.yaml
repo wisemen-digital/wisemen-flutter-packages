@@ -38,6 +38,4 @@ wise_text:
   - '.github/workflows/**'
   - 'packages/wise_text/**'
 wise_feedback:
-  - '.github/actions/**'
-  - '.github/workflows/**'
   - 'packages/wise_feedback/**'

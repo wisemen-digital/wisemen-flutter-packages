@@ -3,26 +3,14 @@
 ## 0.1.0
 
 - Initial release.
-- `LinearFeedback` wrapper with shake and floating-button triggers.
-- Built-in screenshot + title + description form.
-- `LinearDirectTransport` (no-backend, direct Linear GraphQL).
-- `LinearProxyTransport` (backend proxy with documented JSON contract).
-- Removed `ShakeTrigger`, `FloatingButtonTrigger`, `FeedbackTrigger`, and the
-  `triggers:` param — `LinearFeedback` now overlays a built-in button itself.
-- Removed `LinearFeedback.of(context)`; the built-in button is shown by
-  default and can be hidden via `showButton: false`.
-- `WiseFeedbackTheme.primaryColor` removed; theming is now limited to
-  `backgroundColor` plus the display strings.
-- Extracted the submission toast into its own `FeedbackToast` /
-  `FeedbackToastPresenter` classes.
-- Reorganized `src/ui` into `src/screens`, `src/widgets`, and `src/theme`.
-- `FeedbackStatus` is now a sealed class (`FeedbackIdle`, `FeedbackSubmitting`,
-  `FeedbackSuccess`, `FeedbackFailure`) instead of an enum + class; removed
-  `FeedbackSubmissionState`. `onStatusChanged` consumers can `switch` over it.
-- The built-in form now surfaces submission errors through its status
-  listenable rather than a local `setState`; `FeedbackFormSubmit` returns
-  `Future<void>`.
-- `FeedbackButton.padding`/`alignment` accept `EdgeInsetsGeometry`/
-  `AlignmentGeometry` (directional support), as does
-  `LinearFeedback.buttonAlignment`.
-- Added `FeedbackResult.fromJson`.
+- `LinearFeedback` wrapper: mount once near the app root to enable in-app bug
+  reporting. Overlays a built-in feedback button, which can be hidden with
+  `showButton: false`.
+- Built-in form capturing a screenshot, title and description.
+- `LinearDirectTransport` for filing issues straight against the Linear
+  GraphQL API, and `LinearProxyTransport` for filing them through a backend
+  proxy so the token stays off the device.
+- Submission state exposed through `onStatusChanged` as a `FeedbackStatus`
+  sealed class (`FeedbackIdle`, `FeedbackSubmitting`, `FeedbackSuccess`,
+  `FeedbackFailure`) that consumers can `switch` over.
+- Display strings and surface color configurable through `WiseFeedbackTheme`.

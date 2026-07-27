@@ -12,6 +12,7 @@ on:
       - "wise_review-v*"
       - "wise_scalars-v*"
       - "wise_text-v*"
+      - "wise_feedback-v*"
 jobs:
   publish:
     permissions:

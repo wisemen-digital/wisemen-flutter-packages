@@ -4,11 +4,12 @@ import 'package:wise_feedback/wise_feedback.dart';
 
 void main() {
   group('FeedbackForm', () {
-    testWidgets('submitting the form forwards title and description',
-        (tester) async {
+    testWidgets('submitting the form forwards title and description', (
+      tester,
+    ) async {
       String? gotDescription;
       Map<String, dynamic>? gotExtras;
-      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
       await tester.pumpWidget(
         MaterialApp(
@@ -41,7 +42,7 @@ void main() {
     });
 
     testWidgets('shows a progress indicator while submitting', (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.submitting);
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackSubmitting());
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -56,9 +57,10 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('shows the error inline when the status is a failure',
-        (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
+    testWidgets('shows the error inline when the status is a failure', (
+      tester,
+    ) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -73,8 +75,9 @@ void main() {
 
       expect(find.byKey(const Key('wise_feedback_error')), findsNothing);
 
-      status.value =
-          const FeedbackStatus.failure(FeedbackException('Could not send it.'));
+      status.value = const FeedbackFailure(
+        FeedbackException('Could not send it.'),
+      );
       await tester.pump();
 
       expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);
@@ -82,9 +85,10 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
     });
 
-    testWidgets('does not overflow in a short sheet with the keyboard open',
-        (tester) async {
-      final status = ValueNotifier<FeedbackStatus>(FeedbackStatus.idle);
+    testWidgets('does not overflow in a short sheet with the keyboard open', (
+      tester,
+    ) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
         MaterialApp(
           home: MediaQuery(

@@ -7,6 +7,9 @@ import '../theme/wise_feedback_theme.dart';
 /// Wisemen accent used for the submit button.
 const Color _kAccent = Color(0xFF009687);
 
+/// Icon and text color of the inline submission error.
+const Color _kErrorColor = Color(0xFFD32F2F);
+
 /// Callback invoked when the user submits the form.
 ///
 /// Matches the `feedback` package's submit signature: [description] is the
@@ -119,13 +122,13 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     children: [
                       const Icon(
                         Icons.error_outline,
-                        color: Color(0xFFD32F2F),
+                        color: _kErrorColor,
                         size: 18,
                       ),
                       Expanded(
                         child: Text(
                           errorText,
-                          style: const TextStyle(color: Color(0xFFD32F2F)),
+                          style: const TextStyle(color: _kErrorColor),
                         ),
                       ),
                     ],
@@ -139,9 +142,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     ),
                     onPressed: status.isSubmitting ? null : _submit,
                     child: status.isSubmitting
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
+                        ? const SizedBox.square(
+                            dimension: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
                               color: Colors.white,

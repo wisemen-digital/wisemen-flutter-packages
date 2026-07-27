@@ -14,8 +14,9 @@ FeedbackReport _report() => FeedbackReport(
 void main() {
   group('FeedbackController', () {
     test('submit transitions idle -> submitting -> success', () async {
-      final transport =
-          FakeTransport(result: const FeedbackResult(issueId: 'C-1'));
+      final transport = FakeTransport(
+        result: const FeedbackResult(issueId: 'C-1'),
+      );
       final controller = FeedbackController(transport);
       final states = <Type>[controller.value.runtimeType];
       controller.addListener(() => states.add(controller.value.runtimeType));
@@ -31,27 +32,33 @@ void main() {
       expect(transport.sent, hasLength(1));
     });
 
-    test('submit sets failure and does not throw when transport fails',
-        () async {
+    test(
+      'submit sets failure and does not throw when transport fails',
+      () async {
+        final transport = FakeTransport(
+          throwError: const FeedbackException('x'),
+        );
+        final controller = FeedbackController(transport);
+
+        await controller.submit(_report());
+
+        expect(controller.value, isA<FeedbackFailure>());
+        expect(
+          (controller.value as FeedbackFailure).error,
+          isA<FeedbackException>(),
+        );
+      },
+    );
+
+    test('reset clears a previous failure', () async {
       final transport = FakeTransport(throwError: const FeedbackException('x'));
       final controller = FeedbackController(transport);
 
       await controller.submit(_report());
-
       expect(controller.value, isA<FeedbackFailure>());
-      expect(
-        (controller.value as FeedbackFailure).error,
-        isA<FeedbackException>(),
-      );
-    });
 
-    test('show invokes the bound handler', () {
-      final controller = FeedbackController(FakeTransport());
-      var called = 0;
-      controller
-        ..bindShow(() => called++)
-        ..show();
-      expect(called, 1);
+      controller.reset();
+      expect(controller.value, isA<FeedbackIdle>());
     });
 
     test('isSubmitting is true while in flight', () async {
