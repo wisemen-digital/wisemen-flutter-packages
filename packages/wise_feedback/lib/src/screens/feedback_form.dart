@@ -18,10 +18,11 @@ const Color _kErrorColor = Color(0xFFD32F2F);
 /// The form reflects the outcome through its `status` listenable rather than
 /// this future's result: on [FeedbackSuccess] the sheet is dismissed, on
 /// [FeedbackFailure] it stays open and shows the error inline.
-typedef FeedbackFormSubmit = Future<void> Function(
-  String description, {
-  Map<String, dynamic>? extras,
-});
+typedef FeedbackFormSubmit =
+    Future<void> Function(
+      String description, {
+      Map<String, dynamic>? extras,
+    });
 
 /// The built-in title + description form shown over the screenshot.
 class FeedbackForm extends StatefulWidget {
@@ -77,7 +78,8 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
-    final bottomInset = MediaQuery.viewInsetsOf(context).bottom +
+    final bottomInset =
+        MediaQuery.viewInsetsOf(context).bottom +
         MediaQuery.viewPaddingOf(context).bottom;
     return ColoredBox(
       color: theme.backgroundColor,

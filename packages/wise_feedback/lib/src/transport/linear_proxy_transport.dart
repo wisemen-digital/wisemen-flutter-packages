@@ -27,9 +27,9 @@ class LinearProxyTransport implements FeedbackTransport {
     required Uri endpoint,
     AuthHeadersProvider? authHeadersProvider,
     http.Client? httpClient,
-  })  : _endpoint = endpoint,
-        _authHeadersProvider = authHeadersProvider,
-        _http = httpClient ?? http.Client();
+  }) : _endpoint = endpoint,
+       _authHeadersProvider = authHeadersProvider,
+       _http = httpClient ?? http.Client();
 
   final Uri _endpoint;
   final AuthHeadersProvider? _authHeadersProvider;

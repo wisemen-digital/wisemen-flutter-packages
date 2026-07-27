@@ -18,8 +18,9 @@ void main() {
       expect(taps, 1);
     });
 
-    testWidgets('renders with no MaterialApp/Directionality ancestor',
-        (tester) async {
+    testWidgets('renders with no MaterialApp/Directionality ancestor', (
+      tester,
+    ) async {
       var taps = 0;
       await tester.pumpWidget(
         MediaQuery(

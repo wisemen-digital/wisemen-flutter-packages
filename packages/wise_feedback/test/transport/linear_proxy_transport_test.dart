@@ -6,11 +6,11 @@ import 'package:http/testing.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 
 FeedbackReport _report() => FeedbackReport(
-      title: 'Proxy title',
-      description: 'Proxy desc',
-      screenshotPng: Uint8List.fromList([137, 80, 78, 71]),
-      metadata: const {'route': '/settings'},
-    );
+  title: 'Proxy title',
+  description: 'Proxy desc',
+  screenshotPng: Uint8List.fromList([137, 80, 78, 71]),
+  metadata: const {'route': '/settings'},
+);
 
 void main() {
   group('LinearProxyTransport', () {
@@ -28,8 +28,9 @@ void main() {
 
       final transport = LinearProxyTransport(
         endpoint: Uri.parse('https://api.myapp.com/feedback'),
-        authHeadersProvider: () async =>
-            {'Authorization': 'Bearer session-abc'},
+        authHeadersProvider: () async => {
+          'Authorization': 'Bearer session-abc',
+        },
         httpClient: client,
       );
 

@@ -5,13 +5,15 @@ import '../support/fake_transport.dart';
 
 void main() {
   group('LinearFeedback', () {
-    testWidgets('the built-in button opens the form and submits',
-        (tester) async {
+    testWidgets('the built-in button opens the form and submits', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
-      final transport =
-          FakeTransport(result: const FeedbackResult(issueId: 'E2E-1'));
+      final transport = FakeTransport(
+        result: const FeedbackResult(issueId: 'E2E-1'),
+      );
 
       await tester.pumpWidget(
         LinearFeedback(
@@ -46,8 +48,9 @@ void main() {
       expect(transport.sent.single.screenshotPng, isNotEmpty);
     });
 
-    testWidgets('keeps the sheet open and shows the error when submit fails',
-        (tester) async {
+    testWidgets('keeps the sheet open and shows the error when submit fails', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -83,8 +86,9 @@ void main() {
       expect(find.text('Could not authenticate.'), findsWidgets);
     });
 
-    testWidgets('hides the built-in button while the sheet is open',
-        (tester) async {
+    testWidgets('hides the built-in button while the sheet is open', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -102,8 +106,9 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_fab')), findsNothing);
     });
 
-    testWidgets('shows the built-in button only when showButton is true',
-        (tester) async {
+    testWidgets('shows the built-in button only when showButton is true', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
@@ -126,13 +131,15 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_fab')), findsNothing);
     });
 
-    testWidgets('shows the success toast after a successful submit',
-        (tester) async {
+    testWidgets('shows the success toast after a successful submit', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
-      final transport =
-          FakeTransport(result: const FeedbackResult(issueId: 'E2E-1'));
+      final transport = FakeTransport(
+        result: const FeedbackResult(issueId: 'E2E-1'),
+      );
 
       await tester.pumpWidget(
         LinearFeedback(

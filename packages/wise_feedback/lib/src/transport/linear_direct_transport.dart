@@ -29,11 +29,11 @@ class LinearDirectTransport implements FeedbackTransport {
     String? projectId,
     Uri? endpoint,
     http.Client? httpClient,
-  })  : _token = token,
-        _teamId = teamId,
-        _projectId = projectId,
-        _endpoint = endpoint ?? Uri.parse('https://api.linear.app/graphql'),
-        _http = httpClient ?? http.Client();
+  }) : _token = token,
+       _teamId = teamId,
+       _projectId = projectId,
+       _endpoint = endpoint ?? Uri.parse('https://api.linear.app/graphql'),
+       _http = httpClient ?? http.Client();
 
   static const String _fileUploadMutation = r'''
 mutation FileUpload($contentType: String!, $filename: String!, $size: Int!) {

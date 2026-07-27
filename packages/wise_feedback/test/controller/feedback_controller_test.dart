@@ -6,10 +6,10 @@ import 'package:wise_feedback/wise_feedback.dart';
 import '../support/fake_transport.dart';
 
 FeedbackReport _report() => FeedbackReport(
-      title: 't',
-      description: 'd',
-      screenshotPng: Uint8List.fromList([1]),
-    );
+  title: 't',
+  description: 'd',
+  screenshotPng: Uint8List.fromList([1]),
+);
 
 void main() {
   group('FeedbackController', () {

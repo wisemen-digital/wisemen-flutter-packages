@@ -35,8 +35,9 @@ class FeedbackToast extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color:
-                  isError ? const Color(0xFFD32F2F) : const Color(0xFF2E7D32),
+              color: isError
+                  ? const Color(0xFFD32F2F)
+                  : const Color(0xFF2E7D32),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(

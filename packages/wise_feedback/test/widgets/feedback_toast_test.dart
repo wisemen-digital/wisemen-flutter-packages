@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/src/widgets/feedback_toast.dart';
 
 void main() {
-  testWidgets('FeedbackToast renders message and fires onDismiss on tap',
-      (tester) async {
+  testWidgets('FeedbackToast renders message and fires onDismiss on tap', (
+    tester,
+  ) async {
     var dismissed = 0;
     await tester.pumpWidget(
       MediaQuery(
