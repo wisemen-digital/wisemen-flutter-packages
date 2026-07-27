@@ -109,12 +109,14 @@ void main() {
   });
 
   group('built-in templates leave labels null for localization', () {
-    test('DefaultFeedbackTemplate description field has no hardcoded label',
-        () {
-      const template = DefaultFeedbackTemplate();
-      expect(template.fields.single.key, 'description');
-      expect(template.fields.single.label, isNull);
-    });
+    test(
+      'DefaultFeedbackTemplate description field has no hardcoded label',
+      () {
+        const template = DefaultFeedbackTemplate();
+        expect(template.fields.single.key, 'description');
+        expect(template.fields.single.label, isNull);
+      },
+    );
 
     test('BugReportTemplate situation fields have no hardcoded labels', () {
       const template = BugReportTemplate();

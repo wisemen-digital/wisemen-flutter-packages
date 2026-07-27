@@ -281,8 +281,9 @@ void main() {
       expect(find.text('Signaler un bug'), findsOneWidget);
     });
 
-    testWidgets('explicit field label overrides the localized default',
-        (tester) async {
+    testWidgets('explicit field label overrides the localized default', (
+      tester,
+    ) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
         localizedApp(

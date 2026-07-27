@@ -272,8 +272,9 @@ class _WiseFeedbackState extends State<WiseFeedback> {
         theme: widget.theme,
       );
     } catch (error) {
-      final message =
-          error is FeedbackException ? error.message : l10n.genericError;
+      final message = error is FeedbackException
+          ? error.message
+          : l10n.genericError;
       _toasts.show(
         _overlayContext,
         message,

@@ -22,27 +22,27 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
-        "categoryLabel": MessageLookupByLibrary.simpleMessage("Category"),
-        "fieldCurrentSituation": MessageLookupByLibrary.simpleMessage(
-          "Current Situation",
-        ),
-        "fieldDescription": MessageLookupByLibrary.simpleMessage("Description"),
-        "fieldDesiredSituation": MessageLookupByLibrary.simpleMessage(
-          "Desired Situation",
-        ),
-        "genericError": MessageLookupByLibrary.simpleMessage(
-          "Something went wrong. Please try again.",
-        ),
-        "priorityHigh": MessageLookupByLibrary.simpleMessage("High"),
-        "priorityLabel": MessageLookupByLibrary.simpleMessage("Priority"),
-        "priorityLow": MessageLookupByLibrary.simpleMessage("Low"),
-        "priorityMedium": MessageLookupByLibrary.simpleMessage("Medium"),
-        "priorityNone": MessageLookupByLibrary.simpleMessage("None"),
-        "priorityUrgent": MessageLookupByLibrary.simpleMessage("Urgent"),
-        "sheetTitle": MessageLookupByLibrary.simpleMessage("Report a bug"),
-        "successMessage": MessageLookupByLibrary.simpleMessage(
-          "Bug reported. Thanks!",
-        ),
-        "titleFieldLabel": MessageLookupByLibrary.simpleMessage("Title"),
-      };
+    "categoryLabel": MessageLookupByLibrary.simpleMessage("Category"),
+    "fieldCurrentSituation": MessageLookupByLibrary.simpleMessage(
+      "Current Situation",
+    ),
+    "fieldDescription": MessageLookupByLibrary.simpleMessage("Description"),
+    "fieldDesiredSituation": MessageLookupByLibrary.simpleMessage(
+      "Desired Situation",
+    ),
+    "genericError": MessageLookupByLibrary.simpleMessage(
+      "Something went wrong. Please try again.",
+    ),
+    "priorityHigh": MessageLookupByLibrary.simpleMessage("High"),
+    "priorityLabel": MessageLookupByLibrary.simpleMessage("Priority"),
+    "priorityLow": MessageLookupByLibrary.simpleMessage("Low"),
+    "priorityMedium": MessageLookupByLibrary.simpleMessage("Medium"),
+    "priorityNone": MessageLookupByLibrary.simpleMessage("None"),
+    "priorityUrgent": MessageLookupByLibrary.simpleMessage("Urgent"),
+    "sheetTitle": MessageLookupByLibrary.simpleMessage("Report a bug"),
+    "successMessage": MessageLookupByLibrary.simpleMessage(
+      "Bug reported. Thanks!",
+    ),
+    "titleFieldLabel": MessageLookupByLibrary.simpleMessage("Title"),
+  };
 }
