@@ -8,7 +8,7 @@ import 'package:flutter/widgets.dart';
 class WiseFeedbackNavigatorObserver extends NavigatorObserver {
   /// Creates the observer, keeping at most [maxEntries] recent route names.
   WiseFeedbackNavigatorObserver({this.maxEntries = 20})
-      : assert(maxEntries > 0, 'maxEntries must be positive');
+    : assert(maxEntries > 0, 'maxEntries must be positive');
 
   /// The maximum number of route names retained (oldest dropped first).
   final int maxEntries;

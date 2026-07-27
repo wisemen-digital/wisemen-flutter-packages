@@ -5,14 +5,16 @@ import '../support/fake_transport.dart';
 
 class _FakeCollector implements MetadataCollector {
   @override
-  Future<Map<String, String>> collect() async =>
-      {'platform': 'test', 'appVersion': '9.9'};
+  Future<Map<String, String>> collect() async => {
+    'platform': 'test',
+    'appVersion': '9.9',
+  };
 }
 
 Route<void> _route(String name) => PageRouteBuilder<void>(
-      settings: RouteSettings(name: name),
-      pageBuilder: (_, __, ___) => const SizedBox(),
-    );
+  settings: RouteSettings(name: name),
+  pageBuilder: (_, __, ___) => const SizedBox(),
+);
 
 void main() {
   group('LinearFeedback', () {
@@ -177,8 +179,9 @@ void main() {
       expect(find.text('Bug reported. Thanks!'), findsWidgets);
     });
 
-    testWidgets('attaches metadata, navigation and reporter to the report',
-        (tester) async {
+    testWidgets('attaches metadata, navigation and reporter to the report', (
+      tester,
+    ) async {
       tester.view.physicalSize = const Size(1200, 4000);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);

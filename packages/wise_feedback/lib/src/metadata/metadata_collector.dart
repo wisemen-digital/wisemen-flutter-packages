@@ -19,8 +19,8 @@ class DeviceMetadataCollector implements MetadataCollector {
   DeviceMetadataCollector({
     DeviceInfoPlugin? deviceInfo,
     Future<PackageInfo> Function()? packageInfoLoader,
-  })  : _deviceInfo = deviceInfo ?? DeviceInfoPlugin(),
-        _packageInfoLoader = packageInfoLoader ?? PackageInfo.fromPlatform;
+  }) : _deviceInfo = deviceInfo ?? DeviceInfoPlugin(),
+       _packageInfoLoader = packageInfoLoader ?? PackageInfo.fromPlatform;
 
   final DeviceInfoPlugin _deviceInfo;
   final Future<PackageInfo> Function() _packageInfoLoader;

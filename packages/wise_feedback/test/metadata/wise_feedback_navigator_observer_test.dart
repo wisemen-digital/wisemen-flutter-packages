@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 
 Route<void> _route(String name) => PageRouteBuilder<void>(
-      settings: RouteSettings(name: name),
-      pageBuilder: (_, __, ___) => const SizedBox(),
-    );
+  settings: RouteSettings(name: name),
+  pageBuilder: (_, __, ___) => const SizedBox(),
+);
 
 void main() {
   group('WiseFeedbackNavigatorObserver', () {

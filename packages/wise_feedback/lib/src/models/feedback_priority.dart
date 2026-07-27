@@ -15,7 +15,8 @@ enum FeedbackPriority {
   medium(3, 'Medium'),
 
   /// Low (Linear `4`).
-  low(4, 'Low');
+  low(4, 'Low'),
+  ;
 
   const FeedbackPriority(this.linearValue, this.label);
 

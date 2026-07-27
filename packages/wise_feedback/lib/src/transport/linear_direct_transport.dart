@@ -142,10 +142,10 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
 
     final reporter = report.reporter;
     if (reporter != null && !reporter.isEmpty) {
-      final named = <String?>[reporter.name, reporter.email]
-          .whereType<String>()
-          .where((value) => value.isNotEmpty)
-          .toList();
+      final named = <String?>[
+        reporter.name,
+        reporter.email,
+      ].whereType<String>().where((value) => value.isNotEmpty).toList();
       final who = named.isNotEmpty ? named.join(' · ') : (reporter.id ?? '');
       if (who.isNotEmpty) {
         context.add('**Reported by:** $who');

@@ -180,7 +180,8 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   Future<Map<String, Object?>> _collectMetadata() async {
     final metadata = <String, Object?>{};
 
-    final collector = widget.metadataCollector ??
+    final collector =
+        widget.metadataCollector ??
         (widget.collectDeviceInfo ? _defaultCollector : null);
     if (collector != null) {
       final collected = await _guard(collector.collect);

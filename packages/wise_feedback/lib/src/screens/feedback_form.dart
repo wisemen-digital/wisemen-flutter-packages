@@ -164,7 +164,10 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     ),
                     items: [
                       for (final category in categories)
-                        DropdownMenuItem(value: category, child: Text(category)),
+                        DropdownMenuItem(
+                          value: category,
+                          child: Text(category),
+                        ),
                     ],
                     onChanged: (value) => setState(() => _category = value),
                   ),
