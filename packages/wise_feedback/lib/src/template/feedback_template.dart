@@ -49,7 +49,7 @@ class DefaultFeedbackTemplate extends FeedbackTemplate {
     }
 
     final environment = renderEnvironmentBullets(report);
-    final navigation = report.metadata['navigation'];
+    final navigation = report.metadata[FeedbackReport.navigationKey];
 
     if (context.isNotEmpty || environment.isNotEmpty || navigation != null) {
       buffer.write('\n\n## Context\n');
@@ -88,6 +88,6 @@ String? formatReporter(FeedbackReport report) {
 List<String> renderEnvironmentBullets(FeedbackReport report) => report
     .metadata
     .entries
-    .where((entry) => entry.key != 'navigation')
+    .where((entry) => entry.key != FeedbackReport.navigationKey)
     .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
     .toList();

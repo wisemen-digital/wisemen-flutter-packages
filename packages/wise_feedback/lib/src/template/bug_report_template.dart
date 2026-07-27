@@ -51,7 +51,7 @@ class BugReportTemplate extends FeedbackTemplate {
   }
 
   String _steps(FeedbackReport report) {
-    final navigation = report.metadata['navigation'];
+    final navigation = report.metadata[FeedbackReport.navigationKey];
     if (navigation is! String || navigation.isEmpty) {
       return '_No navigation recorded._';
     }
