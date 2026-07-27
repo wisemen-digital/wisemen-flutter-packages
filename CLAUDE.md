@@ -1,0 +1,110 @@
+# Working in this repo
+
+A monorepo of Flutter packages published to pub.dev, managed with melos and a
+pub workspace (every package sets `resolution: workspace`).
+
+These are conventions for maintaining **this repo**. Guidance for writing
+Flutter app code lives in `packages/*/skills/*.md`, which `sync_ai_skills.dart`
+copies into consuming projects — don't put repo-maintenance rules there, they
+are noise in a downstream app.
+
+## Adding or changing a package
+
+**pubspec.yaml** — match the other packages exactly (the shape was unified in
+`46c8c6a`). Diverging here gets caught in review every time:
+
+```yaml
+name: <name>
+description: <one line>
+version: <x.y.z>
+homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/<name>
+repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/<name>
+
+environment:
+  sdk: ">=3.10.0 <4.0.0"
+  flutter: '>=3.19.5'
+resolution: workspace
+dependencies:
+```
+
+Note there is no blank line between `resolution: workspace` and
+`dependencies:`, and the URLs use `/packages/<name>` — not `/tree/main/packages/<name>`.
+
+**CHANGELOG.md** — describes the released package, not how the PR got there.
+An initial release lists what the package does; it does not log the review
+iterations ("removed X", "renamed Y") for code that never shipped.
+
+**analysis_options.yaml** — packages should not have one. The analyzer walks up
+to the root file, so a package-local file containing only
+`include: ../../analysis_options.yaml` does nothing. If you need to exclude
+generated code, add the path to the root file's `analyzer.exclude` list next to
+`packages/sandbox/**`, keeping exclusions in one place.
+
+**.github/package-filters.yaml** — add an entry listing only the package's own
+path:
+
+```yaml
+<name>:
+  - 'packages/<name>/**'
+```
+
+Older entries also list `.github/actions/**` and `.github/workflows/**`; don't
+copy that. A workflow edit should not rebuild every package.
+
+**.github/workflows/publish.yml** — add `"<name>-v*"` to the tag list, or
+tagging a release silently publishes nothing.
+
+## Formatting
+
+CI runs `dart format . --set-exit-if-changed` per package, and two things make
+that stricter than it looks.
+
+**The SDK constraint selects the formatter style.** Dart uses the short style
+below language version 3.7 and the tall style at or above it. Raising a
+package's `sdk:` constraint across that line reformats every file in it. That
+is expected — land it as its own commit so the real change stays reviewable.
+
+**Match CI's toolchain.** CI resolves `channel: stable` (Flutter 3.44.8 /
+Dart 3.12.1 as of this writing). An older local Dart formats a few constructs
+differently, so a locally clean package can still fail CI. Keep your local
+Flutter on the same stable release.
+
+When two formatter versions disagree, prefer a form both accept rather than
+satisfying only one. A trailing comma pins the layout deterministically, because
+the root `analysis_options.yaml` sets `formatter: trailing_commas: preserve`:
+
+```dart
+enum Priority {
+  none(0, 'None'),
+
+  low(4, 'Low'),
+  ;
+
+  const Priority(this.linearValue, this.label);
+  ...
+}
+```
+
+Written as `low(4, 'Low');` the two versions actively fight: Dart 3.11 splits
+the `;` onto its own line, Dart 3.12 joins it.
+
+To check a file against a newer formatter without switching SDKs:
+
+```bash
+dart pub global activate dart_style && dart pub global run dart_style:format --output=none --set-exit-if-changed .
+```
+
+## Stacked PRs
+
+The `gh stack` extension (`gh stack view` / `rebase` / `submit`) manages the
+branch chains here. After the bottom PR merges, `gh stack rebase` cascades the
+rest; `gh stack rebase --abort` restores every branch if a rebase goes wrong.
+
+Two things to watch when the merged PR changed shared API or formatting:
+
+- Commits that exist only to satisfy the pre-merge state — "adopt <the API that
+  was just deleted>", "satisfy CI dart format" — are obsolete. Drop them rather
+  than resolving their conflicts.
+- A PR whose diff touches no path in `package-filters.yaml` (anything only under
+  `packages/sandbox/**`) generates no CI job. Its checks show as *skipping*,
+  which is not the same as passing.

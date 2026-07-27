@@ -470,3 +470,4 @@ export 'text_field.dart';
 14. **Consume the theme; don't re-configure it** — Pull colors from `context.bgColor`, `context.fgColor`, etc. (see the theming skill). Don't add per-widget color/style parameters that duplicate the theme, and never hardcode hex colors like `Color(0xFFD32F2F)`
 15. **Scope MediaQuery reads** — Use the property accessor for what you read (`MediaQuery.sizeOf`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf`, `.textScalerOf`), not `MediaQuery.of(context)`, which rebuilds the widget on *every* metric change
 16. **Widgets take a `child`, not a builder function** — See "Widget API Design"; expose composition through a `child`, and own state locally rather than via `.of(context)` scope lookups
+17. **Use the named `SizedBox` constructors** — `SizedBox.square(dimension: 20)` when width and height match, `SizedBox.shrink()` for an empty slot, `SizedBox.expand()` to fill. They state the intent that `SizedBox(height: 20, width: 20)` only implies
