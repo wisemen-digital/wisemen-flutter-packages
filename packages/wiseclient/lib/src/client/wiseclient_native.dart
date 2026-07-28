@@ -7,13 +7,11 @@ import 'package:wiseclient/wiseclient.dart';
 /// Creates a [WiseClient] for native
 WiseClient createClient({
   required Iterable<WiseInterceptor> wiseInterceptors,
-  required Duration refreshBuffer,
   Future<OAuth2Token> Function(OAuth2Token?, Dio)? refreshFunction,
   BaseOptions? options,
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
-  void Function(Object, StackTrace)? refreshErrorHandler,
   TokenStorage<OAuthToken>? tokenStorage,
 }) => NativeWiseClient(
   wiseInterceptors: wiseInterceptors,

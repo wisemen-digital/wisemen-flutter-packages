@@ -19,8 +19,6 @@ abstract mixin class WiseClient implements Dio {
     bool useNativeAdapter = false,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? interceptors,
-    void Function(Object, StackTrace)? refreshErrorHandler,
-    Duration refreshBuffer = const Duration(minutes: 10),
     TokenStorage<OAuthToken>? tokenStorage,
   }) {
     assert(
@@ -36,8 +34,6 @@ abstract mixin class WiseClient implements Dio {
       useNativeAdapter: useNativeAdapter,
       interceptorsToAdd: interceptorsToAdd,
       replacementInterceptors: interceptors,
-      refreshErrorHandler: refreshErrorHandler,
-      refreshBuffer: refreshBuffer,
       tokenStorage: tokenStorage,
     );
   }
