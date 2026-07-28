@@ -35,7 +35,7 @@ dependencies:
   
  # Riverpod
   riverpod_annotation: ^4.0.0
-  hooks_riverpod: ^3.3.1
+  hooks_riverpod: ">=3.1.0 <4.0.0"
 
   # UI
   modal_bottom_sheet: ^3.0.0
@@ -46,7 +46,7 @@ dependencies:
   
   # Database
   drift: ^2.19.1+1
-  sqlite3_flutter_libs: ^0.5.24
+  sqlite3_flutter_libs: ^0.6.0+eol
   
   # Device info
   package_info_plus: ^9.0.0
