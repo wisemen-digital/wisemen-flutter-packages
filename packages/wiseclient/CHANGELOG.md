@@ -1,6 +1,11 @@
+## 2.1.1
+
+- Fixed constructor function parameters for web and native
+
 ## 2.1.0
 
 - Removed error screens
+- Changed web support to WASM
 
 ## 2.0.4
 

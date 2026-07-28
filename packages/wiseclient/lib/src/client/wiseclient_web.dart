@@ -9,7 +9,6 @@ import '../token_model/oauth_token.dart';
 /// Creates a [WiseClient] for web
 WiseClient createClient({
   required Iterable<WiseInterceptor> wiseInterceptors,
-  required Duration refreshBuffer,
   Future<OAuth2Token> Function(OAuth2Token?, Dio)? refreshFunction,
   BaseOptions? options,
   bool useNativeAdapter = false,
