@@ -1,25 +1,5 @@
-import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/wise_feedback.dart';
-
-FeedbackReport _report({
-  Map<String, String> fields = const {},
-  Map<String, Object?> metadata = const {},
-  FeedbackReporter? reporter,
-  FeedbackPriority priority = FeedbackPriority.none,
-  String? category,
-  DateTime? createdAt,
-}) => FeedbackReport(
-  title: 't',
-  description: '',
-  screenshotPng: Uint8List(0),
-  fields: fields,
-  metadata: metadata,
-  reporter: reporter,
-  priority: priority,
-  category: category,
-  createdAt: createdAt,
-);
 
 void main() {
   group('DefaultFeedbackTemplate', () {
@@ -32,13 +12,14 @@ void main() {
 
     test('renders description plus a context section', () {
       final body = template.buildBody(
-        _report(
-          fields: const {'description': 'It broke'},
-          reporter: const FeedbackReporter(email: 'a@b.c'),
-          category: 'Bug',
-          priority: FeedbackPriority.high,
-          metadata: const {'appVersion': '1.2.3', 'navigation': '/a → /b'},
-        ),
+        fields: const {'description': 'It broke'},
+        metadata: const {
+          'appVersion': '1.2.3',
+          FeedbackReport.navigationKey: ['/a', '/b'],
+        },
+        reporter: const FeedbackReporter(email: 'a@b.c'),
+        category: 'Bug',
+        priority: FeedbackPriority.high,
       );
       expect(body, startsWith('It broke'));
       expect(body, contains('## Context'));
@@ -48,32 +29,38 @@ void main() {
       expect(body, contains('appVersion'));
       expect(body, contains('**Recent screens:** /a → /b'));
     });
+
+    test('omits the breadcrumb line when no trail was recorded', () {
+      final body = template.buildBody(
+        fields: const {'description': 'It broke'},
+        metadata: const {'appVersion': '1.2.3'},
+      );
+      expect(body, isNot(contains('Recent screens')));
+    });
   });
 
   group('BugReportTemplate', () {
     const template = BugReportTemplate();
 
     test('exposes current and desired situation fields', () {
-      expect(
-        template.fields.map((f) => f.key),
-        ['currentSituation', 'desiredSituation'],
-      );
+      expect(template.fields.map((f) => f.key), [
+        'currentSituation',
+        'desiredSituation',
+      ]);
     });
 
     test('renders the bug template sections', () {
       final body = template.buildBody(
-        _report(
-          fields: const {
-            'currentSituation': 'I get an error',
-            'desiredSituation': 'It works',
-          },
-          reporter: const FeedbackReporter(email: 'john.doe@wisemen.digital'),
-          metadata: const {
-            'environment': 'staging',
-            'navigation': 'Overview → Detail → Delete',
-          },
-          createdAt: DateTime(2025, 9, 9, 14),
-        ),
+        fields: const {
+          'currentSituation': 'I get an error',
+          'desiredSituation': 'It works',
+        },
+        metadata: const {
+          'environment': 'staging',
+          FeedbackReport.navigationKey: ['Overview', 'Detail', 'Delete'],
+        },
+        reporter: const FeedbackReporter(email: 'john.doe@wisemen.digital'),
+        createdAt: DateTime(2025, 9, 9, 14),
       );
 
       expect(body, contains('## Current Situation\nI get an error'));
@@ -88,8 +75,20 @@ void main() {
     });
 
     test('falls back gracefully when navigation is absent', () {
-      final body = template.buildBody(_report());
+      final body = template.buildBody(fields: const {}, metadata: const {});
       expect(body, contains('_No navigation recorded._'));
+    });
+
+    test('keeps a route name containing the separator as one step', () {
+      final body = template.buildBody(
+        fields: const {},
+        metadata: const {
+          FeedbackReport.navigationKey: ['Overview → Detail', 'Delete'],
+        },
+      );
+      expect(body, contains('1. Overview → Detail'));
+      expect(body, contains('2. Delete'));
+      expect(body, isNot(contains('3.')));
     });
   });
 }

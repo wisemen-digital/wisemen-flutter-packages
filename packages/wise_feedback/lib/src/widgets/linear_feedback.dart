@@ -163,19 +163,28 @@ class _LinearFeedbackState extends State<LinearFeedback> {
           (key, value) => MapEntry(key.toString(), value.toString()),
         ) ??
         const <String, String>{};
-    final report = FeedbackReport(
-      title: (extra['title'] as String?) ?? '',
-      description: '',
-      screenshotPng: feedback.screenshot,
-      metadata: metadata,
-      fields: fields,
-      reporter: reporter,
-      priority: _priorityFromName(extra['priority'] as String?),
-      category: extra['category'] as String?,
-      createdAt: DateTime.now(),
-    );
+    final priority = _priorityFromName(extra['priority'] as String?);
+    final category = extra['category'] as String?;
+    final createdAt = DateTime.now();
     await _controller.submit(
-      report.copyWith(description: widget.template.buildBody(report)),
+      FeedbackReport(
+        title: (extra['title'] as String?) ?? '',
+        description: widget.template.buildBody(
+          fields: fields,
+          metadata: metadata,
+          reporter: reporter,
+          priority: priority,
+          category: category,
+          createdAt: createdAt,
+        ),
+        screenshotPng: feedback.screenshot,
+        metadata: metadata,
+        fields: fields,
+        reporter: reporter,
+        priority: priority,
+        category: category,
+        createdAt: createdAt,
+      ),
     );
     final status = _controller.value;
     if (status is FeedbackFailure) {
@@ -216,7 +225,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
 
     final observer = widget.navigatorObserver;
     if (observer != null && observer.breadcrumbs.isNotEmpty) {
-      metadata[FeedbackReport.navigationKey] = observer.breadcrumbs.join(' → ');
+      metadata[FeedbackReport.navigationKey] = observer.breadcrumbs;
     }
 
     return metadata;

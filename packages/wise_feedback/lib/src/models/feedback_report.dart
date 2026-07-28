@@ -21,8 +21,9 @@ class FeedbackReport {
 
   /// [metadata] key under which the navigation breadcrumb is stored.
   ///
-  /// Transports read this key to render the trail separately from the rest of
-  /// the environment, so producers and consumers must agree on it.
+  /// The value is a `List<String>` of route names, oldest first. Templates read
+  /// it via `FeedbackTemplate.breadcrumbsOf` and format it themselves, so the
+  /// trail is never flattened to a display string in transit.
   static const String navigationKey = 'navigation';
 
   /// Short summary of the issue.
@@ -52,17 +53,4 @@ class FeedbackReport {
 
   /// When the report was captured.
   final DateTime? createdAt;
-
-  /// Returns a copy with the given fields replaced.
-  FeedbackReport copyWith({String? description}) => FeedbackReport(
-    title: title,
-    description: description ?? this.description,
-    screenshotPng: screenshotPng,
-    metadata: metadata,
-    fields: fields,
-    reporter: reporter,
-    priority: priority,
-    category: category,
-    createdAt: createdAt,
-  );
 }

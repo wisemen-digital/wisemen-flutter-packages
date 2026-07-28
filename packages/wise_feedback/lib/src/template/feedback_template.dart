@@ -1,8 +1,9 @@
 import '../models/feedback_priority.dart';
 import '../models/feedback_report.dart';
+import '../models/feedback_reporter.dart';
 import 'feedback_field.dart';
 
-/// Defines the form inputs and how a [FeedbackReport] renders to an issue body.
+/// Defines the form inputs and how a completed report renders to an issue body.
 ///
 /// Implement this to match your issue tracker's template. The screenshot is
 /// appended by the transport, so [buildBody] should not include it.
@@ -13,8 +14,55 @@ abstract class FeedbackTemplate {
   /// The editable text fields shown in the form (below the title).
   List<FeedbackField> get fields;
 
-  /// Renders the issue body (markdown) from a completed [report].
-  String buildBody(FeedbackReport report);
+  /// Renders the issue body (markdown) from the captured values.
+  ///
+  /// Takes the report's parts rather than a [FeedbackReport], because the body
+  /// this returns *becomes* that report's description — there is no complete
+  /// report to hand over yet.
+  String buildBody({
+    required Map<String, String> fields,
+    required Map<String, Object?> metadata,
+    FeedbackReporter? reporter,
+    FeedbackPriority priority = FeedbackPriority.none,
+    String? category,
+    DateTime? createdAt,
+  });
+
+  /// Formats [reporter] as `name · email` (or the id), or null when unknown.
+  ///
+  /// Available to subclasses building a context section.
+  String? formatReporter(FeedbackReporter? reporter) {
+    if (reporter == null || reporter.isEmpty) {
+      return null;
+    }
+    final named = <String?>[
+      reporter.name,
+      reporter.email,
+    ].whereType<String>().where((value) => value.isNotEmpty).toList();
+    if (named.isNotEmpty) {
+      return named.join(' · ');
+    }
+    return reporter.id;
+  }
+
+  /// Renders [metadata] as markdown bullet lines, excluding the navigation
+  /// breadcrumb, which templates present separately.
+  ///
+  /// Available to subclasses building a context section.
+  List<String> renderEnvironmentBullets(Map<String, Object?> metadata) =>
+      metadata.entries
+          .where((entry) => entry.key != FeedbackReport.navigationKey)
+          .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
+          .toList();
+
+  /// Reads the navigation breadcrumb from [metadata], oldest screen first.
+  ///
+  /// Empty when no trail was recorded.
+  List<String> breadcrumbsOf(Map<String, Object?> metadata) =>
+      switch (metadata[FeedbackReport.navigationKey]) {
+        final List<String> trail => trail,
+        _ => const <String>[],
+      };
 }
 
 /// The default template: a single description field plus a `## Context`
@@ -33,25 +81,34 @@ class DefaultFeedbackTemplate extends FeedbackTemplate {
   ];
 
   @override
-  String buildBody(FeedbackReport report) {
-    final buffer = StringBuffer(report.fields['description'] ?? '');
+  String buildBody({
+    required Map<String, String> fields,
+    required Map<String, Object?> metadata,
+    FeedbackReporter? reporter,
+    FeedbackPriority priority = FeedbackPriority.none,
+    String? category,
+    DateTime? createdAt,
+  }) {
+    final buffer = StringBuffer(fields['description'] ?? '');
     final context = <String>[];
 
-    final who = formatReporter(report);
+    final who = formatReporter(reporter);
     if (who != null) {
       context.add('**Reported by:** $who');
     }
-    if (report.category case final String category) {
-      context.add('**Category:** $category');
+    if (category case final String value) {
+      context.add('**Category:** $value');
     }
-    if (report.priority != FeedbackPriority.none) {
-      context.add('**Priority:** ${report.priority.label}');
+    if (priority != FeedbackPriority.none) {
+      context.add('**Priority:** ${priority.label}');
     }
 
-    final environment = renderEnvironmentBullets(report);
-    final navigation = report.metadata[FeedbackReport.navigationKey];
+    final environment = renderEnvironmentBullets(metadata);
+    final breadcrumbs = breadcrumbsOf(metadata);
 
-    if (context.isNotEmpty || environment.isNotEmpty || navigation != null) {
+    if (context.isNotEmpty ||
+        environment.isNotEmpty ||
+        breadcrumbs.isNotEmpty) {
       buffer.write('\n\n## Context\n');
       if (context.isNotEmpty) {
         buffer.write('${context.join('\n')}\n');
@@ -59,35 +116,10 @@ class DefaultFeedbackTemplate extends FeedbackTemplate {
       if (environment.isNotEmpty) {
         buffer.write('\n**Environment**\n${environment.join('\n')}\n');
       }
-      if (navigation != null) {
-        buffer.write('\n**Recent screens:** $navigation\n');
+      if (breadcrumbs.isNotEmpty) {
+        buffer.write('\n**Recent screens:** ${breadcrumbs.join(' → ')}\n');
       }
     }
     return buffer.toString().trimRight();
   }
 }
-
-/// Formats the reporter as `name · email` (or the id), or null when unknown.
-String? formatReporter(FeedbackReport report) {
-  final reporter = report.reporter;
-  if (reporter == null || reporter.isEmpty) {
-    return null;
-  }
-  final named = <String?>[
-    reporter.name,
-    reporter.email,
-  ].whereType<String>().where((value) => value.isNotEmpty).toList();
-  if (named.isNotEmpty) {
-    return named.join(' · ');
-  }
-  return reporter.id;
-}
-
-/// Renders `report.metadata` (excluding the `navigation` key) as markdown
-/// bullet lines.
-List<String> renderEnvironmentBullets(FeedbackReport report) => report
-    .metadata
-    .entries
-    .where((entry) => entry.key != FeedbackReport.navigationKey)
-    .map((entry) => '- **${entry.key}:** ${entry.value ?? ''}')
-    .toList();

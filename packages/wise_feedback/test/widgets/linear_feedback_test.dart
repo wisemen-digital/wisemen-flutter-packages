@@ -223,7 +223,11 @@ void main() {
       final report = transport.sent.single;
       expect(report.metadata['platform'], 'test');
       expect(report.metadata['appVersion'], '9.9');
-      expect(report.metadata['navigation'], '/home → /settings');
+      expect(report.metadata[FeedbackReport.navigationKey], [
+        '/home',
+        '/settings',
+      ]);
+      expect(report.description, contains('/home → /settings'));
       expect(report.reporter?.email, 'me@x.com');
     });
   });

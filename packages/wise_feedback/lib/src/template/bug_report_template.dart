@@ -1,4 +1,5 @@
-import '../models/feedback_report.dart';
+import '../models/feedback_priority.dart';
+import '../models/feedback_reporter.dart';
 import 'feedback_field.dart';
 import 'feedback_template.dart';
 
@@ -32,38 +33,44 @@ class BugReportTemplate extends FeedbackTemplate {
   ];
 
   @override
-  String buildBody(FeedbackReport report) {
+  String buildBody({
+    required Map<String, String> fields,
+    required Map<String, Object?> metadata,
+    FeedbackReporter? reporter,
+    FeedbackPriority priority = FeedbackPriority.none,
+    String? category,
+    DateTime? createdAt,
+  }) {
     final buffer = StringBuffer()
       ..writeln('## Current Situation')
-      ..writeln(report.fields['currentSituation'] ?? '')
+      ..writeln(fields['currentSituation'] ?? '')
       ..writeln()
       ..writeln('## Desired Situation')
-      ..writeln(report.fields['desiredSituation'] ?? '')
+      ..writeln(fields['desiredSituation'] ?? '')
       ..writeln()
       ..writeln('## Steps to Reproduce')
-      ..writeln(_steps(report))
+      ..writeln(_steps(metadata))
       ..writeln()
       ..writeln('## Context')
-      ..writeln('Environment or url: ${_environment(report)}')
-      ..writeln('Account or user: ${report.reporter?.email ?? ''}')
-      ..writeln('Date & Time: ${_formatDate(report.createdAt)}');
+      ..writeln('Environment or url: ${_environment(metadata)}')
+      ..writeln('Account or user: ${reporter?.email ?? ''}')
+      ..writeln('Date & Time: ${_formatDate(createdAt)}');
     return buffer.toString().trimRight();
   }
 
-  String _steps(FeedbackReport report) {
-    final navigation = report.metadata[FeedbackReport.navigationKey];
-    if (navigation is! String || navigation.isEmpty) {
+  String _steps(Map<String, Object?> metadata) {
+    final steps = breadcrumbsOf(metadata);
+    if (steps.isEmpty) {
       return '_No navigation recorded._';
     }
-    final steps = navigation.split(' → ');
     return [
       for (var i = 0; i < steps.length; i++) '${i + 1}. ${steps[i]}',
     ].join('\n');
   }
 
-  String _environment(FeedbackReport report) {
+  String _environment(Map<String, Object?> metadata) {
     for (final key in environmentKeys) {
-      final value = report.metadata[key];
+      final value = metadata[key];
       if (value != null) {
         return value.toString();
       }
