@@ -1,6 +1,7 @@
 ## 2.1.0
 
 - Removed error screens
+- Changed web support to WASM
 
 ## 2.0.4
 

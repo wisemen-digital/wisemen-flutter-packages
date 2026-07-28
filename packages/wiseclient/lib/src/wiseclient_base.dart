@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 
 import 'client/wiseclient_native.dart'
-    if (dart.library.html) 'client/wiseclient_web.dart';
+    if (dart.library.js_interop) 'client/wiseclient_web.dart';
 import 'exceptions/exceptions.dart';
 import 'interceptors/interceptors.dart';
 import 'options.dart';
