@@ -1,0 +1,40 @@
+name: Weekly coverage
+
+# Refreshes the per-package Codecov coverage badges shown in the README.
+# Codecov reads coverage from the default branch, so this runs the test suite for
+# every package on `main` on a schedule and uploads each package under its own flag.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Every Monday at 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  coverage:
+    name: ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - wise_nav_bar
+          - wise_review
+          - wise_scalars
+          - wise_theming
+          - wise_zitadel_login
+          - wiseclient
+          - wisecore
+          - wisewidgetslibrary
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test and upload coverage for ${{ matrix.package }}
+        uses: ./.github/actions/package
+        with:
+          package_name: ${{ matrix.package }}
+          working_directory: packages/${{ matrix.package }}
+          min_coverage: 80
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          upload_coverage: "true"

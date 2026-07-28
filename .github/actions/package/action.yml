@@ -20,6 +20,10 @@ inputs:
     required: false
     default: "false"
     description: Whether to collect the pana score
+  upload_coverage:
+    required: false
+    default: "false"
+    description: Upload the coverage lcov.info file for codecov badges
 
 runs:
   using: "composite"
@@ -51,7 +55,17 @@ runs:
       shell: bash
       working-directory: ${{ inputs.working_directory }}
       run: flutter test --no-pub --coverage
-    
+
+    - name: Upload coverage to Codecov
+      if: inputs.upload_coverage == 'true'
+      uses: codecov/codecov-action@v5
+      with:
+        files: ${{ inputs.working_directory }}/coverage/lcov.info
+        flags: ${{ inputs.package_name }}
+        name: ${{ inputs.package_name }}
+        disable_search: true
+        fail_ci_if_error: false
+
     - name: Setup LCOV
       uses: hrishikesh-kadam/setup-lcov@v1
 

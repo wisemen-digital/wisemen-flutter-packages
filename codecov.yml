@@ -1,0 +1,28 @@
+# Codecov configuration for the wisemen-flutter-packages monorepo.
+# Each package uploads its coverage under its own flag (see .github/actions/package),
+# which is what powers the per-package coverage badges in the README.
+
+coverage:
+  status:
+    project:
+      default:
+        target: 80%      # matches the min_coverage gate in .github/actions/package
+        threshold: 1%
+    patch:
+      default:
+        target: 80%
+
+# Not every package is tested on every commit in a monorepo. Carry forward the last
+# known coverage for any flag that wasn't part of a given upload, so its badge stays
+# populated instead of dropping to "unknown".
+flag_management:
+  default_rules:
+    carryforward: true
+
+# Generated and non-published code should not count toward coverage.
+ignore:
+  - "**/*.g.dart"
+  - "**/*.freezed.dart"
+  - "**/*.gen.dart"
+  - "**/*.mocks.dart"
+  - "packages/sandbox/**"
