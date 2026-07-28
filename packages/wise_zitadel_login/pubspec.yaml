@@ -20,7 +20,8 @@ dependencies:
   wise_nav_bar: '>=0.0.1 <1.0.0'
   hooks_riverpod: '>=3.0.0 <4.0.0'
   wiseclient: '>=2.0.0 <3.0.0'
-  wisewidgetslibrary: '>=2.0.4 <3.0.0'
+  wisewidgetslibrary:
+    path: ../wisewidgetslibrary
   flutter_svg: '>=2.1.0 <3.0.0'
   flutter_hooks: '>=0.21.2 <1.0.0'
 

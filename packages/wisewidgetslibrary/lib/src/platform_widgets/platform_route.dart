@@ -20,40 +20,26 @@ Route<T> platformRoute<T>({
 
   switch (defaultTargetPlatform) {
     case TargetPlatform.android:
-      return PageRouteBuilder<T>(
+      late final PageRouteBuilder<T> pageRoute;
+
+      pageRoute = PageRouteBuilder<T>(
         settings: settings,
         fullscreenDialog: fullscreenDialog,
-        opaque: false,
         transitionDuration: const Duration(milliseconds: 250),
         reverseTransitionDuration: const Duration(milliseconds: 250),
         pageBuilder: (context, animation, secondaryAnimation) => route,
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          final slideIn = SlideTransition(
-            position: Tween<Offset>(
-              begin: const Offset(1, 0),
-              end: Offset.zero,
-            ).animate(animation),
-            child: child,
-          );
-
-          if (currentRoute == null) {
-            return slideIn;
-          }
-
-          return Stack(
-            children: [
-              SlideTransition(
-                position: Tween<Offset>(
-                  begin: Offset.zero,
-                  end: const Offset(-1, 0),
-                ).animate(animation),
-                child: currentRoute,
-              ),
-              slideIn,
-            ],
+          return const FadeForwardsPageTransitionsBuilder().buildTransitions<T>(
+            pageRoute,
+            context,
+            animation,
+            secondaryAnimation,
+            child,
           );
         },
       );
+
+      return pageRoute;
 
     case TargetPlatform.iOS:
     case TargetPlatform.macOS:

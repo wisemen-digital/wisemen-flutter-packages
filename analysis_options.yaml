@@ -1,6 +1,6 @@
 analyzer:
-  exclude:
-    - packages/sandbox/**
+  # exclude:
+  #   - packages/sandbox/**
 
   language:
     strict-casts: true

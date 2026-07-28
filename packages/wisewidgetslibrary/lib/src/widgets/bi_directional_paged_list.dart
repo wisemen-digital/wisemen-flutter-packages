@@ -37,6 +37,7 @@ class BiDirectionalPagedList<T> extends StatefulWidget {
     this.invisibleItemsThreshold = 5,
     this.scrollDirection = Axis.vertical,
     this.scrollController,
+    this.loadingIndicatorColor,
   });
 
   /// Items before the anchor, ordered nearest-to-anchor first
@@ -118,6 +119,9 @@ class BiDirectionalPagedList<T> extends StatefulWidget {
 
   /// Optional [ScrollController] for the underlying [CustomScrollView]
   final ScrollController? scrollController;
+
+  /// Optional color for the loading indicator.
+  final Color? loadingIndicatorColor;
 
   @override
   State<BiDirectionalPagedList<T>> createState() =>
@@ -215,7 +219,9 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
   Widget _circularLoadingIndicator(BuildContext context) {
     return Center(
       child: PlatformLoadingIndicator(
-        color: Theme.of(context).colorScheme.onSurface,
+        color:
+            widget.loadingIndicatorColor ??
+            Theme.of(context).colorScheme.onSurface,
       ),
     );
   }
