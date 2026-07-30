@@ -64,35 +64,9 @@ below language version 3.7 and the tall style at or above it. Raising a
 package's `sdk:` constraint across that line reformats every file in it. That
 is expected — land it as its own commit so the real change stays reviewable.
 
-**Match CI's toolchain.** CI resolves `channel: stable` (Flutter 3.44.8 /
-Dart 3.12.1 as of this writing). An older local Dart formats a few constructs
-differently, so a locally clean package can still fail CI. Keep your local
-Flutter on the same stable release.
-
-When two formatter versions disagree, prefer a form both accept rather than
-satisfying only one. A trailing comma pins the layout deterministically, because
-the root `analysis_options.yaml` sets `formatter: trailing_commas: preserve`:
-
-```dart
-enum Priority {
-  none(0, 'None'),
-
-  low(4, 'Low'),
-  ;
-
-  const Priority(this.linearValue, this.label);
-  ...
-}
-```
-
-Written as `low(4, 'Low');` the two versions actively fight: Dart 3.11 splits
-the `;` onto its own line, Dart 3.12 joins it.
-
-To check a file against a newer formatter without switching SDKs:
-
-```bash
-dart pub global activate dart_style && dart pub global run dart_style:format --output=none --set-exit-if-changed .
-```
+**Stay on the latest stable Flutter.** CI resolves `channel: stable`. An older
+local Dart formats some constructs differently, so a locally clean package can
+still fail CI.
 
 ## Stacked PRs
 
