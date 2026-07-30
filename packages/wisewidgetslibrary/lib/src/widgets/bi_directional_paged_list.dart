@@ -90,8 +90,7 @@ class BiDirectionalPagedList<T> extends StatefulWidget {
 
   /// Error builder function to display when an error occurs during loading.
   /// Reused for both the backward and forward direction.
-  final Widget Function(BuildContext context, void Function() onRetry)
-  errorBuilder;
+  final Widget Function(BuildContext context, void Function() onRetry) errorBuilder;
 
   /// Optional shimmer item to display while loading
   final T? shimmerItem;
@@ -124,8 +123,7 @@ class BiDirectionalPagedList<T> extends StatefulWidget {
   final Color? loadingIndicatorColor;
 
   @override
-  State<BiDirectionalPagedList<T>> createState() =>
-      _BiDirectionalPagedListState<T>();
+  State<BiDirectionalPagedList<T>> createState() => _BiDirectionalPagedListState<T>();
 }
 
 class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
@@ -153,10 +151,7 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
                 items: widget.backwardItems,
                 controller: widget.backwardController,
                 isLoading: isLoadingBackward,
-                emptyState:
-                    widget.backwardEmptyState ??
-                    widget.emptyState ??
-                    const SizedBox.shrink(),
+                emptyState: widget.backwardEmptyState ?? widget.emptyState ?? const SizedBox.shrink(),
               ),
             ),
             SliverPadding(
@@ -167,10 +162,7 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
                 items: widget.forwardItems,
                 controller: widget.forwardController,
                 isLoading: isLoadingForward,
-                emptyState:
-                    widget.forwardEmptyState ??
-                    widget.emptyState ??
-                    const SizedBox.shrink(),
+                emptyState: widget.forwardEmptyState ?? widget.emptyState ?? const SizedBox.shrink(),
               ),
             ),
           ],
@@ -188,28 +180,23 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
   }) {
     return SliverInfiniteListView.separated(
       enableShrinkWrapForFirstPageIndicators: true,
-      separatorBuilder:
-          widget.separatorBuilder ?? (_, __) => const SizedBox.shrink(),
+      separatorBuilder: widget.separatorBuilder ?? (_, __) => const SizedBox.shrink(),
       delegate: PaginationDelegate(
         isLoading: isLoading,
         itemCount: items.length,
         hasError: controller.error.value != null,
         hasReachedMax: controller.value.isLastPage,
-        itemBuilder: (context, index) =>
-            widget.itemBuilder(context, items[index], index),
+        itemBuilder: (context, index) => widget.itemBuilder(context, items[index], index),
         onFetchData: controller.onFetchData,
         firstPageErrorBuilder: (context, onRetry) => emptyState,
-        firstPageLoadingBuilder: (context) => widget.shimmerItem == null
-            ? _circularLoadingIndicator(context)
-            : _shimmerLoadingIndicator(context),
+        firstPageLoadingBuilder: (context) => widget.shimmerItem == null ? _circularLoadingIndicator(context) : _shimmerLoadingIndicator(context),
         loadMoreLoadingBuilder: (context) => !isLoading
             ? gapHM
             : widget.shimmerItem == null
             ? _circularLoadingIndicator(context)
             : _shimmerLoadingIndicator(context),
         firstPageNoItemsBuilder: (context) => Center(child: widget.emptyState),
-        loadMoreErrorBuilder: (context, onRetry) =>
-            Center(child: widget.errorBuilder(context, onRetry)),
+        loadMoreErrorBuilder: (context, onRetry) => Center(child: widget.errorBuilder(context, onRetry)),
         loadMoreNoMoreItemsBuilder: (context) => const SizedBox.shrink(),
         invisibleItemsThreshold: widget.invisibleItemsThreshold,
       ),
@@ -219,9 +206,7 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
   Widget _circularLoadingIndicator(BuildContext context) {
     return Center(
       child: PlatformLoadingIndicator(
-        color:
-            widget.loadingIndicatorColor ??
-            Theme.of(context).colorScheme.onSurface,
+        color: widget.loadingIndicatorColor,
       ),
     );
   }
@@ -237,8 +222,7 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
             children: [
               Shimmer.fromColors(
                 baseColor: widget.shimmerColor ?? Colors.grey.shade300,
-                highlightColor:
-                    widget.shimmerHighlightColor ?? Colors.grey.shade100,
+                highlightColor: widget.shimmerHighlightColor ?? Colors.grey.shade100,
                 child: widget.itemBuilder(
                   context,
                   widget.shimmerItem as T,
@@ -250,8 +234,7 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
                 ),
                 curve: Curves.easeIn,
               ),
-              if (widget.separatorBuilder != null)
-                widget.separatorBuilder!(context, index),
+              if (widget.separatorBuilder != null) widget.separatorBuilder!(context, index),
             ],
           ),
         ),

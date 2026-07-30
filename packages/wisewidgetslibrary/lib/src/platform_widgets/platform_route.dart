@@ -19,28 +19,6 @@ Route<T> platformRoute<T>({
   }
 
   switch (defaultTargetPlatform) {
-    case TargetPlatform.android:
-      late final PageRouteBuilder<T> pageRoute;
-
-      pageRoute = PageRouteBuilder<T>(
-        settings: settings,
-        fullscreenDialog: fullscreenDialog,
-        transitionDuration: const Duration(milliseconds: 250),
-        reverseTransitionDuration: const Duration(milliseconds: 250),
-        pageBuilder: (context, animation, secondaryAnimation) => route,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return const FadeForwardsPageTransitionsBuilder().buildTransitions<T>(
-            pageRoute,
-            context,
-            animation,
-            secondaryAnimation,
-            child,
-          );
-        },
-      );
-
-      return pageRoute;
-
     case TargetPlatform.iOS:
     case TargetPlatform.macOS:
     case TargetPlatform.linux:
@@ -52,6 +30,7 @@ Route<T> platformRoute<T>({
 
     case TargetPlatform.windows:
     case TargetPlatform.fuchsia:
+    case TargetPlatform.android:
       return MaterialPageRoute<T>(
         builder: (_) => route,
         fullscreenDialog: fullscreenDialog,
