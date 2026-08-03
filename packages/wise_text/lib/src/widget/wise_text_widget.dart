@@ -126,25 +126,24 @@ class WiseTextWidget extends StatefulWidget {
 }
 
 class _WiseTextWidgetState extends State<WiseTextWidget> {
-  late WiseTextClassifier classifier;
+  WiseTextClassifier? classifier;
   late Future<String> classifiedText;
 
   @override
   void initState() {
     super.initState();
-    classifier = WiseTextClassifier(classifier: widget.classifier);
+    if (widget.classified) {
+      classifier = WiseTextClassifier(classifier: widget.classifier);
+    }
     classifiedText = processText();
   }
 
   Future<String> processText() async {
-    if (widget.classified) {
-      try {
-        final classifiedItems = await classifier.classify(widget.text);
-        return classifiedItems.map((e) => e.tag).join();
-      } catch (e) {
-        return widget.text;
-      }
-    } else {
+    if (!widget.classified || classifier == null) return widget.text;
+    try {
+      final classifiedItems = await classifier!.classify(widget.text);
+      return classifiedItems.map((e) => e.tag).join();
+    } catch (e) {
       return widget.text;
     }
   }
@@ -155,8 +154,12 @@ class _WiseTextWidgetState extends State<WiseTextWidget> {
     if (oldWidget.text != widget.text ||
         oldWidget.classified != widget.classified ||
         changedClassifier) {
-      if (changedClassifier) {
-        classifier = WiseTextClassifier(classifier: widget.classifier);
+      if (changedClassifier || !widget.classified) {
+        classifier?.dispose();
+        classifier = null;
+      }
+      if (widget.classified) {
+        classifier ??= WiseTextClassifier(classifier: widget.classifier);
       }
       classifiedText = processText();
     }
@@ -165,7 +168,7 @@ class _WiseTextWidgetState extends State<WiseTextWidget> {
 
   @override
   void dispose() {
-    classifier.dispose();
+    classifier?.dispose();
     super.dispose();
   }
 

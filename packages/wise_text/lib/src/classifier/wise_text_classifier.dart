@@ -10,7 +10,8 @@ import 'classifier.dart';
 class WiseTextClassifier {
   /// Creates [WiseTextClassifier] instance with [WiseTextClassifierInterface] platform implementation or given classifier
   WiseTextClassifier({WiseTextClassifierInterface? classifier})
-    : instance = switch (classifier) {
+    : _externalClassifier = classifier != null,
+      instance = switch (classifier) {
         WiseTextClassifierInterface() => classifier,
         null when Platform.isIOS || Platform.isMacOS => WiseTextClassifierIos(),
         null when Platform.isAndroid => WiseTextClassifierAndroid(),
@@ -28,7 +29,16 @@ class WiseTextClassifier {
   Future<List<ItemSpan>> classify(String text) => instance.classifyText(text);
 
   /// Disposes of native references used by FFI classes
-  void dispose() => instance.dispose();
+  void dispose() {
+    if (!_externalClassifier) {
+      instance.dispose();
+    }
+  }
+
+  /// Check ownership of the classifier before disposing
+  /// If 2 Widgets use the same classifier then UseAfterReleaseError will be thrown
+  /// after a disposed classifier is used
+  final bool _externalClassifier;
 }
 
 /// Classifies text into typed [ItemSpan]s (dates, addresses, links and phone
