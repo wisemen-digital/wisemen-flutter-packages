@@ -74,6 +74,22 @@ void main() {
       expect(body, contains('Date & Time: 2025-09-09 14:00'));
     });
 
+    test('renders the timestamp with a custom date pattern', () {
+      const custom = BugReportTemplate(datePattern: 'dd/MM/yyyy HH:mm:ss');
+      final body = custom.buildBody(
+        fields: const {},
+        metadata: const {},
+        createdAt: DateTime(2025, 9, 9, 14, 5, 30),
+      );
+      expect(body, contains('Date & Time: 09/09/2025 14:05:30'));
+    });
+
+    test('leaves the timestamp empty when createdAt is absent', () {
+      final body = template.buildBody(fields: const {}, metadata: const {});
+      // buildBody trims the trailing whitespace off the empty value.
+      expect(body, endsWith('Date & Time:'));
+    });
+
     test('falls back gracefully when navigation is absent', () {
       final body = template.buildBody(fields: const {}, metadata: const {});
       expect(body, contains('_No navigation recorded._'));

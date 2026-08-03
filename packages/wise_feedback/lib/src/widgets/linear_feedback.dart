@@ -251,11 +251,13 @@ class _LinearFeedbackState extends State<LinearFeedback> {
 
   Future<void> _submit(
     OnSubmit packageOnSubmit,
-    String description,
-    Map<String, dynamic>? extras,
+    Map<String, dynamic> values,
   ) async {
     try {
-      await packageOnSubmit(description, extras: extras);
+      // The feedback package's own signature wants a text payload, but all of
+      // our content travels in `extras` and is read back off `UserFeedback.extra`
+      // in _handleUserFeedback, so the text is deliberately empty.
+      await packageOnSubmit('', extras: values);
       _toasts.show(
         _overlayContext,
         widget.theme.successMessage,
@@ -280,8 +282,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         fields: widget.template.fields,
         showPriority: widget.showPriority,
         categories: widget.categories,
-        onSubmit: (description, {extras}) =>
-            _submit(onSubmit, description, extras),
+        onSubmit: (values) => _submit(onSubmit, values),
       ),
       child: Builder(
         builder: (betterFeedbackContext) {

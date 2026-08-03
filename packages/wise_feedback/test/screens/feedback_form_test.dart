@@ -9,7 +9,7 @@ void main() {
     testWidgets('submitting forwards the title and field values', (
       tester,
     ) async {
-      Map<String, dynamic>? gotExtras;
+      Map<String, dynamic>? gotValues;
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
       await tester.pumpWidget(
@@ -19,8 +19,8 @@ void main() {
               theme: const WiseFeedbackTheme(),
               status: status,
               fields: _fields,
-              onSubmit: (description, {extras}) async {
-                gotExtras = extras;
+              onSubmit: (values) async {
+                gotValues = values;
               },
             ),
           ),
@@ -38,8 +38,8 @@ void main() {
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
       await tester.pump();
 
-      expect(gotExtras?['title'], 'My title');
-      final fields = gotExtras?['fields'] as Map<String, String>;
+      expect(gotValues?['title'], 'My title');
+      final fields = gotValues?['fields'] as Map<String, String>;
       expect(fields['description'], 'My description');
     });
 
@@ -52,7 +52,7 @@ void main() {
               theme: const WiseFeedbackTheme(),
               status: status,
               fields: _fields,
-              onSubmit: (description, {extras}) async {},
+              onSubmit: (values) async {},
             ),
           ),
         ),
@@ -71,7 +71,7 @@ void main() {
               theme: const WiseFeedbackTheme(),
               status: status,
               fields: _fields,
-              onSubmit: (description, {extras}) async {},
+              onSubmit: (values) async {},
             ),
           ),
         ),
@@ -101,7 +101,7 @@ void main() {
                 FeedbackField(key: 'currentSituation', label: 'Current'),
                 FeedbackField(key: 'desiredSituation', label: 'Desired'),
               ],
-              onSubmit: (description, {extras}) async {},
+              onSubmit: (values) async {},
             ),
           ),
         ),
@@ -119,7 +119,7 @@ void main() {
     testWidgets('forwards selected priority and category in extras', (
       tester,
     ) async {
-      Map<String, dynamic>? gotExtras;
+      Map<String, dynamic>? gotValues;
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
       await tester.pumpWidget(
@@ -131,8 +131,8 @@ void main() {
               fields: _fields,
               showPriority: true,
               categories: const ['Bug', 'Idea'],
-              onSubmit: (description, {extras}) async {
-                gotExtras = extras;
+              onSubmit: (values) async {
+                gotValues = values;
               },
             ),
           ),
@@ -152,8 +152,8 @@ void main() {
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
       await tester.pump();
 
-      expect(gotExtras?['priority'], 'high');
-      expect(gotExtras?['category'], 'Idea');
+      expect(gotValues?['priority'], 'high');
+      expect(gotValues?['category'], 'Idea');
     });
 
     testWidgets('hides priority and category by default', (tester) async {
@@ -165,7 +165,7 @@ void main() {
               theme: const WiseFeedbackTheme(),
               status: status,
               fields: _fields,
-              onSubmit: (description, {extras}) async {},
+              onSubmit: (values) async {},
             ),
           ),
         ),
@@ -191,7 +191,7 @@ void main() {
                   theme: const WiseFeedbackTheme(),
                   status: status,
                   fields: _fields,
-                  onSubmit: (description, {extras}) async {},
+                  onSubmit: (values) async {},
                 ),
               ),
             ),

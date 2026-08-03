@@ -14,18 +14,15 @@ const Color _kErrorColor = Color(0xFFD32F2F);
 
 /// Callback invoked when the user submits the form.
 ///
-/// The extras map carries `title`, `fields` (a `Map<String, String>` of the
-/// template field values), and — when shown — `priority` (a [FeedbackPriority]
-/// name) and `category`.
+/// [values] carries `title`, `fields` (a `Map<String, String>` of the template
+/// field values), and — when shown — `priority` (a [FeedbackPriority] name) and
+/// `category`. Every field the form collects travels in here; the body text
+/// itself is assembled later by the feedback template.
 ///
 /// The form reflects the outcome through its `status` listenable rather than
 /// this future's result: on [FeedbackSuccess] the sheet is dismissed, on
 /// [FeedbackFailure] it stays open and shows the error inline.
-typedef FeedbackFormSubmit =
-    Future<void> Function(
-      String description, {
-      Map<String, dynamic>? extras,
-    });
+typedef FeedbackFormSubmit = Future<void> Function(Map<String, dynamic> values);
 
 /// The built-in feedback form: a title, the template's fields, and optional
 /// priority/category selectors.
@@ -91,15 +88,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
       for (final entry in _fieldControllers.entries)
         entry.key: entry.value.text,
     };
-    await widget.onSubmit(
-      '',
-      extras: <String, dynamic>{
-        'title': _titleController.text,
-        'fields': fieldValues,
-        if (widget.showPriority) 'priority': _priority.name,
-        if (_category != null) 'category': _category,
-      },
-    );
+    await widget.onSubmit(<String, dynamic>{
+      'title': _titleController.text,
+      'fields': fieldValues,
+      if (widget.showPriority) 'priority': _priority.name,
+      if (_category != null) 'category': _category,
+    });
   }
 
   @override

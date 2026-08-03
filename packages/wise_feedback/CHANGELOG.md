@@ -8,8 +8,13 @@
   + context section).
 - `BugReportTemplate`: structured **Current Situation** / **Desired Situation**
   inputs, **Steps to Reproduce** filled from the navigation breadcrumb, and
-  **Context** (environment, reporter, date & time) filled automatically.
+  **Context** (environment, reporter, date & time) filled automatically. The
+  timestamp is rendered with `intl`'s `DateFormat`; override the pattern with
+  `BugReportTemplate(datePattern: ...)`.
 - `FeedbackReport` now carries `fields` and `createdAt`.
+- **Breaking:** `FeedbackFormSubmit` takes a single `Map<String, dynamic>` of
+  form values. The old positional description argument was always empty — the
+  body is assembled by the template from `fields`.
 
 ## 0.2.0
 

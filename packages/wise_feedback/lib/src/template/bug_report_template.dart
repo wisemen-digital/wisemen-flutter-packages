@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../models/feedback_priority.dart';
 import '../models/feedback_reporter.dart';
 import 'feedback_field.dart';
@@ -11,10 +13,14 @@ class BugReportTemplate extends FeedbackTemplate {
   ///
   /// [environmentKeys] are the `metadata` keys checked, in order, to fill the
   /// "Environment or url" line (defaults to `environment`, then `flavor`).
+  ///
+  /// [datePattern] is an `intl` [DateFormat] pattern used for the "Date & Time"
+  /// line.
   const BugReportTemplate({
     this.currentSituationLabel = 'Current Situation',
     this.desiredSituationLabel = 'Desired Situation',
     this.environmentKeys = const ['environment', 'flavor'],
+    this.datePattern = 'yyyy-MM-dd HH:mm',
   });
 
   /// Label for the current-situation field.
@@ -25,6 +31,9 @@ class BugReportTemplate extends FeedbackTemplate {
 
   /// Metadata keys checked in order to fill "Environment or url".
   final List<String> environmentKeys;
+
+  /// [DateFormat] pattern used to render the "Date & Time" line.
+  final String datePattern;
 
   @override
   List<FeedbackField> get fields => [
@@ -82,8 +91,6 @@ class BugReportTemplate extends FeedbackTemplate {
     if (date == null) {
       return '';
     }
-    String two(int value) => value.toString().padLeft(2, '0');
-    return '${date.year}-${two(date.month)}-${two(date.day)} '
-        '${two(date.hour)}:${two(date.minute)}';
+    return DateFormat(datePattern).format(date);
   }
 }

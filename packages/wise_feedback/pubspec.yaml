@@ -16,6 +16,8 @@ dependencies:
   auto_route: ">=11.0.0 <12.0.0"
   # Screenshot capture + feedback overlay
   feedback: ">=3.2.0 <4.0.0"
+  # Date formatting in issue templates
+  intl: ">=0.20.2 <1.0.0"
   # Transport HTTP + GraphQL-over-HTTP
   http: ">=1.2.0 <2.0.0"
   # Automatic report metadata
