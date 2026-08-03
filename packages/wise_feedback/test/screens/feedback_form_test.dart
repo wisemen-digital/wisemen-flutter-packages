@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 
+const _fields = [FeedbackField(key: 'description', label: 'Description')];
+
 void main() {
   group('FeedbackForm', () {
-    testWidgets('submitting the form forwards title and description', (
+    testWidgets('submitting forwards the title and field values', (
       tester,
     ) async {
-      String? gotDescription;
-      Map<String, dynamic>? gotExtras;
+      Map<String, dynamic>? gotValues;
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
       await tester.pumpWidget(
@@ -17,9 +18,9 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
-              onSubmit: (description, {extras}) async {
-                gotDescription = description;
-                gotExtras = extras;
+              fields: _fields,
+              onSubmit: (values) async {
+                gotValues = values;
               },
             ),
           ),
@@ -31,14 +32,15 @@ void main() {
         'My title',
       );
       await tester.enterText(
-        find.byKey(const Key('wise_feedback_description')),
+        find.byKey(const Key('wise_feedback_field_description')),
         'My description',
       );
       await tester.tap(find.byKey(const Key('wise_feedback_submit')));
       await tester.pump();
 
-      expect(gotDescription, 'My description');
-      expect(gotExtras?['title'], 'My title');
+      expect(gotValues?['title'], 'My title');
+      final fields = gotValues?['fields'] as Map<String, String>;
+      expect(fields['description'], 'My description');
     });
 
     testWidgets('shows a progress indicator while submitting', (tester) async {
@@ -49,7 +51,8 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
-              onSubmit: (description, {extras}) async {},
+              fields: _fields,
+              onSubmit: (values) async {},
             ),
           ),
         ),
@@ -67,7 +70,8 @@ void main() {
             body: FeedbackForm(
               theme: const WiseFeedbackTheme(),
               status: status,
-              onSubmit: (description, {extras}) async {},
+              fields: _fields,
+              onSubmit: (values) async {},
             ),
           ),
         ),
@@ -83,6 +87,91 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_error')), findsOneWidget);
       expect(find.text('Could not send it.'), findsOneWidget);
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
+    });
+
+    testWidgets('renders a field per template field', (tester) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              status: status,
+              fields: const [
+                FeedbackField(key: 'currentSituation', label: 'Current'),
+                FeedbackField(key: 'desiredSituation', label: 'Desired'),
+              ],
+              onSubmit: (values) async {},
+            ),
+          ),
+        ),
+      );
+      expect(
+        find.byKey(const Key('wise_feedback_field_currentSituation')),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('wise_feedback_field_desiredSituation')),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('forwards selected priority and category in extras', (
+      tester,
+    ) async {
+      Map<String, dynamic>? gotValues;
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              status: status,
+              fields: _fields,
+              showPriority: true,
+              categories: const ['Bug', 'Idea'],
+              onSubmit: (values) async {
+                gotValues = values;
+              },
+            ),
+          ),
+        ),
+      );
+
+      await tester.tap(find.byKey(const Key('wise_feedback_priority')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('High').last);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('wise_feedback_category')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Idea').last);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('wise_feedback_submit')));
+      await tester.pump();
+
+      expect(gotValues?['priority'], 'high');
+      expect(gotValues?['category'], 'Idea');
+    });
+
+    testWidgets('hides priority and category by default', (tester) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              status: status,
+              fields: _fields,
+              onSubmit: (values) async {},
+            ),
+          ),
+        ),
+      );
+      expect(find.byKey(const Key('wise_feedback_priority')), findsNothing);
+      expect(find.byKey(const Key('wise_feedback_category')), findsNothing);
     });
 
     testWidgets('does not overflow in a short sheet with the keyboard open', (
@@ -101,7 +190,8 @@ void main() {
                 child: FeedbackForm(
                   theme: const WiseFeedbackTheme(),
                   status: status,
-                  onSubmit: (description, {extras}) async {},
+                  fields: _fields,
+                  onSubmit: (values) async {},
                 ),
               ),
             ),
