@@ -42,9 +42,11 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Follow the single responsibility principle
 - Keep files focused and small
 - Catch errors with `catch (e)` or `catch (e, stackTrace)` — never `on Object catch (e)` (identical, just noisier). Use `on SpecificType` only when handling that type specifically, and capture the stack trace when logging or forwarding the error
-- Model payload-less states as `static const` singletons, not const constructors (`FeedbackStatus.idle`, not `FeedbackStatus.idle()`). Keep constructors only for variants that carry data
+- Give each type **one** way to construct each case. For a sealed hierarchy that means the subclass constructors alone — don't also expose redirecting factories or `static const` aliases on the base class, so `const Idle()` is the only spelling and never `Status.idle` as well. Two spellings for one value split every call site and every code review
 - Use Flutter's callback typedefs — `VoidCallback` for `void Function()`, `ValueChanged<T>` for `void Function(T)` — instead of writing the raw function type
 - Give void, side-effecting methods a block body (`{ … }`), not `=>`. An arrow returns its expression, so `void f() => _x = v;` silently returns the assigned value into `void` — a statement body reads as "does", not "returns"
+- Keep navigation out of state holders. A notifier or controller owns *state*; opening a sheet, pushing a route or showing a dialog is the widget's job — call it from `onPressed`. A `bindShow(callback)` / `setHandler(callback)` setter on a controller is the smell: it exists only so something else can trigger UI later, and it buys nothing over calling that code directly
+- Don't ship placeholder tests. A scaffolding test like `expect(1 + 1, 2)` proves nothing once real tests exist — delete it. It inflates the test count and hides the fact that a file, or a whole package, is untested
 
 ### Naming Conventions
 
