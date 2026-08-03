@@ -4,7 +4,9 @@
 
 - Automatic device/app/OS metadata attached to every report
   (`DeviceMetadataCollector`, opt out with `collectDeviceInfo: false`).
-- `WiseFeedbackNavigatorObserver` attaches a breadcrumb of recent routes.
+- `WiseFeedbackNavigatorObserver` attaches a breadcrumb of recent routes. It
+  extends auto_route's `AutoRouterObserver`, so tab switches (bottom bar taps)
+  are recorded too.
 - Reporter identity via the `reporter` builder; custom fields via
   `metadataBuilder`.
 - Optional priority (mapped to Linear's `priority`) and category selectors in

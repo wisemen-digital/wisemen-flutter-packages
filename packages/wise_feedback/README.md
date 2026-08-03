@@ -26,13 +26,22 @@ navigator observer for a **breadcrumb of recent screens**, identify the
 **category**. All of it is rendered into a `## Context` section on the Linear
 issue.
 
+`WiseFeedbackNavigatorObserver` is an auto_route `AutoRouterObserver`, so it
+records tab switches (bottom bar taps) next to pushes, pops and replacements.
+It is still a plain `NavigatorObserver`, so it works without auto_route too.
+
 ```dart
 final feedbackObserver = WiseFeedbackNavigatorObserver();
+
+// With auto_route:
+MaterialApp.router(
+  routerConfig: appRouter.config(navigatorObservers: () => [feedbackObserver]),
+);
 
 LinearFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
 
-  // Recent screens — also add feedbackObserver to MaterialApp.navigatorObservers.
+  // Recent screens — also add feedbackObserver to your router's observers.
   navigatorObserver: feedbackObserver,
 
   // Who reported it (resolved at submit time; async-friendly).

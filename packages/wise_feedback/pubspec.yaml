@@ -12,6 +12,8 @@ dependencies:
   # Flutter
   flutter:
     sdk: flutter
+  # Route breadcrumbs, including tab (bottom bar) switches
+  auto_route: ">=11.0.0 <12.0.0"
   # Screenshot capture + feedback overlay
   feedback: ">=3.2.0 <4.0.0"
   # Transport HTTP + GraphQL-over-HTTP
