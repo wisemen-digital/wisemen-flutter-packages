@@ -17,6 +17,10 @@ class WiseFeedbackTheme {
     this.textColor = const Color(0xFF121926),
     this.hintColor = const Color(0xFF9AA4B2),
     this.iconButtonColor = const Color(0xFFEEF2F6),
+    this.errorColor = const Color(0xFFD32F2F),
+    this.successColor = const Color(0xFF2E7D32),
+    this.grabberColor = const Color(0x33000000),
+    this.onAccentColor = Colors.white,
     this.fieldRadius = 16,
     this.sheetTitle = 'Report a bug',
     this.titleHint = 'Title',
@@ -51,6 +55,19 @@ class WiseFeedbackTheme {
 
   /// Background of the circular close (and neutral icon) buttons.
   final Color iconButtonColor;
+
+  /// Fill for failure surfaces: the inline submission error and the error toast.
+  final Color errorColor;
+
+  /// Fill for the success toast.
+  final Color successColor;
+
+  /// Fill of the pill at the top of the sheet that signals it can be dragged.
+  final Color grabberColor;
+
+  /// Icons and text drawn on top of a [primaryColor], [errorColor] or
+  /// [successColor] fill.
+  final Color onAccentColor;
 
   /// Corner radius of input boxes.
   final double fieldRadius;

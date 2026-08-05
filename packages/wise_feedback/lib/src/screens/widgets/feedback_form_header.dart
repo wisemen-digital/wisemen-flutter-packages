@@ -61,7 +61,7 @@ class FeedbackFormHeader extends StatelessWidget {
               buttonKey: const Key('wise_feedback_submit'),
               background: theme.primaryColor,
               icon: Icons.check_rounded,
-              iconColor: Colors.white,
+              iconColor: theme.onAccentColor,
               loading: status.isSubmitting,
               onTap: status.isSubmitting ? null : onSubmit,
             ),

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../theme/wise_feedback_theme.dart';
+
 /// A self-contained toast rendered in an overlay above the app.
 ///
 /// The overlay above the app has no [Directionality] or [Material], so both
@@ -9,11 +11,15 @@ import 'package:flutter/material.dart';
 class FeedbackToast extends StatelessWidget {
   /// Creates a toast.
   const FeedbackToast({
+    required this.theme,
     required this.message,
     required this.isError,
     required this.onDismiss,
     super.key,
   });
+
+  /// Visual configuration.
+  final WiseFeedbackTheme theme;
 
   /// The text shown in the toast.
   final String message;
@@ -35,9 +41,7 @@ class FeedbackToast extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isError
-                  ? const Color(0xFFD32F2F)
-                  : const Color(0xFF2E7D32),
+              color: isError ? theme.errorColor : theme.successColor,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -45,14 +49,14 @@ class FeedbackToast extends StatelessWidget {
               children: [
                 Icon(
                   isError ? Icons.error_outline : Icons.check_circle_outline,
-                  color: Colors.white,
+                  color: theme.onAccentColor,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
                 Flexible(
                   child: Text(
                     message,
-                    style: const TextStyle(color: Colors.white),
+                    style: TextStyle(color: theme.onAccentColor),
                   ),
                 ),
               ],
@@ -79,7 +83,12 @@ class FeedbackToastPresenter {
 
   /// Inserts a toast into the [Overlay] above [context]; auto-dismisses after
   /// 4 seconds. No-ops if [context] is null or has no ambient overlay.
-  void show(BuildContext? context, String message, {required bool isError}) {
+  void show(
+    BuildContext? context,
+    String message, {
+    required bool isError,
+    required WiseFeedbackTheme theme,
+  }) {
     if (context == null) {
       return;
     }
@@ -110,6 +119,7 @@ class FeedbackToastPresenter {
           right: 16,
           bottom: bottom,
           child: FeedbackToast(
+            theme: theme,
             message: message,
             isError: isError,
             onDismiss: remove,

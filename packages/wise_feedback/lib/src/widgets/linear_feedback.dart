@@ -262,12 +262,14 @@ class _LinearFeedbackState extends State<LinearFeedback> {
         _overlayContext,
         widget.theme.successMessage,
         isError: false,
+        theme: widget.theme,
       );
     } catch (error) {
       _toasts.show(
         _overlayContext,
         widget.theme.messageForError(error),
         isError: true,
+        theme: widget.theme,
       );
     }
   }

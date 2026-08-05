@@ -108,7 +108,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const FeedbackSheetGrabber(),
+            FeedbackSheetGrabber(theme: theme),
             FeedbackFormHeader(
               theme: theme,
               status: widget.status,
@@ -182,6 +182,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     valueListenable: widget.status,
                     builder: (context, status, _) => status is FeedbackFailure
                         ? FeedbackErrorMessage(
+                            theme: theme,
                             message: theme.messageForError(status.error),
                           )
                         : const SizedBox.shrink(),

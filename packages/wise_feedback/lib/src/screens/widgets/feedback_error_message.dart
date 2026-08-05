@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
-/// Icon and text color of the inline submission error.
-const Color _kErrorColor = Color(0xFFD32F2F);
+import '../../theme/wise_feedback_theme.dart';
 
 /// The inline error shown under the form when a submission fails.
 class FeedbackErrorMessage extends StatelessWidget {
   /// Creates the error row.
-  const FeedbackErrorMessage({required this.message, super.key});
+  const FeedbackErrorMessage({
+    required this.theme,
+    required this.message,
+    super.key,
+  });
+
+  /// Visual configuration.
+  final WiseFeedbackTheme theme;
 
   /// Human-readable failure text.
   final String message;
@@ -18,12 +24,12 @@ class FeedbackErrorMessage extends StatelessWidget {
       child: Row(
         key: const Key('wise_feedback_error'),
         children: [
-          const Icon(Icons.error_outline, color: _kErrorColor, size: 18),
+          Icon(Icons.error_outline, color: theme.errorColor, size: 18),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               message,
-              style: const TextStyle(color: _kErrorColor),
+              style: TextStyle(color: theme.errorColor),
             ),
           ),
         ],

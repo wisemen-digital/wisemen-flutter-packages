@@ -89,6 +89,35 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
     });
 
+    testWidgets('paints the inline error with the themed error color', (
+      tester,
+    ) async {
+      const customError = Color(0xFF00FF00);
+      final status = ValueNotifier<FeedbackStatus>(
+        const FeedbackFailure(FeedbackException('Could not send it.')),
+      );
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: FeedbackForm(
+              theme: const WiseFeedbackTheme(errorColor: customError),
+              status: status,
+              fields: _fields,
+              onSubmit: (values) async {},
+            ),
+          ),
+        ),
+      );
+
+      final icon = tester.widget<Icon>(
+        find.descendant(
+          of: find.byKey(const Key('wise_feedback_error')),
+          matching: find.byType(Icon),
+        ),
+      );
+      expect(icon.color, customError);
+    });
+
     testWidgets('renders a field per template field', (tester) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
