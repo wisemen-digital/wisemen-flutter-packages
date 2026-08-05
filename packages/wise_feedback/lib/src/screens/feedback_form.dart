@@ -5,9 +5,7 @@ import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
 import '../template/feedback_field.dart';
 import '../theme/wise_feedback_theme.dart';
-
-/// Icon and text color of the inline submission error.
-const Color _kErrorColor = Color(0xFFD32F2F);
+import 'widgets/widgets.dart';
 
 /// Callback invoked when the user submits the form.
 ///
@@ -101,9 +99,6 @@ class _FeedbackFormState extends State<FeedbackForm> {
   Widget build(BuildContext context) {
     final theme = widget.theme;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    // Everything lives in one scroll view driven by the sheet's
-    // scrollController (with always-scrollable physics) so the whole surface —
-    // grabber, header and fields — can drag the sheet.
     return ColoredBox(
       color: theme.backgroundColor,
       child: SingleChildScrollView(
@@ -113,48 +108,36 @@ class _FeedbackFormState extends State<FeedbackForm> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 8, bottom: 4),
-              child: Center(
-                child: Container(
-                  width: 36,
-                  height: 5,
-                  decoration: BoxDecoration(
-                    color: const Color(0x33000000),
-                    borderRadius: BorderRadius.circular(100),
-                  ),
-                ),
-              ),
-            ),
-            _Header(
+            const FeedbackSheetGrabber(),
+            FeedbackFormHeader(
               theme: theme,
               status: widget.status,
               onClose: widget.onClose,
               onSubmit: _submit,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  _LabeledField(
+                  FeedbackLabeledField(
                     theme: theme,
                     label: theme.titleHint,
-                    child: _input(
-                      theme,
-                      _titleController,
+                    child: FeedbackTextInput(
+                      theme: theme,
+                      controller: _titleController,
                       fieldKey: const Key('wise_feedback_title'),
                     ),
                   ),
                   for (final field in widget.fields) ...[
                     const SizedBox(height: 16),
-                    _LabeledField(
+                    FeedbackLabeledField(
                       theme: theme,
                       label: field.label,
-                      child: _input(
-                        theme,
-                        _fieldControllers[field.key]!,
+                      child: FeedbackTextInput(
+                        theme: theme,
+                        controller: _fieldControllers[field.key]!,
                         minLines: field.minLines,
                         maxLines: field.maxLines,
                         fieldKey: Key('wise_feedback_field_${field.key}'),
@@ -163,10 +146,10 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ],
                   if (widget.showPriority) ...[
                     const SizedBox(height: 16),
-                    _LabeledField(
+                    FeedbackLabeledField(
                       theme: theme,
                       label: theme.priorityLabel,
-                      child: _dropdown<FeedbackPriority>(
+                      child: FeedbackDropdown<FeedbackPriority>(
                         theme: theme,
                         value: _priority,
                         fieldKey: const Key('wise_feedback_priority'),
@@ -182,10 +165,10 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ],
                   if (widget.categories case final List<String> categories) ...[
                     const SizedBox(height: 16),
-                    _LabeledField(
+                    FeedbackLabeledField(
                       theme: theme,
                       label: theme.categoryLabel,
-                      child: _dropdown<String>(
+                      child: FeedbackDropdown<String>(
                         theme: theme,
                         value: _category,
                         fieldKey: const Key('wise_feedback_category'),
@@ -197,31 +180,11 @@ class _FeedbackFormState extends State<FeedbackForm> {
                   ],
                   ValueListenableBuilder<FeedbackStatus>(
                     valueListenable: widget.status,
-                    builder: (context, status, _) {
-                      if (status is! FeedbackFailure) {
-                        return const SizedBox.shrink();
-                      }
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Row(
-                          key: const Key('wise_feedback_error'),
-                          children: [
-                            const Icon(
-                              Icons.error_outline,
-                              color: _kErrorColor,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                theme.messageForError(status.error),
-                                style: const TextStyle(color: _kErrorColor),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
+                    builder: (context, status, _) => status is FeedbackFailure
+                        ? FeedbackErrorMessage(
+                            message: theme.messageForError(status.error),
+                          )
+                        : const SizedBox.shrink(),
                   ),
                 ],
               ),
@@ -229,204 +192,6 @@ class _FeedbackFormState extends State<FeedbackForm> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _input(
-    WiseFeedbackTheme theme,
-    TextEditingController controller, {
-    int minLines = 1,
-    int maxLines = 1,
-    Key? fieldKey,
-  }) {
-    return TextField(
-      key: fieldKey,
-      controller: controller,
-      textCapitalization: TextCapitalization.sentences,
-      minLines: minLines,
-      maxLines: maxLines,
-      cursorColor: theme.primaryColor,
-      style: TextStyle(
-        fontSize: 17,
-        letterSpacing: -0.43,
-        color: theme.textColor,
-      ),
-      decoration: InputDecoration(
-        isCollapsed: true,
-        border: InputBorder.none,
-        hintStyle: TextStyle(color: theme.hintColor, fontSize: 17),
-      ),
-    );
-  }
-
-  Widget _dropdown<T>({
-    required WiseFeedbackTheme theme,
-    required T? value,
-    required Map<T, String> items,
-    required ValueChanged<T?> onChanged,
-    required Key fieldKey,
-    String? hint,
-  }) {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton<T>(
-        key: fieldKey,
-        value: value,
-        isExpanded: true,
-        isDense: true,
-        hint: hint == null
-            ? null
-            : Text(
-                hint,
-                style: TextStyle(color: theme.hintColor, fontSize: 17),
-              ),
-        icon: Icon(Icons.keyboard_arrow_down_rounded, color: theme.hintColor),
-        style: TextStyle(fontSize: 17, color: theme.textColor),
-        onChanged: onChanged,
-        items: [
-          for (final entry in items.entries)
-            DropdownMenuItem<T>(value: entry.key, child: Text(entry.value)),
-        ],
-      ),
-    );
-  }
-}
-
-/// The sticky header: close button, centered title, brand submit button.
-class _Header extends StatelessWidget {
-  const _Header({
-    required this.theme,
-    required this.status,
-    required this.onClose,
-    required this.onSubmit,
-  });
-
-  final WiseFeedbackTheme theme;
-  final ValueListenable<FeedbackStatus> status;
-  final VoidCallback? onClose;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
-      child: Row(
-        children: [
-          _CircleButton(
-            buttonKey: const Key('wise_feedback_close'),
-            background: theme.iconButtonColor,
-            icon: Icons.close_rounded,
-            iconColor: theme.labelColor,
-            onTap: onClose,
-          ),
-          Expanded(
-            child: Text(
-              theme.sheetTitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: theme.textColor,
-              ),
-            ),
-          ),
-          ValueListenableBuilder<FeedbackStatus>(
-            valueListenable: status,
-            builder: (context, status, _) => _CircleButton(
-              buttonKey: const Key('wise_feedback_submit'),
-              background: theme.primaryColor,
-              icon: Icons.check_rounded,
-              iconColor: Colors.white,
-              loading: status.isSubmitting,
-              onTap: status.isSubmitting ? null : onSubmit,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _CircleButton extends StatelessWidget {
-  const _CircleButton({
-    required this.buttonKey,
-    required this.background,
-    required this.icon,
-    required this.iconColor,
-    required this.onTap,
-    this.loading = false,
-  });
-
-  final Key buttonKey;
-  final Color background;
-  final IconData icon;
-  final Color iconColor;
-  final VoidCallback? onTap;
-  final bool loading;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox.square(
-      dimension: 44,
-      child: Material(
-        key: buttonKey,
-        color: background,
-        shape: const CircleBorder(),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: onTap,
-          child: Center(
-            child: loading
-                ? SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: iconColor,
-                    ),
-                  )
-                : Icon(icon, size: 20, color: iconColor),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A label above a bordered, rounded input box.
-class _LabeledField extends StatelessWidget {
-  const _LabeledField({
-    required this.theme,
-    required this.label,
-    required this.child,
-  });
-
-  final WiseFeedbackTheme theme;
-  final String label;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 12, bottom: 4),
-          child: Text(
-            label,
-            style: TextStyle(fontSize: 15, color: theme.labelColor),
-          ),
-        ),
-        Container(
-          constraints: const BoxConstraints(minHeight: 52),
-          alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: theme.fieldFillColor,
-            borderRadius: BorderRadius.circular(theme.fieldRadius),
-            border: Border.all(color: theme.fieldBorderColor),
-          ),
-          child: child,
-        ),
-      ],
     );
   }
 }
