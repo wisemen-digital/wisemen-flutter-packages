@@ -198,7 +198,7 @@ void main() {
               status: status,
               fields: _fields,
               onClose: () => closed++,
-              onSubmit: (description, {extras}) async {},
+              onSubmit: (values) async {},
             ),
           ),
         ),
