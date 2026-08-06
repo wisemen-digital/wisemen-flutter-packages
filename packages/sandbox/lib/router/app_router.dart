@@ -22,6 +22,11 @@ class AppRouter extends RootStackRouter {
       page: WiseLoginScreenRoute.page,
       transitionsBuilder: TransitionsBuilders.noTransition,
     ),
+    AdaptiveRoute(
+      path: '/bidirectional-calendar-demo',
+      page: BiDirectionalCalendarDemoScreenRoute.page,
+      title: (context, data) => 'Bi-directional calendar demo',
+    ),
     AdaptiveRoute(page: SettingsScreenRoute.page),
     //mason: insert auto route
   ];
