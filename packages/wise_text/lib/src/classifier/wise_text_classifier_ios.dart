@@ -25,6 +25,9 @@ class WiseTextClassifierIos implements WiseTextClassifierInterface {
 
   @override
   void dispose() {
-    _native.release();
+    // Throws DoubleReleaseError (native crash) on a second call, that's why this is guarded
+    if (!_native.ref.isReleased) {
+      _native.ref.release();
+    }
   }
 }

@@ -198,5 +198,67 @@ void main() {
         throwsA(isA<FeedbackException>()),
       );
     });
+
+    test('uses the report body verbatim and maps priority', () async {
+      Map<String, dynamic>? issueVars;
+      final client = MockClient((request) async {
+        if (request.method == 'PUT') {
+          return http.Response('', 200);
+        }
+        final body = jsonDecode(request.body) as Map<String, dynamic>;
+        final query = body['query'] as String;
+        if (query.contains('fileUpload')) {
+          return http.Response(
+            jsonEncode({
+              'data': {
+                'fileUpload': {
+                  'uploadFile': {
+                    'uploadUrl': 'https://uploads.example/put',
+                    'assetUrl': 'https://assets.example/a.png',
+                    'headers': <dynamic>[],
+                  },
+                },
+              },
+            }),
+            200,
+          );
+        }
+        issueVars = body['variables'] as Map<String, dynamic>;
+        return http.Response(
+          jsonEncode({
+            'data': {
+              'issueCreate': {
+                'success': true,
+                'issue': {'id': 'i', 'url': 'u'},
+              },
+            },
+          }),
+          200,
+        );
+      });
+
+      // The template renders the body; the transport passes it through and
+      // appends the screenshot.
+      final report = FeedbackReport(
+        title: 'Bug',
+        description: '## Current Situation\nbroke',
+        screenshotPng: Uint8List.fromList([1]),
+        priority: FeedbackPriority.high,
+      );
+
+      await LinearDirectTransport(
+        token: 't',
+        teamId: 'team',
+        httpClient: client,
+      ).send(report);
+
+      expect(issueVars?['priority'], FeedbackPriority.high.linearValue);
+      final description = issueVars?['description'] as String;
+      expect(description, contains('## Current Situation\nbroke'));
+      expect(
+        description,
+        contains('![screenshot](https://assets.example/a.png)'),
+      );
+    });
   });
 }

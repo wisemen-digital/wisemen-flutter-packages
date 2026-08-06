@@ -18,6 +18,82 @@ LinearFeedback(
 );
 ```
 
+## What gets attached
+
+By default every report includes **device, OS and app-version metadata**. Add a
+navigator observer for a **breadcrumb of recent screens**, identify the
+**reporter**, and let users pick a **priority** (mapped to Linear's priority) and
+**category**. All of it is rendered into a `## Context` section on the Linear
+issue.
+
+`WiseFeedbackNavigatorObserver` is an auto_route `AutoRouterObserver`, so it
+records tab switches (bottom bar taps) next to pushes, pops and replacements.
+It is still a plain `NavigatorObserver`, so it works without auto_route too.
+
+```dart
+final feedbackObserver = WiseFeedbackNavigatorObserver();
+
+// With auto_route:
+MaterialApp.router(
+  routerConfig: appRouter.config(navigatorObservers: () => [feedbackObserver]),
+);
+
+LinearFeedback(
+  transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
+
+  // Recent screens — also add feedbackObserver to your router's observers.
+  navigatorObserver: feedbackObserver,
+
+  // Who reported it (resolved at submit time; async-friendly).
+  reporter: () => FeedbackReporter(id: user.id, email: user.email),
+
+  // Extra custom fields.
+  metadataBuilder: () => {'tier': user.tier, 'flag.newNav': 'on'},
+
+  // Form selectors.
+  showPriority: true, // default
+  categories: const ['Bug', 'Idea', 'Question'],
+
+  // Device/OS/app metadata is attached by default. Pass a metadataCollector
+  // returning an empty map to attach nothing.
+
+  child: MyApp(),
+);
+```
+
+## Issue templates
+
+The form's fields and the rendered issue body are driven by a
+`FeedbackTemplate`. The default (`DefaultFeedbackTemplate`) is a single
+description plus a context section. Use `BugReportTemplate` for a structured
+bug report, or subclass `FeedbackTemplate` for your own:
+
+```dart
+LinearFeedback(
+  transport: ...,
+  template: const BugReportTemplate(), // Current/Desired + auto Steps/Context
+  navigatorObserver: feedbackObserver, // fills "Steps to Reproduce"
+  reporter: () => FeedbackReporter(email: user.email), // fills "Account or user"
+  metadataBuilder: () => {'environment': env}, // fills "Environment or url"
+  child: MyApp(),
+);
+```
+
+`BugReportTemplate` renders:
+
+```markdown
+## Current Situation
+…
+## Desired Situation
+…
+## Steps to Reproduce
+1. …
+## Context
+Environment or url: …
+Account or user: …
+Date & Time: …
+```
+
 ### Tracking submission progress
 
 The feedback overlay (and its built-in form) is dismissed as soon as a report

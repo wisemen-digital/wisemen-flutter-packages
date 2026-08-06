@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.3.0
+
+- Configurable issue templates via `FeedbackTemplate`: the template defines the
+  form's fields and renders the issue body.
+- `DefaultFeedbackTemplate` preserves the previous behavior (single description
+  + context section).
+- `BugReportTemplate`: structured **Current Situation** / **Desired Situation**
+  inputs, **Steps to Reproduce** filled from the navigation breadcrumb, and
+  **Context** (environment, reporter, date & time) filled automatically. The
+  timestamp is rendered with `intl`'s `DateFormat`; override the pattern with
+  `BugReportTemplate(datePattern: ...)`.
+- `FeedbackReport` now carries `fields` and `createdAt`.
+- **Breaking:** `FeedbackFormSubmit` takes a single `Map<String, dynamic>` of
+  form values. The old positional description argument was always empty — the
+  body is assembled by the template from `fields`.
+
+## 0.2.0
+
+- Automatic device/app/OS metadata attached to every report
+  (`DeviceMetadataCollector`, opt out with `collectDeviceInfo: false`).
+- `WiseFeedbackNavigatorObserver` attaches a breadcrumb of recent routes. It
+  extends auto_route's `AutoRouterObserver`, so tab switches (bottom bar taps)
+  are recorded too.
+- Reporter identity via the `reporter` builder; custom fields via
+  `metadataBuilder`.
+- Optional priority (mapped to Linear's `priority`) and category selectors in
+  the form.
+- The Linear transports render a `## Context` section (reporter, category,
+  priority, environment, recent screens); the proxy transport forwards the new
+  fields.
+
 ## 0.1.0
 
 - Initial release.
