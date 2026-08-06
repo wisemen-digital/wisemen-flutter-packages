@@ -19,19 +19,18 @@ void main() {
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageRouteBuilder on Android without currentRoute', (
+  testWidgets('Returns MaterialPageRoute on Android without currentRoute', (
     tester,
   ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
     final route = platformRoute<dynamic>(route: testWidget);
-    expect(route, isA<PageRouteBuilder<dynamic>>());
-    expect((route as PageRouteBuilder).opaque, isFalse);
+    expect(route, isA<MaterialPageRoute<dynamic>>());
 
     debugDefaultTargetPlatformOverride = null;
   });
 
-  testWidgets('Returns PageRouteBuilder on Android with currentRoute', (
+  testWidgets('Returns MaterialPageRoute on Android with currentRoute', (
     tester,
   ) async {
     debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -40,8 +39,7 @@ void main() {
       route: testWidget,
       currentRoute: currentWidget,
     );
-    expect(route, isA<PageRouteBuilder<dynamic>>());
-    expect((route as PageRouteBuilder).opaque, isFalse);
+    expect(route, isA<MaterialPageRoute<dynamic>>());
 
     debugDefaultTargetPlatformOverride = null;
   });
