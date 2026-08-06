@@ -16,15 +16,13 @@ dependencies:
   auto_route: ">=11.0.0 <12.0.0"
   # Screenshot capture + feedback overlay
   feedback: ">=3.2.0 <4.0.0"
-  # Date formatting in issue templates + generated localizations
+  # Date formatting in issue templates
   intl: ">=0.20.2 <1.0.0"
   # Transport HTTP + GraphQL-over-HTTP
   http: ">=1.2.0 <2.0.0"
   # Automatic report metadata
   device_info_plus: ">=11.0.0 <14.0.0"
   package_info_plus: ">=8.0.0 <11.0.0"
-  flutter_localizations:
-    sdk: flutter
 
 dev_dependencies:
   # Static analysis & linting
@@ -33,11 +31,3 @@ dev_dependencies:
   # Testing
   flutter_test:
     sdk: flutter
-  intl_utils: ^2.8.14
-
-flutter_intl:
-  enabled: true
-  class_name: WiseFeedbackLocalizations
-  main_locale: en
-  arb_dir: lib/l10n
-  output_dir: lib/generated

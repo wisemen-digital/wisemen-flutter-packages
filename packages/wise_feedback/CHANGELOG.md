@@ -7,6 +7,11 @@
 - Localized the built-in form and toasts in **English, Dutch and French**. The
   feedback UI follows the device locale by default; override with the new
   `WiseFeedback(locale: ...)`. Issue bodies sent to the tracker stay English.
+- Wording is a `WiseFeedbackStrings` implementation — plain getters, no
+  generated code and no localization delegate. `WiseFeedbackStringsEn`, `...Nl`
+  and `...Fr` ship with the package; extend one and register it with
+  `WiseFeedback(strings: {locale: yourStrings})` to add a language or reword a
+  shipped one.
 - `WiseFeedbackTheme` is now visual-only: the text fields (`sheetTitle`,
   `titleHint`, `descriptionHint`, `submitLabel`, `priorityLabel`, `categoryLabel`,
   `successMessage`, `genericErrorMessage`) were removed; wording now comes from

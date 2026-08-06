@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wise_feedback/generated/l10n.dart';
-
+import '../l10n/wise_feedback_strings.dart';
 import '../models/feedback_exception.dart';
 import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
@@ -28,6 +27,7 @@ class FeedbackForm extends StatefulWidget {
   const FeedbackForm({
     required this.onSubmit,
     required this.theme,
+    required this.strings,
     required this.status,
     required this.fields,
     this.onClose,
@@ -45,6 +45,9 @@ class FeedbackForm extends StatefulWidget {
 
   /// Visual configuration.
   final WiseFeedbackTheme theme;
+
+  /// Wording for the form and its messages.
+  final WiseFeedbackStrings strings;
 
   /// Submission state used to show progress and disable the button.
   final ValueListenable<FeedbackStatus> status;
@@ -100,7 +103,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
-    final l10n = WiseFeedbackLocalizations.of(context);
+    final strings = widget.strings;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return ColoredBox(
       color: theme.backgroundColor,
@@ -114,7 +117,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
             FeedbackSheetGrabber(theme: theme),
             FeedbackFormHeader(
               theme: theme,
-              title: l10n.sheetTitle,
+              title: strings.sheetTitle,
               status: widget.status,
               onClose: widget.onClose,
               onSubmit: _submit,
@@ -127,7 +130,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                 children: [
                   FeedbackLabeledField(
                     theme: theme,
-                    label: l10n.titleFieldLabel,
+                    label: strings.titleFieldLabel,
                     child: FeedbackTextInput(
                       theme: theme,
                       controller: _titleController,
@@ -138,7 +141,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     FeedbackLabeledField(
                       theme: theme,
-                      label: _fieldLabel(field, l10n),
+                      label: _fieldLabel(field, strings),
                       child: FeedbackTextInput(
                         theme: theme,
                         controller: _fieldControllers[field.key]!,
@@ -152,14 +155,14 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     FeedbackLabeledField(
                       theme: theme,
-                      label: l10n.priorityLabel,
+                      label: strings.priorityLabel,
                       child: FeedbackDropdown<FeedbackPriority>(
                         theme: theme,
                         value: _priority,
                         fieldKey: const Key('wise_feedback_priority'),
                         items: {
                           for (final priority in FeedbackPriority.values)
-                            priority: _priorityLabel(priority, l10n),
+                            priority: _priorityLabel(priority, strings),
                         },
                         onChanged: (value) => setState(
                           () => _priority = value ?? FeedbackPriority.none,
@@ -171,12 +174,12 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     const SizedBox(height: 16),
                     FeedbackLabeledField(
                       theme: theme,
-                      label: l10n.categoryLabel,
+                      label: strings.categoryLabel,
                       child: FeedbackDropdown<String>(
                         theme: theme,
                         value: _category,
                         fieldKey: const Key('wise_feedback_category'),
-                        hint: l10n.categoryLabel,
+                        hint: strings.categoryLabel,
                         items: {for (final c in categories) c: c},
                         onChanged: (value) => setState(() => _category = value),
                       ),
@@ -187,7 +190,7 @@ class _FeedbackFormState extends State<FeedbackForm> {
                     builder: (context, status, _) => status is FeedbackFailure
                         ? FeedbackErrorMessage(
                             theme: theme,
-                            message: _errorMessage(status.error, l10n),
+                            message: _errorMessage(status.error, strings),
                           )
                         : const SizedBox.shrink(),
                   ),
@@ -203,23 +206,23 @@ class _FeedbackFormState extends State<FeedbackForm> {
 
 /// The message shown for a failed submission: the exception's own text when it
 /// carries one, otherwise the localized fallback.
-String _errorMessage(Object error, WiseFeedbackLocalizations l10n) =>
-    error is FeedbackException ? error.message : l10n.genericError;
+String _errorMessage(Object error, WiseFeedbackStrings strings) =>
+    error is FeedbackException ? error.message : strings.genericError;
 
 /// Resolves the display label for [field]: an explicit label wins, otherwise a
 /// localized default for known built-in keys, otherwise the raw key.
-String _fieldLabel(FeedbackField field, WiseFeedbackLocalizations l10n) {
+String _fieldLabel(FeedbackField field, WiseFeedbackStrings strings) {
   final explicit = field.label;
   if (explicit != null) {
     return explicit;
   }
   switch (field.key) {
     case 'description':
-      return l10n.fieldDescription;
+      return strings.fieldDescription;
     case 'currentSituation':
-      return l10n.fieldCurrentSituation;
+      return strings.fieldCurrentSituation;
     case 'desiredSituation':
-      return l10n.fieldDesiredSituation;
+      return strings.fieldDesiredSituation;
     default:
       return field.key;
   }
@@ -229,18 +232,18 @@ String _fieldLabel(FeedbackField field, WiseFeedbackLocalizations l10n) {
 /// the issue body uses [FeedbackPriority.label], which stays English).
 String _priorityLabel(
   FeedbackPriority priority,
-  WiseFeedbackLocalizations l10n,
+  WiseFeedbackStrings strings,
 ) {
   switch (priority) {
     case FeedbackPriority.none:
-      return l10n.priorityNone;
+      return strings.priorityNone;
     case FeedbackPriority.urgent:
-      return l10n.priorityUrgent;
+      return strings.priorityUrgent;
     case FeedbackPriority.high:
-      return l10n.priorityHigh;
+      return strings.priorityHigh;
     case FeedbackPriority.medium:
-      return l10n.priorityMedium;
+      return strings.priorityMedium;
     case FeedbackPriority.low:
-      return l10n.priorityLow;
+      return strings.priorityLow;
   }
 }

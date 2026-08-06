@@ -1,7 +1,6 @@
 analyzer:
   exclude:
     - packages/sandbox/**
-    - packages/wise_feedback/lib/generated/**
 
   language:
     strict-casts: true

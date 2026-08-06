@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
-import 'package:wise_feedback/generated/l10n.dart';
-
 import '../controller/feedback_controller.dart';
+import '../l10n/wise_feedback_strings.dart';
 import '../metadata/metadata_collector.dart';
 import '../metadata/wise_feedback_navigator_observer.dart';
 import '../models/feedback_exception.dart';
@@ -48,6 +47,7 @@ class WiseFeedback extends StatefulWidget {
     this.categories,
     this.template = const DefaultFeedbackTemplate(),
     this.locale,
+    this.strings = const {},
     super.key,
   });
 
@@ -102,14 +102,25 @@ class WiseFeedback extends StatefulWidget {
   final FeedbackTemplate template;
 
   /// Overrides the locale of the feedback UI (form + toasts). When null, the
-  /// feedback UI follows the device locale. Localized in en/nl/fr.
+  /// feedback UI follows the device locale. Ships en/nl/fr.
   final Locale? locale;
+
+  /// Extra or replacement wording, keyed by the locale it applies to.
+  ///
+  /// Takes precedence over the built-in translations, so an entry for a shipped
+  /// locale rewords it and an entry for any other locale adds it:
+  ///
+  /// ```dart
+  /// WiseFeedback(strings: {const Locale('de'): GermanFeedbackStrings()})
+  /// ```
+  final Map<Locale, WiseFeedbackStrings> strings;
 
   @override
   State<WiseFeedback> createState() => _WiseFeedbackState();
 }
 
-class _WiseFeedbackState extends State<WiseFeedback> {
+class _WiseFeedbackState extends State<WiseFeedback>
+    with WidgetsBindingObserver {
   late final FeedbackController _controller = FeedbackController(
     widget.transport,
   );
@@ -124,12 +135,25 @@ class _WiseFeedbackState extends State<WiseFeedback> {
   void initState() {
     super.initState();
     _controller.addListener(_notifyStatus);
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  /// The feedback layer sits above `MaterialApp`, so there is no `Localizations`
+  /// ancestor to read: the device locale comes from the platform directly, and
+  /// this rebuilds when the user changes it in system settings.
+  @override
+  void didChangeLocales(List<Locale>? locales) => setState(() {});
+
+  WiseFeedbackStrings get _strings => WiseFeedbackStrings.resolve(
+    widget.locale ?? WidgetsBinding.instance.platformDispatcher.locale,
+    overrides: widget.strings,
+  );
 
   void _notifyStatus() => widget.onStatusChanged?.call(_controller.value);
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _feedbackNotifier?.removeListener(_syncVisibility);
     _toasts.dispose();
     _controller.dispose();
@@ -259,7 +283,7 @@ class _WiseFeedbackState extends State<WiseFeedback> {
     OnSubmit packageOnSubmit,
     Map<String, dynamic> values,
   ) async {
-    final l10n = WiseFeedbackLocalizations.of(_overlayContext!);
+    final strings = _strings;
     try {
       // The feedback package's own signature wants a text payload, but all of
       // our content travels in `extras` and is read back off `UserFeedback.extra`
@@ -267,14 +291,14 @@ class _WiseFeedbackState extends State<WiseFeedback> {
       await packageOnSubmit('', extras: values);
       _toasts.show(
         _overlayContext,
-        l10n.successMessage,
+        strings.successMessage,
         isError: false,
         theme: widget.theme,
       );
     } catch (error) {
       final message = error is FeedbackException
           ? error.message
-          : l10n.genericError;
+          : strings.genericError;
       _toasts.show(
         _overlayContext,
         message,
@@ -288,9 +312,9 @@ class _WiseFeedbackState extends State<WiseFeedback> {
   Widget build(BuildContext context) {
     return BetterFeedback(
       localeOverride: widget.locale,
-      localizationsDelegates: const [WiseFeedbackLocalizations.delegate],
       feedbackBuilder: (context, onSubmit, scrollController) => FeedbackForm(
         theme: widget.theme,
+        strings: _strings,
         status: _controller,
         scrollController: scrollController,
         fields: widget.template.fields,

@@ -40,6 +40,16 @@ to the root file, so a package-local file containing only
 generated code, add the path to the root file's `analyzer.exclude` list next to
 `packages/sandbox/**`, keeping exclusions in one place.
 
+**No generated code, and no `intl_utils` localization.** Apps here localize with
+ARB files and generated `l10n.dart` — packages do not. Ship user-facing text as
+an abstract class of plain getters with one implementation per language, the way
+a package ships a theme class, and let the consumer register their own against a
+locale. That keeps the package free of a build step, a `flutter_intl` pubspec
+block, a `flutter_localizations` dependency, a `LocalizationsDelegate` the
+consumer has to install, and an `analyzer.exclude` entry for the output.
+`wise_feedback`'s `WiseFeedbackStrings` is the reference. Reach for generated
+code in a package only when hand-writing genuinely does not make sense.
+
 **.github/package-filters.yaml** — add an entry listing only the package's own
 path:
 

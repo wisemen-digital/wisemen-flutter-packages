@@ -63,9 +63,9 @@ WiseFeedback(
 
 ## Localization
 
-The built-in form and its success/error toasts are localized in **English,
-Dutch and French**. The feedback UI follows the **device** locale automatically —
-no setup required. To force a locale, pass `locale`:
+The built-in form and its toasts ship in **English, Dutch and French** and follow
+the **device** locale automatically — no delegates, no generated code, nothing to
+add to your `MaterialApp`. To force a locale, pass `locale`:
 
 ```dart
 WiseFeedback(
@@ -74,6 +74,32 @@ WiseFeedback(
   child: MyApp(),
 );
 ```
+
+Wording lives in `WiseFeedbackStrings`, an abstract class of plain getters —
+the same shape as `WiseFeedbackTheme`, but for text. The package ships
+`WiseFeedbackStringsEn`, `WiseFeedbackStringsNl` and `WiseFeedbackStringsFr`.
+Extend any of them to add a language or reword a shipped one, and register it
+against the locale it serves:
+
+```dart
+class GermanFeedbackStrings extends WiseFeedbackStringsEn {
+  const GermanFeedbackStrings();
+
+  @override
+  String get sheetTitle => 'Fehler melden';
+  // Anything you don't override falls back to the class you extend.
+}
+
+WiseFeedback(
+  transport: ...,
+  strings: {const Locale('de'): const GermanFeedbackStrings()},
+  child: MyApp(),
+);
+```
+
+Entries in `strings` beat the built-ins, so an entry for `nl` rewords Dutch and
+an entry for `de` adds German. Lookup tries the full locale first, then its
+language code — `Locale('nl')` covers `nl_BE` — and falls back to English.
 
 Notes:
 - The **issue body** sent to your tracker stays in English regardless of locale,
@@ -84,6 +110,9 @@ Notes:
   the **device's** locale — not your app's in-app language switcher. If users
   can switch language without changing the device locale, forward that choice
   via `WiseFeedback(locale: appLocale)`.
+- The screenshot-annotation step comes from the `feedback` package and carries
+  its own translations; it falls back to English for locales it doesn't ship
+  (Dutch among them), independently of `strings`.
 
 ## Issue templates
 
