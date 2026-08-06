@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
 
 import '../models/paged_error_test.dart';
@@ -73,6 +74,10 @@ void main() {
     Widget Function(BuildContext, int, int)? itemBuilder,
     Widget Function(BuildContext, int)? separatorBuilder,
     Widget Function(BuildContext, void Function())? errorBuilder,
+    int? shimmerItem,
+    int pageSize = 25,
+    Color? shimmerColor,
+    Color? shimmerHighlightColor,
   }) {
     return MaterialApp(
       home: Scaffold(
@@ -96,6 +101,10 @@ void main() {
                 child: const Text('Retry'),
               ),
           separatorBuilder: separatorBuilder,
+          shimmerItem: shimmerItem,
+          pageSize: pageSize,
+          shimmerColor: shimmerColor,
+          shimmerHighlightColor: shimmerHighlightColor,
         ),
       ),
     );
@@ -188,4 +197,83 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsNothing);
     },
   );
+
+  testWidgets(
+    'shows shimmer placeholders instead of the circular indicator when '
+    'shimmerItem is set',
+    (tester) async {
+      final forwardController = LoadingController(
+        initialData: TestPaginationMeta.firstPage,
+      );
+
+      unawaited(forwardController.refresh());
+      await tester.pumpWidget(
+        buildBiDirectionalPagedList(
+          forwardItems: const [],
+          forwardController: forwardController,
+          shimmerItem: 0,
+          pageSize: 3,
+        ),
+      );
+
+      expect(find.byType(Shimmer), findsNWidgets(3));
+      expect(find.text('Item 0'), findsNWidgets(3));
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+
+      // Let the pending fetch resolve so no timers remain after the test.
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+    },
+  );
+
+  testWidgets('applies the given shimmerColor and shimmerHighlightColor', (
+    tester,
+  ) async {
+    final forwardController = LoadingController(
+      initialData: TestPaginationMeta.firstPage,
+    );
+
+    unawaited(forwardController.refresh());
+    await tester.pumpWidget(
+      buildBiDirectionalPagedList(
+        forwardItems: const [],
+        forwardController: forwardController,
+        shimmerItem: 0,
+        pageSize: 1,
+        shimmerColor: Colors.red,
+        shimmerHighlightColor: Colors.blue,
+      ),
+    );
+
+    final shimmer = tester.widget<Shimmer>(find.byType(Shimmer));
+    expect(shimmer.gradient.colors, contains(Colors.red));
+    expect(shimmer.gradient.colors, contains(Colors.blue));
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('renders separatorBuilder between shimmer placeholders', (
+    tester,
+  ) async {
+    final forwardController = LoadingController(
+      initialData: TestPaginationMeta.firstPage,
+    );
+
+    unawaited(forwardController.refresh());
+    await tester.pumpWidget(
+      buildBiDirectionalPagedList(
+        forwardItems: const [],
+        forwardController: forwardController,
+        shimmerItem: 0,
+        pageSize: 3,
+        separatorBuilder: (context, index) => const Divider(),
+      ),
+    );
+
+    expect(find.byType(Divider), findsNWidgets(3));
+
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pumpAndSettle();
+  });
 }
