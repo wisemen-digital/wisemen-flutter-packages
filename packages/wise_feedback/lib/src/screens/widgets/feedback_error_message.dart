@@ -14,7 +14,7 @@ class FeedbackErrorMessage extends StatelessWidget {
   /// Visual configuration.
   final WiseFeedbackTheme theme;
 
-  /// Human-readable failure text.
+  /// Failure text.
   final String message;
 
   @override
