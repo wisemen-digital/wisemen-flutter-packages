@@ -46,6 +46,37 @@ lib/features/
         └── [item]_card.dart          # Card widget
 ```
 
+## One Widget Per File
+
+Every widget class gets its own file — **including the ones only a single screen
+uses**. A screen file should contain the screen and nothing else. Private
+`_Header` / `_LabeledField` classes appended below it, and `Widget _input(...)`
+builder methods inside its `State`, both belong in files of their own.
+
+Dart privacy is per *library*, so a widget cannot stay `_`-prefixed once it moves
+out — give it a real name and export it from the barrel. Don't reach for
+`part` / `part of` to preserve the underscore; no hand-written code in this repo
+does.
+
+```dart
+// DON'T — one file holding the screen, its sub-widgets and its builders
+// feedback_form.dart
+class FeedbackForm extends StatefulWidget { … }        // 200 lines
+class _Header extends StatelessWidget { … }            // + 60
+class _LabeledField extends StatelessWidget { … }      // + 40
+Widget _input(WiseFeedbackTheme theme, …) => TextField(…);   // + 30
+
+// DO — one widget per file, named, exported
+// feedback_form.dart          → FeedbackForm
+// feedback_form_header.dart   → FeedbackFormHeader
+// labeled_field.dart          → LabeledField
+// feedback_text_field.dart    → FeedbackTextField
+```
+
+A builder method that returns a widget is a widget wearing a disguise: it can't
+be `const`, doesn't get its own element, and can't be tested on its own. Promote
+it rather than growing it.
+
 ## Widget API Design
 
 How a widget exposes itself matters as much as what it renders.
@@ -471,3 +502,6 @@ export 'text_field.dart';
 15. **Scope MediaQuery reads** — Use the property accessor for what you read (`MediaQuery.sizeOf`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf`, `.textScalerOf`), not `MediaQuery.of(context)`, which rebuilds the widget on *every* metric change
 16. **Widgets take a `child`, not a builder function** — See "Widget API Design"; expose composition through a `child`, and own state locally rather than via `.of(context)` scope lookups
 17. **Use the named `SizedBox` constructors** — `SizedBox.square(dimension: 20)` when width and height match, `SizedBox.shrink()` for an empty slot, `SizedBox.expand()` to fill. They state the intent that `SizedBox(height: 20, width: 20)` only implies
+18. **One widget per file** — including single-use sub-widgets and `Widget _build…()` methods; see "One Widget Per File"
+19. **Go directional on any horizontal edge** — `EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0)` over `EdgeInsets.fromLTRB`, `AlignmentDirectional` over `Alignment`, `BorderRadiusDirectional` over `BorderRadius`, and `start`/`end` over `left`/`right`. The non-directional forms hardcode left-to-right and silently mirror wrong in RTL locales. Purely vertical insets (`EdgeInsets.only(bottom: …)`, `symmetric(vertical: …)`) have no handedness — leave those alone
+20. **Don't hand-tune font metrics** — take text styles from the theme (`context.title`, `context.normal`, `context.label`). A `letterSpacing` or line-height lifted off a design file is calibrated to *that file's* typeface; applying it while leaving `fontFamily` unset pins a negative tracking value onto whatever font the platform happens to supply. If a design genuinely needs its own tracking, set the family it was designed for in the same `TextStyle`

@@ -47,6 +47,7 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Give void, side-effecting methods a block body (`{ … }`), not `=>`. An arrow returns its expression, so `void f() => _x = v;` silently returns the assigned value into `void` — a statement body reads as "does", not "returns"
 - Keep navigation out of state holders. A notifier or controller owns *state*; opening a sheet, pushing a route or showing a dialog is the widget's job — call it from `onPressed`. A `bindShow(callback)` / `setHandler(callback)` setter on a controller is the smell: it exists only so something else can trigger UI later, and it buys nothing over calling that code directly
 - Don't ship placeholder tests. A scaffolding test like `expect(1 + 1, 2)` proves nothing once real tests exist — delete it. It inflates the test count and hides the fact that a file, or a whole package, is untested
+- Don't narrate the code in comments. A comment that walks through what the widget tree contains, or restates the call it sits above, is deleted in review — the reader can see the code. Comment the things the code *can't* say: why a workaround exists, which upstream bug or API contract forces an odd shape, why a value that looks wrong is deliberate. Doc comments (`///`) on public API are the exception and stay
 
 ### Naming Conventions
 

@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 /// A [NavigatorObserver] that records a breadcrumb of recently visited routes.
 ///
 /// Add it to your app's `navigatorObservers` and pass the same instance to
-/// `LinearFeedback(navigatorObserver: ...)`. The trail is attached to reports
+/// `WiseFeedback(navigatorObserver: ...)`. The trail is attached to reports
 /// so triagers can see where the user was.
 ///
 /// It extends auto_route's [AutoRouterObserver], so tab switches (bottom bar

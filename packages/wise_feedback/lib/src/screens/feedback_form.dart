@@ -1,16 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import '../l10n/wise_feedback_strings.dart';
+import '../models/feedback_exception.dart';
 import '../models/feedback_priority.dart';
 import '../models/feedback_status.dart';
 import '../template/feedback_field.dart';
 import '../theme/wise_feedback_theme.dart';
-
-/// Wisemen accent used for the submit button.
-const Color _kAccent = Color(0xFF009687);
-
-/// Icon and text color of the inline submission error.
-const Color _kErrorColor = Color(0xFFD32F2F);
+import 'widgets/widgets.dart';
 
 /// Callback invoked when the user submits the form.
 ///
@@ -24,15 +20,17 @@ const Color _kErrorColor = Color(0xFFD32F2F);
 /// [FeedbackFailure] it stays open and shows the error inline.
 typedef FeedbackFormSubmit = Future<void> Function(Map<String, dynamic> values);
 
-/// The built-in feedback form: a title, the template's fields, and optional
-/// priority/category selectors.
+/// The built-in feedback form: a header with close/submit actions, the
+/// template's labelled fields, and optional priority/category selectors.
 class FeedbackForm extends StatefulWidget {
   /// Creates the form.
   const FeedbackForm({
     required this.onSubmit,
     required this.theme,
+    required this.strings,
     required this.status,
     required this.fields,
+    this.onClose,
     this.scrollController,
     this.showPriority = false,
     this.categories,
@@ -42,8 +40,14 @@ class FeedbackForm extends StatefulWidget {
   /// Called with the field values (in extras) on submit.
   final FeedbackFormSubmit onSubmit;
 
+  /// Dismisses the sheet without submitting (the header close button).
+  final VoidCallback? onClose;
+
   /// Visual configuration.
   final WiseFeedbackTheme theme;
+
+  /// Wording for the form and its messages.
+  final WiseFeedbackStrings strings;
 
   /// Submission state used to show progress and disable the button.
   final ValueListenable<FeedbackStatus> status;
@@ -99,125 +103,147 @@ class _FeedbackFormState extends State<FeedbackForm> {
   @override
   Widget build(BuildContext context) {
     final theme = widget.theme;
-    final bottomInset =
-        MediaQuery.viewInsetsOf(context).bottom +
-        MediaQuery.viewPaddingOf(context).bottom;
+    final strings = widget.strings;
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return ColoredBox(
       color: theme.backgroundColor,
       child: SingleChildScrollView(
         controller: widget.scrollController,
-        padding: const EdgeInsets.all(16).copyWith(bottom: 16 + bottomInset),
-        child: ValueListenableBuilder<FeedbackStatus>(
-          valueListenable: widget.status,
-          builder: (context, status, _) {
-            final errorText = status is FeedbackFailure
-                ? theme.messageForError(status.error)
-                : null;
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              spacing: 12,
-              children: [
-                TextField(
-                  key: const Key('wise_feedback_title'),
-                  controller: _titleController,
-                  textCapitalization: TextCapitalization.sentences,
-                  decoration: InputDecoration(
-                    labelText: theme.titleHint,
-                    border: const OutlineInputBorder(),
-                  ),
-                ),
-                for (final field in widget.fields)
-                  TextField(
-                    key: Key('wise_feedback_field_${field.key}'),
-                    controller: _fieldControllers[field.key],
-                    textCapitalization: TextCapitalization.sentences,
-                    minLines: field.minLines,
-                    maxLines: field.maxLines,
-                    decoration: InputDecoration(
-                      labelText: field.label,
-                      border: const OutlineInputBorder(),
-                      alignLabelWithHint: true,
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.only(bottom: 16 + bottomInset),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            FeedbackSheetGrabber(theme: theme),
+            FeedbackFormHeader(
+              theme: theme,
+              title: strings.sheetTitle,
+              status: widget.status,
+              onClose: widget.onClose,
+              onSubmit: _submit,
+            ),
+            Padding(
+              padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  FeedbackLabeledField(
+                    theme: theme,
+                    label: strings.titleFieldLabel,
+                    child: FeedbackTextInput(
+                      theme: theme,
+                      controller: _titleController,
+                      fieldKey: const Key('wise_feedback_title'),
                     ),
                   ),
-                if (widget.showPriority)
-                  DropdownButtonFormField<FeedbackPriority>(
-                    key: const Key('wise_feedback_priority'),
-                    initialValue: _priority,
-                    decoration: InputDecoration(
-                      labelText: theme.priorityLabel,
-                      border: const OutlineInputBorder(),
-                    ),
-                    items: [
-                      for (final priority in FeedbackPriority.values)
-                        DropdownMenuItem(
-                          value: priority,
-                          child: Text(priority.label),
-                        ),
-                    ],
-                    onChanged: (value) => setState(
-                      () => _priority = value ?? FeedbackPriority.none,
-                    ),
-                  ),
-                if (widget.categories case final List<String> categories)
-                  DropdownButtonFormField<String>(
-                    key: const Key('wise_feedback_category'),
-                    initialValue: _category,
-                    decoration: InputDecoration(
-                      labelText: theme.categoryLabel,
-                      border: const OutlineInputBorder(),
-                    ),
-                    items: [
-                      for (final category in categories)
-                        DropdownMenuItem(
-                          value: category,
-                          child: Text(category),
-                        ),
-                    ],
-                    onChanged: (value) => setState(() => _category = value),
-                  ),
-                if (errorText != null)
-                  Row(
-                    key: const Key('wise_feedback_error'),
-                    spacing: 8,
-                    children: [
-                      const Icon(
-                        Icons.error_outline,
-                        color: _kErrorColor,
-                        size: 18,
+                  for (final field in widget.fields) ...[
+                    const SizedBox(height: 16),
+                    FeedbackLabeledField(
+                      theme: theme,
+                      label: _fieldLabel(field, strings),
+                      child: FeedbackTextInput(
+                        theme: theme,
+                        controller: _fieldControllers[field.key]!,
+                        minLines: field.minLines,
+                        maxLines: field.maxLines,
+                        fieldKey: Key('wise_feedback_field_${field.key}'),
                       ),
-                      Expanded(
-                        child: Text(
-                          errorText,
-                          style: const TextStyle(color: _kErrorColor),
+                    ),
+                  ],
+                  if (widget.showPriority) ...[
+                    const SizedBox(height: 16),
+                    FeedbackLabeledField(
+                      theme: theme,
+                      label: strings.priorityLabel,
+                      child: FeedbackDropdown<FeedbackPriority>(
+                        theme: theme,
+                        value: _priority,
+                        fieldKey: const Key('wise_feedback_priority'),
+                        items: {
+                          for (final priority in FeedbackPriority.values)
+                            priority: _priorityLabel(priority, strings),
+                        },
+                        onChanged: (value) => setState(
+                          () => _priority = value ?? FeedbackPriority.none,
                         ),
                       ),
-                    ],
-                  ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: FilledButton(
-                    key: const Key('wise_feedback_submit'),
-                    style: FilledButton.styleFrom(
-                      backgroundColor: _kAccent,
                     ),
-                    onPressed: status.isSubmitting ? null : _submit,
-                    child: status.isSubmitting
-                        ? const SizedBox.square(
-                            dimension: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
+                  ],
+                  if (widget.categories case final List<String> categories) ...[
+                    const SizedBox(height: 16),
+                    FeedbackLabeledField(
+                      theme: theme,
+                      label: strings.categoryLabel,
+                      child: FeedbackDropdown<String>(
+                        theme: theme,
+                        value: _category,
+                        fieldKey: const Key('wise_feedback_category'),
+                        hint: strings.categoryLabel,
+                        items: {for (final c in categories) c: c},
+                        onChanged: (value) => setState(() => _category = value),
+                      ),
+                    ),
+                  ],
+                  ValueListenableBuilder<FeedbackStatus>(
+                    valueListenable: widget.status,
+                    builder: (context, status, _) => status is FeedbackFailure
+                        ? FeedbackErrorMessage(
+                            theme: theme,
+                            message: _errorMessage(status.error, strings),
                           )
-                        : Text(theme.submitLabel),
+                        : const SizedBox.shrink(),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
+  }
+}
+
+/// The message shown for a failed submission: the exception's own text when it
+/// carries one, otherwise the localized fallback.
+String _errorMessage(Object error, WiseFeedbackStrings strings) =>
+    error is FeedbackException ? error.message : strings.genericError;
+
+/// Resolves the display label for [field]: an explicit label wins, otherwise a
+/// localized default for known built-in keys, otherwise the raw key.
+String _fieldLabel(FeedbackField field, WiseFeedbackStrings strings) {
+  final explicit = field.label;
+  if (explicit != null) {
+    return explicit;
+  }
+  switch (field.key) {
+    case 'description':
+      return strings.fieldDescription;
+    case 'currentSituation':
+      return strings.fieldCurrentSituation;
+    case 'desiredSituation':
+      return strings.fieldDesiredSituation;
+    default:
+      return field.key;
+  }
+}
+
+/// The localized display name for a priority option (the form selector only;
+/// the issue body uses [FeedbackPriority.label], which stays English).
+String _priorityLabel(
+  FeedbackPriority priority,
+  WiseFeedbackStrings strings,
+) {
+  switch (priority) {
+    case FeedbackPriority.none:
+      return strings.priorityNone;
+    case FeedbackPriority.urgent:
+      return strings.priorityUrgent;
+    case FeedbackPriority.high:
+      return strings.priorityHigh;
+    case FeedbackPriority.medium:
+      return strings.priorityMedium;
+    case FeedbackPriority.low:
+      return strings.priorityLow;
   }
 }

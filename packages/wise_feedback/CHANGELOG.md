@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.5.0
+
+- Renamed the entry widget `LinearFeedback` → `WiseFeedback` (the transport was
+  already pluggable; the widget name no longer implies Linear).
+- Localized the built-in form and toasts in **English, Dutch and French**. The
+  feedback UI follows the device locale by default; override with the new
+  `WiseFeedback(locale: ...)`. Issue bodies sent to the tracker stay English.
+- Wording is a `WiseFeedbackStrings` implementation — plain getters, no
+  generated code and no localization delegate. `WiseFeedbackStringsEn`, `...Nl`
+  and `...Fr` ship with the package; extend one and register it with
+  `WiseFeedback(strings: {locale: yourStrings})` to add a language or reword a
+  shipped one.
+- `WiseFeedbackTheme` is now visual-only: the text fields (`sheetTitle`,
+  `titleHint`, `descriptionHint`, `submitLabel`, `priorityLabel`, `categoryLabel`,
+  `successMessage`, `genericErrorMessage`) were removed; wording now comes from
+  localization.
+- `FeedbackField.label` is now optional; built-in template fields resolve a
+  localized label, and consumers provide labels (and translations) for their own
+  custom fields.
+
+## 0.4.0
+
+- Modernized form UI (Crispy design): a header with circular close/submit
+  actions, labelled inputs in soft-bordered 16px-radius boxes, and an indigo
+  brand accent. All colors, radius and labels are themeable via
+  `WiseFeedbackTheme`.
+- Added a drag handle (grabber) and made the whole form surface (grabber,
+  header, fields) drag the sheet.
+
 ## 0.3.0
 
 - Configurable issue templates via `FeedbackTemplate`: the template defines the

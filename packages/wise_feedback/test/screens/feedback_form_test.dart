@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wise_feedback/wise_feedback.dart';
 
+import '../support/test_app.dart';
+
 const _fields = [FeedbackField(key: 'description', label: 'Description')];
 
 void main() {
@@ -13,16 +15,15 @@ void main() {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FeedbackForm(
-              theme: const WiseFeedbackTheme(),
-              status: status,
-              fields: _fields,
-              onSubmit: (values) async {
-                gotValues = values;
-              },
-            ),
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            onSubmit: (values) async {
+              gotValues = values;
+            },
           ),
         ),
       );
@@ -46,14 +47,13 @@ void main() {
     testWidgets('shows a progress indicator while submitting', (tester) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackSubmitting());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FeedbackForm(
-              theme: const WiseFeedbackTheme(),
-              status: status,
-              fields: _fields,
-              onSubmit: (values) async {},
-            ),
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            onSubmit: (values) async {},
           ),
         ),
       );
@@ -65,14 +65,13 @@ void main() {
     ) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FeedbackForm(
-              theme: const WiseFeedbackTheme(),
-              status: status,
-              fields: _fields,
-              onSubmit: (values) async {},
-            ),
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            onSubmit: (values) async {},
           ),
         ),
       );
@@ -89,20 +88,47 @@ void main() {
       expect(find.byKey(const Key('wise_feedback_submit')), findsOneWidget);
     });
 
+    testWidgets('paints the inline error with the themed error color', (
+      tester,
+    ) async {
+      const customError = Color(0xFF00FF00);
+      final status = ValueNotifier<FeedbackStatus>(
+        const FeedbackFailure(FeedbackException('Could not send it.')),
+      );
+      await tester.pumpWidget(
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(errorColor: customError),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            onSubmit: (values) async {},
+          ),
+        ),
+      );
+
+      final icon = tester.widget<Icon>(
+        find.descendant(
+          of: find.byKey(const Key('wise_feedback_error')),
+          matching: find.byType(Icon),
+        ),
+      );
+      expect(icon.color, customError);
+    });
+
     testWidgets('renders a field per template field', (tester) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FeedbackForm(
-              theme: const WiseFeedbackTheme(),
-              status: status,
-              fields: const [
-                FeedbackField(key: 'currentSituation', label: 'Current'),
-                FeedbackField(key: 'desiredSituation', label: 'Desired'),
-              ],
-              onSubmit: (values) async {},
-            ),
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: const [
+              FeedbackField(key: 'currentSituation', label: 'Current'),
+              FeedbackField(key: 'desiredSituation', label: 'Desired'),
+            ],
+            onSubmit: (values) async {},
           ),
         ),
       );
@@ -123,18 +149,17 @@ void main() {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FeedbackForm(
-              theme: const WiseFeedbackTheme(),
-              status: status,
-              fields: _fields,
-              showPriority: true,
-              categories: const ['Bug', 'Idea'],
-              onSubmit: (values) async {
-                gotValues = values;
-              },
-            ),
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            showPriority: true,
+            categories: const ['Bug', 'Idea'],
+            onSubmit: (values) async {
+              gotValues = values;
+            },
           ),
         ),
       );
@@ -156,17 +181,40 @@ void main() {
       expect(gotValues?['category'], 'Idea');
     });
 
+    testWidgets('header shows the title and close button fires onClose', (
+      tester,
+    ) async {
+      var closed = 0;
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+      await tester.pumpWidget(
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            onClose: () => closed++,
+            onSubmit: (values) async {},
+          ),
+        ),
+      );
+
+      expect(find.text('Report a bug'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('wise_feedback_close')));
+      await tester.pump();
+      expect(closed, 1);
+    });
+
     testWidgets('hides priority and category by default', (tester) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: FeedbackForm(
-              theme: const WiseFeedbackTheme(),
-              status: status,
-              fields: _fields,
-              onSubmit: (values) async {},
-            ),
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsEn(),
+            status: status,
+            fields: _fields,
+            onSubmit: (values) async {},
           ),
         ),
       );
@@ -179,20 +227,19 @@ void main() {
     ) async {
       final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
       await tester.pumpWidget(
-        MaterialApp(
-          home: MediaQuery(
+        testApp(
+          child: MediaQuery(
             data: const MediaQueryData(
               viewInsets: EdgeInsets.only(bottom: 300),
             ),
-            child: Scaffold(
-              body: SizedBox(
-                height: 220,
-                child: FeedbackForm(
-                  theme: const WiseFeedbackTheme(),
-                  status: status,
-                  fields: _fields,
-                  onSubmit: (values) async {},
-                ),
+            child: SizedBox(
+              height: 220,
+              child: FeedbackForm(
+                theme: const WiseFeedbackTheme(),
+                strings: const WiseFeedbackStringsEn(),
+                status: status,
+                fields: _fields,
+                onSubmit: (values) async {},
               ),
             ),
           ),
@@ -201,6 +248,73 @@ void main() {
 
       expect(tester.takeException(), isNull);
       expect(find.byType(SingleChildScrollView), findsOneWidget);
+    });
+  });
+
+  group('wording comes from the supplied strings', () {
+    testWidgets('renders Dutch strings when given the Dutch implementation', (
+      tester,
+    ) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+      await tester.pumpWidget(
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsNl(),
+            status: status,
+            fields: const [FeedbackField(key: 'description')],
+            showPriority: true,
+            onSubmit: (values) async {},
+          ),
+        ),
+      );
+
+      expect(find.text('Een bug melden'), findsOneWidget); // sheet title
+      expect(find.text('Titel'), findsOneWidget); // title field label
+      expect(find.text('Omschrijving'), findsOneWidget); // built-in field label
+      expect(find.text('Prioriteit'), findsOneWidget); // priority label
+    });
+
+    testWidgets(
+      'renders French sheet title when given the French implementation',
+      (tester) async {
+        final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+        await tester.pumpWidget(
+          testApp(
+            child: FeedbackForm(
+              theme: const WiseFeedbackTheme(),
+              strings: const WiseFeedbackStringsFr(),
+              status: status,
+              fields: const [FeedbackField(key: 'description')],
+              onSubmit: (values) async {},
+            ),
+          ),
+        );
+
+        expect(find.text('Signaler un bug'), findsOneWidget);
+      },
+    );
+
+    testWidgets('explicit field label overrides the built-in default', (
+      tester,
+    ) async {
+      final status = ValueNotifier<FeedbackStatus>(const FeedbackIdle());
+      await tester.pumpWidget(
+        testApp(
+          child: FeedbackForm(
+            theme: const WiseFeedbackTheme(),
+            strings: const WiseFeedbackStringsNl(),
+            status: status,
+            fields: const [
+              FeedbackField(key: 'description', label: 'Mijn label'),
+            ],
+            onSubmit: (values) async {},
+          ),
+        ),
+      );
+
+      expect(find.text('Mijn label'), findsOneWidget);
+      expect(find.text('Omschrijving'), findsNothing);
     });
   });
 }

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:feedback/feedback.dart' hide FeedbackController;
 import 'package:flutter/material.dart';
-
 import '../controller/feedback_controller.dart';
+import '../l10n/wise_feedback_strings.dart';
 import '../metadata/metadata_collector.dart';
 import '../metadata/wise_feedback_navigator_observer.dart';
 import '../models/feedback_exception.dart';
@@ -29,9 +29,9 @@ typedef FeedbackMetadataBuilder = FutureOr<Map<String, String>> Function();
 /// Wraps [child] with the screenshot capture layer, overlays a built-in
 /// button (unless [showButton] is false), and files reports through
 /// [transport].
-class LinearFeedback extends StatefulWidget {
+class WiseFeedback extends StatefulWidget {
   /// Creates the wrapper.
-  const LinearFeedback({
+  const WiseFeedback({
     required this.transport,
     required this.child,
     this.theme = const WiseFeedbackTheme(),
@@ -46,6 +46,8 @@ class LinearFeedback extends StatefulWidget {
     this.showPriority = true,
     this.categories,
     this.template = const DefaultFeedbackTemplate(),
+    this.locale,
+    this.strings = const {},
     super.key,
   });
 
@@ -99,11 +101,26 @@ class LinearFeedback extends StatefulWidget {
   /// [FeedbackTemplate] for a structured layout.
   final FeedbackTemplate template;
 
+  /// Overrides the locale of the feedback UI (form + toasts). When null, the
+  /// feedback UI follows the device locale. Ships en/nl/fr.
+  final Locale? locale;
+
+  /// Extra or replacement wording, keyed by the locale it applies to.
+  ///
+  /// Takes precedence over the built-in translations, so an entry for a shipped
+  /// locale rewords it and an entry for any other locale adds it:
+  ///
+  /// ```dart
+  /// WiseFeedback(strings: {const Locale('de'): GermanFeedbackStrings()})
+  /// ```
+  final Map<Locale, WiseFeedbackStrings> strings;
+
   @override
-  State<LinearFeedback> createState() => _LinearFeedbackState();
+  State<WiseFeedback> createState() => _WiseFeedbackState();
 }
 
-class _LinearFeedbackState extends State<LinearFeedback> {
+class _WiseFeedbackState extends State<WiseFeedback>
+    with WidgetsBindingObserver {
   late final FeedbackController _controller = FeedbackController(
     widget.transport,
   );
@@ -118,12 +135,25 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   void initState() {
     super.initState();
     _controller.addListener(_notifyStatus);
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  /// The feedback layer sits above `MaterialApp`, so there is no `Localizations`
+  /// ancestor to read: the device locale comes from the platform directly, and
+  /// this rebuilds when the user changes it in system settings.
+  @override
+  void didChangeLocales(List<Locale>? locales) => setState(() {});
+
+  WiseFeedbackStrings get _strings => WiseFeedbackStrings.resolve(
+    widget.locale ?? WidgetsBinding.instance.platformDispatcher.locale,
+    overrides: widget.strings,
+  );
 
   void _notifyStatus() => widget.onStatusChanged?.call(_controller.value);
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _feedbackNotifier?.removeListener(_syncVisibility);
     _toasts.dispose();
     _controller.dispose();
@@ -253,6 +283,7 @@ class _LinearFeedbackState extends State<LinearFeedback> {
     OnSubmit packageOnSubmit,
     Map<String, dynamic> values,
   ) async {
+    final strings = _strings;
     try {
       // The feedback package's own signature wants a text payload, but all of
       // our content travels in `extras` and is read back off `UserFeedback.extra`
@@ -260,14 +291,19 @@ class _LinearFeedbackState extends State<LinearFeedback> {
       await packageOnSubmit('', extras: values);
       _toasts.show(
         _overlayContext,
-        widget.theme.successMessage,
+        strings.successMessage,
         isError: false,
+        theme: widget.theme,
       );
     } catch (error) {
+      final message = error is FeedbackException
+          ? error.message
+          : strings.genericError;
       _toasts.show(
         _overlayContext,
-        widget.theme.messageForError(error),
+        message,
         isError: true,
+        theme: widget.theme,
       );
     }
   }
@@ -275,13 +311,16 @@ class _LinearFeedbackState extends State<LinearFeedback> {
   @override
   Widget build(BuildContext context) {
     return BetterFeedback(
+      localeOverride: widget.locale,
       feedbackBuilder: (context, onSubmit, scrollController) => FeedbackForm(
         theme: widget.theme,
+        strings: _strings,
         status: _controller,
         scrollController: scrollController,
         fields: widget.template.fields,
         showPriority: widget.showPriority,
         categories: widget.categories,
+        onClose: BetterFeedback.of(context).hide,
         onSubmit: (values) => _submit(onSubmit, values),
       ),
       child: Builder(

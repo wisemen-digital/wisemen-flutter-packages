@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:wise_feedback/src/theme/wise_feedback_theme.dart';
 import 'package:wise_feedback/src/widgets/feedback_toast.dart';
 
 void main() {
@@ -11,6 +12,7 @@ void main() {
       MediaQuery(
         data: const MediaQueryData(),
         child: FeedbackToast(
+          theme: const WiseFeedbackTheme(),
           message: 'Saved',
           isError: false,
           onDismiss: () => dismissed++,
