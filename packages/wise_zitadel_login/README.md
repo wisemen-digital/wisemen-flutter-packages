@@ -1,6 +1,6 @@
 # wise_zitadel_login
 
-A Zitadel login package to be used with Wisemen backends. Provides a ready-made login screen with configurable identity provider buttons, built on top of `flutter_appauth`, `auto_route` and `hooks_riverpod`.
+A Zitadel login package to be used with Wisemen backends. Provides a ready-made login screen with configurable identity provider buttons, built on top of [`oidc`](https://pub.dev/packages/oidc), `auto_route` and `hooks_riverpod`.
 
 ## Features
 
@@ -18,8 +18,80 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  wise_zitadel_login: ^0.0.2
+  wise_zitadel_login: ^1.0.0
 ```
+
+## Platform setup
+
+The login flow runs in the platform's browser, which needs a little setup per
+platform. Skip the platforms your app does not ship on.
+
+### Android
+
+Requires `minSdk 23` (the Flutter default is higher, so usually nothing to do)
+and the redirect scheme of your app. The scheme has to match the `bundleId` you
+pass to `WiseZitadelOptions`, since that is what the redirect URL is built from.
+
+Add it to `android/app/build.gradle`:
+
+```groovy
+android {
+    defaultConfig {
+        minSdk = 23
+        manifestPlaceholders += [oidcRedirectScheme: "com.example.app"]
+    }
+}
+```
+
+Nothing has to be added to `AndroidManifest.xml`: the activity that catches the
+redirect ships with the `oidc` plugin and picks up the placeholder above.
+
+### iOS
+
+Requires iOS 13.0 or higher, which is below the Flutter minimum, so there is
+usually nothing to do. The flow uses `ASWebAuthenticationSession`, so the
+redirect scheme does not have to be registered in `Info.plist`.
+
+Set the deployment target in Xcode and in `ios/Podfile` if your app is still on
+an older one:
+
+```ruby
+platform :ios, '13.0'
+```
+
+### macOS
+
+Requires macOS 10.15 or higher, and the network client entitlement, since the
+token exchange is an outgoing request. Add it to **both**
+`macos/Runner/DebugProfile.entitlements` and `macos/Runner/Release.entitlements`:
+
+```xml
+<key>com.apple.security.network.client</key>
+<true/>
+```
+
+### Web
+
+The browser comes back to a `redirect.html` page that hands the result to your
+app over a `BroadcastChannel`. Copy
+[`redirect.html`](https://github.com/Bdaya-Dev/oidc/blob/main/packages/oidc/example/web/redirect.html)
+from the `oidc` example into your app's `web/` folder, so it is served at
+`https://your-app.com/redirect.html`.
+
+That page is versioned together with the `oidc` package: re-copy it whenever the
+`oidc` dependency of this package moves to a new major version.
+
+The login opens in a new browser tab, not in a chrome-less popup window. The tab
+is opened during the tap on the login button, which is what keeps browsers from
+blocking it, so the login screen fetches the discovery document up front.
+
+### Zitadel
+
+Whitelist the redirect URLs on the application in the Zitadel console:
+
+- `com.example.app:/` for Android, iOS and macOS, with your own bundle id
+- `https://your-app.com/redirect.html` for web
+
 
 ## Usage
 
@@ -131,6 +203,42 @@ WiseLoginScreenRoute(
 )
 ```
 
+## Tokens and refreshing
+
+A successful login returns an `OAuthToken` from `wiseclient` and nothing else:
+this package keeps no session of its own. It does not persist the login and it
+never refreshes the token, that stays the job of the app (through `wiseclient`'s
+`fresh` interceptor).
+
+This is deliberate. Zitadel rotates refresh tokens, so a second component
+refreshing in the background would invalidate the token the app is holding, and
+whichever one refreshes last logs the user out.
+
+## Testing
+
+The login screen reads its login flow from `wiseZitadelAuthenticatorProvider`.
+Override it with your own `WiseZitadelAuthenticator` to test screens behind the
+login without opening a browser:
+
+```dart
+class FakeAuthenticator implements WiseZitadelAuthenticator {
+  @override
+  Future<OAuthToken?> login(ZitadelLoginType type) async =>
+      OAuthToken(accessToken: 'access_token', refreshToken: 'refresh_token');
+
+  @override
+  Future<void> dispose() async {}
+}
+
+ProviderScope(
+  overrides: [
+    wiseZitadelAuthenticatorProvider.overrideWithValue(FakeAuthenticator()),
+  ],
+  child: const App(),
+);
+```
+
+
 ## Parameters
 
 ### WiseZitadelOptions
@@ -154,16 +262,18 @@ WiseLoginScreenRoute(
 
 - `buttonText` (String, required): The text displayed in the button
 - `iconSvgString` (String, required): The SVG asset used for the button icon, usually Google, Apple, Microsoft, etc.'s logo
-- `idp` (String, required): The identity provider id used for the login
+- `idp` (String, required): The identity provider id used for the login, an empty id logs in through Zitadel itself
 
 ## Requirements
 
 - Flutter SDK: >=3.19.5
-- Dart SDK: >=3.6.0 <4.0.0
+- Dart SDK: >=3.10.0 <4.0.0
+- Android: `minSdk` 23
+- iOS: 13.0, macOS: 10.15
 
 ## Dependencies
 
-- `flutter_appauth`: For the OAuth/OIDC authentication flow
+- `oidc`: For the OAuth/OIDC authentication flow
 - `auto_route`: For the login screen route
 - `hooks_riverpod`: For state management and configuration
 - `wiseclient`: For the `OAuthToken` type
