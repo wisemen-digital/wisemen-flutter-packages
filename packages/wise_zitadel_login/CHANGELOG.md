@@ -1,3 +1,7 @@
+# 1.0.1
+
+- Reverted redirect url to redirect.html from auth.html
+
 # 1.0.0
 
 - Replaced `flutter_appauth` with `oidc` for the login flow, adding web support
