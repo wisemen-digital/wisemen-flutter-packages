@@ -81,7 +81,8 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     return [
       ..._baseScopes,
       'urn:zitadel:iam:org:id:${options.organizationId}',
-      if (type != null && type.idp.isNotEmpty) 'urn:zitadel:iam:org:idp:id:${type.idp}',
+      if (type != null && type.idp.isNotEmpty)
+        'urn:zitadel:iam:org:idp:id:${type.idp}',
     ];
   }
 
