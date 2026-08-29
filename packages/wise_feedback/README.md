@@ -6,16 +6,145 @@ In-app bug reporting for Flutter. Capture a screenshot + title + description and
 
 ```yaml
 dependencies:
-  wise_feedback: ^0.1.0
+  wise_feedback: ^0.5.0
 ```
 
 ## Quick start (no backend)
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   child: MyApp(),
 );
+```
+
+## What gets attached
+
+By default every report includes **device, OS and app-version metadata**. Add a
+navigator observer for a **breadcrumb of recent screens**, identify the
+**reporter**, and let users pick a **priority** (mapped to Linear's priority) and
+**category**. All of it is rendered into a `## Context` section on the Linear
+issue.
+
+`WiseFeedbackNavigatorObserver` is an auto_route `AutoRouterObserver`, so it
+records tab switches (bottom bar taps) next to pushes, pops and replacements.
+It is still a plain `NavigatorObserver`, so it works without auto_route too.
+
+```dart
+final feedbackObserver = WiseFeedbackNavigatorObserver();
+
+// With auto_route:
+MaterialApp.router(
+  routerConfig: appRouter.config(navigatorObservers: () => [feedbackObserver]),
+);
+
+WiseFeedback(
+  transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
+
+  // Recent screens — also add feedbackObserver to your router's observers.
+  navigatorObserver: feedbackObserver,
+
+  // Who reported it (resolved at submit time; async-friendly).
+  reporter: () => FeedbackReporter(id: user.id, email: user.email),
+
+  // Extra custom fields.
+  metadataBuilder: () => {'tier': user.tier, 'flag.newNav': 'on'},
+
+  // Form selectors.
+  showPriority: true, // default
+  categories: const ['Bug', 'Idea', 'Question'],
+
+  // Device/OS/app metadata is attached by default. Pass a metadataCollector
+  // returning an empty map to attach nothing.
+
+  child: MyApp(),
+);
+```
+
+## Localization
+
+The built-in form and its toasts ship in **English, Dutch and French** and follow
+the **device** locale automatically — no delegates, no generated code, nothing to
+add to your `MaterialApp`. To force a locale, pass `locale`:
+
+```dart
+WiseFeedback(
+  transport: ...,
+  locale: const Locale('nl'), // force Dutch; omit to follow the device
+  child: MyApp(),
+);
+```
+
+Wording lives in `WiseFeedbackStrings`, an abstract class of plain getters —
+the same shape as `WiseFeedbackTheme`, but for text. The package ships
+`WiseFeedbackStringsEn`, `WiseFeedbackStringsNl` and `WiseFeedbackStringsFr`.
+Extend any of them to add a language or reword a shipped one, and register it
+against the locale it serves:
+
+```dart
+class GermanFeedbackStrings extends WiseFeedbackStringsEn {
+  const GermanFeedbackStrings();
+
+  @override
+  String get sheetTitle => 'Fehler melden';
+  // Anything you don't override falls back to the class you extend.
+}
+
+WiseFeedback(
+  transport: ...,
+  strings: {const Locale('de'): const GermanFeedbackStrings()},
+  child: MyApp(),
+);
+```
+
+Entries in `strings` beat the built-ins, so an entry for `nl` rewords Dutch and
+an entry for `de` adds German. Lookup tries the full locale first, then its
+language code — `Locale('nl')` covers `nl_BE` — and falls back to English.
+
+Notes:
+- The **issue body** sent to your tracker stays in English regardless of locale,
+  so your team sees consistent headings.
+- Labels for your own custom `FeedbackField`s and `categories` are passed through
+  as-is — translate those in your app.
+- The feedback layer sits above `MaterialApp`, so "device locale" really means
+  the **device's** locale — not your app's in-app language switcher. If users
+  can switch language without changing the device locale, forward that choice
+  via `WiseFeedback(locale: appLocale)`.
+- The screenshot-annotation step comes from the `feedback` package and carries
+  its own translations; it falls back to English for locales it doesn't ship
+  (Dutch among them), independently of `strings`.
+
+## Issue templates
+
+The form's fields and the rendered issue body are driven by a
+`FeedbackTemplate`. The default (`DefaultFeedbackTemplate`) is a single
+description plus a context section. Use `BugReportTemplate` for a structured
+bug report, or subclass `FeedbackTemplate` for your own:
+
+```dart
+WiseFeedback(
+  transport: ...,
+  template: const BugReportTemplate(), // Current/Desired + auto Steps/Context
+  navigatorObserver: feedbackObserver, // fills "Steps to Reproduce"
+  reporter: () => FeedbackReporter(email: user.email), // fills "Account or user"
+  metadataBuilder: () => {'environment': env}, // fills "Environment or url"
+  child: MyApp(),
+);
+```
+
+`BugReportTemplate` renders:
+
+```markdown
+## Current Situation
+…
+## Desired Situation
+…
+## Steps to Reproduce
+1. …
+## Context
+Environment or url: …
+Account or user: …
+Date & Time: …
 ```
 
 ### Tracking submission progress
@@ -26,7 +155,7 @@ Surface submission progress, success, and errors yourself by listening to
 `onStatusChanged`, which receives a `FeedbackStatus` for each state change:
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   onStatusChanged: (status) {
     switch (status) {
@@ -59,7 +188,7 @@ the backend proxy below.
 ## Backend proxy (token stays off the device)
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearProxyTransport(
     endpoint: Uri.parse('https://api.myapp.com/feedback'),
     authHeadersProvider: () async => {'Authorization': 'Bearer ${await mySession.token()}'},
@@ -92,13 +221,13 @@ Non-2xx responses are surfaced as a `FeedbackException`.
 
 ## Opening the flow
 
-`LinearFeedback` overlays a built-in button on top of `child` and shows it by
+`WiseFeedback` overlays a built-in button on top of `child` and shows it by
 default. Tapping it opens the feedback flow; the button hides itself again
 while the sheet is open. Set `showButton: false` to hide it (for example if
 you want to trigger feedback from your own UI instead):
 
 ```dart
-LinearFeedback(
+WiseFeedback(
   transport: LinearDirectTransport(token: myBotToken, teamId: myTeamId),
   showButton: false,
   child: MyApp(),

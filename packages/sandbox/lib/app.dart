@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sandbox/features/shared/shared.dart';
+import 'package:sandbox/feedback_demo.dart';
 import 'package:sandbox/generated/l10n.dart';
 import 'package:sandbox/router/app_router_service.dart';
 import 'package:sandbox/router/route_observer.dart';
@@ -48,7 +49,7 @@ class App extends ConsumerWidget {
                   .watch(appRouterServiceProvider)
                   .config(
                     deepLinkBuilder: (deepLink) => deepLink,
-                    navigatorObservers: () => [AppRouterObserver(), VisibleAwareObserver()],
+                    navigatorObservers: () => [AppRouterObserver(), VisibleAwareObserver(), wiseFeedbackObserver],
                     reevaluateListenable: ReevaluateListenable.stream(
                       ref.watch(appRepositoryServiceProvider).authenticationStatus,
                     ),

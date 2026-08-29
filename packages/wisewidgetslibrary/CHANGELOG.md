@@ -1,3 +1,7 @@
+## 2.1.6
+
+* Added `BiDirectionalPagedList<T>` that pages both backward and forward from an anchor point, each direction driven by its own `InfiniteScrollController` (e.g. a calendar list that opens on today and pages into the past or future)
+
 ## 2.1.5
 
 * Added Swift Package Manager support

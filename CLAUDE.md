@@ -40,6 +40,16 @@ to the root file, so a package-local file containing only
 generated code, add the path to the root file's `analyzer.exclude` list next to
 `packages/sandbox/**`, keeping exclusions in one place.
 
+**No generated code, and no `intl_utils` localization.** Apps here localize with
+ARB files and generated `l10n.dart` — packages do not. Ship user-facing text as
+an abstract class of plain getters with one implementation per language, the way
+a package ships a theme class, and let the consumer register their own against a
+locale. That keeps the package free of a build step, a `flutter_intl` pubspec
+block, a `flutter_localizations` dependency, a `LocalizationsDelegate` the
+consumer has to install, and an `analyzer.exclude` entry for the output.
+`wise_feedback`'s `WiseFeedbackStrings` is the reference. Reach for generated
+code in a package only when hand-writing genuinely does not make sense.
+
 **.github/package-filters.yaml** — add an entry listing only the package's own
 path:
 
@@ -71,8 +81,25 @@ still fail CI.
 ## Stacked PRs
 
 The `gh stack` extension (`gh stack view` / `rebase` / `submit`) manages the
-branch chains here. After the bottom PR merges, `gh stack rebase` cascades the
-rest; `gh stack rebase --abort` restores every branch if a rebase goes wrong.
+branch chains here — reach for it before rebasing anything by hand. After the
+bottom PR merges, `gh stack rebase` cascades the rest; `gh stack rebase --abort`
+restores every branch if a rebase goes wrong.
+
+**If you do rebase by hand, `git rebase <parent>` is the wrong command.** PRs
+here land rebase-merged, so the parent's commits reach `main` with new SHAs. The
+child branch still carries the originals, and any that were conflict-resolved on
+the way in no longer match by patch-id — so git cannot tell they are already
+upstream and replays them onto a base that has them, conflict by conflict.
+Rebase the child's *own* commits instead:
+
+```bash
+git rebase --onto <new-parent-tip> <old-parent-tip>
+```
+
+`<old-parent-tip>` is the parent commit the child was branched from; everything
+above it is the child's real work. Verify the split first with
+`git log --oneline <old-parent-tip>..HEAD` — that should list only the child's
+commits and nothing belonging to the parent.
 
 Two things to watch when the merged PR changed shared API or formatting:
 

@@ -1,2 +1,2 @@
 export 'feedback_button.dart';
-export 'linear_feedback.dart';
+export 'wise_feedback.dart';

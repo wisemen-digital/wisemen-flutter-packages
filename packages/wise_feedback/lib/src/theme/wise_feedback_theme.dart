@@ -1,43 +1,65 @@
 import 'package:flutter/material.dart';
 
-import '../models/feedback_exception.dart';
-
-/// Text and surface configuration for the built-in feedback form.
+/// Visual configuration for the built-in feedback form.
 ///
-/// Styling is intentionally opinionated (Wisemen defaults); only the surface
-/// [backgroundColor] and the display strings are configurable. The strings are
-/// placeholders pending localization in a follow-up.
+/// Defaults follow a modern, Crispy-style design: labelled inputs with a soft
+/// border and 16px corners, and an indigo brand accent. All user-facing text is
+/// localized via the package's localizations, not configured here.
 class WiseFeedbackTheme {
   /// Creates a theme. All parameters have sensible defaults.
   const WiseFeedbackTheme({
+    this.primaryColor = const Color(0xFF4F46E5),
     this.backgroundColor = Colors.white,
-    this.titleHint = 'Title',
-    this.descriptionHint = 'Description',
-    this.submitLabel = 'Report bug',
-    this.successMessage = 'Bug reported. Thanks!',
-    this.genericErrorMessage = 'Something went wrong. Please try again.',
+    this.fieldFillColor = Colors.white,
+    this.fieldBorderColor = const Color(0xFFE3E8EF),
+    this.labelColor = const Color(0xFF364152),
+    this.textColor = const Color(0xFF121926),
+    this.hintColor = const Color(0xFF9AA4B2),
+    this.iconButtonColor = const Color(0xFFEEF2F6),
+    this.errorColor = const Color(0xFFD32F2F),
+    this.successColor = const Color(0xFF2E7D32),
+    this.grabberColor = const Color(0x33000000),
+    this.onAccentColor = Colors.white,
+    this.fieldRadius = 16,
   });
+
+  /// Accent color for the submit button and focused fields.
+  final Color primaryColor;
 
   /// Background color of the form surface.
   final Color backgroundColor;
 
-  /// Placeholder/label for the title field.
-  final String titleHint;
+  /// Fill color of input boxes.
+  final Color fieldFillColor;
 
-  /// Placeholder/label for the description field.
-  final String descriptionHint;
+  /// Border color of input boxes.
+  final Color fieldBorderColor;
 
-  /// Text on the submit button.
-  final String submitLabel;
+  /// Color of field labels.
+  final Color labelColor;
 
-  /// Confirmation shown after a report is filed successfully.
-  final String successMessage;
+  /// Color of entered text.
+  final Color textColor;
 
-  /// Fallback message shown when submission fails without a specific reason.
-  final String genericErrorMessage;
+  /// Color of placeholder/hint text.
+  final Color hintColor;
 
-  /// The user-facing message for a failed submission: the [FeedbackException]'s
-  /// own message when available, otherwise [genericErrorMessage].
-  String messageForError(Object error) =>
-      error is FeedbackException ? error.message : genericErrorMessage;
+  /// Background of the circular close (and neutral icon) buttons.
+  final Color iconButtonColor;
+
+  /// Fill for failure surfaces: the inline submission error and the error toast.
+  final Color errorColor;
+
+  /// Fill for the success toast.
+  final Color successColor;
+
+  /// Fill of the pill at the top of the sheet that signals it can be dragged.
+  final Color grabberColor;
+
+  /// Icons and text drawn on top of a [primaryColor], [errorColor] or
+  /// [successColor] fill.
+  final Color onAccentColor;
+
+  /// Corner radius of input boxes.
+  final double fieldRadius;
 }

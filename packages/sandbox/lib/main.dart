@@ -5,8 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:repository/repository.dart';
 import 'package:sandbox/app.dart';
+import 'package:sandbox/feedback_demo.dart';
 import 'package:sandbox/router/app_router.gr.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wise_feedback/wise_feedback.dart';
 import 'package:wise_theming/wise_theming.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
 import 'package:wisecore/wisecore.dart';
@@ -77,7 +79,39 @@ Future<void> initMain(Flavor flavor) async {
           ),
         ],
       ),
-      child: const App(),
+      // wise_feedback smoke test: tap the bug button to capture a screenshot +
+      // title + description and file it as a Linear issue. Supply a
+      // least-privilege Linear bot token + team id via
+      // --dart-define=LINEAR_TOKEN=... --dart-define=LINEAR_TEAM_ID=... .
+      child: WiseFeedback(
+        transport: LinearDirectTransport(
+          token: const String.fromEnvironment('LINEAR_TOKEN'),
+          teamId: const String.fromEnvironment('LINEAR_TEAM_ID'),
+        ),
+        // Structured bug template: Current/Desired Situation, Steps from the
+        // nav breadcrumb, and auto-filled Context.
+        template: const BugReportTemplate(),
+        navigatorObserver: wiseFeedbackObserver,
+        reporter: () => const FeedbackReporter(
+          id: 'demo-user',
+          name: 'Demo User',
+          email: 'demo@wisemen.digital',
+        ),
+        metadataBuilder: () => {'environment': F.name},
+        categories: const ['bug', 'improvement', 'change request'],
+        onStatusChanged: (status) {
+          switch (status) {
+            case FeedbackSuccess(:final result):
+              debugPrint('wise_feedback: filed ${result.issueUrl}');
+            case FeedbackFailure(:final error):
+              debugPrint('wise_feedback: failed $error');
+            case FeedbackIdle():
+            case FeedbackSubmitting():
+              break;
+          }
+        },
+        child: const App(),
+      ),
     ),
   );
 }

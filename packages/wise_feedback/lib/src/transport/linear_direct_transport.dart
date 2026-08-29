@@ -49,8 +49,8 @@ mutation FileUpload($contentType: String!, $filename: String!, $size: Int!) {
 ''';
 
   static const String _issueCreateMutation = r'''
-mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $projectId: String) {
-  issueCreate(input: {title: $title, description: $description, teamId: $teamId, projectId: $projectId}) {
+mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $projectId: String, $priority: Int) {
+  issueCreate(input: {title: $title, description: $description, teamId: $teamId, projectId: $projectId, priority: $priority}) {
     success
     issue { id url }
   }
@@ -114,12 +114,12 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
     FeedbackReport report,
     String assetUrl,
   ) async {
-    final description = '${report.description}\n\n![screenshot]($assetUrl)';
     final data = await _graphql(_issueCreateMutation, <String, dynamic>{
       'title': report.title,
-      'description': description,
+      'description': _renderBody(report, assetUrl),
       'teamId': _teamId,
       'projectId': _projectId,
+      'priority': report.priority.linearValue,
     });
     final issueCreate = data['issueCreate'] as Json?;
     final success = issueCreate?['success'] as bool?;
@@ -132,6 +132,10 @@ mutation IssueCreate($title: String!, $description: String!, $teamId: String!, $
       issueUrl: issue['url'] as String?,
     );
   }
+
+  /// Appends the uploaded screenshot to the template-rendered body.
+  String _renderBody(FeedbackReport report, String assetUrl) =>
+      '${report.description}\n\n![screenshot]($assetUrl)';
 
   Future<Json> _graphql(
     String query,
