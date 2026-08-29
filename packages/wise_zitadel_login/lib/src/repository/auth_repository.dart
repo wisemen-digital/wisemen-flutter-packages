@@ -65,7 +65,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     required bool isWeb,
   }) {
     if (isWeb) {
-      return Uri.base.replace(path: 'auth.html');
+      return Uri.base.replace(path: 'redirect.html');
     }
     return Uri(scheme: options.bundleId, path: '/');
   }
