@@ -1,3 +1,7 @@
+# 1.1.0
+
+- `login` no longer requires a `ZitadelLoginType`: uses only organization id by default
+
 # 1.0.1
 
 - Reverted redirect url to redirect.html from auth.html

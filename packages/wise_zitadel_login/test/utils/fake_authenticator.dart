@@ -18,7 +18,7 @@ class FakeAuthenticator implements WiseZitadelAuthenticator {
   final Completer<OAuthToken?>? completer;
 
   /// The login types [login] was called with, in order
-  final List<ZitadelLoginType> loginCalls = [];
+  final List<ZitadelLoginType?> loginCalls = [];
 
   /// The number of times [prepare] was called
   int prepareCalls = 0;
@@ -32,7 +32,7 @@ class FakeAuthenticator implements WiseZitadelAuthenticator {
   }
 
   @override
-  Future<OAuthToken?> login(ZitadelLoginType type) {
+  Future<OAuthToken?> login([ZitadelLoginType? type]) {
     loginCalls.add(type);
     return completer?.future ?? Future.value(token);
   }

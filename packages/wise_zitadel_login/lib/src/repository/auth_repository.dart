@@ -14,9 +14,9 @@ abstract interface class WiseZitadelAuthenticator {
   /// waiting first. The login screen calls this when it is shown.
   Future<void> prepare();
 
-  /// Logs in with [type] and returns the resulting token, or `null` when the
+  /// Logs in with organization id, optionally [type] and returns the resulting token, or `null` when the
   /// authorization server did not return a usable token.
-  Future<OAuthToken?> login(ZitadelLoginType type);
+  Future<OAuthToken?> login([ZitadelLoginType? type]);
 
   /// Releases the resources held by the authenticator.
   Future<void> dispose();
@@ -81,8 +81,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     return [
       ..._baseScopes,
       'urn:zitadel:iam:org:id:${options.organizationId}',
-      if (type != null && type.idp.isNotEmpty)
-        'urn:zitadel:iam:org:idp:id:${type.idp}',
+      if (type != null && type.idp.isNotEmpty) 'urn:zitadel:iam:org:idp:id:${type.idp}',
     ];
   }
 
@@ -123,7 +122,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   Future<void> prepare() => _ensureManager();
 
   @override
-  Future<OAuthToken?> login(ZitadelLoginType type) {
+  Future<OAuthToken?> login([ZitadelLoginType? type]) {
     // Deliberately not awaited when the manager is ready: `oidc` opens the
     // login tab synchronously, and browsers only allow that inside the task of
     // the tap that asked for it. An await here would lose that user gesture and
@@ -137,7 +136,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
 
   Future<OAuthToken?> _loginWith(
     OidcUserManager manager,
-    ZitadelLoginType type,
+    ZitadelLoginType? type,
   ) async {
     final user = await manager.loginAuthorizationCodeFlow(
       scopeOverride: scopesFor(options: options, type: type),
