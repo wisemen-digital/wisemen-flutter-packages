@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:oidc/oidc.dart';
 import 'package:wiseclient/wiseclient.dart' show OAuthToken;
@@ -12,10 +14,19 @@ import '../types/zitadel_login_type.dart';
 abstract interface class WiseZitadelAuthenticator {
   /// Prepares everything [login] needs, so that it can start the flow without
   /// waiting first. The login screen calls this when it is shown.
-  Future<void> prepare();
+  ///
+  /// Returns a token when a login that was started before is finished by this
+  /// call instead of by [login]. On the web the authorization server sends the
+  /// user back to a fresh page load, so the [login] call that started the flow
+  /// is gone by the time its result arrives and this is the only place the
+  /// token can surface. Everywhere else this returns `null`.
+  Future<OAuthToken?> prepare();
 
   /// Logs in with organization id, optionally [type] and returns the resulting token, or `null` when the
   /// authorization server did not return a usable token.
+  ///
+  /// On the web this never returns: the flow navigates the page away and its
+  /// token comes back through [prepare] on the next page load.
   Future<OAuthToken?> login([ZitadelLoginType? type]);
 
   /// Releases the resources held by the authenticator.
@@ -25,7 +36,7 @@ abstract interface class WiseZitadelAuthenticator {
 /// [AuthenticationRepository] handles the login process using [OidcUserManager]
 ///
 /// The manager is only used to run the authorization code flow: it keeps no
-/// persisted session and refreshes nothing. The [OAuthToken] it returns is
+/// session past the flow and refreshes nothing. The [OAuthToken] it returns is
 /// handed to the app, which stays the single owner of storing and refreshing
 /// it. Running a second refresh here would race the app's own one, and with
 /// refresh token rotation enabled the loser of that race is logged out.
@@ -47,6 +58,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
 
   OidcUserManager? _manager;
   Future<OidcUserManager>? _pendingManager;
+  OAuthToken? _resumedToken;
 
   /// The discovery document URL of the Zitadel instance
   static Uri discoveryUriFor({required WiseZitadelOptions options}) {
@@ -86,6 +98,26 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     ];
   }
 
+  /// The platform options used for the login flow
+  ///
+  /// Web runs the flow in the app's own tab
+  /// ([OidcPlatformSpecificOptions_Web_NavigationMode.samePage]) rather than in
+  /// a second one. A popup or a new tab has to be handed its result over a
+  /// `BroadcastChannel`, and reaching back into the opener is exactly what
+  /// cross-origin isolation is there to stop: an app that sets COOP/COEP (for
+  /// `SharedArrayBuffer`, or because its host sets them) severs that handle and
+  /// the login hangs. Navigating this tab needs no cross-window handle at all.
+  ///
+  /// The cost is a page load in the middle of the flow, which is why the flow
+  /// state has to outlive the isolate, see [WiseZitadelOptions.store].
+  static OidcPlatformSpecificOptions get platformOptions {
+    return const OidcPlatformSpecificOptions(
+      web: OidcPlatformSpecificOptions_Web(
+        navigationMode: OidcPlatformSpecificOptions_Web_NavigationMode.samePage,
+      ),
+    );
+  }
+
   /// The [OidcUserManagerSettings] used for the login flow
   static OidcUserManagerSettings settingsFor({
     required WiseZitadelOptions options,
@@ -94,6 +126,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     return OidcUserManagerSettings(
       redirectUri: redirectUriFor(options: options, isWeb: isWeb),
       scope: scopesFor(options: options),
+      options: platformOptions,
       // The app refreshes the token it receives, see the class documentation.
       refreshBefore: (token) => null,
     );
@@ -120,7 +153,14 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   }
 
   @override
-  Future<void> prepare() => _ensureManager();
+  Future<OAuthToken?> prepare() async {
+    await _ensureManager();
+    // Handed out once: a second [prepare] on the same authenticator is a
+    // rebuild of the login screen, not a second login.
+    final resumed = _resumedToken;
+    _resumedToken = null;
+    return resumed;
+  }
 
   @override
   Future<OAuthToken?> login([ZitadelLoginType? type]) {
@@ -141,10 +181,22 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   ) async {
     final user = await manager.loginAuthorizationCodeFlow(
       scopeOverride: scopesFor(options: options, type: type),
+      // Where `redirect.html` sends the browser once it has parked the
+      // response. Without it that page has nowhere to go and the user is left
+      // looking at it.
+      originalUri: isWeb ? Uri.base : null,
       // The manager holds no session of its own, so a previous login must not
       // pin the next one to the same user.
       includeIdTokenHintFromCurrentUser: false,
     );
+
+    if (isWeb && user == null) {
+      // `samePage` has navigated this tab away and returns no user: the flow
+      // continues in the page load that comes back, and [prepare] finishes it
+      // there. Completing here instead would report the started login to the
+      // app as one that produced no token, i.e. as a failure.
+      return Completer<OAuthToken?>().future;
+    }
 
     final token = user?.token;
     if (token == null) {
@@ -158,6 +210,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     final manager = _manager;
     _manager = null;
     _pendingManager = null;
+    _resumedToken = null;
     await manager?.dispose();
   }
 
@@ -181,15 +234,41 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   }
 
   Future<OidcUserManager> _createManager() async {
+    final store = options.store ?? OidcMemoryStore();
+    if (isWeb && store is OidcMemoryStore) {
+      throw StateError(
+        'The web login navigates this tab away and comes back to a new page '
+        'load, so an in-memory store loses the flow before it can finish. '
+        'Pass a persistent one through WiseZitadelOptions.store, see its '
+        'documentation.',
+      );
+    }
+    await store.init();
+    // Asked before `init()`, which is what consumes it: a parked authorization
+    // response is the only thing that makes the user `init()` restores a login
+    // this app just completed rather than a leftover from an earlier one.
+    final hasPendingResponse =
+        (await store.getStatesWithResponses()).isNotEmpty;
+
     final manager = OidcUserManager.lazy(
       discoveryDocumentUri: discoveryUriFor(options: options),
       clientCredentials: OidcClientAuthentication.none(
         clientId: options.applicationId,
       ),
-      store: OidcMemoryStore(),
+      store: store,
       settings: settingsFor(options: options, isWeb: isWeb),
     );
     await manager.init();
+
+    if (hasPendingResponse) {
+      final token = manager.currentUser?.token;
+      _resumedToken = token == null ? null : tokenFrom(token);
+    }
+    // The store survives the page load on web, the session must not: the app
+    // owns the token from here on, and a rotated refresh token left behind in
+    // browser storage is a logout waiting to happen.
+    await manager.forgetUser();
+
     _manager = manager;
     return manager;
   }

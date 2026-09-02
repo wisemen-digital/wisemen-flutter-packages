@@ -170,4 +170,46 @@ void main() {
 
     expect(authenticator.prepareCalls, 1);
   });
+
+  testWidgets('WiseLoginScreen reports a login that prepare resumed', (
+    tester,
+  ) async {
+    final authenticator = FakeAuthenticator(
+      resumedToken: OAuthToken(accessToken: 'resumed_token'),
+    );
+    OAuthToken? receivedToken;
+
+    await tester.pumpWidget(
+      buildScreen(
+        options: testOptions(
+          onLoginSuccess: (router, ref, token) => receivedToken = token,
+        ),
+        authenticator: authenticator,
+        router: mockStackRouter,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(receivedToken?.accessToken, 'resumed_token');
+    expect(authenticator.loginCalls, isEmpty);
+  });
+
+  testWidgets('WiseLoginScreen reports nothing when prepare resumes nothing', (
+    tester,
+  ) async {
+    var loginSuccessCalls = 0;
+
+    await tester.pumpWidget(
+      buildScreen(
+        options: testOptions(
+          onLoginSuccess: (router, ref, token) => loginSuccessCalls++,
+        ),
+        authenticator: FakeAuthenticator(),
+        router: mockStackRouter,
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(loginSuccessCalls, 0);
+  });
 }

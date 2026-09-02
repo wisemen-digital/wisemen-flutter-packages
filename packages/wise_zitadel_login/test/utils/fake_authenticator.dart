@@ -9,10 +9,14 @@ class FakeAuthenticator implements WiseZitadelAuthenticator {
   /// Constructor for [FakeAuthenticator]
   ///
   /// Pass a [completer] to keep the login pending until the test completes it.
-  FakeAuthenticator({this.token, this.completer});
+  FakeAuthenticator({this.token, this.completer, this.resumedToken});
 
   /// The token returned by [login]
   final OAuthToken? token;
+
+  /// The token returned by the first [prepare], as a web login that finished
+  /// in an earlier page load would return it
+  final OAuthToken? resumedToken;
 
   /// Completes the pending [login] call, if given
   final Completer<OAuthToken?>? completer;
@@ -27,8 +31,9 @@ class FakeAuthenticator implements WiseZitadelAuthenticator {
   bool disposed = false;
 
   @override
-  Future<void> prepare() async {
+  Future<OAuthToken?> prepare() async {
     prepareCalls++;
+    return prepareCalls == 1 ? resumedToken : null;
   }
 
   @override

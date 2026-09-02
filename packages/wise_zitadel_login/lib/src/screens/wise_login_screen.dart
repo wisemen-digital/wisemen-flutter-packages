@@ -30,9 +30,20 @@ class WiseLoginScreen extends HookConsumerWidget {
     ValueNotifier<ZitadelLoginType?> loadingLoginType = useState(null);
 
     // Fetching the discovery document up front keeps the login itself
-    // synchronous, which is what lets the browser tab open on web.
+    // synchronous, which is what lets the flow start on web. A failure here is
+    // ignored on purpose: the login the user actually asks for runs into it
+    // again, and reports it then.
+    //
+    // On web this also finishes a login that was started before: the
+    // authorization server sends the browser back to a fresh page load, so the
+    // token arrives here rather than out of the button's own `login` call.
     useEffect(() {
-      authenticator.prepare().ignore();
+      authenticator.prepare().then((token) {
+        if (token == null || !context.mounted) {
+          return;
+        }
+        options.onLoginSuccess(context.router, ref, token);
+      }).ignore();
       return null;
     }, [authenticator]);
 

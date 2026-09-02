@@ -107,6 +107,18 @@ void main() {
       );
     });
 
+    test('navigates the same page on web instead of opening a second one', () {
+      final settings = AuthenticationRepository.settingsFor(
+        options: testOptions(),
+        isWeb: true,
+      );
+
+      expect(
+        settings.options?.web.navigationMode,
+        OidcPlatformSpecificOptions_Web_NavigationMode.samePage,
+      );
+    });
+
     test('uses the redirect uri and the base scopes', () {
       final settings = AuthenticationRepository.settingsFor(
         options: testOptions(),
@@ -120,6 +132,22 @@ void main() {
           options: testOptions(),
         ),
       );
+    });
+  });
+
+  group('store', () {
+    test('keeps the flow state in memory by default', () {
+      expect(testOptions().store, isNull);
+    });
+
+    test('refuses to run the web flow on the in-memory default', () async {
+      final repository = AuthenticationRepository(
+        options: testOptions(),
+        isWeb: true,
+      );
+      addTearDown(repository.dispose);
+
+      await expectLater(repository.prepare(), throwsStateError);
     });
   });
 

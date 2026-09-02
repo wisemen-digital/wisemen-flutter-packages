@@ -18,7 +18,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  wise_zitadel_login: ^1.0.0
+  wise_zitadel_login: ^1.2.0
 ```
 
 ## Platform setup
@@ -81,9 +81,49 @@ from the `oidc` example into your app's `web/` folder, so it is served at
 That page is versioned together with the `oidc` package: re-copy it whenever the
 `oidc` dependency of this package moves to a new major version.
 
-The login opens in a new browser tab, not in a chrome-less popup window. The tab
-is opened during the tap on the login button, which is what keeps browsers from
-blocking it, so the login screen fetches the discovery document up front.
+The login runs in the app's own tab: the tap navigates the page to Zitadel, and
+`redirect.html` navigates it back when the user returns. No popup and no second
+tab, so there is nothing for a popup blocker to block, and nothing that has to
+reach back into an opener window — an app that is cross-origin isolated
+(COOP/COEP, e.g. for `SharedArrayBuffer`) logs in like any other.
+
+What it costs is a page load in the middle of the login: the app is torn down
+while the user is at Zitadel and started again on the way back. Two things
+follow from that.
+
+- **The flow state has to survive the reload, so a web app has to pass a
+  persistent store.** The default is in-memory and the login throws on web
+  rather than fail quietly. Add
+  [`oidc_web_core`](https://pub.dev/packages/oidc_web_core) to your app and hand
+  `WiseZitadelOptions.store` an `OidcWebStore`, which writes the same browser
+  storage keys `redirect.html` reads:
+
+  ```yaml
+  dependencies:
+    oidc_web_core: ^1.2.0
+  ```
+
+  ```dart
+  import 'package:oidc_web_core/oidc_web_core.dart';
+
+  WiseZitadelOptions(
+    // ...
+    store: const OidcWebStore(),
+  );
+  ```
+
+  `oidc_web_core` only compiles for the web, so an app that also ships natively
+  imports it behind a conditional import. The package clears the store again as
+  soon as the token is handed to your app, so no session is left behind in the
+  browser.
+- The token arrives on the *next* page load, not out of the tap that started the
+  login. `WiseLoginScreen` handles this for you — it finishes the pending login
+  when it is shown and calls `onLoginSuccess` with the token. If you drive
+  `WiseZitadelAuthenticator` yourself, call `prepare()` when your login UI
+  appears and treat the token it returns exactly like one from `login()`.
+
+Make sure the login screen is what the app shows on a fresh load of the URL the
+login started from, since that is where the browser comes back to.
 
 ### Zitadel
 
@@ -222,8 +262,12 @@ login without opening a browser:
 
 ```dart
 class FakeAuthenticator implements WiseZitadelAuthenticator {
+  // No login is ever pending in a test, so there is nothing to resume.
   @override
-  Future<OAuthToken?> login(ZitadelLoginType type) async =>
+  Future<OAuthToken?> prepare() async => null;
+
+  @override
+  Future<OAuthToken?> login([ZitadelLoginType? type]) async =>
       OAuthToken(accessToken: 'access_token', refreshToken: 'refresh_token');
 
   @override
@@ -250,6 +294,7 @@ ProviderScope(
 - `supportedTypes` (List\<ZitadelLoginType\>, required): The login types shown as buttons on the login screen
 - `onLoginSuccess` (Function, required): Callback called after a login attempt, receives the `StackRouter`, `WidgetRef` and the (nullable) `OAuthToken`
 - `buttonOptions` (WiseZitadelButtonOptions, required): Styling options for the login buttons
+- `store` (OidcStore, optional): The store the login flow keeps its state in, in-memory when left out. Web apps have to pass a persistent one, see [Web](#web)
 
 ### WiseZitadelButtonOptions
 
