@@ -25,17 +25,50 @@ class WiseLoginScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final options = ref.watch(wiseZitadelOptionsProvider);
+    final authenticator = ref.watch(wiseZitadelAuthenticatorProvider);
     // ignore: prefer_final_locals, omit_local_variable_types
     ValueNotifier<ZitadelLoginType?> loadingLoginType = useState(null);
+
+    // Fetching the discovery document up front keeps the login itself
+    // synchronous, which is what lets the flow start on web. A failure here is
+    // ignored on purpose: the login the user actually asks for runs into it
+    // again, and reports it then.
+    //
+    // On web this also finishes a login that was started before: the
+    // authorization server sends the browser back to a fresh page load, so the
+    // token arrives here rather than out of the button's own `login` call.
+    useEffect(() {
+      authenticator.prepare().then((token) {
+        if (token == null || !context.mounted) {
+          return;
+        }
+        options.onLoginSuccess(context.router, ref, token);
+      }).ignore();
+      return null;
+    }, [authenticator]);
 
     Future<void> handleLogin(
       ZitadelLoginType loginTypePressed,
     ) async {
       loadingLoginType.value = loginTypePressed;
-      final token = await loginTypePressed.login(options);
-      loadingLoginType.value = null;
-      // ignore: use_build_context_synchronously
-      options.onLoginSuccess(context.router, ref, token);
+      try {
+        final token = await authenticator.login(loginTypePressed);
+        // ignore: use_build_context_synchronously
+        options.onLoginSuccess(context.router, ref, token);
+      } catch (error, stackTrace) {
+        // A cancelled or failed login must not leave the button spinning, and
+        // is reported to the app's error handler rather than swallowed.
+        FlutterError.reportError(
+          FlutterErrorDetails(
+            exception: error,
+            stack: stackTrace,
+            library: 'wise_zitadel_login',
+            context: ErrorDescription('while logging in'),
+          ),
+        );
+      } finally {
+        loadingLoginType.value = null;
+      }
     }
 
     return PlatformScaffold(

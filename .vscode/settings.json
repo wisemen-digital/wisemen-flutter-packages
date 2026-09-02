@@ -1,10 +1,9 @@
 {
     "cSpell.words": [
-        "appauth",
         "cdef",
-        "crossingthestreams",
         "PHONENUMBER",
         "libsqlite",
+        "oidc",
         "typesense",
         "uploaders",
         "uppercases",
