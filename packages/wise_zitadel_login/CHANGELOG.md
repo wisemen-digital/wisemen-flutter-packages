@@ -1,3 +1,7 @@
+# 1.3.0
+
+- Added `WiseZitadelOptions.prompt`, which sets the OIDC `prompt` of the authorization request
+
 # 1.2.0
 
 - The web login runs in the app's own tab (`samePage`) instead of opening a

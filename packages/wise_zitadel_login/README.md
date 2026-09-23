@@ -11,6 +11,7 @@ A Zitadel login package to be used with Wisemen backends. Provides a ready-made 
 - `auto_route` route (`WiseLoginScreenRoute`) ready to drop into your router
 - Riverpod provider for flavored configuration
 - Returns an `OAuthToken` from `wiseclient` on successful login
+- Optional `prompt`, to re-authenticate on every login instead of reusing the Zitadel session
 
 ## Installation
 
@@ -18,7 +19,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  wise_zitadel_login: ^1.2.0
+  wise_zitadel_login: ^1.3.0
 ```
 
 ## Platform setup
@@ -243,6 +244,32 @@ WiseLoginScreenRoute(
 )
 ```
 
+## Forcing a fresh login
+
+Zitadel keeps a session of its own in the browser the flow runs in. A user who
+logged in before is sent straight back with a new token without seeing a
+screen, which is what makes a second login look cached — clearing the app's own
+token does not change that.
+
+Pass `prompt` to override it:
+
+```dart
+WiseZitadelOptions(
+  // ...
+  prompt: ZitadelLoginPrompt.login,
+);
+```
+
+- `ZitadelLoginPrompt.login` authenticates every time, regardless of the open
+  session
+- `ZitadelLoginPrompt.selectAccount` shows the account picker instead, for a
+  user with more than one session
+- `ZitadelLoginPrompt.consent` asks to consent to the requested scopes again
+- leaving it out sends no `prompt` and reuses the session
+
+This governs Zitadel's session, not the browser's cookies: the user stays known
+to Zitadel either way, they are only asked to authenticate again.
+
 ## Tokens and refreshing
 
 A successful login returns an `OAuthToken` from `wiseclient` and nothing else:
@@ -294,6 +321,7 @@ ProviderScope(
 - `supportedTypes` (List\<ZitadelLoginType\>, required): The login types shown as buttons on the login screen
 - `onLoginSuccess` (Function, required): Callback called after a login attempt, receives the `StackRouter`, `WidgetRef` and the (nullable) `OAuthToken`
 - `buttonOptions` (WiseZitadelButtonOptions, required): Styling options for the login buttons
+- `prompt` (ZitadelLoginPrompt, optional): What Zitadel asks the user before returning a token, the open session is reused when left out. See [Forcing a fresh login](#forcing-a-fresh-login)
 - `store` (OidcStore, optional): The store the login flow keeps its state in, in-memory when left out. Web apps have to pass a persistent one, see [Web](#web)
 
 ### WiseZitadelButtonOptions
@@ -302,6 +330,12 @@ ProviderScope(
 - `buttonTextStyle` (TextStyle Function(BuildContext), required): The text style of the button's text
 - `borderRadius` (BorderRadius, default: circular 10): The border radius of the button
 - `borderSide` (BorderSide?, optional): The border side of the button
+
+### ZitadelLoginPrompt
+
+- `login`: Authenticate again, even when a Zitadel session is still open
+- `selectAccount`: Ask which account to continue with
+- `consent`: Ask the user to consent to the requested scopes again
 
 ### ZitadelLoginType
 

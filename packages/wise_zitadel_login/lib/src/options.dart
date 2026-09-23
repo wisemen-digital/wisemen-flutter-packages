@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:oidc/oidc.dart';
 import 'package:wiseclient/wiseclient.dart';
+import 'types/zitadel_login_prompt.dart';
 import 'types/zitadel_login_type.dart';
 
 /// [WiseZitadelOptions] containing params (usually flavored) used by the repository
@@ -16,6 +17,7 @@ class WiseZitadelOptions {
     required this.supportedTypes,
     required this.onLoginSuccess,
     required this.buttonOptions,
+    this.prompt,
     this.store,
   });
 
@@ -44,6 +46,28 @@ class WiseZitadelOptions {
 
   /// Login button styling options
   final WiseZitadelButtonOptions buttonOptions;
+
+  /// What Zitadel asks the user before it returns a token
+  ///
+  /// `null`, the default, sends no `prompt` parameter: a user with an open
+  /// Zitadel session is logged straight back in without seeing a screen, which
+  /// is what makes a second login look cached.
+  ///
+  /// Pass [ZitadelLoginPrompt.login] to authenticate every time regardless of
+  /// that session, or [ZitadelLoginPrompt.selectAccount] to let the user pick
+  /// an account instead:
+  ///
+  /// ```dart
+  /// WiseZitadelOptions(
+  ///   // ...
+  ///   prompt: ZitadelLoginPrompt.login,
+  /// )
+  /// ```
+  ///
+  /// This only governs Zitadel's own session. The browser the flow runs in
+  /// keeps its cookies either way, so the user stays known to Zitadel even
+  /// when re-authentication is asked for.
+  final ZitadelLoginPrompt? prompt;
 
   /// The store the login flow keeps its authorization state in
   ///

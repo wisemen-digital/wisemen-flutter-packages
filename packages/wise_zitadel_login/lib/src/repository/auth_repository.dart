@@ -98,6 +98,18 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     ];
   }
 
+  /// The `prompt` values sent with the authorization request
+  ///
+  /// Empty by default, which lets Zitadel log a user with an open session
+  /// straight back in. See [WiseZitadelOptions.prompt].
+  static List<String> promptFor({required WiseZitadelOptions options}) {
+    final prompt = options.prompt;
+    if (prompt == null) {
+      return const [];
+    }
+    return [prompt.value];
+  }
+
   /// The platform options used for the login flow
   ///
   /// Web runs the flow in the app's own tab
@@ -126,6 +138,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     return OidcUserManagerSettings(
       redirectUri: redirectUriFor(options: options, isWeb: isWeb),
       scope: scopesFor(options: options),
+      prompt: promptFor(options: options),
       options: platformOptions,
       // The app refreshes the token it receives, see the class documentation.
       refreshBefore: (token) => null,

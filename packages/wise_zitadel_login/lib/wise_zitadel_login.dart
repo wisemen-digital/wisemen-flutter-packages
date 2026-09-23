@@ -13,4 +13,5 @@ export 'src/providers/wise_zitadel_provider.dart';
 export 'src/repository/auth_repository.dart' show WiseZitadelAuthenticator;
 export 'src/routes/wise_login_screen_route.dart';
 export 'src/screens/wise_login_screen.dart';
+export 'src/types/zitadel_login_prompt.dart';
 export 'src/types/zitadel_login_type.dart';

@@ -15,6 +15,7 @@ const testLoginType = ZitadelLoginType(
 WiseZitadelOptions testOptions({
   String zitadelBaseUrl = 'https://zitadel.example.com',
   List<ZitadelLoginType> supportedTypes = const [testLoginType],
+  ZitadelLoginPrompt? prompt,
   void Function(StackRouter router, WidgetRef ref, OAuthToken? token)?
   onLoginSuccess,
 }) {
@@ -24,6 +25,7 @@ WiseZitadelOptions testOptions({
     applicationId: 'app_id',
     organizationId: 'org_id',
     supportedTypes: supportedTypes,
+    prompt: prompt,
     onLoginSuccess: onLoginSuccess ?? (router, ref, token) {},
     buttonOptions: WiseZitadelButtonOptions(
       color: (_) => const Color(0xFFFF9000),

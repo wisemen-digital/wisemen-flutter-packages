@@ -92,6 +92,31 @@ void main() {
     });
   });
 
+  group('promptFor', () {
+    test('sends no prompt by default, so an open session is reused', () {
+      expect(
+        AuthenticationRepository.promptFor(options: testOptions()),
+        isEmpty,
+      );
+    });
+
+    test('asks for a fresh authentication for the login prompt', () {
+      final prompt = AuthenticationRepository.promptFor(
+        options: testOptions(prompt: ZitadelLoginPrompt.login),
+      );
+
+      expect(prompt, ['login']);
+    });
+
+    test('asks for an account choice for the select account prompt', () {
+      final prompt = AuthenticationRepository.promptFor(
+        options: testOptions(prompt: ZitadelLoginPrompt.selectAccount),
+      );
+
+      expect(prompt, ['select_account']);
+    });
+  });
+
   group('settingsFor', () {
     test('disables the automatic refresh of the oidc manager', () {
       final settings = AuthenticationRepository.settingsFor(
@@ -117,6 +142,15 @@ void main() {
         settings.options?.web.navigationMode,
         OidcPlatformSpecificOptions_Web_NavigationMode.samePage,
       );
+    });
+
+    test('passes the configured prompt on to the authorization request', () {
+      final settings = AuthenticationRepository.settingsFor(
+        options: testOptions(prompt: ZitadelLoginPrompt.login),
+        isWeb: false,
+      );
+
+      expect(settings.prompt, ['login']);
     });
 
     test('uses the redirect uri and the base scopes', () {
