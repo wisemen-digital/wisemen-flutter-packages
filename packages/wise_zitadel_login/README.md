@@ -12,6 +12,7 @@ A Zitadel login package to be used with Wisemen backends. Provides a ready-made 
 - Riverpod provider for flavored configuration
 - Returns an `OAuthToken` from `wiseclient` on successful login
 - Optional `prompt`, to re-authenticate on every login instead of reusing the Zitadel session
+- Optional `ephemeralSession`, to run the native login in a private browser session
 
 ## Installation
 
@@ -270,6 +271,22 @@ WiseZitadelOptions(
 This governs Zitadel's session, not the browser's cookies: the user stays known
 to Zitadel either way, they are only asked to authenticate again.
 
+To drop the cookies too, pass `ephemeralSession`:
+
+```dart
+WiseZitadelOptions(
+  // ...
+  ephemeralSession: true,
+);
+```
+
+The login then runs in a private browser session on iOS, macOS and Android: it
+starts without cookies and keeps none, so the user authenticates every time and
+is not signed in to Zitadel in the system browser afterwards. On iOS and macOS
+it also skips the "wants to use ... to sign in" alert. Android ignores it where
+the browser does not support it, and it has no effect on web, where the flow
+runs in the app's own tab.
+
 ## Tokens and refreshing
 
 A successful login returns an `OAuthToken` from `wiseclient` and nothing else:
@@ -322,6 +339,7 @@ ProviderScope(
 - `onLoginSuccess` (Function, required): Callback called after a login attempt, receives the `StackRouter`, `WidgetRef` and the (nullable) `OAuthToken`
 - `buttonOptions` (WiseZitadelButtonOptions, required): Styling options for the login buttons
 - `prompt` (ZitadelLoginPrompt, optional): What Zitadel asks the user before returning a token, the open session is reused when left out. See [Forcing a fresh login](#forcing-a-fresh-login)
+- `ephemeralSession` (bool, defaults to `false`): Runs the login in a private browser session on iOS, macOS and Android. See [Forcing a fresh login](#forcing-a-fresh-login)
 - `store` (OidcStore, optional): The store the login flow keeps its state in, in-memory when left out. Web apps have to pass a persistent one, see [Web](#web)
 
 ### WiseZitadelButtonOptions

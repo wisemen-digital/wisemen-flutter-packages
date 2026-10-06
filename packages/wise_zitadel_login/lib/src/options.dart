@@ -18,6 +18,7 @@ class WiseZitadelOptions {
     required this.onLoginSuccess,
     required this.buttonOptions,
     this.prompt,
+    this.ephemeralSession = false,
     this.store,
   });
 
@@ -68,6 +69,28 @@ class WiseZitadelOptions {
   /// keeps its cookies either way, so the user stays known to Zitadel even
   /// when re-authentication is asked for.
   final ZitadelLoginPrompt? prompt;
+
+  /// Whether the login runs in a private browser session on iOS, macOS and
+  /// Android
+  ///
+  /// `false`, the default, runs the flow in a session that shares cookies with
+  /// the system browser, so a user signed in to Zitadel there is signed in here
+  /// too, and the next login reuses that session.
+  ///
+  /// `true` starts every login with no cookies and keeps none afterwards: the
+  /// user always has to authenticate, and nothing outlives the flow. On iOS and
+  /// macOS this also skips the "wants to use ... to sign in" alert.
+  ///
+  /// ```dart
+  /// WiseZitadelOptions(
+  ///   // ...
+  ///   ephemeralSession: true,
+  /// )
+  /// ```
+  ///
+  /// Android ignores it where the browser does not support it. Web has no such
+  /// session, the flow runs in the app's own tab; use [prompt] there instead.
+  final bool ephemeralSession;
 
   /// The store the login flow keeps its authorization state in
   ///

@@ -1,3 +1,8 @@
+# 1.4.0
+
+- Added `WiseZitadelOptions.ephemeralSession`, which runs the login in a private
+  browser session on iOS, macOS and Android
+
 # 1.3.0
 
 - Added `WiseZitadelOptions.prompt`, which sets the OIDC `prompt` of the authorization request

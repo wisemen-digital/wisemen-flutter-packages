@@ -16,6 +16,7 @@ WiseZitadelOptions testOptions({
   String zitadelBaseUrl = 'https://zitadel.example.com',
   List<ZitadelLoginType> supportedTypes = const [testLoginType],
   ZitadelLoginPrompt? prompt,
+  bool ephemeralSession = false,
   void Function(StackRouter router, WidgetRef ref, OAuthToken? token)?
   onLoginSuccess,
 }) {
@@ -26,6 +27,7 @@ WiseZitadelOptions testOptions({
     organizationId: 'org_id',
     supportedTypes: supportedTypes,
     prompt: prompt,
+    ephemeralSession: ephemeralSession,
     onLoginSuccess: onLoginSuccess ?? (router, ref, token) {},
     buttonOptions: WiseZitadelButtonOptions(
       color: (_) => const Color(0xFFFF9000),

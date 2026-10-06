@@ -153,6 +153,28 @@ void main() {
       expect(settings.prompt, ['login']);
     });
 
+    test('shares the browser session on native platforms by default', () {
+      final options = AuthenticationRepository.settingsFor(
+        options: testOptions(),
+        isWeb: false,
+      ).options;
+
+      expect(options?.ios.prefersEphemeralWebBrowserSession, isFalse);
+      expect(options?.macos.prefersEphemeralWebBrowserSession, isFalse);
+      expect(options?.android.ephemeralBrowsing, isFalse);
+    });
+
+    test('runs in a private browser session when ephemeral is asked for', () {
+      final options = AuthenticationRepository.settingsFor(
+        options: testOptions(ephemeralSession: true),
+        isWeb: false,
+      ).options;
+
+      expect(options?.ios.prefersEphemeralWebBrowserSession, isTrue);
+      expect(options?.macos.prefersEphemeralWebBrowserSession, isTrue);
+      expect(options?.android.ephemeralBrowsing, isTrue);
+    });
+
     test('uses the redirect uri and the base scopes', () {
       final settings = AuthenticationRepository.settingsFor(
         options: testOptions(),

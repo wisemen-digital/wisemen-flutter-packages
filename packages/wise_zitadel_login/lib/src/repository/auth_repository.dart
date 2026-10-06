@@ -122,9 +122,22 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   ///
   /// The cost is a page load in the middle of the flow, which is why the flow
   /// state has to outlive the isolate, see [WiseZitadelOptions.store].
-  static OidcPlatformSpecificOptions get platformOptions {
-    return const OidcPlatformSpecificOptions(
-      web: OidcPlatformSpecificOptions_Web(
+  ///
+  /// Native platforms run in a private browser session when
+  /// [WiseZitadelOptions.ephemeralSession] is set.
+  static OidcPlatformSpecificOptions platformOptionsFor({
+    required WiseZitadelOptions options,
+  }) {
+    final apple = OidcNativeOptionsApple(
+      prefersEphemeralWebBrowserSession: options.ephemeralSession,
+    );
+    return OidcPlatformSpecificOptions(
+      android: OidcNativeOptionsAndroid(
+        ephemeralBrowsing: options.ephemeralSession,
+      ),
+      ios: apple,
+      macos: apple,
+      web: const OidcPlatformSpecificOptions_Web(
         navigationMode: OidcPlatformSpecificOptions_Web_NavigationMode.samePage,
       ),
     );
@@ -139,7 +152,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
       redirectUri: redirectUriFor(options: options, isWeb: isWeb),
       scope: scopesFor(options: options),
       prompt: promptFor(options: options),
-      options: platformOptions,
+      options: platformOptionsFor(options: options),
       // The app refreshes the token it receives, see the class documentation.
       refreshBefore: (token) => null,
     );
