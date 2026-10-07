@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wise_zitadel_login/src/providers/wise_zitadel_provider.dart';
 import 'package:wise_zitadel_login/src/routes/wise_login_screen_route.dart';
 
-import '../utils/fake_ref.dart';
+import '../utils/test_options.dart';
 
 Text builder(BuildContext context) => const Text('Logo');
 
@@ -48,9 +48,7 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
-            wiseZitadelOptionsProvider.overrideWithValue(
-              FakeRef().read(wiseZitadelOptionsProvider),
-            ),
+            wiseZitadelOptionsProvider.overrideWithValue(testOptions()),
           ],
           child: MaterialApp(
             home: Scaffold(

@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:oidc/oidc.dart';
 import 'package:wiseclient/wiseclient.dart';
+import 'types/zitadel_login_prompt.dart';
 import 'types/zitadel_login_type.dart';
 
 /// [WiseZitadelOptions] containing params (usually flavored) used by the repository
@@ -15,6 +17,9 @@ class WiseZitadelOptions {
     required this.supportedTypes,
     required this.onLoginSuccess,
     required this.buttonOptions,
+    this.prompt,
+    this.ephemeralSession = false,
+    this.store,
   });
 
   /// The base api URL for the application
@@ -42,6 +47,72 @@ class WiseZitadelOptions {
 
   /// Login button styling options
   final WiseZitadelButtonOptions buttonOptions;
+
+  /// What Zitadel asks the user before it returns a token
+  ///
+  /// `null`, the default, sends no `prompt` parameter: a user with an open
+  /// Zitadel session is logged straight back in without seeing a screen, which
+  /// is what makes a second login look cached.
+  ///
+  /// Pass [ZitadelLoginPrompt.login] to authenticate every time regardless of
+  /// that session, or [ZitadelLoginPrompt.selectAccount] to let the user pick
+  /// an account instead:
+  ///
+  /// ```dart
+  /// WiseZitadelOptions(
+  ///   // ...
+  ///   prompt: ZitadelLoginPrompt.login,
+  /// )
+  /// ```
+  ///
+  /// This only governs Zitadel's own session. The browser the flow runs in
+  /// keeps its cookies either way, so the user stays known to Zitadel even
+  /// when re-authentication is asked for.
+  final ZitadelLoginPrompt? prompt;
+
+  /// Whether the login runs in a private browser session on iOS, macOS and
+  /// Android
+  ///
+  /// `false`, the default, runs the flow in a session that shares cookies with
+  /// the system browser, so a user signed in to Zitadel there is signed in here
+  /// too, and the next login reuses that session.
+  ///
+  /// `true` starts every login with no cookies and keeps none afterwards: the
+  /// user always has to authenticate, and nothing outlives the flow. On iOS and
+  /// macOS this also skips the "wants to use ... to sign in" alert.
+  ///
+  /// ```dart
+  /// WiseZitadelOptions(
+  ///   // ...
+  ///   ephemeralSession: true,
+  /// )
+  /// ```
+  ///
+  /// Android ignores it where the browser does not support it. Web has no such
+  /// session, the flow runs in the app's own tab; use [prompt] there instead.
+  final bool ephemeralSession;
+
+  /// The store the login flow keeps its authorization state in
+  ///
+  /// `null` keeps the state in memory, which is all a native platform needs: it
+  /// hands the redirect back to the running app, so the state only has to
+  /// outlive an `await`.
+  ///
+  /// **Web apps have to pass a persistent one.** The login navigates the app's
+  /// own tab to Zitadel and the browser comes back to a fresh page load, so an
+  /// in-memory state is gone before the response arrives and the login cannot
+  /// be finished. Add
+  /// [oidc_web_core](https://pub.dev/packages/oidc_web_core) to your app and
+  /// pass its `OidcWebStore`, which stores in the browser under the same keys
+  /// the `redirect.html` in your `web/` folder writes:
+  ///
+  /// ```dart
+  /// WiseZitadelOptions(
+  ///   // ...
+  ///   store: const OidcWebStore(),
+  /// )
+  /// ```
+  final OidcStore? store;
 }
 
 /// [WiseZitadelButtonOptions] containing button styling options
