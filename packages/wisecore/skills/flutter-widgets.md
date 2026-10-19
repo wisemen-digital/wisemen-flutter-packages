@@ -77,6 +77,89 @@ A builder method that returns a widget is a widget wearing a disguise: it can't
 be `const`, doesn't get its own element, and can't be tested on its own. Promote
 it rather than growing it.
 
+What this rule does *not* cover:
+
+- **A `StatefulWidget`'s `State` class** is not a second widget — it stays in the
+  same file as its widget.
+- **Callbacks an API asks for** (`itemBuilder`, `builder`, `pageListBuilder`,
+  `errorBuilder`) are not builder methods.
+- **Methods that only return an existing widget class**, like widget-manager
+  methods (`return ItemRelatedList(itemId: itemId);`), build nothing themselves.
+- **A trivial piece used once** — a centered `Text` for an error state — doesn't
+  need a class at all. Keep it inline in the parent's `build`. A file holding three
+  lines of UI only adds a file to jump to; extract once it is reused or makes the
+  parent hard to read.
+
+## Keep Logic Out of Widgets
+
+A widget builds UI. Everything else has a better home, where it can be tested and
+reused, and where it doesn't run again on every rebuild:
+
+| Logic | Belongs in |
+|-------|------------|
+| Submitting, loading and error state | The controller (see the providers skill) |
+| Showing a submission error | The controller, via the project's shared error dialog — not a separate listener widget |
+| Parsing or transforming data | A mapper in `lib/repository/` |
+| A long condition about a model | A getter on the model (`state.canSubmit`) |
+| Other non-trivial logic | Its own file (extension or util) |
+
+```dart
+// DON'T — business rules spelled out inside build
+final canSubmit = state.requesterDateInfo?.hasShift == true &&
+    state.candidate != null &&
+    state.candidateDateInfo?.hasShift == true &&
+    !state.isSubmitting;
+
+// DO — the model names the rule, the controller owns submission
+final canSubmit = state.canSubmit && !submission.isLoading;
+```
+
+## Sizes and Spacing
+
+Padding, gaps and radii come from `wisewidgetslibrary`
+(`import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';`), not from raw
+numbers. One set of constants keeps spacing consistent across the app and turns a
+design change into a one-place edit. Don't add a project-specific set next to it.
+
+| Constant | Values |
+|----------|--------|
+| `Sizes.xs` / `s` / `m` / `l` / `xl` | 4 / 8 / 16 / 32 / 64 |
+| Gaps | `gapHXS`…`gapHXL` (height), `gapWXS`…`gapWXL` (width), `gapBottom` |
+| Padding | `padXS`…`padXL` (all sides), `padVXS`…`padVXL` (vertical), `padHXS`…`padHXL` (horizontal), `pad0` |
+| Radius | `radXS`…`radXL` |
+
+When every child of a `Column` or `Row` is separated by the same gap, use its
+`spacing:` parameter instead of a gap widget between each child.
+
+When no constant matches the value the design needs, use the actual value rather
+than a constant that is "close enough".
+
+```dart
+// DON'T
+Padding(padding: const EdgeInsets.all(16), child: …)
+Column(children: [first, gapHS, second, gapHS, third])
+
+// DO
+Padding(padding: padM, child: …)
+Column(spacing: Sizes.s, children: [first, second, third])
+```
+
+## Navigation
+
+Navigate with `context.router` from auto_route — `context.router.pop()`,
+`context.router.push(...)` — also to close a dialog or bottom sheet. Never call
+`Navigator.of(context)` directly: auto_route owns the navigation stack, and
+`Navigator.of(context)` can act on the wrong navigator in nested routers and
+bottom sheets.
+
+```dart
+// DON'T
+onPressed: () => Navigator.of(context).pop(),
+
+// DO
+onPressed: () => context.router.pop(),
+```
+
 ## Widget API Design
 
 How a widget exposes itself matters as much as what it renders.
@@ -402,14 +485,14 @@ class EmptyState extends StatelessWidget {
                 size: 64,
                 color: context.fgColor.tertiary,
               ),
-            gapM,
+            gapHM,
             Text(
               title,
               style: context.title,
               textAlign: TextAlign.center,
             ),
             if (subtitle != null) ...[
-              gapS,
+              gapHS,
               Text(
                 subtitle!,
                 style: context.label,
@@ -417,7 +500,7 @@ class EmptyState extends StatelessWidget {
               ),
             ],
             if (action != null) ...[
-              gapL,
+              gapHL,
               action!,
             ],
           ],
@@ -489,7 +572,7 @@ export 'text_field.dart';
 2. **Include Semantics** — Add accessibility labels for interactive widgets
 3. **Const constructors** — Use `const` for better performance
 4. **Named parameters** — Use required named parameters for clarity
-5. **Extract magic numbers** — Use `static const` for sizes and dimensions
+5. **No magic numbers** — Use the `wisewidgetslibrary` constants (`Sizes`, `gap*`, `pad*`, `rad*`) for padding, gaps and radii; `static const` for component-specific dimensions (like `PrimaryButton.SIZE`). See "Sizes and Spacing"
 6. **Handle loading/disabled states** — Buttons should support both states
 7. **Barrel exports** — Always export from `widgets.dart`
 8. **Single responsibility** — Each widget should do one thing well
@@ -502,6 +585,8 @@ export 'text_field.dart';
 15. **Scope MediaQuery reads** — Use the property accessor for what you read (`MediaQuery.sizeOf`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf`, `.textScalerOf`), not `MediaQuery.of(context)`, which rebuilds the widget on *every* metric change
 16. **Widgets take a `child`, not a builder function** — See "Widget API Design"; expose composition through a `child`, and own state locally rather than via `.of(context)` scope lookups
 17. **Use the named `SizedBox` constructors** — `SizedBox.square(dimension: 20)` when width and height match, `SizedBox.shrink()` for an empty slot, `SizedBox.expand()` to fill. They state the intent that `SizedBox(height: 20, width: 20)` only implies
-18. **One widget per file** — including single-use sub-widgets and `Widget _build…()` methods; see "One Widget Per File"
+18. **One widget per file** — including single-use sub-widgets and `Widget _build…()` methods; a `State` class stays with its widget, and a trivial one-off stays inline in `build`. See "One Widget Per File"
 19. **Go directional on any horizontal edge** — `EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0)` over `EdgeInsets.fromLTRB`, `AlignmentDirectional` over `Alignment`, `BorderRadiusDirectional` over `BorderRadius`, and `start`/`end` over `left`/`right`. The non-directional forms hardcode left-to-right and silently mirror wrong in RTL locales. Purely vertical insets (`EdgeInsets.only(bottom: …)`, `symmetric(vertical: …)`) have no handedness — leave those alone
 20. **Don't hand-tune font metrics** — take text styles from the theme (`context.title`, `context.normal`, `context.label`). A `letterSpacing` or line-height lifted off a design file is calibrated to *that file's* typeface; applying it while leaving `fontFamily` unset pins a negative tracking value onto whatever font the platform happens to supply. If a design genuinely needs its own tracking, set the family it was designed for in the same `TextStyle`
+21. **Keep logic out of widgets** — Submission state in the controller, transformations in mappers, long conditions as model getters. See "Keep Logic Out of Widgets"
+22. **Navigate with `context.router`** — Never `Navigator.of(context)`, also not to close a dialog

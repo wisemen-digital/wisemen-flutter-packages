@@ -135,12 +135,12 @@ enum ItemType {
   typeC,
   typeD;
 
-  String get displayName {
+  String label(BuildContext context) {
     return switch (this) {
-      ItemType.typeA => 'Type A',
-      ItemType.typeB => 'Type B',
-      ItemType.typeC => 'Type C',
-      ItemType.typeD => 'Type D',
+      ItemType.typeA => S.of(context).typeA,
+      ItemType.typeB => S.of(context).typeB,
+      ItemType.typeC => S.of(context).typeC,
+      ItemType.typeD => S.of(context).typeD,
     };
   }
 
@@ -293,6 +293,37 @@ extension EventDtoMapper on EventDTO {
 | Feature Enum | `lib/features/[feature]/enums/` | UI display and logic |
 | DTO | `lib/network/dto/` | API response parsing |
 
+## Nullable Fields vs Fallback Defaults
+
+Answer three questions for every field, in this order:
+
+1. **Do we use this value in the app?** If not, leave the field out of the
+   model. Unused fields only add mapping code for data nobody needs.
+2. **Can the value be missing?** That depends on the data — what the API or
+   database can send — not on how we use it. If it can be missing, make the field
+   nullable (`String?`, `int?`). If it is always present, read it strictly so a
+   missing value surfaces as an error.
+3. **What should happen when it's missing?** Decide that where the value is used,
+   usually in the UI — show a placeholder, hide a row, disable a button. Not while
+   parsing.
+
+Never invent a value just to avoid a nullable type. A made-up `0` or `''` looks
+like real data and hides that the value was missing.
+
+```dart
+// DON'T — invented values while parsing
+id: json['id'] as int? ?? 0,
+description: json['description'] as String? ?? '',
+
+// DO — nullable when it can be missing, the UI decides what to show
+id: json['id'] as int,                       // always sent
+description: json['description'] as String?, // optional
+```
+
+A fallback while parsing is fine when a missing value has a real meaning in the
+domain, the same everywhere it is used: an absent list means "no items", an
+absent flag is documented as `false`.
+
 ## Best Practices
 
 1. **Keep feature models simple** — no business logic beyond display helpers
@@ -300,3 +331,4 @@ extension EventDtoMapper on EventDTO {
 3. **Separate display logic** — use extension methods for complex formatting
 4. **Map enums explicitly** — avoid implicit conversions between layers
 5. **Document optional fields** — clarify when null is valid
+6. **Only fields we use, nullable when they can be missing** — No invented defaults. See "Nullable Fields vs Fallback Defaults"

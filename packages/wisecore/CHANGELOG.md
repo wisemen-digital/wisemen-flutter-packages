@@ -1,3 +1,10 @@
+## 2.2.13
+
+- Improved general skill with rules for scope, helpers and localization
+- Improved widgets skill with logic placement, sizes and navigation
+- Improved screens skill with screen structure, submit bars and access checks
+- Improved router, database, providers, repositories and models skills
+
 ## 2.2.12
 
 - Improved AI skills script

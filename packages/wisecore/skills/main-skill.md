@@ -48,6 +48,58 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Keep navigation out of state holders. A notifier or controller owns *state*; opening a sheet, pushing a route or showing a dialog is the widget's job — call it from `onPressed`. A `bindShow(callback)` / `setHandler(callback)` setter on a controller is the smell: it exists only so something else can trigger UI later, and it buys nothing over calling that code directly
 - Don't ship placeholder tests. A scaffolding test like `expect(1 + 1, 2)` proves nothing once real tests exist — delete it. It inflates the test count and hides the fact that a file, or a whole package, is untested
 - Don't narrate the code in comments. A comment that walks through what the widget tree contains, or restates the call it sits above, is deleted in review — the reader can see the code. Comment the things the code *can't* say: why a workaround exists, which upstream bug or API contract forces an odd shape, why a value that looks wrong is deliberate. Doc comments (`///`) on public API are the exception and stay
+- Build what the requirements ask for, nothing more. Don't add behaviour nobody asked for — a non-dismissible dialog, extra fields, extra states. If something extra seems needed, mention it instead of adding it; unrequested code still has to be read, tested and maintained
+- Make each decision in one place. Check a condition where the decision belongs and don't call code that would only return early — `if (user.isEmployee) loadEmployeeDetail();` beats calling `loadEmployeeDetail()` and returning inside it. Don't repeat the same check in several layers "for extra protection": it hides where the real decision is made. When a function has many callers that all need the check, one check inside the function *is* the one place
+- Don't declare named functions inside functions or methods. Move them to a private method, an extension or their own file — a nested `void collectItems(...)` hides how big its parent really is and can't be tested on its own. Lambdas passed as arguments (`onPressed: () { … }`, `.map((e) => …)`) are fine
+- Prefer a new file over another private function. When a piece of logic does a lot of work or could be used elsewhere, give it its own widget, mapper, extension or controller file instead of growing the current one with private helpers
+- Write `value ?? false` for a nullable `bool`, not `value == true` — the fallback is visible at a glance. Use the same fallback for the same kind of value throughout a screen; one flag defaulting to `false` while its siblings default to `true` reads as a bug
+
+### Reusing Helpers
+
+Before writing a helper, check the `wisecore` package (`import 'package:wisecore/wisecore.dart';`), the project's own extensions and `package:collection`. A second copy of an existing helper drifts apart from the original over time.
+
+| Need | Use |
+|------|-----|
+| Compare dates without time / strip the time | `date.isSameDate(other)` / `date.withoutTime` (wisecore) |
+| Capitalize a string | `text.capitalized` (wisecore) |
+| Null-or-empty checks | `text.orNull`, `text.isNullOrEmpty`, `list.isNullOrEmpty` (wisecore) |
+| Show an `AsyncValue` from a stream provider | `whenStream(...)` (wisecore) |
+| Debounce input, open URLs / mail / phone | `Debouncer`, `WiseLauncher` (wisecore) |
+| First element or null | `list.firstOrNull` (`package:collection`) |
+
+```dart
+// DON'T — hand-rolled copies of what already exists
+final isSameDay = a.year == b.year && a.month == b.month && a.day == b.day;
+final title = name[0].toUpperCase() + name.substring(1);
+
+// DO
+final isSameDay = a.isSameDate(b);
+final title = name.capitalized;
+```
+
+### Localization
+
+Translations live in `lib/l10n/intl_<locale>.arb`, one file per language — often 5 to 10 files. The Flutter Intl plugin (`flutter_intl` in `pubspec.yaml`, class `S`) generates `lib/generated/` from them; `main_locale` there is the source language.
+
+- **No hardcoded user-facing text.** Use `S.of(context).keyName`. Labels built outside a widget (enums, models) take a `BuildContext` and return `S.of(context)…`
+- **Change keys in every `.arb` file.** When you add, rename or remove a key, do it in *all* `intl_*.arb` files. List `lib/l10n/` first instead of assuming which languages exist. Keep the key and its placeholders (`{number}`) identical everywhere and translate the value per language; if you're unsure of a translation, still add the key and mention it so it can be checked
+- **Name keys in English lowerCamelCase, after the meaning** — `cancel`, `thanks`, `weeksOfService` — not after the screen. Reuse an existing key when text and meaning are the same
+- **Never edit `lib/generated/` by hand.** The plugin regenerates it when an `.arb` file is saved. Without the IDE plugin: `dart pub global activate intl_utils` once, then `dart pub global run intl_utils:generate`
+
+A key missing from one file breaks that language, and with many languages it is easy to miss. A key in the wrong language (`vrouw` in one file, `woman` in the others) breaks generation and lookups.
+
+```
+// DON'T — key only added to the languages you happen to know
+// intl_en.arb: "number": "Number"
+// intl_nl.arb: "number": "Nummer"
+// intl_fr.arb: (missing)
+
+// DO — same key in every intl_*.arb
+// intl_en.arb: "number": "Number"
+// intl_nl.arb: "number": "Nummer"
+// intl_fr.arb: "number": "Numéro"
+// intl_de.arb: "number": "Nummer"
+```
 
 ### Naming Conventions
 
@@ -57,6 +109,7 @@ This is a Flutter application following a **feature-based clean architecture** w
 | Screens | `_screen.dart` suffix | `item_list_screen.dart` |
 | Widgets | `_widget.dart` suffix (optional) | `item_card.dart` |
 | Providers | `_providers.dart` suffix | `item_providers.dart` |
+| Controllers | `_controller.dart` suffix | `item_controller.dart` |
 | Repositories | `_repository.dart` suffix | `item_repository.dart` |
 | Services | `_service.dart` suffix | `item_service.dart` |
 | DTOs | `_dto.dart` suffix | `item_dto.dart` |

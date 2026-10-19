@@ -34,6 +34,9 @@ abstract class ItemRepository {
   // Watch methods return streams for reactive updates
   Stream<List<Item>> watchItems();
   Stream<Item?> watchItemById({required String id});
+
+  // Get methods read the local database once
+  Future<Item?> getItemById({required String id});
   
   // Fetch methods get data from API and store locally
   Future<void> fetchItems();
@@ -73,6 +76,16 @@ class ItemRepositoryImpl implements ItemRepository {
     return ref.watch(itemDaoProvider).watchById(id: id).map(
           (item) => item?.toFeatureModel(),
         );
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // GET METHODS — One-time reads from database
+  // ═══════════════════════════════════════════════════════════════
+
+  @override
+  Future<Item?> getItemById({required String id}) async {
+    final item = await ref.read(itemDaoProvider).getById(id: id);
+    return item?.toFeatureModel();
   }
 
   // ═══════════════════════════════════════════════════════════════
@@ -241,6 +254,25 @@ class ItemsProvider extends _$ItemsProvider {
 }
 ```
 
+## Parse Responses with DTOs
+
+A repository never reads fields from a raw `Map` (`response['key']`). The service
+returns a DTO (see the network skill) and a mapper in `dto_mappers/` turns it into
+a companion or feature model — the same path as all other API data, so parsing
+lives in one place and is generated, not hand-written.
+
+```dart
+// DON'T — hand-written parsing inside the repository
+return ShiftSwapResult(
+  success: response['success'] == true,
+  message: response['message']?.toString(),
+);
+
+// DO — DTO from the service, mapper to the model
+final dto = await ref.read(shiftSwapServiceProvider).submit(body);
+return dto.toFeatureModel();
+```
+
 ## Best Practices
 
 1. **Watch for reads, fetch for writes** — streams enable reactive UI
@@ -249,3 +281,5 @@ class ItemsProvider extends _$ItemsProvider {
 4. **Use `ref.watch` for DAOs** — enables stream updates
 5. **Use `ref.read` for services** — one-time calls for API requests
 6. **Keep repositories thin** — orchestration only, no business logic
+7. **`get*` for one-time reads** — Add a `get*` method next to `watch*` instead of `watch*().first` or `watch*().where(...).first`
+8. **No JSON parsing in repositories** — DTO from the service, mapper in `dto_mappers/`. See "Parse Responses with DTOs"

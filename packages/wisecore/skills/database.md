@@ -167,6 +167,16 @@ class ItemsDao extends DatabaseAccessor<AppDatabase> with _$ItemsDaoMixin {
   }
 
   // ═══════════════════════════════════════════════════════════════
+  // GET OPERATIONS — One-time reads
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Get single item by ID (null when it doesn't exist)
+  Future<ItemObject?> getById({required String id}) {
+    return (select(itemsTable)..where((t) => t.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   // WATCH OPERATIONS — Reactive streams
   // ═══════════════════════════════════════════════════════════════
 
@@ -257,8 +267,11 @@ class ItemDetails {
 
   factory ItemDetails.fromJson(Map<String, dynamic> json) {
     return ItemDetails(
-      category: json['category'] as String? ?? 'default',
+      // Always present → read strictly; a missing value is a real error
+      category: json['category'] as String,
+      // Absent means "active" by the domain's own rule → a real default
       isActive: json['is_active'] as bool? ?? true,
+      // Can be missing → nullable, the UI decides what to show
       metadata: json['metadata'] as String?,
     );
   }
@@ -328,6 +341,63 @@ class StringListConverter extends TypeConverter<List<String>, String> {
 ```
 
 
+## One-Time Reads vs Watches
+
+When you need a value once — in a repository method, a controller action or a
+guard — add a `get*` method to the DAO next to its `watch*` method and use that.
+Calling `.first` on a watch opens a stream only to close it again, and hides that
+you only needed one value.
+
+```dart
+// DON'T — a stream for a single read
+final user = await ref.read(usersDaoProvider).watchUser().where((u) => u != null).first;
+
+// DO — a get method states the intent
+final user = await ref.read(usersDaoProvider).getCurrentUser();
+```
+
+Taking `.first` of a stream you don't own — an auth status stream from a
+package, for example — is fine; there is no `get*` to add.
+
+## Don't Hide Row-Count Errors
+
+Don't add `limit(1)` to a query that should only ever match one row just to avoid
+errors. Choose the method that matches what is valid:
+
+| Valid result | Method | Throws when |
+|--------------|--------|-------------|
+| Exactly one row must exist | `getSingle()` | zero or multiple rows |
+| Zero or one row (lookup by ID, no user while logged out) | `getSingleOrNull()` | multiple rows |
+
+The errors `limit(1)` hides are informative: if a change ever allows multiple
+users in the table, `limit(1)` silently picks one and the bug goes unnoticed.
+
+```dart
+// DON'T — hides "multiple users" (and "no user" when one must exist)
+Future<UserObject?> getCurrentUser() {
+  return (select(usersTable)..limit(1)).getSingleOrNull();
+}
+
+// DO — when a user must exist at this point
+Future<UserObject> getCurrentUser() {
+  return select(usersTable).getSingle();
+}
+```
+
+`limit(1)` is fine when you really want "the first of many", together with an
+`orderBy` — the most recent entry, for example.
+
+## Migrations
+
+Don't hand-write migration steps. Bump `schemaVersion` and let `onUpgrade`
+recreate the tables (see the Database Class above). Replacing the tables avoids
+migration issues altogether, and data that comes from the API is fetched again
+anyway.
+
+The exception is a table holding data that exists only on the device, such as
+offline drafts that aren't synced yet. Recreating it would lose that data, so
+that table needs a real migration.
+
 ## Code Generation
 
 After modifying tables or DAOs:
@@ -343,3 +413,7 @@ dart run build_runner build --delete-conflicting-outputs
 3. **Null safety** — use `.nullable()` for optional columns
 4. **JSON for nested data** — complex objects as JSON in text columns
 5. **Feature-specific DAOs** — one DAO per feature, can span multiple tables
+6. **`get*` for one-time reads** — Instead of `watch*().first` on your own DAO
+7. **Don't hide row-count errors** — No `limit(1)` on a query that should match one row; choose `getSingle()` or `getSingleOrNull()`
+8. **No hand-written migrations** — Bump `schemaVersion` and recreate tables, unless a table holds device-only data
+9. **No invented defaults** — See "Nullable Fields vs Fallback Defaults" in the models skill
