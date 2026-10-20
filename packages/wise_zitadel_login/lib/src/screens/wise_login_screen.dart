@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wise_nav_bar/wise_nav_bar.dart';
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';
@@ -93,13 +92,14 @@ class WiseLoginScreen extends HookConsumerWidget {
                     children: options.supportedTypes.map(
                       (type) {
                         final isLoading = value == type;
+                        final foregroundColor =
+                            options.buttonOptions
+                                .buttonTextStyle(context)
+                                .color ??
+                            Colors.white;
                         return PlatformButton2(
                           color: options.buttonOptions.color(context),
-                          foregroundColor:
-                              options.buttonOptions
-                                  .buttonTextStyle(context)
-                                  .color ??
-                              Colors.white,
+                          foregroundColor: foregroundColor,
                           borderRadius: options.buttonOptions.borderRadius,
                           borderSide: options.buttonOptions.borderSide,
                           isLoading: isLoading,
@@ -110,10 +110,15 @@ class WiseLoginScreen extends HookConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             spacing: 8,
                             children: [
-                              SvgPicture.asset(
-                                type.iconSvgString,
-                                width: 24,
-                                height: 24,
+                              IconTheme.merge(
+                                data: IconThemeData(
+                                  color: foregroundColor,
+                                  size: 24,
+                                ),
+                                child: SizedBox.square(
+                                  dimension: 24,
+                                  child: type.icon,
+                                ),
                               ),
                               Flexible(
                                 child: Text(

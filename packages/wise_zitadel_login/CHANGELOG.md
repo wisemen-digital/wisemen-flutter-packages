@@ -1,3 +1,8 @@
+# 1.4.1
+
+- **Breaking:** `ZitadelLoginType.iconSvgString` is replaced by an optional `icon` widget, defaulting to `Icon(Icons.login)`. Pass e.g. `SvgPicture.asset(...)` to keep using an SVG asset
+- Removed the `flutter_svg` dependency
+
 # 1.4.0
 
 - Added `WiseZitadelOptions.ephemeralSession`, which runs the login in a private

@@ -59,6 +59,10 @@ void main() {
       ),
     );
 
+    final typeCount = FakeRef()
+        .read(wiseZitadelOptionsProvider)
+        .supportedTypes
+        .length;
     expect(find.text('Logo'), findsOneWidget);
     expect(
       find.byType(PlatformButton2),
