@@ -34,11 +34,7 @@ void main() {
     test('omits the idp scope for a login type without an idp', () {
       final scopes = AuthenticationRepository.scopesFor(
         options: testOptions(),
-        type: const ZitadelLoginType(
-          buttonText: 'Internal',
-          iconSvgString: '',
-          idp: '',
-        ),
+        type: const ZitadelLoginType(buttonText: 'Internal', idp: ''),
       );
 
       expect(

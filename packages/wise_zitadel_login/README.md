@@ -20,7 +20,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  wise_zitadel_login: ^1.4.1
+  wise_zitadel_login: ^1.5.0
 ```
 
 ## Platform setup

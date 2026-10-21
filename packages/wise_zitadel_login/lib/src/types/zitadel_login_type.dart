@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wise_zitadel_login/src/repository/auth_repository.dart';
-import 'package:wiseclient/wiseclient.dart' show OAuthToken;
-
-import '../options.dart';
 
 /// [ZitadelLoginType] represents a login type for buttons on the login screen
 final class ZitadelLoginType {

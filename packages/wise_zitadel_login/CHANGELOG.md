@@ -1,4 +1,4 @@
-# 1.4.1
+# 1.5.0
 
 - **Breaking:** `ZitadelLoginType.iconSvgString` is replaced by an optional `icon` widget, defaulting to `Icon(Icons.login)`. Pass e.g. `SvgPicture.asset(...)` to keep using an SVG asset
 - Removed the `flutter_svg` dependency
