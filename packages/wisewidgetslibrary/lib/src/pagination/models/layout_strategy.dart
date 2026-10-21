@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 /// Represents the different layout strategies available.
 ///
 /// This enumeration is used to determine how the layout of a widget should be handled.

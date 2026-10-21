@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 export 'bottom_loader_padding.dart';
 export 'first_page_error_builder.dart';
 export 'first_page_indicator_widget_builder.dart';

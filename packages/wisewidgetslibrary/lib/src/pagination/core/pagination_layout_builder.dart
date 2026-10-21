@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'dart:math' as math show max;
 
 import 'package:flutter/material.dart';

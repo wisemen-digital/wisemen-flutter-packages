@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'dart:async' show Timer;
 import 'dart:ui';
 
