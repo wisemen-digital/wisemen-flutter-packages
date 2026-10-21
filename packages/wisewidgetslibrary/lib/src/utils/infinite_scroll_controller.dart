@@ -28,6 +28,7 @@ abstract class InfiniteScrollController<PageKeyType>
 
   /// Fetches data and sets loading
   Future<void> onFetchData() async {
+    if (isLoading.value) return;
     try {
       error.value = null;
       if (!value.isLastPage) {
@@ -49,7 +50,10 @@ abstract class InfiniteScrollController<PageKeyType>
   Future<void> refresh() async {
     isLoading.value = true;
     value = initial;
-    await fetchNewPage();
-    isLoading.value = false;
+    try {
+      await fetchNewPage();
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

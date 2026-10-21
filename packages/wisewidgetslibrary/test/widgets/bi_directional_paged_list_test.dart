@@ -55,6 +55,26 @@ class LoadingController extends InfiniteScrollController<int> {
   Future<void> logError(Object error, StackTrace stackTrace) => Future.value();
 }
 
+class CountingController extends InfiniteScrollController<int> {
+  CountingController({required super.initialData});
+
+  int fetchCount = 0;
+
+  @override
+  Future<TestPaginationMeta> fetchNewPage() {
+    fetchCount++;
+    return Future.value(
+      TestPaginationMeta(
+        next: fetchCount == 1 ? 2 : null,
+        pageSize: TestPaginationMeta.appPageSize,
+      ),
+    );
+  }
+
+  @override
+  Future<void> logError(Object error, StackTrace stackTrace) => Future.value();
+}
+
 void main() {
   // The backward direction renders above the anchor at negative scroll
   // offsets, which start outside the initial viewport (which shows the
@@ -252,6 +272,41 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
   });
+
+  testWidgets(
+    'fetches the next page when loading ends after items arrived mid-load',
+    (tester) async {
+      final forwardController = CountingController(
+        initialData: TestPaginationMeta.firstPage,
+      );
+
+      await tester.pumpWidget(
+        buildBiDirectionalPagedList(
+          forwardItems: List.generate(30, (i) => i),
+          forwardController: forwardController,
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(forwardController.fetchCount, 1);
+
+      // The next page arrives while isLoading is still true, as with a
+      // database-backed stream, and its last item is built during loading.
+      forwardController.isLoading.value = true;
+      await tester.pumpWidget(
+        buildBiDirectionalPagedList(
+          forwardItems: List.generate(40, (i) => i),
+          forwardController: forwardController,
+        ),
+      );
+      await tester.drag(find.byType(CustomScrollView), const Offset(0, -3000));
+      await tester.pumpAndSettle();
+      expect(forwardController.fetchCount, 1);
+
+      forwardController.isLoading.value = false;
+      await tester.pumpAndSettle();
+      expect(forwardController.fetchCount, 2);
+    },
+  );
 
   testWidgets('renders separatorBuilder between shimmer placeholders', (
     tester,
