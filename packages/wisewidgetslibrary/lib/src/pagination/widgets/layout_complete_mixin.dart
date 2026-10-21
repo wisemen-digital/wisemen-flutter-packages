@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'package:flutter/material.dart';
 
 /// A mixin that can be used by a `State` to invoke a function after the

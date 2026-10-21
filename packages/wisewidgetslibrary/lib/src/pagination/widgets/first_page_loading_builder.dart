@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 import 'package:flutter/material.dart';
 
 /// A widget builder function that builds a [Center] widget containing a

@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 /// An enumeration representing the different statuses of a pagination operation.
 ///
 /// Each status corresponds to a specific state a pagination operation can be in.

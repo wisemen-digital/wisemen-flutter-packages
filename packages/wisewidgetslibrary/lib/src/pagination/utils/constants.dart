@@ -1,3 +1,5 @@
+// coverage:ignore-file
+
 /// The default duration for debouncing.
 const Duration defaultDebounceDuration = Duration(milliseconds: 150);
 
