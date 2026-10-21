@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 /// [ZitadelLoginType] represents a login type for buttons on the login screen
 final class ZitadelLoginType {
@@ -6,16 +6,15 @@ final class ZitadelLoginType {
   const ZitadelLoginType({
     required this.buttonText,
     required this.idp,
-    this.icon = const Icon(Icons.login),
+    this.icon,
   });
 
   /// The text displayed in the button
   final String buttonText;
 
-  /// The icon displayed in the button, sized to 24x24
-  /// Defaults to a Material login icon
-  /// Override with e.g. Google, Apple, Microsoft, etc.'s logo
-  final Widget icon;
+  /// The optional icon displayed in the button, sized to 24x24
+  /// Usually Google, Apple, Microsoft, etc.'s logo
+  final Widget? icon;
 
   /// The IDP used for the login
   ///

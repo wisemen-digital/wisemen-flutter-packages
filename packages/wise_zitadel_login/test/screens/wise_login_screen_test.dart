@@ -66,6 +66,30 @@ void main() {
     );
   });
 
+  testWidgets('WiseLoginScreen shows the icon of a login type that has one', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      buildScreen(
+        options: testOptions(
+          supportedTypes: const [
+            testLoginType,
+            ZitadelLoginType(
+              buttonText: 'Google',
+              idp: 'google',
+              icon: Icon(Icons.g_mobiledata),
+            ),
+          ],
+        ),
+        authenticator: FakeAuthenticator(),
+        router: mockStackRouter,
+      ),
+    );
+
+    expect(find.byType(Icon), findsOneWidget);
+    expect(find.byIcon(Icons.g_mobiledata), findsOneWidget);
+  });
+
   testWidgets('WiseLoginScreen logs in with the pressed login type', (
     tester,
   ) async {

@@ -17,11 +17,10 @@ void main() {
       expect(type.idp, 'google');
     });
 
-    test('defaults the icon to a login icon', () {
+    test('has no icon by default', () {
       const type = ZitadelLoginType(buttonText: 'Internal', idp: '');
 
-      expect(type.icon, isA<Icon>());
-      expect((type.icon as Icon).icon, Icons.login);
+      expect(type.icon, isNull);
     });
   });
 }

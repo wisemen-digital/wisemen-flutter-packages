@@ -110,16 +110,17 @@ class WiseLoginScreen extends HookConsumerWidget {
                             mainAxisSize: MainAxisSize.min,
                             spacing: 8,
                             children: [
-                              IconTheme.merge(
-                                data: IconThemeData(
-                                  color: foregroundColor,
-                                  size: 24,
+                              if (type.icon case final icon?)
+                                IconTheme.merge(
+                                  data: IconThemeData(
+                                    color: foregroundColor,
+                                    size: 24,
+                                  ),
+                                  child: SizedBox.square(
+                                    dimension: 24,
+                                    child: icon,
+                                  ),
                                 ),
-                                child: SizedBox.square(
-                                  dimension: 24,
-                                  child: type.icon,
-                                ),
-                              ),
                               Flexible(
                                 child: Text(
                                   type.buttonText,

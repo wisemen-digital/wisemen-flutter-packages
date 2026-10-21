@@ -363,7 +363,7 @@ ProviderScope(
 
 - `buttonText` (String, required): The text displayed in the button
 - `idp` (String, required): The identity provider id used for the login
-- `icon` (Widget, default: `Icon(Icons.login)`): The icon shown in the button, sized to 24x24. Override with any widget, e.g. `SvgPicture.asset(...)` for a Google, Apple, Microsoft, etc. logo. `Icon`s pick up the button's text color
+- `icon` (Widget?, optional): The icon shown in the button, sized to 24x24. Without one, the button shows only its text. Pass any widget, e.g. `SvgPicture.asset(...)` for a Google, Apple, Microsoft, etc. logo. `Icon`s pick up the button's text color
 
 ## Requirements
 
