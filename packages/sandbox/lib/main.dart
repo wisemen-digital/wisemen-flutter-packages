@@ -71,7 +71,6 @@ Future<void> initMain(Flavor flavor) async {
               supportedTypes: [
                 const ZitadelLoginType(
                   buttonText: 'Internal',
-                  iconSvgString: '',
                   idp: '',
                 ),
               ],

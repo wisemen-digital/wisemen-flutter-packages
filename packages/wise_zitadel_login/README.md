@@ -20,7 +20,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  wise_zitadel_login: ^1.3.0
+  wise_zitadel_login: ^1.5.0
 ```
 
 ## Platform setup
@@ -173,8 +173,12 @@ void main() {
             supportedTypes: [
               const ZitadelLoginType(
                 buttonText: 'Internal',
-                iconSvgString: 'assets/icons/logo.svg',
                 idp: '',
+              ),
+              ZitadelLoginType(
+                buttonText: 'Sign in with Google',
+                idp: 'google',
+                icon: SvgPicture.asset('assets/icons/google.svg'),
               ),
             ],
           ),
@@ -358,8 +362,8 @@ ProviderScope(
 ### ZitadelLoginType
 
 - `buttonText` (String, required): The text displayed in the button
-- `iconSvgString` (String, required): The SVG asset used for the button icon, usually Google, Apple, Microsoft, etc.'s logo
-- `idp` (String, required): The identity provider id used for the login, an empty id logs in through Zitadel itself
+- `idp` (String, required): The identity provider id used for the login
+- `icon` (Widget?, optional): The icon shown in the button, sized to 24x24. Without one, the button shows only its text. Pass any widget, e.g. `SvgPicture.asset(...)` for a Google, Apple, Microsoft, etc. logo. `Icon`s pick up the button's text color
 
 ## Requirements
 

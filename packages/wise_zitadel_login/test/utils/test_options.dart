@@ -8,7 +8,6 @@ import 'package:wiseclient/wiseclient.dart' show OAuthToken;
 const testLoginType = ZitadelLoginType(
   idp: 'idp_id',
   buttonText: 'Login',
-  iconSvgString: '',
 );
 
 /// Builds [WiseZitadelOptions] with values every test can rely on.

@@ -1,3 +1,12 @@
+# 1.5.0
+
+- **Breaking:** `ZitadelLoginType.iconSvgString` is replaced by an optional
+  `Widget? icon`, so a login type no longer needs an SVG asset. A button
+  without an icon shows only its text. To keep an SVG logo, pass
+  `icon: SvgPicture.asset(...)` from your own `flutter_svg` dependency
+- The icon is shown in a 24x24 box, and an `Icon` takes the button's text color
+- Removed the `flutter_svg` dependency
+
 # 1.4.0
 
 - Added `WiseZitadelOptions.ephemeralSession`, which runs the login in a private
