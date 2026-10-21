@@ -1,3 +1,5 @@
+import 'dart:math' as math show max;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -280,6 +282,8 @@ class _PaginationLayoutBuilderState extends State<PaginationLayoutBuilder>
   /// Builds an item at the specified index.
   ///
   /// If the [index] is equal to `_delegate.fetchAtIndex`, it invokes `_onBuiltLastItem`.
+  /// A list with no more items than `invisibleItemsThreshold` has a negative
+  /// `fetchAtIndex` and triggers on its first item instead.
   ///
   /// Parameters:
   ///   - [context]: The build context.
@@ -287,8 +291,10 @@ class _PaginationLayoutBuilderState extends State<PaginationLayoutBuilder>
   /// Returns a widget.
   Widget _buildItemBuilder(BuildContext context, int index) {
     // Check if the current index is equal to the index to fetch.
-    // If it is, invoke `_onBuiltLastItem`.
-    if (index == _delegate.fetchAtIndex) {
+    // If it is, invoke `_onBuiltLastItem`. The unclamped `fetchAtIndex` is
+    // passed on, so a short list that grows still gets a new value and
+    // fetches again.
+    if (index == math.max(_delegate.fetchAtIndex, 0)) {
       _onBuiltLastItem(_delegate.fetchAtIndex);
     }
 
@@ -322,16 +328,23 @@ class _PaginationLayoutBuilderState extends State<PaginationLayoutBuilder>
   ///  - The data source does not have an error.
   ///
   /// If all the conditions are met, it invokes the `_delegate.onFetchData`
-  /// callback after the next frame.
+  /// callback after the next frame. The conditions are checked again against
+  /// the delegate at that moment once the debounce fires, since a fetch may
+  /// have started in the meantime.
   void _fetchData() {
     // Checks if the conditions are met.
-    if (_delegate.notReachedMax && _delegate.notLoading && _delegate.notError) {
+    if (_canFetch) {
       // Invokes the `_delegate.onFetchData` callback after the next frame.
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _debouncer.run(_delegate.onFetchData);
+        _debouncer.run(() {
+          if (mounted && _canFetch) _delegate.onFetchData();
+        });
       });
     }
   }
+
+  bool get _canFetch =>
+      _delegate.notReachedMax && _delegate.notLoading && _delegate.notError;
 
   @override
   void dispose() {

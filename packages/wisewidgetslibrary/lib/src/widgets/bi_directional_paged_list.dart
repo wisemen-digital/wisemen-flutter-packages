@@ -148,37 +148,29 @@ class _BiDirectionalPagedListState<T> extends State<BiDirectionalPagedList<T>> {
           slivers: [
             SliverPadding(
               padding: widget.padding,
-              sliver: PaginationRecheck(
+              sliver: _buildSliver(
+                context: context,
+                items: widget.backwardItems,
                 controller: widget.backwardController,
-                forward: false,
-                child: _buildSliver(
-                  context: context,
-                  items: widget.backwardItems,
-                  controller: widget.backwardController,
-                  isLoading: isLoadingBackward,
-                  emptyState:
-                      widget.backwardEmptyState ??
-                      widget.emptyState ??
-                      const SizedBox.shrink(),
-                ),
+                isLoading: isLoadingBackward,
+                emptyState:
+                    widget.backwardEmptyState ??
+                    widget.emptyState ??
+                    const SizedBox.shrink(),
               ),
             ),
             SliverPadding(
               key: _centerKey,
               padding: widget.padding,
-              sliver: PaginationRecheck(
+              sliver: _buildSliver(
+                context: context,
+                items: widget.forwardItems,
                 controller: widget.forwardController,
-                forward: true,
-                child: _buildSliver(
-                  context: context,
-                  items: widget.forwardItems,
-                  controller: widget.forwardController,
-                  isLoading: isLoadingForward,
-                  emptyState:
-                      widget.forwardEmptyState ??
-                      widget.emptyState ??
-                      const SizedBox.shrink(),
-                ),
+                isLoading: isLoadingForward,
+                emptyState:
+                    widget.forwardEmptyState ??
+                    widget.emptyState ??
+                    const SizedBox.shrink(),
               ),
             ),
           ],
