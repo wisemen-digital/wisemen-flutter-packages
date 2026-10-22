@@ -26,14 +26,8 @@ dependencies:
   fresh: ^0.6.1
 
 dev_dependencies:
-  # Static analysis & linting
-  lints: ^6.1.0
-  mocktail: ^1.0.5
-
   # Testing
+  mocktail: ^1.0.5
   test: ^1.25.15
-
-  # Mocking
-  mockito: ^5.4.0
   flutter_test:
     sdk: flutter

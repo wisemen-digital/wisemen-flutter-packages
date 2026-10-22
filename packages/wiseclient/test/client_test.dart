@@ -496,10 +496,6 @@ void main() {
   });
 
   group('Exception throwing tests', () {
-    test('LogoutException throws a', () {
-      expect(() => throw LogoutException(), throwsA(isA<LogoutException>()));
-    });
-
     test('UnknownException throws a', () {
       final exception = UnknownException('Test message');
       expect(exception.message, equals('Test message'));

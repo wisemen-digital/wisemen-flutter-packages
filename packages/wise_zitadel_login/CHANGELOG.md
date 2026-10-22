@@ -1,7 +1,7 @@
 # 2.0.0
 
 - Updated oidc major
-- Wiseclient major update (OAuthToken changes)
+- **Breaking:** Requires wiseclient 3. `prepare`, `login`, `tokenFrom` and `onLoginSuccess` use `OAuth2Token` instead of `OAuthToken`
 
 # 1.5.0
 

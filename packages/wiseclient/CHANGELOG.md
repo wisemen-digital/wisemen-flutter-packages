@@ -4,6 +4,7 @@
 - **Breaking:** `OAuthToken.fromSnakeCase` and `OAuthToken.fromCamelCasing` are
   replaced by `map.toOAuth2TokenFromSnakeCase()` and
   `map.toOAuth2TokenFromCamelCase()`.
+- **Breaking:** Removed the unused `LogoutException`. Throw `RevokeTokenException` from `refreshFunction` to log the user out
 - Fixed refreshed tokens not being persisted when `refreshFunction` returned an `OAuth2Token`
 - Fixed requests hanging when the stored token could not be read; it is now deleted and reported to the zone as a `TokenParseException`
 - Updated `flutter_secure_storage` to 11.x
