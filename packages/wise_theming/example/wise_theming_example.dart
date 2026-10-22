@@ -122,7 +122,7 @@ class ExampleScreen extends StatelessWidget {
                             color: context.textColors.errorPrimary,
                           ),
                         ),
-                        SizedBox.shrink(),
+                        const SizedBox.shrink(),
                         Container(
                           width: 20,
                           height: 20,
@@ -137,7 +137,7 @@ class ExampleScreen extends StatelessWidget {
                             color: context.textColors.warningPrimary,
                           ),
                         ),
-                        SizedBox.shrink(),
+                        const SizedBox.shrink(),
                         Container(
                           width: 20,
                           height: 20,
