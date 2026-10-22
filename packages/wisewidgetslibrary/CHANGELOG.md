@@ -1,3 +1,11 @@
+## 2.1.8
+
+* Updated majors of transitive dependencies (cached network image wasm issue fixes)
+
+## 2.1.7
+
+* Added a close button to `FullScreenImage`
+
 ## 2.1.6
 
 * Added `BiDirectionalPagedList<T>` that pages both backward and forward from an anchor point, each direction driven by its own `InfiniteScrollController` (e.g. a calendar list that opens on today and pages into the past or future)

@@ -1,6 +1,6 @@
 name: wisewidgetslibrary
 description: Wisemen widgets library containing platform specific widgets and other commonly useful widgets.
-version: 2.1.6
+version: 2.1.8
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wisewidgetslibrary
 repository: https://github.com/wisemen-digital/flutter-widgets-library/packages/wisewidgetslibrary
 
@@ -15,14 +15,14 @@ dependencies:
   intl: ">=0.20.2 <1.0.0"
 
   # Images
-  cached_network_image: ">=3.4.1 <4.0.0"
+  cached_network_image: ">=4.0.0 <5.0.0"
   photo_view: ">=0.15.0 <1.0.0"
 
   # UI
   auto_size_text: ">=3.0.0 <4.0.0"
   pull_down_button: ">=0.10.2 <1.0.0"
   sliver_tools: ">=0.2.12 <1.0.0"
-  shimmer: ">=3.0.0 <4.0.0"
+  shimmer: ">=4.0.0 <5.0.0"
   easy_infinite_pagination: ">=0.0.6 <1.0.0"
     
   # Animations
