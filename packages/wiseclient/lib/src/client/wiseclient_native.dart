@@ -36,9 +36,9 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     Fresh<OAuth2Token>? fresh,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = useNativeAdapter
-        ? NativeAdapter()
-        : IOHttpClientAdapter();
+    HttpClientAdapter createAdapter() =>
+        useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
+    httpClientAdapter = createAdapter();
     if (replacementInterceptors != null) {
       interceptors.addAll(
         replacementInterceptors,
@@ -46,7 +46,12 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     } else {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
         this.fresh =
-            fresh ?? getFreshInterceptor(refreshFunction: refreshFunction!);
+            fresh ??
+            getFreshInterceptor(
+              refreshFunction: refreshFunction!,
+              httpClient: Dio(options.copyWith())
+                ..httpClientAdapter = createAdapter(),
+            );
       }
       interceptors.addAll(
         [

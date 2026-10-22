@@ -42,7 +42,7 @@ final client = WiseClient(
   options: WiseOptions.base(url: url),
   refreshFunction: (token, dio) async {
     final response = await dio.post<Map<String, dynamic>>(
-      '$url/auth/refresh',
+      '/auth/refresh',
       data: {'refresh_token': token?.refreshToken},
     );
     return response.data!.toOAuth2TokenFromSnakeCase();
@@ -76,12 +76,15 @@ memory, so a refresh by one client goes unnoticed by the others. When the server
 tokens, the next client to refresh uses an invalidated refresh token and logs the user out. Sharing
 the storage does not help, since a client only reads it once, on creation.
 
-To store the token somewhere else, create the instance yourself and pass it the same way:
+To store the token somewhere else, create the instance yourself and pass it the same way. Pass an
+`httpClient` set up like your client too, or refreshes and retries go through a plain `Dio` without
+your base url, timeouts or adapter:
 
 ```dart
 final fresh = getFreshInterceptor(
   refreshFunction: refreshToken,
   tokenStorage: MyTokenStorage(),
+  httpClient: Dio(WiseOptions.base(url: url)),
 );
 final client = WiseClient(
   wiseInterceptors: [WiseInterceptor.fresh],

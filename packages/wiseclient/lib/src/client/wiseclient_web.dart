@@ -35,14 +35,20 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
     Fresh<OAuth2Token>? fresh,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)
-      ..withCredentials = true;
+    httpClientAdapter = BrowserHttpClientAdapter(withCredentials: true);
     if (replacementInterceptors != null) {
       interceptors.addAll(replacementInterceptors);
     } else {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
         this.fresh =
-            fresh ?? getFreshInterceptor(refreshFunction: refreshFunction!);
+            fresh ??
+            getFreshInterceptor(
+              refreshFunction: refreshFunction!,
+              httpClient: Dio(options.copyWith())
+                ..httpClientAdapter = BrowserHttpClientAdapter(
+                  withCredentials: true,
+                ),
+            );
       }
       interceptors.addAll(
         [

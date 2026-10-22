@@ -26,9 +26,8 @@ final client = WiseClient(
   options: WiseOptions.base(url: 'https://api.example.com'),
   refreshFunction: (token, dio) async {
     try {
-      // `dio` is a separate client without your base url: use an absolute url
       final response = await dio.post<Map<String, dynamic>>(
-        'https://api.example.com/auth/refresh',
+        '/auth/refresh',
         data: {'refresh_token': token?.refreshToken},
       );
       return response.data!.toOAuth2TokenFromSnakeCase();
@@ -45,8 +44,12 @@ final client = WiseClient(
 
 - Return an `OAuth2Token`. It is saved to secure storage and the failed request is retried
   with it.
-- The `dio` argument is not `client`: it has none of the client's options, interceptors or
-  adapter. Call the refresh endpoint with an absolute url.
+- The `dio` argument is not `client`: it has the client's options (base url, timeouts, default
+  headers) and the same kind of adapter, but none of its interceptors, so the refresh call is not
+  logged. Options are copied when the client is created; headers added later with `addHeaders`
+  are not on it.
+- A client created with `fresh:` refreshes through the `dio` of the client that created that
+  instance.
 - Throw `RevokeTokenException` when the refresh token is rejected. This clears the stored token
   and moves `authenticationStatus` to `unauthenticated`.
 - Let any other failure surface as a `DioException`: the user stays logged in, the request fails
@@ -166,8 +169,9 @@ final mediaClient = WiseClient(
   `WiseInterceptor.fresh`, pass neither.
 - Login, logout and `authenticationStatus` can go through any client that shares the instance.
 - For custom token storage, create the instance with
-  `getFreshInterceptor(refreshFunction: ..., tokenStorage: ...)` and pass it as `fresh`. There is
-  no `tokenStorage` parameter on `WiseClient`.
+  `getFreshInterceptor(refreshFunction: ..., tokenStorage: ..., httpClient: ...)` and pass it as
+  `fresh`. Give `httpClient` the same options as the client, or refreshes go through a plain `Dio`.
+  There is no `tokenStorage` parameter on `WiseClient`.
 
 ### Token model
 

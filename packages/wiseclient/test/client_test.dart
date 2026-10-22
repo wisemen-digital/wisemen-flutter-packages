@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fresh_dio/fresh_dio.dart';
@@ -231,6 +232,34 @@ void main() {
         () => WiseClient(wiseInterceptors: [], fresh: fresh),
         throwsA(isA<AssertionError>()),
       );
+    });
+
+    test('Refreshes through a dio configured like the client', () async {
+      Dio? refreshClient;
+      final client = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.logging],
+        options: WiseOptions.base(url: 'https://api.example.com'),
+        refreshFunction: (token, dio) async {
+          refreshClient = dio;
+          return const OAuth2Token(accessToken: 'new');
+        },
+      );
+
+      await client.fresh.refreshToken();
+
+      expect(refreshClient, isNot(same(client)));
+      expect(refreshClient!.httpClientAdapter, isA<IOHttpClientAdapter>());
+      expect(
+        refreshClient!.httpClientAdapter,
+        isNot(same(client.httpClientAdapter)),
+      );
+      expect(refreshClient!.options.baseUrl, 'https://api.example.com');
+      expect(
+        refreshClient!.options.connectTimeout,
+        client.options.connectTimeout,
+      );
+      expect(refreshClient!.interceptors, isNot(contains(client.fresh)));
+      await client.fresh.clearToken();
     });
 
     test('Token methods throw without the fresh interceptor', () {
