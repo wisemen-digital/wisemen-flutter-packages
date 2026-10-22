@@ -109,11 +109,9 @@ class _FullscreenImageState extends State<FullscreenImage> {
                                     const Center(
                                       child: Material(
                                         type: MaterialType.transparency,
-                                        child: Text(
-                                          'Failed to load image',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                          ),
+                                        child: Icon(
+                                          Icons.error_rounded,
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ),
