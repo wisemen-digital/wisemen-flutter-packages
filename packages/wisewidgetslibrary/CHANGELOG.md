@@ -1,3 +1,7 @@
+## 2.1.8
+
+* Updated majors of transitive dependencies (cached network image wasm issue fixes)
+
 ## 2.1.7
 
 * Added a close button to `FullScreenImage`
