@@ -48,10 +48,14 @@ Future<void> main() async {
         externalVersions: fg.ExternalVersions(
           ios: fg.Versions(min: Version(15, 0, 0)),
         ),
-        interfaces: fg.Interfaces(
-          include: (decl) => decl.originalName == 'SwiftTextClassifier',
-        ),
       ),
+      visitors: [
+        fg.Visitor(
+          objCInterface: (node) {
+            if (node.name == 'SwiftTextClassifier') node.isIncluded = true;
+          },
+        ),
+      ],
     ),
-  ).generate(logger: logger, tempDirectory: Uri.directory('temp'));
+  ).generate(logger: logger, tempDirectory: Uri.directory('gen_utils'));
 }

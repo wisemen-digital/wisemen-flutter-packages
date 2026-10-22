@@ -76,7 +76,7 @@ You can use the classifier on its own when you only need the structured spans:
 
 ```dart
 final spans = await WiseTextClassifier().classify(
-  'Call 0470 58 20 75 before June 29, 2026',
+  'Call +1 3052019961 before June 29, 2026',
 );
 
 for (final span in spans) {
