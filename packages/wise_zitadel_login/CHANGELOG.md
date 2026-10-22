@@ -1,3 +1,7 @@
+# 1.6.0
+
+- Updated oidc major
+
 # 1.5.0
 
 - **Breaking:** `ZitadelLoginType.iconSvgString` is replaced by an optional
