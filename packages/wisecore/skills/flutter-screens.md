@@ -180,36 +180,31 @@ class ItemsScreen extends ConsumerWidget {
 
 ## Screen Structure
 
-Keep the `Scaffold` in the `_screen.dart` file, so opening the screen file shows
-the whole page at once. Extract the parts — the app bar, the content, a submit
-bar — into widgets, but not the `Scaffold` itself: a feature-specific
-`ShiftSwapPageScaffold` hides the page's structure behind one more file.
-
-If the project already has a shared, app-wide scaffold (check the shared widgets
-first), use that one instead. Don't create a new shared scaffold for one feature.
+Keep the `Scaffold` in the `_screen.dart` file so the screen file shows the whole
+page. Extract the app bar, content and submit bar into widgets, but not the
+`Scaffold` itself. If the project has a shared app-wide scaffold, use that; don't
+create one for a single feature.
 
 ```dart
-// DON'T — the screen only forwards to a feature-specific scaffold widget
-return ShiftSwapPageScaffold(child: ShiftSwapContent());
+// DON'T
+return ItemFormScaffold(child: ItemFormContent());
 
-// DO — the screen shows its structure, the parts are widgets
+// DO
 return Scaffold(
-  appBar: const ShiftSwapAppBar(),
-  body: const ShiftSwapContent(),
-  bottomNavigationBar: const SafeArea(child: ShiftSwapSubmitBar()),
+  appBar: const ItemFormAppBar(),
+  body: const ItemFormContent(),
+  bottomNavigationBar: const SafeArea(child: ItemFormSubmitBar()),
 );
 ```
 
 ## Submit and Action Bars
 
-A submit or action bar that stays fixed at the bottom of a full screen (forms,
-multi-step flows) goes in the Scaffold's `bottomNavigationBar`, wrapped in a
-`SafeArea`. There it sits outside the scroll area, so the content never needs a
-guessed bottom padding to stay clear of it. A hardcoded padding breaks as soon
-as the bar height, the device or the text scale changes.
+A submit or action bar fixed to the bottom of a full screen goes in the
+Scaffold's `bottomNavigationBar`, wrapped in a `SafeArea`, so the content needs no
+guessed bottom padding.
 
 ```dart
-// DON'T — bar stacked over the content, content padded by a guess
+// DON'T
 Stack(children: [
   ListView(children: [...fields, const SizedBox(height: 100)]),
   const Align(alignment: Alignment.bottomCenter, child: SubmitBar()),
@@ -222,31 +217,9 @@ Scaffold(
 )
 ```
 
-Two cases are different:
-
-- **`WoltModalSheet`** — use its `stickyActionBar` (see Modal Bottom Sheets).
-- **The design places the button inside the scrolling content** — then it is just
-  part of the content.
-
-## Access Checks
-
-Don't check access inside a screen that the user can't reach without access —
-for example when the button that opens it is already hidden. Such a check is
-dead code, and it spreads one access decision over several places.
-
-```dart
-// DON'T — the only entry point is already hidden for users without access
-if (menu.value?.accessToRequestShiftSwap != true) {
-  return Center(child: Text(S.of(context).accessDenied));
-}
-
-// DO — decide once, where the entry point is shown
-if (menu.accessToRequestShiftSwap ?? false) RequestShiftSwapButton(),
-```
-
-When the screen *is* reachable another way — a deep link, a notification —
-protect the route with a guard (see the router skill), not with a check inside
-the screen.
+Exceptions: in a `WoltModalSheet`, use its `stickyActionBar` (see Modal Bottom
+Sheets). A button the design places inside the scrolling content is part of the
+content.
 
 ## Pop Scope Handling
 
@@ -433,11 +406,10 @@ export 'items_screen.dart';
 3. **Keep screens thin** — Delegate logic to providers and widgets
 4. **Use semantic naming** — `[Feature]Screen`, `[Item]DetailScreen`, `All[Items]Screen`
 5. **Handle loading states** — Use `.when()` pattern for async data
-6. **Consistent spacing** — Use `SizeUtils.bottomSpacing()` for safe area padding at the end of scrolling content, and the `wisewidgetslibrary` size constants (`padM`, `gapHM`, …) instead of raw numbers. Not for clearing a fixed submit bar — that goes in `bottomNavigationBar`
+6. **Consistent spacing** — Use `SizeUtils.bottomSpacing()` for safe area padding at the end of scrolling content and the `wisewidgetslibrary` constants (`padM`, `gapHM`, …) instead of raw numbers. A fixed submit bar goes in `bottomNavigationBar`
 7. **Barrel exports** — Always export from `screens.dart`
 8. **Use theme extensions** — Access colors via `context.bgColor`, `context.textColor`
 9. **Scope MediaQuery reads** — Prefer `MediaQuery.sizeOf(context)`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf` over `MediaQuery.of(context)`, which rebuilds the screen on *every* metric change (rotation, keyboard, text scale). Screens that read insets or size do this constantly
 10. **Scaffold in the screen file** — Extract the app bar and content into widgets, not the Scaffold. See "Screen Structure"
 11. **Fixed submit bar in `bottomNavigationBar`** — Wrapped in `SafeArea`, no guessed bottom padding. See "Submit and Action Bars"
-12. **No access checks for unreachable screens** — Guard the route only when it is reachable another way. See "Access Checks"
-13. **Navigate with `context.router`** — Never `Navigator.of(context)`
+12. **Navigate with `context.router`** — Never `Navigator.of(context)`

@@ -295,20 +295,6 @@ context.router.pop();
 context.router.popUntilRouteWithName(DashboardRouter.name);
 ```
 
-Always navigate through `context.router` — or, outside widgets, the router from
-`appRouterServiceProvider`. Never call `Navigator.of(context)` directly, also not
-to close a dialog or bottom sheet. auto_route owns the navigation stack;
-`Navigator.of(context)` can act on the wrong navigator in nested routers and
-bottom sheets, and mixing both styles makes navigation harder to follow.
-
-```dart
-// DON'T
-Navigator.of(context).pop();
-
-// DO
-context.router.pop();
-```
-
 ### From Provider (cross-feature)
 
 ```dart
@@ -369,7 +355,7 @@ Widget build(BuildContext context) {
 
 ## Best Practices
 
-1. **Use guards for access control** — Don't check auth in screens. Only add a guard when the route is actually reachable without access; when its only entry point is already hidden, no check is needed
+1. **Use guards for access control** — Don't check auth in screens
 2. **Centralize route definitions** — All routes in `app_router.dart`
 3. **Use `AdaptiveRoute`** — Platform-appropriate transitions
 4. **Ref for cross-feature navigation** — Access router via provider

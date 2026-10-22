@@ -42,11 +42,9 @@ features/my_feature/providers/
 └── my_controller.g.dart       # Generated code (never edit)
 ```
 
-All of a feature's providers live in one `[feature]_providers.dart` — each one
-still a separate, small provider — and the controller gets its own
-`[feature]_controller.dart`. Spreading providers over many files makes a feature
-harder to scan. A flow with clearly separate steps can have one controller file
-per step.
+All of a feature's providers go in one `[feature]_providers.dart`, each still a
+separate small provider. The controller gets its own `[feature]_controller.dart`.
+A flow with separate steps can have one controller per step.
 
 ## Provider Class Pattern
 
@@ -73,10 +71,7 @@ This allows clean access: `ref.watch(MyProviders.items)`
 
 ## Controllers
 
-A controller handles user actions (submit, cancel, delete) for a screen. It owns the **submission state**: loading, success and errors.
-
-Keep three things apart, so each stays small. A controller that holds form
-data, flags and errors at once becomes hard to read and to change.
+A controller handles a screen's user actions (submit, cancel, delete) and owns the **submission state**: loading, success and errors. Keep these apart:
 
 | What | Where |
 |------|-------|
@@ -86,17 +81,13 @@ data, flags and errors at once becomes hard to read and to change.
 
 Show submission errors from the controller with the project's shared error
 dialog (e.g. `ErrorUtils.showErrorDialog` in `listenSelf`), not with a separate
-listener widget or a new feature-specific dialog. A validation error that
-belongs to one input is different: show it next to that field.
-
-A flow with clearly separate steps gets one controller per step instead of one
-large controller.
+listener widget. Show a validation error for one input next to that field.
 
 ```dart
-// DON'T — form data, flags and errors in one state object
+// DON'T
 state = AsyncData(current.copyWith(isSubmitting: true, clearError: true));
 
-// DO — the AsyncValue is the submission state
+// DO
 state = const AsyncLoading();
 state = await AsyncValue.guard(() => repository.submit(form));
 ```

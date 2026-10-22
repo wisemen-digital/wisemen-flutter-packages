@@ -135,15 +135,6 @@ enum ItemType {
   typeC,
   typeD;
 
-  String label(BuildContext context) {
-    return switch (this) {
-      ItemType.typeA => S.of(context).typeA,
-      ItemType.typeB => S.of(context).typeB,
-      ItemType.typeC => S.of(context).typeC,
-      ItemType.typeD => S.of(context).typeD,
-    };
-  }
-
   Color get color {
     return switch (this) {
       ItemType.typeA => Colors.green,
@@ -151,6 +142,31 @@ enum ItemType {
       ItemType.typeC => Colors.orange,
       ItemType.typeD => Colors.red,
     };
+  }
+}
+```
+
+### Enum Labels
+
+Show an enum's translated text with a widget, not with a method on the enum.
+
+```dart
+// lib/features/my_feature/widgets/item_type_label.dart
+class ItemTypeLabel extends StatelessWidget {
+  const ItemTypeLabel({super.key, required this.type});
+
+  final ItemType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      switch (type) {
+        ItemType.typeA => S.of(context).typeA,
+        ItemType.typeB => S.of(context).typeB,
+        ItemType.typeC => S.of(context).typeC,
+        ItemType.typeD => S.of(context).typeD,
+      },
+    );
   }
 }
 ```
@@ -295,34 +311,29 @@ extension EventDtoMapper on EventDTO {
 
 ## Nullable Fields vs Fallback Defaults
 
-Answer three questions for every field, in this order:
+For every field:
 
-1. **Do we use this value in the app?** If not, leave the field out of the
-   model. Unused fields only add mapping code for data nobody needs.
-2. **Can the value be missing?** That depends on the data — what the API or
-   database can send — not on how we use it. If it can be missing, make the field
-   nullable (`String?`, `int?`). If it is always present, read it strictly so a
-   missing value surfaces as an error.
-3. **What should happen when it's missing?** Decide that where the value is used,
-   usually in the UI — show a placeholder, hide a row, disable a button. Not while
-   parsing.
+1. **Is it used in the app?** If not, leave it out of the model.
+2. **Can it be missing?** That depends on what the API or database can send. If
+   it can, make it nullable. If not, read it strictly so a missing value is an
+   error.
+3. **What happens when it's missing?** Decide where the value is used, usually in
+   the UI — not while parsing.
 
-Never invent a value just to avoid a nullable type. A made-up `0` or `''` looks
-like real data and hides that the value was missing.
+Don't invent values like `0` or `''` to avoid a nullable type.
 
 ```dart
-// DON'T — invented values while parsing
+// DON'T
 id: json['id'] as int? ?? 0,
 description: json['description'] as String? ?? '',
 
-// DO — nullable when it can be missing, the UI decides what to show
+// DO
 id: json['id'] as int,                       // always sent
 description: json['description'] as String?, // optional
 ```
 
-A fallback while parsing is fine when a missing value has a real meaning in the
-domain, the same everywhere it is used: an absent list means "no items", an
-absent flag is documented as `false`.
+A fallback while parsing is fine when a missing value has a fixed meaning in the
+domain: an absent list means "no items", an absent flag is documented as `false`.
 
 ## Best Practices
 
@@ -332,3 +343,4 @@ absent flag is documented as `false`.
 4. **Map enums explicitly** — avoid implicit conversions between layers
 5. **Document optional fields** — clarify when null is valid
 6. **Only fields we use, nullable when they can be missing** — No invented defaults. See "Nullable Fields vs Fallback Defaults"
+7. **Enum labels as widgets** — `ItemTypeLabel(type: type)`, not a `label(context)` method on the enum. See "Enum Labels"

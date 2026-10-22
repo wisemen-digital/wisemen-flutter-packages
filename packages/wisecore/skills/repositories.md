@@ -254,25 +254,6 @@ class ItemsProvider extends _$ItemsProvider {
 }
 ```
 
-## Parse Responses with DTOs
-
-A repository never reads fields from a raw `Map` (`response['key']`). The service
-returns a DTO (see the network skill) and a mapper in `dto_mappers/` turns it into
-a companion or feature model — the same path as all other API data, so parsing
-lives in one place and is generated, not hand-written.
-
-```dart
-// DON'T — hand-written parsing inside the repository
-return ShiftSwapResult(
-  success: response['success'] == true,
-  message: response['message']?.toString(),
-);
-
-// DO — DTO from the service, mapper to the model
-final dto = await ref.read(shiftSwapServiceProvider).submit(body);
-return dto.toFeatureModel();
-```
-
 ## Best Practices
 
 1. **Watch for reads, fetch for writes** — streams enable reactive UI
@@ -282,4 +263,4 @@ return dto.toFeatureModel();
 5. **Use `ref.read` for services** — one-time calls for API requests
 6. **Keep repositories thin** — orchestration only, no business logic
 7. **`get*` for one-time reads** — Add a `get*` method next to `watch*` instead of `watch*().first` or `watch*().where(...).first`
-8. **No JSON parsing in repositories** — DTO from the service, mapper in `dto_mappers/`. See "Parse Responses with DTOs"
+8. **No JSON parsing in repositories** — The service returns a DTO, a mapper in `dto_mappers/` converts it

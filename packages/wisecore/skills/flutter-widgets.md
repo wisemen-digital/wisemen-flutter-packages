@@ -77,23 +77,19 @@ A builder method that returns a widget is a widget wearing a disguise: it can't
 be `const`, doesn't get its own element, and can't be tested on its own. Promote
 it rather than growing it.
 
-What this rule does *not* cover:
+Exceptions:
 
-- **A `StatefulWidget`'s `State` class** is not a second widget — it stays in the
-  same file as its widget.
-- **Callbacks an API asks for** (`itemBuilder`, `builder`, `pageListBuilder`,
-  `errorBuilder`) are not builder methods.
-- **Methods that only return an existing widget class**, like widget-manager
-  methods (`return ItemRelatedList(itemId: itemId);`), build nothing themselves.
-- **A trivial piece used once** — a centered `Text` for an error state — doesn't
-  need a class at all. Keep it inline in the parent's `build`. A file holding three
-  lines of UI only adds a file to jump to; extract once it is reused or makes the
-  parent hard to read.
+- A `StatefulWidget`'s `State` class stays in the same file as its widget.
+- Callbacks an API asks for (`itemBuilder`, `builder`, `errorBuilder`, …) are not
+  builder methods.
+- Methods that only return an existing widget class, like widget-manager methods,
+  build nothing themselves.
+- A trivial one-off, like a centered `Text` for an error state, stays inline in
+  `build`. Extract it once it is reused or makes `build` hard to read.
 
 ## Keep Logic Out of Widgets
 
-A widget builds UI. Everything else has a better home, where it can be tested and
-reused, and where it doesn't run again on every rebuild:
+A widget builds UI. Other logic goes where it can be tested and reused:
 
 | Logic | Belongs in |
 |-------|------------|
@@ -104,22 +100,21 @@ reused, and where it doesn't run again on every rebuild:
 | Other non-trivial logic | Its own file (extension or util) |
 
 ```dart
-// DON'T — business rules spelled out inside build
-final canSubmit = state.requesterDateInfo?.hasShift == true &&
-    state.candidate != null &&
-    state.candidateDateInfo?.hasShift == true &&
+// DON'T
+final canSubmit = state.startDate != null &&
+    state.endDate != null &&
+    state.endDate!.isAfter(state.startDate!) &&
     !state.isSubmitting;
 
-// DO — the model names the rule, the controller owns submission
+// DO
 final canSubmit = state.canSubmit && !submission.isLoading;
 ```
 
 ## Sizes and Spacing
 
-Padding, gaps and radii come from `wisewidgetslibrary`
-(`import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';`), not from raw
-numbers. One set of constants keeps spacing consistent across the app and turns a
-design change into a one-place edit. Don't add a project-specific set next to it.
+Use the `wisewidgetslibrary` constants
+(`import 'package:wisewidgetslibrary/wisewidgetslibrary.dart';`) for padding, gaps
+and radii. Don't add a project-specific set next to them.
 
 | Constant | Values |
 |----------|--------|
@@ -128,11 +123,10 @@ design change into a one-place edit. Don't add a project-specific set next to it
 | Padding | `padXS`…`padXL` (all sides), `padVXS`…`padVXL` (vertical), `padHXS`…`padHXL` (horizontal), `pad0` |
 | Radius | `radXS`…`radXL` |
 
-When every child of a `Column` or `Row` is separated by the same gap, use its
-`spacing:` parameter instead of a gap widget between each child.
+Use `spacing:` on a `Column` or `Row` when all children have the same gap.
 
-When no constant matches the value the design needs, use the actual value rather
-than a constant that is "close enough".
+When no constant matches the design, use the exact value (a `static const` when
+reused), not the closest constant.
 
 ```dart
 // DON'T
@@ -146,18 +140,16 @@ Column(spacing: Sizes.s, children: [first, second, third])
 
 ## Navigation
 
-Navigate with `context.router` from auto_route — `context.router.pop()`,
-`context.router.push(...)` — also to close a dialog or bottom sheet. Never call
-`Navigator.of(context)` directly: auto_route owns the navigation stack, and
-`Navigator.of(context)` can act on the wrong navigator in nested routers and
-bottom sheets.
+Use `context.router` for all navigation, including closing dialogs and bottom
+sheets. Don't use `Navigator.of(context)`: in nested routers and bottom sheets it
+can pop the wrong navigator.
 
 ```dart
 // DON'T
 onPressed: () => Navigator.of(context).pop(),
 
 // DO
-onPressed: () => context.router.pop(),
+onPressed: context.router.pop,
 ```
 
 ## Widget API Design
@@ -572,7 +564,7 @@ export 'text_field.dart';
 2. **Include Semantics** — Add accessibility labels for interactive widgets
 3. **Const constructors** — Use `const` for better performance
 4. **Named parameters** — Use required named parameters for clarity
-5. **No magic numbers** — Use the `wisewidgetslibrary` constants (`Sizes`, `gap*`, `pad*`, `rad*`) for padding, gaps and radii; `static const` for component-specific dimensions (like `PrimaryButton.SIZE`). See "Sizes and Spacing"
+5. **Extract magic numbers** — Use `static const` for sizes and dimensions
 6. **Handle loading/disabled states** — Buttons should support both states
 7. **Barrel exports** — Always export from `widgets.dart`
 8. **Single responsibility** — Each widget should do one thing well
@@ -590,3 +582,4 @@ export 'text_field.dart';
 20. **Don't hand-tune font metrics** — take text styles from the theme (`context.title`, `context.normal`, `context.label`). A `letterSpacing` or line-height lifted off a design file is calibrated to *that file's* typeface; applying it while leaving `fontFamily` unset pins a negative tracking value onto whatever font the platform happens to supply. If a design genuinely needs its own tracking, set the family it was designed for in the same `TextStyle`
 21. **Keep logic out of widgets** — Submission state in the controller, transformations in mappers, long conditions as model getters. See "Keep Logic Out of Widgets"
 22. **Navigate with `context.router`** — Never `Navigator.of(context)`, also not to close a dialog
+23. **Spacing from `wisewidgetslibrary`** — `Sizes`, `gap*`, `pad*` and `rad*` for padding, gaps and radii. See "Sizes and Spacing"
