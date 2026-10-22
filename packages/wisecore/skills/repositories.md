@@ -262,5 +262,5 @@ class ItemsProvider extends _$ItemsProvider {
 4. **Use `ref.watch` for DAOs** — enables stream updates
 5. **Use `ref.read` for services** — one-time calls for API requests
 6. **Keep repositories thin** — orchestration only, no business logic
-7. **`get*` for one-time reads** — Add a `get*` method next to `watch*` instead of `watch*().first` or `watch*().where(...).first`
+7. **`get*` for one-time reads** — Add a `get*` method next to `watch*`
 8. **No JSON parsing in repositories** — The service returns a DTO, a mapper in `dto_mappers/` converts it

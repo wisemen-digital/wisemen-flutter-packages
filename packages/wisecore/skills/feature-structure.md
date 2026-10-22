@@ -47,6 +47,11 @@ features/my_feature/
 │   ├── my_providers.dart        # Provider definitions
 │   └── my_providers.g.dart      # Generated code
 │
+├── controllers/                 # Controllers for user actions (optional)
+│   ├── controllers.dart         # Barrel export
+│   ├── my_controller.dart
+│   └── my_controller.g.dart     # Generated code
+│
 ├── repositories/                # Repository interface
 │   └── my_repository.dart       # Abstract interface only
 │
@@ -69,6 +74,7 @@ Each folder has a barrel file exporting its public API:
 
 ```dart
 // features/my_feature/my_feature.dart
+export 'controllers/controllers.dart';
 export 'enums/my_status.dart';
 export 'models/models.dart';
 export 'providers/providers.dart';

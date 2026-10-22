@@ -365,4 +365,3 @@ Widget build(BuildContext context) {
 8. **Group nested routes** — Use child routes for tab-based navigation
 9. **Barrel exports** — Export guards and managers from index files
 10. **Type-safe routes** — Use generated route classes, not strings
-11. **Never `Navigator.of(context)`** — Use `context.router` for every push and pop, also for dialogs

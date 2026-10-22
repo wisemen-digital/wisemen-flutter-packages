@@ -313,27 +313,24 @@ extension EventDtoMapper on EventDTO {
 
 For every field:
 
-1. **Is it used in the app?** If not, leave it out of the model.
-2. **Can it be missing?** That depends on what the API or database can send. If
-   it can, make it nullable. If not, read it strictly so a missing value is an
-   error.
-3. **What happens when it's missing?** Decide where the value is used, usually in
-   the UI — not while parsing.
+1. **Is it used in the app?** If not, leave it out of the feature model.
+2. **DTOs match the backend.** A field the backend sends as nullable stays
+   nullable in the DTO.
+3. **The feature model decides.** In the mapper to the feature model, keep the
+   value nullable and let the UI decide, or use a default when a missing value
+   has a fixed meaning in the domain (an absent list means "no items").
 
 Don't invent values like `0` or `''` to avoid a nullable type.
 
 ```dart
-// DON'T
-id: json['id'] as int? ?? 0,
-description: json['description'] as String? ?? '',
+// DTO — same nullability as the backend
+final String? description;
+final List<TagDTO>? tags;
 
-// DO
-id: json['id'] as int,                       // always sent
-description: json['description'] as String?, // optional
+// Mapper to the feature model
+description: dto.description,           // stays nullable, the UI decides
+tags: dto.tags?.map((t) => t.toFeatureModel()).toList() ?? [],
 ```
-
-A fallback while parsing is fine when a missing value has a fixed meaning in the
-domain: an absent list means "no items", an absent flag is documented as `false`.
 
 ## Best Practices
 
@@ -342,5 +339,5 @@ domain: an absent list means "no items", an absent flag is documented as `false`
 3. **Separate display logic** — use extension methods for complex formatting
 4. **Map enums explicitly** — avoid implicit conversions between layers
 5. **Document optional fields** — clarify when null is valid
-6. **Only fields we use, nullable when they can be missing** — No invented defaults. See "Nullable Fields vs Fallback Defaults"
+6. **Only fields we use; DTOs match the backend** — Decide about missing values in the feature model, no invented defaults. See "Nullable Fields vs Fallback Defaults"
 7. **Enum labels as widgets** — `ItemTypeLabel(type: type)`, not a `label(context)` method on the enum. See "Enum Labels"

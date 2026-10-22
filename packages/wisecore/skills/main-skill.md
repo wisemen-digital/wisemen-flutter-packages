@@ -49,7 +49,7 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Don't ship placeholder tests. A scaffolding test like `expect(1 + 1, 2)` proves nothing once real tests exist — delete it. It inflates the test count and hides the fact that a file, or a whole package, is untested
 - Don't narrate the code in comments. A comment that walks through what the widget tree contains, or restates the call it sits above, is deleted in review — the reader can see the code. Comment the things the code *can't* say: why a workaround exists, which upstream bug or API contract forces an odd shape, why a value that looks wrong is deliberate. Doc comments (`///`) on public API are the exception and stay
 - Build only what the requirements ask for. If something extra seems needed, mention it instead of adding it
-- Make each decision in one place: `if (user.isEmployee) loadEmployeeDetail();`, not an early return inside `loadEmployeeDetail()`. Don't repeat the check in other layers. When many callers need the same check, it belongs inside the function
+- Make each decision in one place: `if (user.isAdmin) loadAdminSettings();`, not an early return inside `loadAdminSettings()`. Don't repeat the check in other layers. When many callers need the same check, it belongs inside the function
 - No named functions inside functions or methods — use a private method, an extension or a separate file. Lambdas passed as arguments are fine
 - Prefer a new file (widget, mapper, extension, controller) over more private helpers when logic is large or reusable
 - Write `value ?? false` for a nullable `bool`, not `value == true`. Use the same fallback for the same kind of value throughout a screen
@@ -63,7 +63,7 @@ Before writing a helper, check the `wisecore` package (`import 'package:wisecore
 | Compare dates without time / strip the time | `date.isSameDate(other)` / `date.withoutTime` (wisecore) |
 | Capitalize a string | `text.capitalized` (wisecore) |
 | Null-or-empty checks | `text.orNull`, `text.isNullOrEmpty`, `list.isNullOrEmpty` (wisecore) |
-| Show an `AsyncValue` from a stream provider | `whenStream(...)` (wisecore) |
+| Show loading / data / error of a `LoadingStreamProvider` | `whenStream(...)` (wisecore) |
 | Debounce input, open URLs / mail / phone | `Debouncer`, `WiseLauncher` (wisecore) |
 | First element or null | `list.firstOrNull` (`package:collection`) |
 
@@ -74,7 +74,7 @@ Translations live in `lib/l10n/intl_<locale>.arb`, one file per language. The Fl
 - **No hardcoded user-facing text.** Use `S.of(context).keyName`. Show enum and model labels with a widget (see "Enum Labels" in the models skill)
 - **Change keys in every `.arb` file.** Add, rename or remove a key in *all* `intl_*.arb` files — list `lib/l10n/` instead of assuming which languages exist. Keep the key and its placeholders (`{number}`) identical and translate the value; if unsure of a translation, add the key anyway and mention it
 - **Keep the key order identical** in every `.arb` file
-- **Name keys in English lowerCamelCase, after the meaning** — `cancel`, `weeksOfService` — not after the screen. Reuse an existing key when text and meaning match
+- **Name keys in English lowerCamelCase, after the meaning** — `cancel`, `deliveryDate` — not after the screen. Reuse an existing key when text and meaning match
 - **Never edit `lib/generated/` by hand.** The plugin regenerates it when an `.arb` file is saved. Without the IDE plugin: `dart pub global activate intl_utils` once, then `dart pub global run intl_utils:generate`
 
 ### Naming Conventions

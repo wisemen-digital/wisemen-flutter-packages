@@ -412,4 +412,3 @@ export 'items_screen.dart';
 9. **Scope MediaQuery reads** — Prefer `MediaQuery.sizeOf(context)`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf` over `MediaQuery.of(context)`, which rebuilds the screen on *every* metric change (rotation, keyboard, text scale). Screens that read insets or size do this constantly
 10. **Scaffold in the screen file** — Extract the app bar and content into widgets, not the Scaffold. See "Screen Structure"
 11. **Fixed submit bar in `bottomNavigationBar`** — Wrapped in `SafeArea`, no guessed bottom padding. See "Submit and Action Bars"
-12. **Navigate with `context.router`** — Never `Navigator.of(context)`

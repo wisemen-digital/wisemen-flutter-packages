@@ -255,30 +255,24 @@ final itemsDaoProvider = Provider<ItemsDao>(
 ```dart
 // lib/database/models/item/item_details.dart
 class ItemDetails {
-  const ItemDetails({
-    required this.category,
-    required this.isActive,
-    this.metadata,
-  });
+  const ItemDetails({this.category, this.isActive, this.metadata});
 
-  final String category;
-  final bool isActive;
+  // Same nullability as the data; the feature model mapper decides on defaults
+  final String? category;
+  final bool? isActive;
   final String? metadata;
 
   factory ItemDetails.fromJson(Map<String, dynamic> json) {
     return ItemDetails(
-      // Always present → read strictly; a missing value is a real error
-      category: json['category'] as String,
-      // Absent means "active" by the domain's own rule → a real default
-      isActive: json['is_active'] as bool? ?? true,
-      // Can be missing → nullable, the UI decides what to show
+      category: json['category'] as String?,
+      isActive: json['is_active'] as bool?,
       metadata: json['metadata'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'category': category,
-        'is_active': isActive,
+        if (category != null) 'category': category,
+        if (isActive != null) 'is_active': isActive,
         if (metadata != null) 'metadata': metadata,
       };
 
@@ -398,7 +392,7 @@ dart run build_runner build --delete-conflicting-outputs
 3. **Null safety** — use `.nullable()` for optional columns
 4. **JSON for nested data** — complex objects as JSON in text columns
 5. **Feature-specific DAOs** — one DAO per feature, can span multiple tables
-6. **`get*` for one-time reads** — Instead of `watch*().first` on your own DAO
+6. **`get*` for one-time reads** — Next to the `watch*` method
 7. **Don't hide row-count errors** — No `limit(1)` on a query that should match one row; choose `getSingle()` or `getSingleOrNull()`
 8. **No hand-written migrations** — Bump `schemaVersion` and recreate tables, unless a table holds device-only data
 9. **No invented defaults** — See "Nullable Fields vs Fallback Defaults" in the models skill

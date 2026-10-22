@@ -5,6 +5,7 @@
 - Improved widgets skill with logic placement, sizes and navigation
 - Improved screens skill with screen structure and submit bars
 - Improved router, database, providers, repositories and models skills
+- Added the `controllers/` folder to the feature structure skill
 
 ## 2.2.12
 
