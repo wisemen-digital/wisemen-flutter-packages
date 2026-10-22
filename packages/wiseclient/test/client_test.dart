@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -95,6 +96,21 @@ class FreshController<T> with FreshMixin<T> {
   Future<T> performTokenRefresh(T? token) {
     return Future.value(token!);
   }
+}
+
+/// Runs [body], collecting errors reported to the zone instead of failing.
+Future<(T, List<Object>)> captureReportedErrors<T>(
+  Future<T> Function() body,
+) async {
+  final reported = <Object>[];
+  final completer = Completer<T>();
+  runZonedGuarded(
+    () => unawaited(
+      body().then(completer.complete, onError: completer.completeError),
+    ),
+    (error, _) => reported.add(error),
+  );
+  return (await completer.future, reported);
 }
 
 extension VoidAnswer on When<Future<void>> {
@@ -707,5 +723,72 @@ void main() {
         expect(stored?.toOAuth2Token.accessToken, 'new');
       },
     );
+  });
+
+  group('Unreadable stored token', () {
+    test('malformed values throw TokenParseException', () {
+      const malformed = [
+        'not json',
+        '[]',
+        '{}',
+        '{"accessToken":1}',
+        '{"accessToken":"token","expiresIn":"100"}',
+        '{"accessToken":"token","issuedAt":"yesterday"}',
+      ];
+      for (final value in malformed) {
+        expect(
+          () => value.toOAuth2Token,
+          throwsA(isA<TokenParseException>()),
+          reason: value,
+        );
+      }
+    });
+
+    test('is deleted, reported and read as no token', () async {
+      final storage = FreshSecureTokenStorage();
+      await storage.storage.write(
+        key: storage.storageIdentifier,
+        value: 'not json',
+      );
+
+      final (token, reported) = await captureReportedErrors(
+        () => FreshSecureTokenStorage().read(),
+      );
+
+      expect(token, isNull);
+      expect(reported, [isA<TokenParseException>()]);
+      expect(
+        await storage.storage.read(key: storage.storageIdentifier),
+        isNull,
+      );
+    });
+
+    test('does not hang requests', () async {
+      final storage = FreshSecureTokenStorage();
+      await storage.storage.write(
+        key: storage.storageIdentifier,
+        value: 'not json',
+      );
+      final adapter = TokenCheckingAdapter();
+
+      final (response, _) = await captureReportedErrors(() {
+        final dio = Dio()
+          ..httpClientAdapter = adapter
+          ..options.validateStatus = ((_) => true)
+          ..interceptors.add(
+            Fresh.oAuth2(
+              tokenStorage: FreshSecureTokenStorage(),
+              httpClient: Dio()..httpClientAdapter = adapter,
+              refreshToken: (_, __) async =>
+                  const OAuth2Token(accessToken: 'new'),
+            ),
+          );
+        return dio
+            .get<dynamic>('https://example.com')
+            .timeout(const Duration(seconds: 5));
+      });
+
+      expect(response.statusCode, 401);
+    });
   });
 }

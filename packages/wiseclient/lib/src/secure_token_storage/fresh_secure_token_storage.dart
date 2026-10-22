@@ -1,3 +1,4 @@
+import 'dart:async' show Zone;
 import 'dart:convert' show jsonEncode;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,11 +30,22 @@ class FreshSecureTokenStorage implements TokenStorage<OAuth2Token> {
   @override
   Future<OAuth2Token?> read() async {
     if (_token != null) return _token;
-    final tokenFromStorage = await storage.read(key: storageIdentifier);
-    if (tokenFromStorage != null) {
-      return tokenFromStorage.toOAuth2Token;
-    } else {
+    try {
+      final tokenFromStorage = await storage.read(key: storageIdentifier);
+      return tokenFromStorage?.toOAuth2Token;
+    } on Exception catch (error, stackTrace) {
+      await _deleteUnreadableToken();
+      Zone.current.handleUncaughtError(error, stackTrace);
       return null;
+    }
+  }
+
+  Future<void> _deleteUnreadableToken() async {
+    try {
+      await storage.delete(key: storageIdentifier);
+    } on Exception {
+      // The read error is already being reported, and a token that can't be
+      // read can't authenticate anyone either.
     }
   }
 

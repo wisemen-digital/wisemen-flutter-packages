@@ -1,7 +1,7 @@
-# 1.6.0
+# 2.0.0
 
 - Updated oidc major
-- Wiseclient OAuthToken changes
+- Wiseclient major update (OAuthToken changes)
 
 # 1.5.0
 
