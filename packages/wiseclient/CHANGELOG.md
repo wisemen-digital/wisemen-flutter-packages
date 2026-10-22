@@ -5,6 +5,9 @@
   replaced by `map.toOAuth2TokenFromSnakeCase()` and
   `map.toOAuth2TokenFromCamelCase()`.
 - **Breaking:** Removed the unused `LogoutException`. Throw `RevokeTokenException` from `refreshFunction` to log the user out
+- **Breaking:** `fresh`, `setFreshToken`, `removeFreshToken` and `authenticationStatus` throw a `StateError` on a client created without `WiseInterceptor.fresh`, instead of reading and changing the shared stored token
+- **Breaking:** `interceptorsToAdd` now run before the wise interceptors
+- **Breaking:** Replaced the `tokenStorage` parameter with `fresh`. Pass one client's `fresh` to the others to share a session; for custom storage, pass `getFreshInterceptor(refreshFunction: ..., tokenStorage: ...)`
 - Fixed refreshed tokens not being persisted when `refreshFunction` returned an `OAuth2Token`
 - Fixed requests hanging when the stored token could not be read; it is now deleted and reported to the zone as a `TokenParseException`
 - Updated `flutter_secure_storage` to 11.x

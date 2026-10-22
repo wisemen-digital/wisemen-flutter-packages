@@ -179,6 +179,71 @@ void main() {
       },
     );
 
+    test('Adds interceptorsToAdd before the wise interceptors', () {
+      final interceptor = FakeInterceptor();
+      final client = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.error],
+        refreshFunction: emptyRefreshToken,
+        interceptorsToAdd: [interceptor],
+      );
+      // Skips the ImplyContentTypeInterceptor Dio always adds first
+      expect(client.interceptors.skip(1), [
+        interceptor,
+        client.fresh,
+        isA<BaseErrorInterceptor>(),
+      ]);
+    });
+
+    test('Clients passed the same fresh share one session', () async {
+      final first = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh],
+        refreshFunction: emptyRefreshToken,
+      );
+      final second = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh],
+        fresh: first.fresh,
+      );
+      expect(second.fresh, same(first.fresh));
+      expect(second.interceptors, contains(first.fresh));
+
+      await first.setFreshToken(
+        token: const OAuth2Token(accessToken: 'shared'),
+      );
+      expect((await second.fresh.token)?.accessToken, 'shared');
+      await first.fresh.clearToken();
+    });
+
+    test('Fresh needs either a refreshFunction or a fresh instance', () {
+      final fresh = getFreshInterceptor(refreshFunction: emptyRefreshToken);
+      expect(
+        () => WiseClient(wiseInterceptors: [WiseInterceptor.fresh]),
+        throwsA(isA<AssertionError>()),
+      );
+      expect(
+        () => WiseClient(
+          wiseInterceptors: [WiseInterceptor.fresh],
+          refreshFunction: emptyRefreshToken,
+          fresh: fresh,
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+      expect(
+        () => WiseClient(wiseInterceptors: [], fresh: fresh),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('Token methods throw without the fresh interceptor', () {
+      final client = WiseClient(wiseInterceptors: [WiseInterceptor.error]);
+      expect(() => client.fresh, throwsStateError);
+      expect(() => client.authenticationStatus, throwsStateError);
+      expect(
+        () => client.setFreshToken(token: const OAuth2Token(accessToken: 'a')),
+        throwsStateError,
+      );
+      expect(client.removeFreshToken, throwsStateError);
+    });
+
     test('isWebClient throws error when not implemented', () {
       expect(
         () => FakeClient().isWebClient,

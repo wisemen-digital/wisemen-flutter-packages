@@ -66,6 +66,10 @@ final client = WiseClient(
 > **Rule:** `WiseInterceptor.fresh` requires `refreshFunction` to be provided. All other interceptors
 > must NOT provide `refreshFunction`.
 
+Interceptors run in this order: `interceptorsToAdd`, then `fresh`, then the other wise interceptors
+in the order given. An added interceptor sees a 401 in `onError` before `fresh` refreshes it, so it
+must call `handler.next` for refresh to happen. Passing `interceptors:` replaces all of them.
+
 ---
 
 ## Making requests
@@ -115,6 +119,10 @@ WiseOptions(
 
 ## Token management
 
+Only on a client created with `WiseInterceptor.fresh`. On any other client `fresh`,
+`setFreshToken`, `removeFreshToken` and `authenticationStatus` throw a `StateError`. Manage the
+token through the client that sends authenticated requests.
+
 ```dart
 // Set a token after login
 await client.setFreshToken(
@@ -129,6 +137,37 @@ client.authenticationStatus.listen((status) {
   // AuthenticationStatus: initial | authenticated | unauthenticated
 });
 ```
+
+### Sharing a session between clients
+
+Every client that sends the same user's token must share one `Fresh` instance. Create the session
+once with `refreshFunction`, and pass its `fresh` to every other client instead of a
+`refreshFunction`:
+
+```dart
+final apiClient = WiseClient(
+  wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.error],
+  options: WiseOptions.base(url: apiUrl),
+  refreshFunction: refreshToken,
+);
+
+final mediaClient = WiseClient(
+  wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.error],
+  options: WiseOptions.base(url: mediaUrl),
+  fresh: apiClient.fresh,
+);
+```
+
+- **Never** create two clients that each have their own `refreshFunction` for the same login. Each
+  keeps its own in-memory token and reads storage only on creation, so after one refreshes, the
+  other refreshes with a rotated refresh token and logs the user out. Sharing token storage does
+  not prevent this.
+- `WiseInterceptor.fresh` takes exactly one of `refreshFunction` or `fresh`. Without
+  `WiseInterceptor.fresh`, pass neither.
+- Login, logout and `authenticationStatus` can go through any client that shares the instance.
+- For custom token storage, create the instance with
+  `getFreshInterceptor(refreshFunction: ..., tokenStorage: ...)` and pass it as `fresh`. There is
+  no `tokenStorage` parameter on `WiseClient`.
 
 ### Token model
 
