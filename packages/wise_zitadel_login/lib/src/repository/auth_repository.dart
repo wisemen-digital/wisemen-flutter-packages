@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:oidc/oidc.dart';
-import 'package:wiseclient/wiseclient.dart' show OAuthToken;
+import 'package:wiseclient/wiseclient.dart' show OAuth2Token;
 
 import '../options.dart';
 import '../types/zitadel_login_type.dart';
@@ -20,14 +20,14 @@ abstract interface class WiseZitadelAuthenticator {
   /// user back to a fresh page load, so the [login] call that started the flow
   /// is gone by the time its result arrives and this is the only place the
   /// token can surface. Everywhere else this returns `null`.
-  Future<OAuthToken?> prepare();
+  Future<OAuth2Token?> prepare();
 
   /// Logs in with organization id, optionally [type] and returns the resulting token, or `null` when the
   /// authorization server did not return a usable token.
   ///
   /// On the web this never returns: the flow navigates the page away and its
   /// token comes back through [prepare] on the next page load.
-  Future<OAuthToken?> login([ZitadelLoginType? type]);
+  Future<OAuth2Token?> login([ZitadelLoginType? type]);
 
   /// Releases the resources held by the authenticator.
   Future<void> dispose();
@@ -36,7 +36,7 @@ abstract interface class WiseZitadelAuthenticator {
 /// [AuthenticationRepository] handles the login process using [OidcUserManager]
 ///
 /// The manager is only used to run the authorization code flow: it keeps no
-/// session past the flow and refreshes nothing. The [OAuthToken] it returns is
+/// session past the flow and refreshes nothing. The [OAuth2Token] it returns is
 /// handed to the app, which stays the single owner of storing and refreshing
 /// it. Running a second refresh here would race the app's own one, and with
 /// refresh token rotation enabled the loser of that race is logged out.
@@ -58,7 +58,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
 
   OidcUserManager? _manager;
   Future<OidcUserManager>? _pendingManager;
-  OAuthToken? _resumedToken;
+  OAuth2Token? _resumedToken;
 
   /// The discovery document URL of the Zitadel instance
   static Uri discoveryUriFor({required WiseZitadelOptions options}) {
@@ -158,17 +158,17 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     );
   }
 
-  /// Maps the token of an [OidcUser] onto the [OAuthToken] of `wiseclient`
+  /// Maps the token of an [OidcUser] onto the [OAuth2Token] of `wiseclient`
   ///
   /// Returns `null` when either token is missing, since the app cannot keep a
   /// session alive without both.
-  static OAuthToken? tokenFrom(OidcToken token) {
+  static OAuth2Token? tokenFrom(OidcToken token) {
     final accessToken = token.accessToken;
     final refreshToken = token.refreshToken;
     if (accessToken == null || refreshToken == null) {
       return null;
     }
-    return OAuthToken(
+    return OAuth2Token(
       accessToken: accessToken,
       refreshToken: refreshToken,
       tokenType: token.tokenType,
@@ -179,7 +179,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   }
 
   @override
-  Future<OAuthToken?> prepare() async {
+  Future<OAuth2Token?> prepare() async {
     await _ensureManager();
     // Handed out once: a second [prepare] on the same authenticator is a
     // rebuild of the login screen, not a second login.
@@ -189,7 +189,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
   }
 
   @override
-  Future<OAuthToken?> login([ZitadelLoginType? type]) {
+  Future<OAuth2Token?> login([ZitadelLoginType? type]) {
     // Deliberately not awaited when the manager is ready: `oidc` opens the
     // login tab synchronously, and browsers only allow that inside the task of
     // the tap that asked for it. An await here would lose that user gesture and
@@ -201,7 +201,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
     return _ensureManager().then((manager) => _loginWith(manager, type));
   }
 
-  Future<OAuthToken?> _loginWith(
+  Future<OAuth2Token?> _loginWith(
     OidcUserManager manager,
     ZitadelLoginType? type,
   ) async {
@@ -221,7 +221,7 @@ class AuthenticationRepository implements WiseZitadelAuthenticator {
       // continues in the page load that comes back, and [prepare] finishes it
       // there. Completing here instead would report the started login to the
       // app as one that produced no token, i.e. as a failure.
-      return Completer<OAuthToken?>().future;
+      return Completer<OAuth2Token?>().future;
     }
 
     final token = user?.token;

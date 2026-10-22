@@ -41,7 +41,7 @@ class WiseZitadelOptions {
   final void Function(
     StackRouter router,
     WidgetRef ref,
-    OAuthToken? token,
+    OAuth2Token? token,
   )
   onLoginSuccess;
 
