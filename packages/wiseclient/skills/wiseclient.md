@@ -25,16 +25,35 @@ final client = WiseClient(
   ],
   options: WiseOptions.base(url: 'https://api.example.com'),
   refreshFunction: (token, dio) async {
-    // Call your refresh endpoint and return a new OAuth2Token
-    final response = await dio.post('/auth/refresh', data: {'refresh_token': token?.refreshToken});
-    return OAuthToken.fromSnakeCase(response.data as Map<String, dynamic>);
+    try {
+      // `dio` is a separate client without your base url: use an absolute url
+      final response = await dio.post<Map<String, dynamic>>(
+        'https://api.example.com/auth/refresh',
+        data: {'refresh_token': token?.refreshToken},
+      );
+      return response.data!.toOAuth2TokenFromSnakeCase();
+    } on DioException catch (e) {
+      // The refresh token is rejected: log the user out
+      if (e.response?.statusCode case 400 || 401) throw RevokeTokenException();
+      rethrow;
+    }
   },
-  refreshErrorHandler: (error, stackTrace) {
-    // Called when refresh fails – typically log the user out here
-  },
-  refreshBuffer: const Duration(minutes: 10), // Refresh token this long before expiry
 );
 ```
+
+### `refreshFunction` rules
+
+- Return an `OAuth2Token`. It is saved to secure storage and the failed request is retried
+  with it.
+- The `dio` argument is not `client`: it has none of the client's options, interceptors or
+  adapter. Call the refresh endpoint with an absolute url.
+- Throw `RevokeTokenException` when the refresh token is rejected. This clears the stored token
+  and moves `authenticationStatus` to `unauthenticated`.
+- Let any other failure surface as a `DioException`: the user stays logged in, the request fails
+  with that exception, and the next 401 retries the refresh. Any other exception type makes the
+  original request resolve successfully with its 401 response.
+- Tokens are refreshed when a request returns 401, and before a request when the token expires
+  within 30 seconds. The early refresh needs both `expiresIn` and `issuedAt`.
 
 ### `WiseInterceptor` options
 
@@ -98,7 +117,9 @@ WiseOptions(
 
 ```dart
 // Set a token after login
-await client.setFreshToken(token: OAuthToken(accessToken: '...', refreshToken: '...'));
+await client.setFreshToken(
+  token: loginResponse.toOAuth2TokenFromSnakeCase(),
+);
 
 // Clear the token on logout
 await client.removeFreshToken();
@@ -109,22 +130,30 @@ client.authenticationStatus.listen((status) {
 });
 ```
 
-### Token models
+### Token model
+
+Tokens are `OAuth2Token` from `fresh`, exported by `wiseclient` (fields: `accessToken`,
+`tokenType`, `expiresIn`, `refreshToken`, `scope`, `issuedAt`). There is no `OAuthToken`
+since wiseclient 3.0.0.
 
 ```dart
 // Parse from a snake_case JSON response (typical OAuth2 server response)
-final token = OAuthToken.fromSnakeCase(responseJson);
+final token = responseJson.toOAuth2TokenFromSnakeCase();
 
 // Parse from camelCase JSON
-final token = OAuthToken.fromCamelCasing(responseJson);
+final token = responseJson.toOAuth2TokenFromCamelCase();
 
-// Check expiry (uses JWT decoder)
-final expiresAt = token.expiresAt; // DateTime
+// issuedAt + expiresIn, null when either is missing
+final DateTime? expiresAt = token.expiresAt;
 ```
 
-`OAuthToken` extends `OAuth2Token` (fields: `accessToken`, `tokenType`, `expiresIn`,
-`refreshToken`, `scope`). Tokens are persisted in `FlutterSecureStorage` via
-`FreshSecureTokenStorage` under the key `OAUTH_TOKEN`.
+Both parsers set `issuedAt` to now when the JSON has none, so the early refresh works. Prefer them
+over the `OAuth2Token` constructor, which leaves `issuedAt` null.
+
+Tokens are persisted in `FlutterSecureStorage` via `FreshSecureTokenStorage` under the key
+`OAUTH_TOKEN_STORAGE`. If the stored token can't be read or parsed, it is deleted, the user is
+logged out, and the error is reported to the current zone (a `TokenParseException`, or the storage
+error) so `runZonedGuarded` and crash reporting see it. Requests continue without a token.
 
 ---
 
@@ -179,8 +208,9 @@ try {
 }
 ```
 
-Token-refresh failure triggers `refreshErrorHandler`. Throwing `RevokeTokenException` inside
-`refreshFunction` clears the stored token and propagates a `DioException` with that error.
+Throwing `RevokeTokenException` inside `refreshFunction` clears the stored token and propagates a
+`DioException` whose `error` is the `RevokeTokenException`. Listen to `authenticationStatus` to
+navigate to login rather than catching it per request.
 
 ---
 
