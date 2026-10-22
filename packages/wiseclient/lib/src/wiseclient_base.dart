@@ -7,7 +7,6 @@ import 'exceptions/exceptions.dart';
 import 'interceptors/interceptors.dart';
 import 'options.dart';
 import 'secure_token_storage/fresh_secure_token_storage.dart';
-import 'token_model/oauth_token.dart';
 
 /// A networking client that extends [Dio]
 abstract mixin class WiseClient implements Dio {
@@ -19,7 +18,7 @@ abstract mixin class WiseClient implements Dio {
     bool useNativeAdapter = false,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? interceptors,
-    TokenStorage<OAuthToken>? tokenStorage,
+    TokenStorage<OAuth2Token>? tokenStorage,
   }) {
     assert(
       wiseInterceptors.contains(WiseInterceptor.fresh)

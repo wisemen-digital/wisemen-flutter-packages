@@ -1,13 +1,13 @@
 import 'dart:convert' show jsonDecode;
 
-import '../token_model/oauth_token.dart';
+import 'package:fresh_dio/fresh_dio.dart';
 
-/// [OAuthTokenFromString] to get token from secure storage
-extension OAuthTokenFromString on String {
-  /// Returns [OAuthToken] from [String]
-  OAuthToken get toOAuthToken {
+/// [OAuth2TokenFromString] to get token from secure storage
+extension OAuth2TokenFromString on String {
+  /// Returns [OAuth2Token] from [String]
+  OAuth2Token get toOAuth2Token {
     final dynamic tokenMap = jsonDecode(this);
-    return OAuthToken(
+    return OAuth2Token(
       accessToken: (tokenMap as Map)['accessToken'] as String,
       refreshToken: tokenMap['refreshToken'] as String?,
       tokenType: tokenMap['tokenType'] as String?,

@@ -12,7 +12,7 @@ WiseClient createClient({
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
-  TokenStorage<OAuthToken>? tokenStorage,
+  TokenStorage<OAuth2Token>? tokenStorage,
 }) => NativeWiseClient(
   wiseInterceptors: wiseInterceptors,
   baseOptions: options,
@@ -33,7 +33,7 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
-    TokenStorage<OAuthToken>? tokenStorage,
+    TokenStorage<OAuth2Token>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
     httpClientAdapter = useNativeAdapter

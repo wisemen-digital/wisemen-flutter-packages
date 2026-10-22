@@ -4,7 +4,6 @@ import 'package:fresh_dio/fresh_dio.dart';
 import 'package:wiseclient/src/wiseclient_base.dart';
 
 import '../interceptors/interceptors.dart';
-import '../token_model/oauth_token.dart';
 
 /// Creates a [WiseClient] for web
 WiseClient createClient({
@@ -14,7 +13,7 @@ WiseClient createClient({
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
-  TokenStorage<OAuthToken>? tokenStorage,
+  TokenStorage<OAuth2Token>? tokenStorage,
 }) => WebWiseClient(
   wiseInterceptors: wiseInterceptors,
   baseOptions: options,
@@ -33,7 +32,7 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
-    TokenStorage<OAuthToken>? tokenStorage,
+    TokenStorage<OAuth2Token>? tokenStorage,
   }) {
     options = baseOptions ?? BaseOptions();
     httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)

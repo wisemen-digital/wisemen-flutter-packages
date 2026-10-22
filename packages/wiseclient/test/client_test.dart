@@ -15,8 +15,6 @@ class MockStorage extends Mock implements FreshSecureTokenStorage {}
 
 class FakeSecureStorage extends Fake implements FlutterSecureStorage {}
 
-class FakeOAuthToken extends Fake implements OAuthToken {}
-
 class FakeClient extends Fake implements WiseClient {}
 
 class MockClient extends Mock implements WiseClient {}
@@ -60,6 +58,28 @@ class FakeDioException extends Fake implements DioException {}
 
 class MockExtendedClient extends Fake implements WiseClient {}
 
+/// Returns 200 for requests carrying `bearer new`, 401 for anything else.
+class TokenCheckingAdapter implements HttpClientAdapter {
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final authorized = options.headers['authorization'] == 'bearer new';
+    return ResponseBody.fromString(
+      '{}',
+      authorized ? 200 : 401,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
+}
+
 class FakeInterceptor extends Fake implements Interceptor {}
 
 Future<OAuth2Token> emptyRefreshToken(OAuth2Token? _, Dio __) async {
@@ -87,7 +107,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeSecureStorage());
-    registerFallbackValue(FakeOAuthToken());
+    registerFallbackValue(FakeOAuth2Token());
   });
 
   group('A group of basic tests to test functionality', () {
@@ -102,14 +122,14 @@ void main() {
       wiseInterceptors: WiseInterceptor.values,
       options: wiseOptions,
       refreshFunction: (token, client) {
-        return Future.value(OAuthToken(accessToken: 'newToken'));
+        return Future.value(const OAuth2Token(accessToken: 'newToken'));
       },
     );
     final awesomeBase = WiseClient(
       wiseInterceptors: WiseInterceptor.values,
       options: wiseBaseOptions,
       refreshFunction: (token, client) {
-        return Future.value(OAuthToken(accessToken: 'newToken'));
+        return Future.value(const OAuth2Token(accessToken: 'newToken'));
       },
     );
 
@@ -326,15 +346,15 @@ void main() {
       final storage = MockStorage();
       when(storage.read).thenAnswer(
         (_) => Future.value(
-          OAuthToken(accessToken: 'token'),
+          const OAuth2Token(accessToken: 'token'),
         ),
       );
       final token = await storage.read();
-      expect(token, isA<OAuthToken>());
+      expect(token, isA<OAuth2Token>());
     });
 
     test('Token tests', () async {
-      final token = OAuthToken(
+      const token = OAuth2Token(
         accessToken: 'token',
         expiresIn: 100,
         refreshToken: 'refresh',
@@ -350,30 +370,31 @@ void main() {
     });
 
     test('Token from snake case', () async {
-      final token = OAuthToken.fromSnakeCase(
-        {
-          'access_token': 'token',
-          'token_type': 'bearer',
-          'expires_in': 100,
-          'refresh_token': 'refresh',
-          'scope': 'scope',
-          'issued_at': DateTime.now().toIso8601String(),
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final issuedAt = DateTime(2017, 5, 12);
+      final token = <String, dynamic>{
+        'access_token': 'token',
+        'token_type': 'bearer',
+        'expires_in': 100,
+        'refresh_token': 'refresh',
+        'scope': 'scope',
+        'issued_at': issuedAt.toIso8601String(),
+      }.toOAuth2TokenFromSnakeCase();
+      expect(token.accessToken, 'token');
+      expect(token.tokenType, 'bearer');
+      expect(token.expiresIn, 100);
+      expect(token.refreshToken, 'refresh');
+      expect(token.scope, 'scope');
+      expect(token.issuedAt, issuedAt);
     });
 
     test('Token from snake case without date', () async {
-      final token = OAuthToken.fromSnakeCase(
-        {
-          'access_token': 'token',
-          'token_type': 'bearer',
-          'expires_in': 100,
-          'refresh_token': 'refresh',
-          'scope': 'scope',
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final token = <String, dynamic>{
+        'access_token': 'token',
+        'token_type': 'bearer',
+        'expires_in': 100,
+        'refresh_token': 'refresh',
+        'scope': 'scope',
+      }.toOAuth2TokenFromSnakeCase();
       expect(
         token.issuedAt?.difference(DateTime.now()),
         lessThan(const Duration(seconds: 1)),
@@ -381,30 +402,31 @@ void main() {
     });
 
     test('Token from camel case', () async {
-      final token = OAuthToken.fromCamelCasing(
-        {
-          'accessToken': 'token',
-          'tokenType': 'bearer',
-          'expiresIn': 100,
-          'refreshToken': 'refresh',
-          'scope': 'scope',
-          'issuedAt': DateTime.now().toIso8601String(),
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final issuedAt = DateTime(2017, 5, 12);
+      final token = <String, dynamic>{
+        'accessToken': 'token',
+        'tokenType': 'bearer',
+        'expiresIn': 100,
+        'refreshToken': 'refresh',
+        'scope': 'scope',
+        'issuedAt': issuedAt.toIso8601String(),
+      }.toOAuth2TokenFromCamelCase();
+      expect(token.accessToken, 'token');
+      expect(token.tokenType, 'bearer');
+      expect(token.expiresIn, 100);
+      expect(token.refreshToken, 'refresh');
+      expect(token.scope, 'scope');
+      expect(token.issuedAt, issuedAt);
     });
 
     test('Token from camel case without date', () async {
-      final token = OAuthToken.fromCamelCasing(
-        {
-          'accessToken': 'token',
-          'tokenType': 'bearer',
-          'expiresIn': 100,
-          'refreshToken': 'refresh',
-          'scope': 'scope',
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final token = <String, dynamic>{
+        'accessToken': 'token',
+        'tokenType': 'bearer',
+        'expiresIn': 100,
+        'refreshToken': 'refresh',
+        'scope': 'scope',
+      }.toOAuth2TokenFromCamelCase();
       expect(
         token.issuedAt?.difference(DateTime.now()),
         lessThan(const Duration(seconds: 1)),
@@ -415,8 +437,7 @@ void main() {
       final date = DateTime(2017, 5, 12);
       final tokenString =
           '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope","issuedAt":"${date.toIso8601String()}"}';
-      final token = tokenString.toOAuthToken;
-      expect(token, isA<OAuthToken>());
+      final token = tokenString.toOAuth2Token;
       expect(token.accessToken, 'token');
       expect(token.tokenType, 'bearer');
       expect(token.expiresIn, 100);
@@ -427,10 +448,10 @@ void main() {
 
     test('Can set the client token', () async {
       await awesome.setFreshToken(
-        token: OAuthToken(accessToken: 'accessToken'),
+        token: const OAuth2Token(accessToken: 'accessToken'),
       );
       final token = await awesome.fresh.token;
-      expect(token, isA<OAuthToken>());
+      expect(token?.accessToken, 'accessToken');
 
       await awesome.fresh.clearToken();
       expect(await awesome.fresh.token, isNull);
@@ -655,5 +676,36 @@ void main() {
         );
       });
     });
+  });
+
+  group('Token refresh', () {
+    test(
+      'persists a refreshed OAuth2Token and retries the request',
+      () async {
+        final storage = FreshSecureTokenStorage();
+        await storage.write(
+          const OAuth2Token(accessToken: 'old', refreshToken: 'refresh'),
+        );
+        final adapter = TokenCheckingAdapter();
+        final dio = Dio()
+          ..httpClientAdapter = adapter
+          ..interceptors.add(
+            Fresh.oAuth2(
+              tokenStorage: storage,
+              httpClient: Dio()..httpClientAdapter = adapter,
+              refreshToken: (_, __) async =>
+                  const OAuth2Token(accessToken: 'new'),
+            ),
+          );
+
+        final response = await dio.get<dynamic>('https://example.com');
+
+        expect(response.statusCode, 200);
+        final stored = await storage.storage.read(
+          key: storage.storageIdentifier,
+        );
+        expect(stored?.toOAuth2Token.accessToken, 'new');
+      },
+    );
   });
 }

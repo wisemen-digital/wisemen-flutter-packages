@@ -2,14 +2,13 @@ import 'dart:convert' show jsonEncode;
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fresh_dio/fresh_dio.dart';
-import 'package:wiseclient/src/token_model/oauth_token.dart';
 import 'map_from_token_extension.dart';
 import 'token_from_string_extension.dart';
 
 /// [FreshSecureTokenStorage] to store and keep tokens on device, implements [TokenStorage]
-class FreshSecureTokenStorage implements TokenStorage<OAuthToken> {
+class FreshSecureTokenStorage implements TokenStorage<OAuth2Token> {
   /// Variable token (usually Oauth) [_token]
-  OAuthToken? _token;
+  OAuth2Token? _token;
 
   /// [FlutterSecureStorage] to save token on device
   final storage = const FlutterSecureStorage(
@@ -28,18 +27,18 @@ class FreshSecureTokenStorage implements TokenStorage<OAuthToken> {
   }
 
   @override
-  Future<OAuthToken?> read() async {
+  Future<OAuth2Token?> read() async {
     if (_token != null) return _token;
     final tokenFromStorage = await storage.read(key: storageIdentifier);
     if (tokenFromStorage != null) {
-      return tokenFromStorage.toOAuthToken;
+      return tokenFromStorage.toOAuth2Token;
     } else {
       return null;
     }
   }
 
   @override
-  Future<void> write(OAuthToken token) async {
+  Future<void> write(OAuth2Token token) async {
     _token = token;
     await storage.write(
       key: storageIdentifier,

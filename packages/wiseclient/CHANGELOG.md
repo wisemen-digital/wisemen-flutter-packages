@@ -1,3 +1,12 @@
+## 3.0.0
+
+- **Breaking:** Removed `OAuthToken`. Use `OAuth2Token` from fresh
+- **Breaking:** `OAuthToken.fromSnakeCase` and `OAuthToken.fromCamelCasing` are
+  replaced by `map.toOAuth2TokenFromSnakeCase()` and
+  `map.toOAuth2TokenFromCamelCase()`.
+- Fixed refreshed tokens not being persisted when `refreshFunction` returned an `OAuth2Token`
+- Updated `flutter_secure_storage` to 11.x
+
 ## 2.1.1
 
 - Fixed constructor function parameters for web and native
