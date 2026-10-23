@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:oidc/oidc.dart';
 import 'package:wise_zitadel_login/src/repository/auth_repository.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
-import 'package:wiseclient/wiseclient.dart' show OAuthToken;
+import 'package:wiseclient/wiseclient.dart' show OAuth2Token;
 
 import '../utils/test_options.dart';
 
@@ -204,7 +204,7 @@ void main() {
   });
 
   group('tokenFrom', () {
-    test('maps an oidc token onto an OAuthToken', () {
+    test('maps an oidc token onto an OAuth2Token', () {
       final creationTime = DateTime.utc(2026, 8, 29, 12);
       final token = AuthenticationRepository.tokenFrom(
         OidcToken(
@@ -217,7 +217,7 @@ void main() {
         ),
       );
 
-      expect(token, isA<OAuthToken>());
+      expect(token, isA<OAuth2Token>());
       expect(token!.accessToken, 'access');
       expect(token.refreshToken, 'refresh');
       expect(token.tokenType, 'Bearer');

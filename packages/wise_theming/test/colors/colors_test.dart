@@ -57,7 +57,7 @@ void main() {
     });
 
     test('should interpolate between two TextColors', () {
-      final otherTextColors = const TextColors(
+      const otherTextColors = TextColors(
         primary: Color(0xFFFFFFFF),
         primaryOnBrand: Color(0xFF000000),
         secondary: Color(0xFF333333),
@@ -94,7 +94,7 @@ void main() {
     });
 
     test('should interpolate at extremes correctly', () {
-      final otherTextColors = const TextColors(
+      const otherTextColors = TextColors(
         primary: Color(0xFFFFFFFF),
         primaryOnBrand: Color(0xFF000000),
         secondary: Color(0xFF333333),
@@ -119,12 +119,12 @@ void main() {
       );
 
       // At t=0, should be exactly the first color scheme
-      final interpolatedAt0 = TextColors.lerp(textColors, otherTextColors, 0.0);
+      final interpolatedAt0 = TextColors.lerp(textColors, otherTextColors, 0);
       expect(interpolatedAt0.primary, textColors.primary);
       expect(interpolatedAt0.brandPrimary, textColors.brandPrimary);
 
       // At t=1, should be exactly the second color scheme
-      final interpolatedAt1 = TextColors.lerp(textColors, otherTextColors, 1.0);
+      final interpolatedAt1 = TextColors.lerp(textColors, otherTextColors, 1);
       expect(interpolatedAt1.primary, otherTextColors.primary);
       expect(interpolatedAt1.brandPrimary, otherTextColors.brandPrimary);
     });
@@ -204,7 +204,7 @@ void main() {
     });
 
     test('should interpolate between two BackgroundColors', () {
-      final otherBackgroundColors = const BackgroundColors(
+      const otherBackgroundColors = BackgroundColors(
         primary: Color(0xFF000000),
         primaryAlt: Color(0xFF111111),
         primaryHover: Color(0xFF222222),
@@ -280,7 +280,7 @@ void main() {
     });
 
     test('should interpolate between two BorderColors', () {
-      final otherBorderColors = const BorderColors(
+      const otherBorderColors = BorderColors(
         primary: Color(0xFFFFFFFF),
         secondary: Color(0xFF999999),
         tertiary: Color(0xFF333333),
@@ -309,7 +309,7 @@ void main() {
     });
 
     test('should interpolate at boundaries correctly', () {
-      final otherBorderColors = const BorderColors(
+      const otherBorderColors = BorderColors(
         primary: Color(0xFFFFFFFF),
         secondary: Color(0xFF999999),
         tertiary: Color(0xFF333333),
@@ -325,7 +325,7 @@ void main() {
       final interpolatedAt0 = BorderColors.lerp(
         borderColors,
         otherBorderColors,
-        0.0,
+        0,
       );
       expect(interpolatedAt0.primary, borderColors.primary);
 
@@ -333,7 +333,7 @@ void main() {
       final interpolatedAt1 = BorderColors.lerp(
         borderColors,
         otherBorderColors,
-        1.0,
+        1,
       );
       expect(interpolatedAt1.primary, otherBorderColors.primary);
     });
@@ -395,7 +395,7 @@ void main() {
     });
 
     test('should interpolate between two ForegroundColors', () {
-      final otherForegroundColors = const ForegroundColors(
+      const otherForegroundColors = ForegroundColors(
         primary: Color(0xFFFFFFFF),
         secondary: Color(0xFFCCCCCC),
         secondaryHover: Color(0xFFEEEEEE),
@@ -496,7 +496,7 @@ void main() {
     });
 
     test('should interpolate between two UtilityColors', () {
-      final otherUtilityColors = const UtilityColors(
+      const otherUtilityColors = UtilityColors(
         teal: Color(0xFF80FFFF),
         blue: Color(0xFF8080FF),
         orange: Color(0xFF80FF80),
@@ -568,7 +568,7 @@ void main() {
 
   group('Color interpolation edge cases', () {
     test('should handle interpolation at t=0', () {
-      final textColors1 = const TextColors(
+      const textColors1 = TextColors(
         primary: Color(0xFF000000),
         primaryOnBrand: Color(0xFFFFFFFF),
         secondary: Color(0xFF666666),
@@ -592,7 +592,7 @@ void main() {
         successPrimary: Color(0xFF00FF00),
       );
 
-      final textColors2 = const TextColors(
+      const textColors2 = TextColors(
         primary: Color(0xFFFFFFFF),
         primaryOnBrand: Color(0xFF000000),
         secondary: Color(0xFF333333),
@@ -616,7 +616,7 @@ void main() {
         successPrimary: Color(0xFF009900),
       );
 
-      final interpolated = TextColors.lerp(textColors1, textColors2, 0.0);
+      final interpolated = TextColors.lerp(textColors1, textColors2, 0);
 
       expect(interpolated.primary, textColors1.primary);
       expect(interpolated.brandPrimary, textColors1.brandPrimary);
@@ -624,7 +624,7 @@ void main() {
     });
 
     test('should handle interpolation at t=1', () {
-      final borderColors1 = const BorderColors(
+      const borderColors1 = BorderColors(
         primary: Color(0xFF000000),
         secondary: Color(0xFF666666),
         tertiary: Color(0xFFCCCCCC),
@@ -636,7 +636,7 @@ void main() {
         errorSubtle: Color(0xFFFFCCCC),
       );
 
-      final borderColors2 = const BorderColors(
+      const borderColors2 = BorderColors(
         primary: Color(0xFFFFFFFF),
         secondary: Color(0xFF999999),
         tertiary: Color(0xFF333333),
@@ -648,7 +648,7 @@ void main() {
         errorSubtle: Color(0xFF663333),
       );
 
-      final interpolated = BorderColors.lerp(borderColors1, borderColors2, 1.0);
+      final interpolated = BorderColors.lerp(borderColors1, borderColors2, 1);
 
       expect(interpolated.primary, borderColors2.primary);
       expect(interpolated.brand, borderColors2.brand);

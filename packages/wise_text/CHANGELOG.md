@@ -1,3 +1,7 @@
+## 1.1.0
+
+* Updated dependencies to stable versions and regenerated bindings
+ 
 ## 1.0.2
 
 * Fixed crash where Swift classier would release() twice

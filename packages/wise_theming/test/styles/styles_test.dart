@@ -163,65 +163,65 @@ void main() {
     group('Style hierarchy and relationships', () {
       test('largeTitle should be the largest font size', () {
         expect(
-          AppStyles.largeTitle.fontSize!,
+          AppStyles.largeTitle.fontSize,
           greaterThan(AppStyles.title.fontSize!),
         );
         expect(
-          AppStyles.largeTitle.fontSize!,
+          AppStyles.largeTitle.fontSize,
           greaterThan(AppStyles.headline.fontSize!),
         );
         expect(
-          AppStyles.largeTitle.fontSize!,
+          AppStyles.largeTitle.fontSize,
           greaterThan(AppStyles.subHeadline.fontSize!),
         );
         expect(
-          AppStyles.largeTitle.fontSize!,
+          AppStyles.largeTitle.fontSize,
           greaterThan(AppStyles.body.fontSize!),
         );
         expect(
-          AppStyles.largeTitle.fontSize!,
+          AppStyles.largeTitle.fontSize,
           greaterThan(AppStyles.input.fontSize!),
         );
       });
 
       test('title should be larger than body text styles', () {
         expect(
-          AppStyles.title.fontSize!,
+          AppStyles.title.fontSize,
           greaterThan(AppStyles.headline.fontSize!),
         );
         expect(
-          AppStyles.title.fontSize!,
+          AppStyles.title.fontSize,
           greaterThan(AppStyles.subHeadline.fontSize!),
         );
         expect(
-          AppStyles.title.fontSize!,
+          AppStyles.title.fontSize,
           greaterThan(AppStyles.body.fontSize!),
         );
         expect(
-          AppStyles.title.fontSize!,
+          AppStyles.title.fontSize,
           greaterThan(AppStyles.input.fontSize!),
         );
       });
 
       test('subHeadline should be the smallest font size', () {
         expect(
-          AppStyles.subHeadline.fontSize!,
+          AppStyles.subHeadline.fontSize,
           lessThan(AppStyles.largeTitle.fontSize!),
         );
         expect(
-          AppStyles.subHeadline.fontSize!,
+          AppStyles.subHeadline.fontSize,
           lessThan(AppStyles.title.fontSize!),
         );
         expect(
-          AppStyles.subHeadline.fontSize!,
+          AppStyles.subHeadline.fontSize,
           lessThan(AppStyles.headline.fontSize!),
         );
         expect(
-          AppStyles.subHeadline.fontSize!,
+          AppStyles.subHeadline.fontSize,
           lessThan(AppStyles.body.fontSize!),
         );
         expect(
-          AppStyles.subHeadline.fontSize!,
+          AppStyles.subHeadline.fontSize,
           lessThan(AppStyles.input.fontSize!),
         );
       });
@@ -331,7 +331,7 @@ void main() {
       });
 
       test('original styles should remain unchanged after copyWith', () {
-        final originalTitle = AppStyles.title;
+        const originalTitle = AppStyles.title;
         final modifiedTitle = AppStyles.title.copyWith(
           color: Colors.green,
           fontSize: 30,

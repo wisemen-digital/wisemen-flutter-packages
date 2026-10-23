@@ -4,7 +4,6 @@ import 'package:fresh_dio/fresh_dio.dart';
 import 'package:wiseclient/src/wiseclient_base.dart';
 
 import '../interceptors/interceptors.dart';
-import '../token_model/oauth_token.dart';
 
 /// Creates a [WiseClient] for web
 WiseClient createClient({
@@ -14,14 +13,14 @@ WiseClient createClient({
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
-  TokenStorage<OAuthToken>? tokenStorage,
+  Fresh<OAuth2Token>? fresh,
 }) => WebWiseClient(
   wiseInterceptors: wiseInterceptors,
   baseOptions: options,
   refreshFunction: refreshFunction,
   interceptorsToAdd: interceptorsToAdd,
   replacementInterceptors: replacementInterceptors,
-  tokenStorage: tokenStorage,
+  fresh: fresh,
 );
 
 /// Implements [DioForBrowser] for native
@@ -33,25 +32,29 @@ base class WebWiseClient extends DioForBrowser with WiseClient {
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
-    TokenStorage<OAuthToken>? tokenStorage,
+    Fresh<OAuth2Token>? fresh,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = (HttpClientAdapter() as BrowserHttpClientAdapter)
-      ..withCredentials = true;
+    httpClientAdapter = BrowserHttpClientAdapter(withCredentials: true);
     if (replacementInterceptors != null) {
       interceptors.addAll(replacementInterceptors);
     } else {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
-        fresh = getFreshInterceptor(
-          refreshFunction: refreshFunction!,
-          tokenStorage: tokenStorage,
-        );
+        this.fresh =
+            fresh ??
+            getFreshInterceptor(
+              refreshFunction: refreshFunction!,
+              httpClient: Dio(options.copyWith())
+                ..httpClientAdapter = BrowserHttpClientAdapter(
+                  withCredentials: true,
+                ),
+            );
       }
       interceptors.addAll(
         [
-          if (wiseInterceptors.contains(WiseInterceptor.fresh)) fresh,
-          ...wiseInterceptors.map((e) => e.getInterceptor()).nonNulls,
+          if (wiseInterceptors.contains(WiseInterceptor.fresh)) this.fresh,
           if (interceptorsToAdd != null) ...interceptorsToAdd,
+          ...wiseInterceptors.map((e) => e.getInterceptor()).nonNulls,
         ],
       );
     }

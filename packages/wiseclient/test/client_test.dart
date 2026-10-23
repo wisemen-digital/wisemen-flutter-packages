@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fresh_dio/fresh_dio.dart';
@@ -14,8 +16,6 @@ import 'package:wiseclient/wiseclient.dart';
 class MockStorage extends Mock implements FreshSecureTokenStorage {}
 
 class FakeSecureStorage extends Fake implements FlutterSecureStorage {}
-
-class FakeOAuthToken extends Fake implements OAuthToken {}
 
 class FakeClient extends Fake implements WiseClient {}
 
@@ -60,6 +60,28 @@ class FakeDioException extends Fake implements DioException {}
 
 class MockExtendedClient extends Fake implements WiseClient {}
 
+/// Returns 200 for requests carrying `bearer new`, 401 for anything else.
+class TokenCheckingAdapter implements HttpClientAdapter {
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    final authorized = options.headers['authorization'] == 'bearer new';
+    return ResponseBody.fromString(
+      '{}',
+      authorized ? 200 : 401,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
+  }
+
+  @override
+  void close({bool force = false}) {}
+}
+
 class FakeInterceptor extends Fake implements Interceptor {}
 
 Future<OAuth2Token> emptyRefreshToken(OAuth2Token? _, Dio __) async {
@@ -77,6 +99,21 @@ class FreshController<T> with FreshMixin<T> {
   }
 }
 
+/// Runs [body], collecting errors reported to the zone instead of failing.
+Future<(T, List<Object>)> captureReportedErrors<T>(
+  Future<T> Function() body,
+) async {
+  final reported = <Object>[];
+  final completer = Completer<T>();
+  runZonedGuarded(
+    () => unawaited(
+      body().then(completer.complete, onError: completer.completeError),
+    ),
+    (error, _) => reported.add(error),
+  );
+  return (await completer.future, reported);
+}
+
 extension VoidAnswer on When<Future<void>> {
   void thenAnswerWithVoid() => thenAnswer((_) async {});
 }
@@ -87,7 +124,7 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeSecureStorage());
-    registerFallbackValue(FakeOAuthToken());
+    registerFallbackValue(FakeOAuth2Token());
   });
 
   group('A group of basic tests to test functionality', () {
@@ -102,14 +139,14 @@ void main() {
       wiseInterceptors: WiseInterceptor.values,
       options: wiseOptions,
       refreshFunction: (token, client) {
-        return Future.value(OAuthToken(accessToken: 'newToken'));
+        return Future.value(const OAuth2Token(accessToken: 'newToken'));
       },
     );
     final awesomeBase = WiseClient(
       wiseInterceptors: WiseInterceptor.values,
       options: wiseBaseOptions,
       refreshFunction: (token, client) {
-        return Future.value(OAuthToken(accessToken: 'newToken'));
+        return Future.value(const OAuth2Token(accessToken: 'newToken'));
       },
     );
 
@@ -142,6 +179,99 @@ void main() {
         expect(client.interceptors.contains(interceptor), isTrue);
       },
     );
+
+    test('Adds interceptorsToAdd before the wise interceptors', () {
+      final interceptor = FakeInterceptor();
+      final client = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.error],
+        refreshFunction: emptyRefreshToken,
+        interceptorsToAdd: [interceptor],
+      );
+      // Skips the ImplyContentTypeInterceptor Dio always adds first
+      expect(client.interceptors.skip(1), [
+        interceptor,
+        client.fresh,
+        isA<BaseErrorInterceptor>(),
+      ]);
+    });
+
+    test('Clients passed the same fresh share one session', () async {
+      final first = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh],
+        refreshFunction: emptyRefreshToken,
+      );
+      final second = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh],
+        fresh: first.fresh,
+      );
+      expect(second.fresh, same(first.fresh));
+      expect(second.interceptors, contains(first.fresh));
+
+      await first.setFreshToken(
+        token: const OAuth2Token(accessToken: 'shared'),
+      );
+      expect((await second.fresh.token)?.accessToken, 'shared');
+      await first.fresh.clearToken();
+    });
+
+    test('Fresh needs either a refreshFunction or a fresh instance', () {
+      final fresh = getFreshInterceptor(refreshFunction: emptyRefreshToken);
+      expect(
+        () => WiseClient(wiseInterceptors: [WiseInterceptor.fresh]),
+        throwsA(isA<AssertionError>()),
+      );
+      expect(
+        () => WiseClient(
+          wiseInterceptors: [WiseInterceptor.fresh],
+          refreshFunction: emptyRefreshToken,
+          fresh: fresh,
+        ),
+        throwsA(isA<AssertionError>()),
+      );
+      expect(
+        () => WiseClient(wiseInterceptors: [], fresh: fresh),
+        throwsA(isA<AssertionError>()),
+      );
+    });
+
+    test('Refreshes through a dio configured like the client', () async {
+      Dio? refreshClient;
+      final client = WiseClient(
+        wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.logging],
+        options: WiseOptions.base(url: 'https://api.example.com'),
+        refreshFunction: (token, dio) async {
+          refreshClient = dio;
+          return const OAuth2Token(accessToken: 'new');
+        },
+      );
+
+      await client.fresh.refreshToken();
+
+      expect(refreshClient, isNot(same(client)));
+      expect(refreshClient!.httpClientAdapter, isA<IOHttpClientAdapter>());
+      expect(
+        refreshClient!.httpClientAdapter,
+        isNot(same(client.httpClientAdapter)),
+      );
+      expect(refreshClient!.options.baseUrl, 'https://api.example.com');
+      expect(
+        refreshClient!.options.connectTimeout,
+        client.options.connectTimeout,
+      );
+      expect(refreshClient!.interceptors, isNot(contains(client.fresh)));
+      await client.fresh.clearToken();
+    });
+
+    test('Token methods throw without the fresh interceptor', () {
+      final client = WiseClient(wiseInterceptors: [WiseInterceptor.error]);
+      expect(() => client.fresh, throwsStateError);
+      expect(() => client.authenticationStatus, throwsStateError);
+      expect(
+        () => client.setFreshToken(token: const OAuth2Token(accessToken: 'a')),
+        throwsStateError,
+      );
+      expect(client.removeFreshToken, throwsStateError);
+    });
 
     test('isWebClient throws error when not implemented', () {
       expect(
@@ -326,15 +456,15 @@ void main() {
       final storage = MockStorage();
       when(storage.read).thenAnswer(
         (_) => Future.value(
-          OAuthToken(accessToken: 'token'),
+          const OAuth2Token(accessToken: 'token'),
         ),
       );
       final token = await storage.read();
-      expect(token, isA<OAuthToken>());
+      expect(token, isA<OAuth2Token>());
     });
 
     test('Token tests', () async {
-      final token = OAuthToken(
+      const token = OAuth2Token(
         accessToken: 'token',
         expiresIn: 100,
         refreshToken: 'refresh',
@@ -350,30 +480,31 @@ void main() {
     });
 
     test('Token from snake case', () async {
-      final token = OAuthToken.fromSnakeCase(
-        {
-          'access_token': 'token',
-          'token_type': 'bearer',
-          'expires_in': 100,
-          'refresh_token': 'refresh',
-          'scope': 'scope',
-          'issued_at': DateTime.now().toIso8601String(),
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final issuedAt = DateTime(2017, 5, 12);
+      final token = <String, dynamic>{
+        'access_token': 'token',
+        'token_type': 'bearer',
+        'expires_in': 100,
+        'refresh_token': 'refresh',
+        'scope': 'scope',
+        'issued_at': issuedAt.toIso8601String(),
+      }.toOAuth2TokenFromSnakeCase();
+      expect(token.accessToken, 'token');
+      expect(token.tokenType, 'bearer');
+      expect(token.expiresIn, 100);
+      expect(token.refreshToken, 'refresh');
+      expect(token.scope, 'scope');
+      expect(token.issuedAt, issuedAt);
     });
 
     test('Token from snake case without date', () async {
-      final token = OAuthToken.fromSnakeCase(
-        {
-          'access_token': 'token',
-          'token_type': 'bearer',
-          'expires_in': 100,
-          'refresh_token': 'refresh',
-          'scope': 'scope',
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final token = <String, dynamic>{
+        'access_token': 'token',
+        'token_type': 'bearer',
+        'expires_in': 100,
+        'refresh_token': 'refresh',
+        'scope': 'scope',
+      }.toOAuth2TokenFromSnakeCase();
       expect(
         token.issuedAt?.difference(DateTime.now()),
         lessThan(const Duration(seconds: 1)),
@@ -381,30 +512,31 @@ void main() {
     });
 
     test('Token from camel case', () async {
-      final token = OAuthToken.fromCamelCasing(
-        {
-          'accessToken': 'token',
-          'tokenType': 'bearer',
-          'expiresIn': 100,
-          'refreshToken': 'refresh',
-          'scope': 'scope',
-          'issuedAt': DateTime.now().toIso8601String(),
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final issuedAt = DateTime(2017, 5, 12);
+      final token = <String, dynamic>{
+        'accessToken': 'token',
+        'tokenType': 'bearer',
+        'expiresIn': 100,
+        'refreshToken': 'refresh',
+        'scope': 'scope',
+        'issuedAt': issuedAt.toIso8601String(),
+      }.toOAuth2TokenFromCamelCase();
+      expect(token.accessToken, 'token');
+      expect(token.tokenType, 'bearer');
+      expect(token.expiresIn, 100);
+      expect(token.refreshToken, 'refresh');
+      expect(token.scope, 'scope');
+      expect(token.issuedAt, issuedAt);
     });
 
     test('Token from camel case without date', () async {
-      final token = OAuthToken.fromCamelCasing(
-        {
-          'accessToken': 'token',
-          'tokenType': 'bearer',
-          'expiresIn': 100,
-          'refreshToken': 'refresh',
-          'scope': 'scope',
-        },
-      );
-      expect(token, isA<OAuthToken>());
+      final token = <String, dynamic>{
+        'accessToken': 'token',
+        'tokenType': 'bearer',
+        'expiresIn': 100,
+        'refreshToken': 'refresh',
+        'scope': 'scope',
+      }.toOAuth2TokenFromCamelCase();
       expect(
         token.issuedAt?.difference(DateTime.now()),
         lessThan(const Duration(seconds: 1)),
@@ -415,8 +547,7 @@ void main() {
       final date = DateTime(2017, 5, 12);
       final tokenString =
           '{"accessToken":"token","tokenType":"bearer","expiresIn":100,"refreshToken":"refresh","scope":"scope","issuedAt":"${date.toIso8601String()}"}';
-      final token = tokenString.toOAuthToken;
-      expect(token, isA<OAuthToken>());
+      final token = tokenString.toOAuth2Token;
       expect(token.accessToken, 'token');
       expect(token.tokenType, 'bearer');
       expect(token.expiresIn, 100);
@@ -427,10 +558,10 @@ void main() {
 
     test('Can set the client token', () async {
       await awesome.setFreshToken(
-        token: OAuthToken(accessToken: 'accessToken'),
+        token: const OAuth2Token(accessToken: 'accessToken'),
       );
       final token = await awesome.fresh.token;
-      expect(token, isA<OAuthToken>());
+      expect(token?.accessToken, 'accessToken');
 
       await awesome.fresh.clearToken();
       expect(await awesome.fresh.token, isNull);
@@ -459,10 +590,6 @@ void main() {
   });
 
   group('Exception throwing tests', () {
-    test('LogoutException throws a', () {
-      expect(() => throw LogoutException(), throwsA(isA<LogoutException>()));
-    });
-
     test('UnknownException throws a', () {
       final exception = UnknownException('Test message');
       expect(exception.message, equals('Test message'));
@@ -654,6 +781,104 @@ void main() {
           ),
         );
       });
+    });
+  });
+
+  group('Token refresh', () {
+    test(
+      'persists a refreshed OAuth2Token and retries the request',
+      () async {
+        final storage = FreshSecureTokenStorage();
+        await storage.write(
+          const OAuth2Token(accessToken: 'old', refreshToken: 'refresh'),
+        );
+        final adapter = TokenCheckingAdapter();
+        final dio = Dio()
+          ..httpClientAdapter = adapter
+          ..interceptors.add(
+            Fresh.oAuth2(
+              tokenStorage: storage,
+              httpClient: Dio()..httpClientAdapter = adapter,
+              refreshToken: (_, __) async =>
+                  const OAuth2Token(accessToken: 'new'),
+            ),
+          );
+
+        final response = await dio.get<dynamic>('https://example.com');
+
+        expect(response.statusCode, 200);
+        final stored = await storage.storage.read(
+          key: storage.storageIdentifier,
+        );
+        expect(stored?.toOAuth2Token.accessToken, 'new');
+      },
+    );
+  });
+
+  group('Unreadable stored token', () {
+    test('malformed values throw TokenParseException', () {
+      const malformed = [
+        'not json',
+        '[]',
+        '{}',
+        '{"accessToken":1}',
+        '{"accessToken":"token","expiresIn":"100"}',
+        '{"accessToken":"token","issuedAt":"yesterday"}',
+      ];
+      for (final value in malformed) {
+        expect(
+          () => value.toOAuth2Token,
+          throwsA(isA<TokenParseException>()),
+          reason: value,
+        );
+      }
+    });
+
+    test('is deleted, reported and read as no token', () async {
+      final storage = FreshSecureTokenStorage();
+      await storage.storage.write(
+        key: storage.storageIdentifier,
+        value: 'not json',
+      );
+
+      final (token, reported) = await captureReportedErrors(
+        () => FreshSecureTokenStorage().read(),
+      );
+
+      expect(token, isNull);
+      expect(reported, [isA<TokenParseException>()]);
+      expect(
+        await storage.storage.read(key: storage.storageIdentifier),
+        isNull,
+      );
+    });
+
+    test('does not hang requests', () async {
+      final storage = FreshSecureTokenStorage();
+      await storage.storage.write(
+        key: storage.storageIdentifier,
+        value: 'not json',
+      );
+      final adapter = TokenCheckingAdapter();
+
+      final (response, _) = await captureReportedErrors(() {
+        final dio = Dio()
+          ..httpClientAdapter = adapter
+          ..options.validateStatus = ((_) => true)
+          ..interceptors.add(
+            Fresh.oAuth2(
+              tokenStorage: FreshSecureTokenStorage(),
+              httpClient: Dio()..httpClientAdapter = adapter,
+              refreshToken: (_, __) async =>
+                  const OAuth2Token(accessToken: 'new'),
+            ),
+          );
+        return dio
+            .get<dynamic>('https://example.com')
+            .timeout(const Duration(seconds: 5));
+      });
+
+      expect(response.statusCode, 401);
     });
   });
 }

@@ -12,7 +12,7 @@ WiseClient createClient({
   bool useNativeAdapter = false,
   Iterable<Interceptor>? interceptorsToAdd,
   Iterable<Interceptor>? replacementInterceptors,
-  TokenStorage<OAuthToken>? tokenStorage,
+  Fresh<OAuth2Token>? fresh,
 }) => NativeWiseClient(
   wiseInterceptors: wiseInterceptors,
   baseOptions: options,
@@ -20,7 +20,7 @@ WiseClient createClient({
   useNativeAdapter: useNativeAdapter,
   interceptorsToAdd: interceptorsToAdd,
   replacementInterceptors: replacementInterceptors,
-  tokenStorage: tokenStorage,
+  fresh: fresh,
 );
 
 /// Implements [DioForNative] for native
@@ -33,28 +33,31 @@ base class NativeWiseClient extends DioForNative with WiseClient {
     BaseOptions? baseOptions,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? replacementInterceptors,
-    TokenStorage<OAuthToken>? tokenStorage,
+    Fresh<OAuth2Token>? fresh,
   }) {
     options = baseOptions ?? BaseOptions();
-    httpClientAdapter = useNativeAdapter
-        ? NativeAdapter()
-        : IOHttpClientAdapter();
+    HttpClientAdapter createAdapter() =>
+        useNativeAdapter ? NativeAdapter() : IOHttpClientAdapter();
+    httpClientAdapter = createAdapter();
     if (replacementInterceptors != null) {
       interceptors.addAll(
         replacementInterceptors,
       );
     } else {
       if (wiseInterceptors.contains(WiseInterceptor.fresh)) {
-        fresh = getFreshInterceptor(
-          refreshFunction: refreshFunction!,
-          tokenStorage: tokenStorage,
-        );
+        this.fresh =
+            fresh ??
+            getFreshInterceptor(
+              refreshFunction: refreshFunction!,
+              httpClient: Dio(options.copyWith())
+                ..httpClientAdapter = createAdapter(),
+            );
       }
       interceptors.addAll(
         [
-          if (wiseInterceptors.contains(WiseInterceptor.fresh)) fresh,
-          ...wiseInterceptors.map((e) => e.getInterceptor()).nonNulls,
+          if (wiseInterceptors.contains(WiseInterceptor.fresh)) this.fresh,
           if (interceptorsToAdd != null) ...interceptorsToAdd,
+          ...wiseInterceptors.map((e) => e.getInterceptor()).nonNulls,
         ],
       );
     }

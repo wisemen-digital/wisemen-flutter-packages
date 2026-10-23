@@ -398,10 +398,10 @@ void main() {
     late WiseTheme testTheme;
 
     setUp(() {
-      testTheme = WiseTheme(
+      testTheme = const WiseTheme(
         identifier: 'test-theme',
         themeType: WiseThemeType.light,
-        textColors: const TextColors(
+        textColors: TextColors(
           primary: Color(0xFF000000),
           primaryOnBrand: Color(0xFFFFFFFF),
           secondary: Color(0xFF666666),
@@ -424,7 +424,7 @@ void main() {
           warningPrimary: Color(0xFFFF9900),
           successPrimary: Color(0xFF00FF00),
         ),
-        backgroundColors: const BackgroundColors(
+        backgroundColors: BackgroundColors(
           primary: Color(0xFFFFFFFF),
           primaryAlt: Color(0xFFF8F8F8),
           primaryHover: Color(0xFFF0F0F0),
@@ -457,7 +457,7 @@ void main() {
           successSecondary: Color(0xFFCCFFCC),
           successSolid: Color(0xFF00FF00),
         ),
-        borderColors: const BorderColors(
+        borderColors: BorderColors(
           primary: Color(0xFF000000),
           secondary: Color(0xFF666666),
           tertiary: Color(0xFFCCCCCC),
@@ -468,7 +468,7 @@ void main() {
           error: Color(0xFFFF0000),
           errorSubtle: Color(0xFFFFCCCC),
         ),
-        foregroundColors: const ForegroundColors(
+        foregroundColors: ForegroundColors(
           primary: Color(0xFF000000),
           secondary: Color(0xFF333333),
           secondaryHover: Color(0xFF111111),
@@ -492,7 +492,7 @@ void main() {
           successPrimary: Color(0xFF00FF00),
           successSecondary: Color(0xFF66FF66),
         ),
-        utilityColors: const UtilityColors(
+        utilityColors: UtilityColors(
           teal: Color(0xFF008080),
           blue: Color(0xFF0000FF),
           orange: Color(0xFFFF8000),
@@ -659,10 +659,10 @@ void main() {
     late WiseTheme testTheme;
 
     setUp(() {
-      testTheme = WiseTheme(
+      testTheme = const WiseTheme(
         identifier: 'test-theme',
         themeType: WiseThemeType.light,
-        textColors: const TextColors(
+        textColors: TextColors(
           primary: Color(0xFF123456),
           primaryOnBrand: Color(0xFFFFFFFF),
           secondary: Color(0xFF666666),
@@ -685,7 +685,7 @@ void main() {
           warningPrimary: Color(0xFFFF9900),
           successPrimary: Color(0xFF00FF00),
         ),
-        backgroundColors: const BackgroundColors(
+        backgroundColors: BackgroundColors(
           primary: Color(0xFFFFFFFF),
           primaryAlt: Color(0xFFF8F8F8),
           primaryHover: Color(0xFFF0F0F0),
@@ -718,7 +718,7 @@ void main() {
           successSecondary: Color(0xFFCCFFCC),
           successSolid: Color(0xFF00FF00),
         ),
-        borderColors: const BorderColors(
+        borderColors: BorderColors(
           primary: Color(0xFF000000),
           secondary: Color(0xFF666666),
           tertiary: Color(0xFFCCCCCC),
@@ -729,7 +729,7 @@ void main() {
           error: Color(0xFFFF0000),
           errorSubtle: Color(0xFFFFCCCC),
         ),
-        foregroundColors: const ForegroundColors(
+        foregroundColors: ForegroundColors(
           primary: Color(0xFF000000),
           secondary: Color(0xFF333333),
           secondaryHover: Color(0xFF111111),
@@ -753,7 +753,7 @@ void main() {
           successPrimary: Color(0xFF00FF00),
           successSecondary: Color(0xFF66FF66),
         ),
-        utilityColors: const UtilityColors(
+        utilityColors: UtilityColors(
           teal: Color(0xFF008080),
           blue: Color(0xFF0000FF),
           orange: Color(0xFFFF8000),

@@ -1,3 +1,8 @@
+# 2.0.0
+
+- Updated oidc major
+- **Breaking:** Requires wiseclient 3. `prepare`, `login`, `tokenFrom` and `onLoginSuccess` use `OAuth2Token` instead of `OAuthToken`
+
 # 1.5.0
 
 - **Breaking:** `ZitadelLoginType.iconSvgString` is replaced by an optional

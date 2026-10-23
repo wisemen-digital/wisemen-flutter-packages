@@ -1,8 +1,8 @@
-import '../token_model/oauth_token.dart';
+import 'package:fresh_dio/fresh_dio.dart';
 
-/// extension to convert [OAuthTokenToMap] to [Map]
-extension OAuthTokenToMap on OAuthToken {
-  /// Returns [Map] from [OAuthToken]
+/// extension to convert [OAuth2Token] to [Map]
+extension OAuth2TokenToMap on OAuth2Token {
+  /// Returns [Map] from [OAuth2Token]
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'accessToken': accessToken,
