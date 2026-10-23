@@ -69,9 +69,10 @@ final client = WiseClient(
 > **Rule:** `WiseInterceptor.fresh` requires `refreshFunction` to be provided. All other interceptors
 > must NOT provide `refreshFunction`.
 
-Interceptors run in this order: `interceptorsToAdd`, then `fresh`, then the other wise interceptors
-in the order given. An added interceptor sees a 401 in `onError` before `fresh` refreshes it, so it
-must call `handler.next` for refresh to happen. Passing `interceptors:` replaces all of them.
+Interceptors run in this order: `fresh`, then `interceptorsToAdd`, then the other wise interceptors
+in the order given. Added interceptors see requests with the `Authorization` header already set, and
+`fresh` handles a 401 in `onError` before they do. Passing `interceptors:` replaces all of
+them.
 
 ---
 

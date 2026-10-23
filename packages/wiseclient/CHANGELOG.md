@@ -1,3 +1,7 @@
+## 3.1.0
+
+- `fresh` now runs before `interceptorsToAdd`
+
 ## 3.0.0
 
 - **Breaking:** Removed `OAuthToken`. Use `OAuth2Token` from fresh
