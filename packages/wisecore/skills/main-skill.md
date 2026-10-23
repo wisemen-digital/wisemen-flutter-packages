@@ -48,6 +48,34 @@ This is a Flutter application following a **feature-based clean architecture** w
 - Keep navigation out of state holders. A notifier or controller owns *state*; opening a sheet, pushing a route or showing a dialog is the widget's job — call it from `onPressed`. A `bindShow(callback)` / `setHandler(callback)` setter on a controller is the smell: it exists only so something else can trigger UI later, and it buys nothing over calling that code directly
 - Don't ship placeholder tests. A scaffolding test like `expect(1 + 1, 2)` proves nothing once real tests exist — delete it. It inflates the test count and hides the fact that a file, or a whole package, is untested
 - Don't narrate the code in comments. A comment that walks through what the widget tree contains, or restates the call it sits above, is deleted in review — the reader can see the code. Comment the things the code *can't* say: why a workaround exists, which upstream bug or API contract forces an odd shape, why a value that looks wrong is deliberate. Doc comments (`///`) on public API are the exception and stay
+- Build only what the requirements ask for. If something extra seems needed, mention it instead of adding it
+- Make each decision in one place: `if (user.isAdmin) loadAdminSettings();`, not an early return inside `loadAdminSettings()`. Don't repeat the check in other layers. When many callers need the same check, it belongs inside the function
+- No named functions inside functions or methods — use a private method, an extension or a separate file. Lambdas passed as arguments are fine
+- Prefer a new file (widget, mapper, extension, controller) over more private helpers when logic is large or reusable
+- Write `value ?? false` for a nullable `bool`, not `value == true`. Use the same fallback for the same kind of value throughout a screen
+
+### Reusing Helpers
+
+Before writing a helper, check the `wisecore` package (`import 'package:wisecore/wisecore.dart';`), the project's own extensions and `package:collection`. Some examples of what already exists:
+
+| Need | Use |
+|------|-----|
+| Compare dates without time / strip the time | `date.isSameDate(other)` / `date.withoutTime` (wisecore) |
+| Capitalize a string | `text.capitalized` (wisecore) |
+| Null-or-empty checks | `text.orNull`, `text.isNullOrEmpty`, `list.isNullOrEmpty` (wisecore) |
+| Show loading / data / error of a `LoadingStreamProvider` | `whenStream(...)` (wisecore) |
+| Debounce input, open URLs / mail / phone | `Debouncer`, `WiseLauncher` (wisecore) |
+| First element or null | `list.firstOrNull` (`package:collection`) |
+
+### Localization
+
+Translations live in `lib/l10n/intl_<locale>.arb`, one file per language. The Flutter Intl plugin (`flutter_intl` in `pubspec.yaml`, class `S`) generates `lib/generated/` from them; `main_locale` there is the source language.
+
+- **No hardcoded user-facing text.** Use `S.of(context).keyName`. Show enum and model labels with a widget (see "Enum Labels" in the models skill)
+- **Change keys in every `.arb` file.** Add, rename or remove a key in *all* `intl_*.arb` files — list `lib/l10n/` instead of assuming which languages exist. Keep the key and its placeholders (`{number}`) identical and translate the value; if unsure of a translation, add the key anyway and mention it
+- **Keep the key order identical** in every `.arb` file
+- **Name keys in English lowerCamelCase, after the meaning** — `cancel`, `deliveryDate` — not after the screen. Reuse an existing key when text and meaning match
+- **Never edit `lib/generated/` by hand.** The plugin regenerates it when an `.arb` file is saved. Without the IDE plugin: `dart pub global activate intl_utils` once, then `dart pub global run intl_utils:generate`
 
 ### Naming Conventions
 
@@ -57,6 +85,7 @@ This is a Flutter application following a **feature-based clean architecture** w
 | Screens | `_screen.dart` suffix | `item_list_screen.dart` |
 | Widgets | `_widget.dart` suffix (optional) | `item_card.dart` |
 | Providers | `_providers.dart` suffix | `item_providers.dart` |
+| Controllers | `_controller.dart` suffix | `item_controller.dart` |
 | Repositories | `_repository.dart` suffix | `item_repository.dart` |
 | Services | `_service.dart` suffix | `item_service.dart` |
 | DTOs | `_dto.dart` suffix | `item_dto.dart` |

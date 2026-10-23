@@ -5,27 +5,11 @@ import 'dart:io';
 
 import 'package:args/args.dart';
 
-// 🛠️ Map your AI platforms to their respective local directories
-const platformDirectories = {
-  'claude-code': '.claude/skills',
-  'copilot': '.github/instructions',
-};
-
-// Platforms that require a custom file extension (replaces .md)
-const platformExtensions = {
-  'copilot': '.instructions.md',
-};
+const skillsDirectory = '.claude/skills';
 
 void main(List<String> arguments) async {
   // 1. Setup CLI Argument Parser
   final parser = ArgParser()
-    ..addMultiOption(
-      'agent',
-      abbr: 'a',
-      help: 'Choose which AI platforms to install skills for.',
-      allowed: platformDirectories.keys.toList(),
-      defaultsTo: ['claude-code'], // Default if no flags are passed
-    )
     ..addFlag('help', abbr: 'h', negatable: false, help: 'Show usage info.');
 
   final ArgResults argResults;
@@ -44,8 +28,7 @@ void main(List<String> arguments) async {
     exit(0);
   }
 
-  final selectedAgents = argResults['agent'] as List<String>;
-  print('🤖 Syncing AI skills for: ${selectedAgents.join(', ')}...\n');
+  print('🤖 Syncing AI skills for Claude Code...\n');
 
   // 2. Read Dart's package cache
   final packageConfigFile = File('.dart_tool/package_config.json');
@@ -56,12 +39,10 @@ void main(List<String> arguments) async {
     exit(1);
   }
 
-  // 3. Ensure target directories exist
-  for (final agent in selectedAgents) {
-    final targetDir = Directory(platformDirectories[agent]!);
-    if (!targetDir.existsSync()) {
-      targetDir.createSync(recursive: true);
-    }
+  // 3. Ensure the target directory exists
+  final targetDir = Directory(skillsDirectory);
+  if (!targetDir.existsSync()) {
+    targetDir.createSync(recursive: true);
   }
 
   // 4. Scan installed packages
@@ -85,50 +66,19 @@ void main(List<String> arguments) async {
         if (entity is File) {
           final fileName = entity.uri.pathSegments.last;
 
-          // 5. Copy the file to every selected platform's directory
-          for (final agent in selectedAgents) {
-            // Special case: main-skill.md is placed as a root config file per platform
-            if (fileName == 'main-skill.md') {
-              if (agent == 'copilot') {
-                final githubDir = Directory('.github');
-                if (!githubDir.existsSync()) {
-                  githubDir.createSync(recursive: true);
-                }
-                final destFile = File('.github/copilot-instructions.md');
-                entity.copySync(destFile.path);
-                copiedCount++;
-                print(
-                  '  -> Copied $fileName to .github/copilot-instructions.md',
-                );
-              } else if (agent == 'claude-code') {
-                final destFile = File('CLAUDE.md');
-                entity.copySync(destFile.path);
-                copiedCount++;
-                print('  -> Copied $fileName to CLAUDE.md');
-              }
-              continue;
-            }
-
-            final targetDirPath = platformDirectories[agent]!;
-            final customExt = platformExtensions[agent];
-
-            final destFileName = customExt != null
-                ? '${name}_${fileName.replaceFirst(RegExp(r'\.[^.]+$'), customExt)}'
-                : '${name}_$fileName';
-
-            final destFile = File('$targetDirPath/$destFileName');
-
-            if (agent == 'copilot') {
-              // Copilot requires applyTo frontmatter so instructions are auto-applied
-              final content = entity.readAsStringSync();
-              destFile.writeAsStringSync('---\napplyTo: "**"\n---\n\n$content');
-            } else {
-              entity.copySync(destFile.path);
-            }
-
+          // 5. Copy the file into the project
+          // Special case: main-skill.md becomes the project's CLAUDE.md
+          if (fileName == 'main-skill.md') {
+            entity.copySync('CLAUDE.md');
             copiedCount++;
-            print('  -> Copied $fileName to $targetDirPath/$destFileName');
+            print('  -> Copied $fileName to CLAUDE.md');
+            continue;
           }
+
+          final destFileName = '${name}_$fileName';
+          entity.copySync('$skillsDirectory/$destFileName');
+          copiedCount++;
+          print('  -> Copied $fileName to $skillsDirectory/$destFileName');
         }
       }
     }
