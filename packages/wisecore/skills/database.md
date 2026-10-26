@@ -167,6 +167,16 @@ class ItemsDao extends DatabaseAccessor<AppDatabase> with _$ItemsDaoMixin {
   }
 
   // ═══════════════════════════════════════════════════════════════
+  // GET OPERATIONS — One-time reads
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Get single item by ID (null when it doesn't exist)
+  Future<ItemObject?> getById({required String id}) {
+    return (select(itemsTable)..where((t) => t.id.equals(id)))
+        .getSingleOrNull();
+  }
+
+  // ═══════════════════════════════════════════════════════════════
   // WATCH OPERATIONS — Reactive streams
   // ═══════════════════════════════════════════════════════════════
 
@@ -245,27 +255,24 @@ final itemsDaoProvider = Provider<ItemsDao>(
 ```dart
 // lib/database/models/item/item_details.dart
 class ItemDetails {
-  const ItemDetails({
-    required this.category,
-    required this.isActive,
-    this.metadata,
-  });
+  const ItemDetails({this.category, this.isActive, this.metadata});
 
-  final String category;
-  final bool isActive;
+  // Same nullability as the data; the feature model mapper decides on defaults
+  final String? category;
+  final bool? isActive;
   final String? metadata;
 
   factory ItemDetails.fromJson(Map<String, dynamic> json) {
     return ItemDetails(
-      category: json['category'] as String? ?? 'default',
-      isActive: json['is_active'] as bool? ?? true,
+      category: json['category'] as String?,
+      isActive: json['is_active'] as bool?,
       metadata: json['metadata'] as String?,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'category': category,
-        'is_active': isActive,
+        if (category != null) 'category': category,
+        if (isActive != null) 'is_active': isActive,
         if (metadata != null) 'metadata': metadata,
       };
 
@@ -328,6 +335,48 @@ class StringListConverter extends TypeConverter<List<String>, String> {
 ```
 
 
+## One-Time Reads vs Watches
+
+For a value you need once — in a repository method, a controller action or a
+guard — add a `get*` method to the DAO next to its `watch*` method.
+
+```dart
+final user = await ref.read(usersDaoProvider).getCurrentUser();
+```
+
+## Don't Hide Row-Count Errors
+
+Don't add `limit(1)` to a query that should match one row; it hides real errors,
+like a second user in the table. Use the method that matches what is valid:
+
+| Valid result | Method | Throws when |
+|--------------|--------|-------------|
+| Exactly one row must exist | `getSingle()` | zero or multiple rows |
+| Zero or one row (lookup by ID, no user while logged out) | `getSingleOrNull()` | multiple rows |
+
+```dart
+// DON'T
+Future<UserObject?> getCurrentUser() {
+  return (select(usersTable)..limit(1)).getSingleOrNull();
+}
+
+// DO — when a user must exist at this point
+Future<UserObject> getCurrentUser() {
+  return select(usersTable).getSingle();
+}
+```
+
+`limit(1)` with an `orderBy` is fine for "the first of many", like the most
+recent entry.
+
+## Migrations
+
+Don't hand-write migration steps. Bump `schemaVersion` and let `onUpgrade`
+recreate the tables (see the Database Class above); API data is fetched again.
+
+Exception: a table with data that exists only on the device, such as unsynced
+offline drafts, needs a real migration.
+
 ## Code Generation
 
 After modifying tables or DAOs:
@@ -343,3 +392,7 @@ dart run build_runner build --delete-conflicting-outputs
 3. **Null safety** — use `.nullable()` for optional columns
 4. **JSON for nested data** — complex objects as JSON in text columns
 5. **Feature-specific DAOs** — one DAO per feature, can span multiple tables
+6. **`get*` for one-time reads** — Next to the `watch*` method
+7. **Don't hide row-count errors** — No `limit(1)` on a query that should match one row; choose `getSingle()` or `getSingleOrNull()`
+8. **No hand-written migrations** — Bump `schemaVersion` and recreate tables, unless a table holds device-only data
+9. **No invented defaults** — See "Nullable Fields vs Fallback Defaults" in the models skill

@@ -135,15 +135,6 @@ enum ItemType {
   typeC,
   typeD;
 
-  String get displayName {
-    return switch (this) {
-      ItemType.typeA => 'Type A',
-      ItemType.typeB => 'Type B',
-      ItemType.typeC => 'Type C',
-      ItemType.typeD => 'Type D',
-    };
-  }
-
   Color get color {
     return switch (this) {
       ItemType.typeA => Colors.green,
@@ -151,6 +142,31 @@ enum ItemType {
       ItemType.typeC => Colors.orange,
       ItemType.typeD => Colors.red,
     };
+  }
+}
+```
+
+### Enum Labels
+
+Show an enum's translated text with a widget, not with a method on the enum.
+
+```dart
+// lib/features/my_feature/widgets/item_type_label.dart
+class ItemTypeLabel extends StatelessWidget {
+  const ItemTypeLabel({super.key, required this.type});
+
+  final ItemType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      switch (type) {
+        ItemType.typeA => S.of(context).typeA,
+        ItemType.typeB => S.of(context).typeB,
+        ItemType.typeC => S.of(context).typeC,
+        ItemType.typeD => S.of(context).typeD,
+      },
+    );
   }
 }
 ```
@@ -293,6 +309,29 @@ extension EventDtoMapper on EventDTO {
 | Feature Enum | `lib/features/[feature]/enums/` | UI display and logic |
 | DTO | `lib/network/dto/` | API response parsing |
 
+## Nullable Fields vs Fallback Defaults
+
+For every field:
+
+1. **Is it used in the app?** If not, leave it out of the feature model.
+2. **DTOs match the backend.** A field the backend sends as nullable stays
+   nullable in the DTO.
+3. **The feature model decides.** In the mapper to the feature model, keep the
+   value nullable and let the UI decide, or use a default when a missing value
+   has a fixed meaning in the domain (an absent list means "no items").
+
+Don't invent values like `0` or `''` to avoid a nullable type.
+
+```dart
+// DTO — same nullability as the backend
+final String? description;
+final List<TagDTO>? tags;
+
+// Mapper to the feature model
+description: dto.description,           // stays nullable, the UI decides
+tags: dto.tags?.map((t) => t.toFeatureModel()).toList() ?? [],
+```
+
 ## Best Practices
 
 1. **Keep feature models simple** — no business logic beyond display helpers
@@ -300,3 +339,5 @@ extension EventDtoMapper on EventDTO {
 3. **Separate display logic** — use extension methods for complex formatting
 4. **Map enums explicitly** — avoid implicit conversions between layers
 5. **Document optional fields** — clarify when null is valid
+6. **Only fields we use; DTOs match the backend** — Decide about missing values in the feature model, no invented defaults. See "Nullable Fields vs Fallback Defaults"
+7. **Enum labels as widgets** — `ItemTypeLabel(type: type)`, not a `label(context)` method on the enum. See "Enum Labels"

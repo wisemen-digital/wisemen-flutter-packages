@@ -1,6 +1,6 @@
 ---
-applyTo: '**/*provider*.dart'
-description: 'Use when creating Riverpod providers, working with state management, or understanding provider patterns. Covers @riverpod annotation, provider types (Stream, Notifier, AsyncNotifier), code generation, and provider organization.'
+applyTo: '**/*provider*.dart,**/*controller*.dart'
+description: 'Use when creating Riverpod providers or controllers, working with state management, or understanding provider patterns. Covers @riverpod annotation, provider types (Stream, Notifier, AsyncNotifier), controllers for form submission, code generation, and provider organization.'
 ---
 
 # Providers Guidelines
@@ -34,11 +34,20 @@ State management uses **Riverpod** with code generation via `@riverpod` annotati
 ## File Structure
 
 ```
-features/my_feature/providers/
-├── providers.dart             # Barrel export
-├── my_providers.dart          # Provider definitions
-└── my_providers.g.dart        # Generated code (never edit)
+features/my_feature/
+├── providers/
+│   ├── providers.dart         # Barrel export
+│   ├── my_providers.dart      # All providers of the feature, as separate providers in one file
+│   └── my_providers.g.dart    # Generated code (never edit)
+└── controllers/               # Only when the feature has user actions
+    ├── controllers.dart       # Barrel export
+    ├── my_controller.dart
+    └── my_controller.g.dart   # Generated code (never edit)
 ```
+
+All of a feature's providers go in one `[feature]_providers.dart`, each still a
+separate small provider. Controllers live in `[feature]/controllers/`. A flow with
+separate steps can have one controller per step.
 
 ## Provider Class Pattern
 
@@ -56,12 +65,67 @@ class MyProviders {
   static var items = itemsStreamNotifierProvider;
   static var itemDetail = itemDetailNotifierProvider;
   static var filters = filtersNotifierProvider;
+  static var form = myFormNotifierProvider;
+  static var controller = myControllerProvider;
 }
 ```
 
 This allows clean access: `ref.watch(MyProviders.items)`
 
-<!-- TODO: add controller example and usage -->
+## Controllers
+
+A controller handles a screen's user actions (submit, cancel, delete) and owns the **submission state**: loading, success and errors. Keep these apart:
+
+| What | Where |
+|------|-------|
+| Submission state (loading, error) | The controller's `AsyncValue`, set with `AsyncValue.guard` — no `isSubmitting`, `error` or `clearError` fields on a form model |
+| Form data (what the user entered) | Its own provider or model |
+| The screen's initial data | Its own provider, not the controller |
+
+Show submission errors from the controller with the project's shared error
+dialog (e.g. `ErrorUtils.showErrorDialog` in `listenSelf`), not with a separate
+listener widget. This is the one exception to keeping UI out of controllers. Show a
+validation error for one input next to that field.
+
+```dart
+// DON'T
+state = AsyncData(current.copyWith(isSubmitting: true, clearError: true));
+
+// DO
+state = const AsyncLoading();
+state = await AsyncValue.guard(() => repository.submit(form));
+```
+
+```dart
+// lib/features/my_feature/controllers/my_controller.dart
+@riverpod
+class MyController extends _$MyController {
+  @override
+  FutureOr<void> build() {
+    listenSelf((previous, next) => ErrorUtils.showErrorDialog(next));
+  }
+
+  Future<void> submit() async {
+    final form = ref.read(MyProviders.form);
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(
+      () => ref.read(MyFeature.myRepository).submit(form),
+    );
+  }
+}
+```
+
+**Usage in UI:**
+
+```dart
+final submission = ref.watch(MyProviders.controller);
+
+PrimaryButton(
+  text: S.of(context).submit,
+  isLoading: submission.isLoading,
+  onPressed: ref.read(MyProviders.controller.notifier).submit,
+);
+```
 
 ## Stream Providers
 
@@ -98,14 +162,14 @@ For state with async initialization and mutation methods:
 class ItemDetailNotifier extends _$ItemDetailNotifier {
   @override
   FutureOr<MyItem?> build({required String id}) async {
-    return ref.watch(MyFeature.myRepository).watchItemById(id: id).first;
+    return ref.watch(MyFeature.myRepository).getItemById(id: id);
   }
 
   Future<void> refresh() async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref.read(MyFeature.myRepository).fetchItemById(id: id);
-      return ref.read(MyFeature.myRepository).watchItemById(id: id).first;
+      return ref.read(MyFeature.myRepository).getItemById(id: id);
     });
   }
 }
@@ -303,6 +367,9 @@ dart run build_runner watch --delete-conflicting-outputs
 4. **Prefer `ref.watch` over `ref.read`** — except in callbacks/methods
 5. **Add refresh methods** — for pull-to-refresh and manual updates
 6. **Watch or keepAlive to prevent auto-disposal** — a provider with no active listeners is auto-disposed; calling its methods then creates a fresh instance with no prior state. Fix: `ref.watch` in `build` for feature-scoped providers, `@Riverpod(keepAlive: true)` for global state
+7. **Use `get*` for one-time reads** — See the repositories guidelines
+8. **Controller owns submission state** — loading and errors via `AsyncValue`, form data in its own provider, validation errors next to the field
+9. **Providers in one file, controllers in their own folder** — `providers/[feature]_providers.dart` + `controllers/[feature]_controller.dart`
 
 ## Common Provider Types Summary
 

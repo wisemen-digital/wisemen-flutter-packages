@@ -1,3 +1,12 @@
+## 2.2.13
+
+- Removed Copilot support and the `--agent` option from the AI skills script; it now syncs for Claude Code only
+- Improved general skill with rules for scope, helpers and localization
+- Improved widgets skill with logic placement, sizes and navigation
+- Improved screens skill with screen structure and submit bars
+- Improved router, database, providers, repositories and models skills
+- Added the `controllers/` folder to the feature structure skill
+
 ## 2.2.12
 
 - Improved AI skills script

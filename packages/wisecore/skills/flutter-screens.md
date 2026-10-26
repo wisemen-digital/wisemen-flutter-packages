@@ -178,6 +178,49 @@ class ItemsScreen extends ConsumerWidget {
 }
 ```
 
+## Screen Structure
+
+Keep the `Scaffold` in the `_screen.dart` file so the screen file shows the whole
+page. Extract the app bar, content and submit bar into widgets, but not the
+`Scaffold` itself. If the project has a shared app-wide scaffold, use that; don't
+create one for a single feature.
+
+```dart
+// DON'T
+return ItemFormScaffold(child: ItemFormContent());
+
+// DO
+return Scaffold(
+  appBar: const ItemFormAppBar(),
+  body: const ItemFormContent(),
+  bottomNavigationBar: const SafeArea(child: ItemFormSubmitBar()),
+);
+```
+
+## Submit and Action Bars
+
+A submit or action bar fixed to the bottom of a full screen goes in the
+Scaffold's `bottomNavigationBar`, wrapped in a `SafeArea`, so the content needs no
+guessed bottom padding.
+
+```dart
+// DON'T
+Stack(children: [
+  ListView(children: [...fields, const SizedBox(height: 100)]),
+  const Align(alignment: Alignment.bottomCenter, child: SubmitBar()),
+])
+
+// DO
+Scaffold(
+  body: ListView(children: fields),
+  bottomNavigationBar: const SafeArea(child: SubmitBar()),
+)
+```
+
+Exceptions: in a `WoltModalSheet`, use its `stickyActionBar` (see Modal Bottom
+Sheets). A button the design places inside the scrolling content is part of the
+content.
+
 ## Pop Scope Handling
 
 Handle back navigation behavior with `PopScope`.
@@ -363,7 +406,9 @@ export 'items_screen.dart';
 3. **Keep screens thin** — Delegate logic to providers and widgets
 4. **Use semantic naming** — `[Feature]Screen`, `[Item]DetailScreen`, `All[Items]Screen`
 5. **Handle loading states** — Use `.when()` pattern for async data
-6. **Consistent spacing** — Use `SizeUtils.bottomSpacing()` for safe area padding
+6. **Consistent spacing** — Use `SizeUtils.bottomSpacing()` for safe area padding at the end of scrolling content and the `wisewidgetslibrary` constants (`padM`, `gapHM`, …) instead of raw numbers. A fixed submit bar goes in `bottomNavigationBar`
 7. **Barrel exports** — Always export from `screens.dart`
 8. **Use theme extensions** — Access colors via `context.bgColor`, `context.textColor`
 9. **Scope MediaQuery reads** — Prefer `MediaQuery.sizeOf(context)`, `.paddingOf`, `.viewInsetsOf`, `.viewPaddingOf` over `MediaQuery.of(context)`, which rebuilds the screen on *every* metric change (rotation, keyboard, text scale). Screens that read insets or size do this constantly
+10. **Scaffold in the screen file** — Extract the app bar and content into widgets, not the Scaffold. See "Screen Structure"
+11. **Fixed submit bar in `bottomNavigationBar`** — Wrapped in `SafeArea`, no guessed bottom padding. See "Submit and Action Bars"
