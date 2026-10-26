@@ -180,20 +180,23 @@ void main() {
       },
     );
 
-    test('Adds interceptorsToAdd before the wise interceptors', () {
-      final interceptor = FakeInterceptor();
-      final client = WiseClient(
-        wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.error],
-        refreshFunction: emptyRefreshToken,
-        interceptorsToAdd: [interceptor],
-      );
-      // Skips the ImplyContentTypeInterceptor Dio always adds first
-      expect(client.interceptors.skip(1), [
-        interceptor,
-        client.fresh,
-        isA<BaseErrorInterceptor>(),
-      ]);
-    });
+    test(
+      'Adds interceptorsToAdd after fresh and before the other wise interceptors',
+      () {
+        final interceptor = FakeInterceptor();
+        final client = WiseClient(
+          wiseInterceptors: [WiseInterceptor.fresh, WiseInterceptor.error],
+          refreshFunction: emptyRefreshToken,
+          interceptorsToAdd: [interceptor],
+        );
+        // Skips the ImplyContentTypeInterceptor Dio always adds first
+        expect(client.interceptors.skip(1), [
+          client.fresh,
+          interceptor,
+          isA<BaseErrorInterceptor>(),
+        ]);
+      },
+    );
 
     test('Clients passed the same fresh share one session', () async {
       final first = WiseClient(
