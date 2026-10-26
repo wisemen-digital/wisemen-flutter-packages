@@ -26,28 +26,28 @@ Future<void> main() async {
       print('${record.level.name}: ${record.message}');
     });
   final packageRoot = Platform.script.resolve('../');
-  await generateJniBindings(
-    Config(
-      outputConfig: OutputConfig(
-        dartConfig: DartCodeOutputConfig(
-          path: packageRoot.resolve(
-            'lib/src/classifier/wise_text_classifier_android.g.dart',
-          ),
-          structure: OutputStructure.singleFile,
-        ),
-      ),
-      preamble:
-          '// ignore_for_file: type=lint\n'
-          '// coverage:ignore-file\n',
+  await JniGenerator(
+    input: Input(
+      classes: ['com.example.wise_text.WiseTextPlugin'],
       // Builds the example app to compile the plugin and collect its full
       // classpath (the plugin's own classes + the Android SDK). This is how the
       // Kotlin `WiseTextPlugin` class and types like Context/TextClassifier are
       // resolved.
-      androidSdkConfig: AndroidSdkConfig(
+      androidSdk: AndroidSdk(
         addGradleDeps: true,
-        androidExample: 'example/',
+        androidExample: packageRoot.resolve('example/'),
       ),
-      classes: ['com.example.wise_text.WiseTextPlugin'],
     ),
-  );
+    output: Output(
+      dart: DartOutput(
+        path: packageRoot.resolve(
+          'lib/src/classifier/wise_text_classifier_android.g.dart',
+        ),
+        structure: OutputStructure.singleFile,
+      ),
+      preamble:
+          '// ignore_for_file: type=lint\n'
+          '// coverage:ignore-file\n',
+    ),
+  ).generate(logger: Logger.root);
 }

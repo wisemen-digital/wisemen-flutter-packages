@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
-import 'package:wiseclient/wiseclient.dart' show OAuthToken;
+import 'package:wiseclient/wiseclient.dart' show OAuth2Token;
 
 /// A [WiseZitadelAuthenticator] that records its calls instead of running the
 /// real authorization code flow.
@@ -12,14 +12,14 @@ class FakeAuthenticator implements WiseZitadelAuthenticator {
   FakeAuthenticator({this.token, this.completer, this.resumedToken});
 
   /// The token returned by [login]
-  final OAuthToken? token;
+  final OAuth2Token? token;
 
   /// The token returned by the first [prepare], as a web login that finished
   /// in an earlier page load would return it
-  final OAuthToken? resumedToken;
+  final OAuth2Token? resumedToken;
 
   /// Completes the pending [login] call, if given
-  final Completer<OAuthToken?>? completer;
+  final Completer<OAuth2Token?>? completer;
 
   /// The login types [login] was called with, in order
   final List<ZitadelLoginType?> loginCalls = [];
@@ -31,13 +31,13 @@ class FakeAuthenticator implements WiseZitadelAuthenticator {
   bool disposed = false;
 
   @override
-  Future<OAuthToken?> prepare() async {
+  Future<OAuth2Token?> prepare() async {
     prepareCalls++;
     return prepareCalls == 1 ? resumedToken : null;
   }
 
   @override
-  Future<OAuthToken?> login([ZitadelLoginType? type]) {
+  Future<OAuth2Token?> login([ZitadelLoginType? type]) {
     loginCalls.add(type);
     return completer?.future ?? Future.value(token);
   }

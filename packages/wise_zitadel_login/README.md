@@ -10,7 +10,7 @@ A Zitadel login package to be used with Wisemen backends. Provides a ready-made 
 - Loading state per login button while authenticating
 - `auto_route` route (`WiseLoginScreenRoute`) ready to drop into your router
 - Riverpod provider for flavored configuration
-- Returns an `OAuthToken` from `wiseclient` on successful login
+- Returns an `OAuth2Token` from `wiseclient` on successful login
 - Optional `prompt`, to re-authenticate on every login instead of reusing the Zitadel session
 - Optional `ephemeralSession`, to run the native login in a private browser session
 
@@ -293,7 +293,7 @@ runs in the app's own tab.
 
 ## Tokens and refreshing
 
-A successful login returns an `OAuthToken` from `wiseclient` and nothing else:
+A successful login returns an `OAuth2Token` from `wiseclient` and nothing else:
 this package keeps no session of its own. It does not persist the login and it
 never refreshes the token, that stays the job of the app (through `wiseclient`'s
 `fresh` interceptor).
@@ -312,11 +312,11 @@ login without opening a browser:
 class FakeAuthenticator implements WiseZitadelAuthenticator {
   // No login is ever pending in a test, so there is nothing to resume.
   @override
-  Future<OAuthToken?> prepare() async => null;
+  Future<OAuth2Token?> prepare() async => null;
 
   @override
-  Future<OAuthToken?> login([ZitadelLoginType? type]) async =>
-      OAuthToken(accessToken: 'access_token', refreshToken: 'refresh_token');
+  Future<OAuth2Token?> login([ZitadelLoginType? type]) async =>
+      const OAuth2Token(accessToken: 'access_token', refreshToken: 'refresh_token');
 
   @override
   Future<void> dispose() async {}
@@ -340,7 +340,7 @@ ProviderScope(
 - `applicationId` (String, required): The Zitadel application id
 - `organizationId` (String, required): The Zitadel organization id
 - `supportedTypes` (List\<ZitadelLoginType\>, required): The login types shown as buttons on the login screen
-- `onLoginSuccess` (Function, required): Callback called after a login attempt, receives the `StackRouter`, `WidgetRef` and the (nullable) `OAuthToken`
+- `onLoginSuccess` (Function, required): Callback called after a login attempt, receives the `StackRouter`, `WidgetRef` and the (nullable) `OAuth2Token`
 - `buttonOptions` (WiseZitadelButtonOptions, required): Styling options for the login buttons
 - `prompt` (ZitadelLoginPrompt, optional): What Zitadel asks the user before returning a token, the open session is reused when left out. See [Forcing a fresh login](#forcing-a-fresh-login)
 - `ephemeralSession` (bool, defaults to `false`): Runs the login in a private browser session on iOS, macOS and Android. See [Forcing a fresh login](#forcing-a-fresh-login)
@@ -377,7 +377,7 @@ ProviderScope(
 - `oidc`: For the OAuth/OIDC authentication flow
 - `auto_route`: For the login screen route
 - `hooks_riverpod`: For state management and configuration
-- `wiseclient`: For the `OAuthToken` type
+- `wiseclient`: For the `OAuth2Token` type
 - `wise_nav_bar` & `wisewidgetslibrary`: For platform aware UI components
 
 ## License

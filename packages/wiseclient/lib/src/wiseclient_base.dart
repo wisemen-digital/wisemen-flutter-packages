@@ -6,12 +6,16 @@ import 'client/wiseclient_native.dart'
 import 'exceptions/exceptions.dart';
 import 'interceptors/interceptors.dart';
 import 'options.dart';
-import 'secure_token_storage/fresh_secure_token_storage.dart';
-import 'token_model/oauth_token.dart';
 
 /// A networking client that extends [Dio]
 abstract mixin class WiseClient implements Dio {
   /// Creates [WiseClient] instance
+  ///
+  /// [WiseInterceptor.fresh] needs either a [refreshFunction], to create a new
+  /// [Fresh] instance, or an existing [fresh] instance. Pass another client's
+  /// [WiseClient.fresh] to let both clients share one session: clients with
+  /// their own [Fresh] each keep a separate copy of the token and log each
+  /// other out when the refresh token rotates.
   factory WiseClient({
     required Iterable<WiseInterceptor> wiseInterceptors,
     Future<OAuth2Token> Function(OAuth2Token?, Dio)? refreshFunction,
@@ -19,13 +23,14 @@ abstract mixin class WiseClient implements Dio {
     bool useNativeAdapter = false,
     Iterable<Interceptor>? interceptorsToAdd,
     Iterable<Interceptor>? interceptors,
-    TokenStorage<OAuthToken>? tokenStorage,
+    Fresh<OAuth2Token>? fresh,
   }) {
     assert(
       wiseInterceptors.contains(WiseInterceptor.fresh)
-          ? refreshFunction != null
-          : refreshFunction == null,
-      'RefreshFunction is required when using fresh interceptor',
+          ? (refreshFunction == null) != (fresh == null)
+          : refreshFunction == null && fresh == null,
+      'WiseInterceptor.fresh requires either a refreshFunction or a fresh '
+      'instance, and neither is used without it',
     );
     return createClient(
       wiseInterceptors: wiseInterceptors,
@@ -34,23 +39,33 @@ abstract mixin class WiseClient implements Dio {
       useNativeAdapter: useNativeAdapter,
       interceptorsToAdd: interceptorsToAdd,
       replacementInterceptors: interceptors,
-      tokenStorage: tokenStorage,
+      fresh: fresh,
     );
   }
 
   /// Checks if client is an instance on web or native
   bool get isWebClient => throw UnimplementedError();
 
+  Fresh<OAuth2Token>? _fresh;
+
   /// [Fresh] to handle authentication
-  Fresh<OAuth2Token> fresh = Fresh.oAuth2(
-    tokenStorage: FreshSecureTokenStorage(),
-    refreshToken: (_, __) async => const OAuth2Token(accessToken: ''),
-  );
+  ///
+  /// Throws a [StateError] when the client was created without
+  /// [WiseInterceptor.fresh], so the token methods can't silently change the
+  /// session of another client sharing the same token storage.
+  Fresh<OAuth2Token> get fresh =>
+      _fresh ??
+      (throw StateError(
+        'WiseClient was created without WiseInterceptor.fresh, '
+        'so it has no token to manage',
+      ));
+
+  set fresh(Fresh<OAuth2Token> fresh) => _fresh = fresh;
 
   /// [CancelToken] for wise requests
   CancelToken cancelToken = CancelToken();
 
-  /// [Stream] of [AuthenticationStatus], only works if [Fresh] client is in use
+  /// [Stream] of [AuthenticationStatus], see [fresh] for clients without it
   Stream<AuthenticationStatus> get authenticationStatus {
     return fresh.authenticationStatus;
   }

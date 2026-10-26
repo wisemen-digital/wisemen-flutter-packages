@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
-import 'package:wiseclient/wiseclient.dart' show OAuthToken;
+import 'package:wiseclient/wiseclient.dart' show OAuth2Token;
 import 'package:wisewidgetslibrary/wisewidgetslibrary.dart'
     show PlatformButton2;
 
@@ -94,9 +94,9 @@ void main() {
     tester,
   ) async {
     final authenticator = FakeAuthenticator(
-      token: OAuthToken(accessToken: 'access_token'),
+      token: const OAuth2Token(accessToken: 'access_token'),
     );
-    OAuthToken? receivedToken;
+    OAuth2Token? receivedToken;
 
     await tester.pumpWidget(
       buildScreen(
@@ -118,7 +118,7 @@ void main() {
   testWidgets('WiseLoginScreen shows the pressed button as loading', (
     tester,
   ) async {
-    final completer = Completer<OAuthToken?>();
+    final completer = Completer<OAuth2Token?>();
     final authenticator = FakeAuthenticator(completer: completer);
 
     await tester.pumpWidget(
@@ -154,7 +154,7 @@ void main() {
   testWidgets('WiseLoginScreen stops loading when the login fails', (
     tester,
   ) async {
-    final completer = Completer<OAuthToken?>();
+    final completer = Completer<OAuth2Token?>();
     final authenticator = FakeAuthenticator(completer: completer);
 
     await tester.pumpWidget(
@@ -199,9 +199,9 @@ void main() {
     tester,
   ) async {
     final authenticator = FakeAuthenticator(
-      resumedToken: OAuthToken(accessToken: 'resumed_token'),
+      resumedToken: const OAuth2Token(accessToken: 'resumed_token'),
     );
-    OAuthToken? receivedToken;
+    OAuth2Token? receivedToken;
 
     await tester.pumpWidget(
       buildScreen(

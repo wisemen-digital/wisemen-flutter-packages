@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wise_zitadel_login/wise_zitadel_login.dart';
-import 'package:wiseclient/wiseclient.dart' show OAuthToken;
+import 'package:wiseclient/wiseclient.dart' show OAuth2Token;
 
 /// The login type used across the tests.
 const testLoginType = ZitadelLoginType(
@@ -16,7 +16,7 @@ WiseZitadelOptions testOptions({
   List<ZitadelLoginType> supportedTypes = const [testLoginType],
   ZitadelLoginPrompt? prompt,
   bool ephemeralSession = false,
-  void Function(StackRouter router, WidgetRef ref, OAuthToken? token)?
+  void Function(StackRouter router, WidgetRef ref, OAuth2Token? token)?
   onLoginSuccess,
 }) {
   return WiseZitadelOptions(

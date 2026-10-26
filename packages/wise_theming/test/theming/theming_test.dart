@@ -246,7 +246,7 @@ void main() {
       });
 
       test('copyWith should update individual color schemes', () {
-        final newTextColors = const TextColors(
+        const newTextColors = TextColors(
           primary: Color(0xFF111111),
           primaryOnBrand: Color(0xFFEEEEEE),
           secondary: Color(0xFF555555),
@@ -286,14 +286,14 @@ void main() {
       });
 
       test('should interpolate between two WiseThemes at t=0', () {
-        final result = lightTheme.lerp(darkTheme, 0.0) as WiseTheme;
+        final result = lightTheme.lerp(darkTheme, 0) as WiseTheme;
 
         expect(result.identifier, lightTheme.identifier);
         expect(result.themeType, lightTheme.themeType);
       });
 
       test('should interpolate between two WiseThemes at t=1', () {
-        final result = lightTheme.lerp(darkTheme, 1.0) as WiseTheme;
+        final result = lightTheme.lerp(darkTheme, 1) as WiseTheme;
 
         expect(result.identifier, darkTheme.identifier);
         expect(result.themeType, darkTheme.themeType);
