@@ -1,3 +1,7 @@
+## 1.1.1
+
+* Fixed iOS Swift Package Manager builds by declaring the swift-tools-version in Package.swift
+
 ## 1.1.0
 
 * Updated dependencies to stable versions and regenerated bindings
