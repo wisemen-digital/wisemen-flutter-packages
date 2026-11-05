@@ -49,6 +49,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
                   loading: () => const CircularProgressIndicator(),
                 ),
           ),
+          const Expanded(child: SignatureDemo()),
         ],
       ),
     );

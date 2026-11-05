@@ -11,5 +11,8 @@
   "description": "Description",
   "reportDamage": "Report damage",
   "date": "Date",
-  "time": "Time"
+  "time": "Time",
+  "done": "Done",
+  "signatureDemoPreview": "Submitted snapshot (app preview)",
+  "signatureDemoMetadata": "{name} · {time}"
 }
