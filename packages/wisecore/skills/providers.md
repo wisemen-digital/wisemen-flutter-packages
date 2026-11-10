@@ -310,6 +310,7 @@ class ItemDetailProvider extends _$ItemDetailProvider with LoadingStreamProvider
 - **`refreshFunction()`**: Override to define the actual fetch operation
 - **`onError()`**: Optional override for custom error handling (logging, Sentry, etc.)
 - **Smooth UX**: Preserves existing data during refresh
+- **`notifier:` in `whenStream`**: Pass the provider's notifier so an empty list or `null` emitted by the database before the initial fetch finishes shows `loading` instead of an empty state. Cached data still shows immediately. Don't write your own initial-loading wrapper.
 
 **Usage in UI:**
 
@@ -317,6 +318,7 @@ class ItemDetailProvider extends _$ItemDetailProvider with LoadingStreamProvider
 final itemAsync = ref.watch(MyProviders.itemDetail);
 
 return itemAsync.whenStream(
+  notifier: ref.watch(MyProviders.itemDetail.notifier),
   data: (item) => RefreshIndicator(
     onRefresh: () => ref.read(MyProviders.itemDetail.notifier).refresh(),
     child: ItemDetailContent(item: item),

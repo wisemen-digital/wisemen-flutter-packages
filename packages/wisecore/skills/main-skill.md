@@ -63,7 +63,7 @@ Before writing a helper, check the `wisecore` package (`import 'package:wisecore
 | Compare dates without time / strip the time | `date.isSameDate(other)` / `date.withoutTime` (wisecore) |
 | Capitalize a string | `text.capitalized` (wisecore) |
 | Null-or-empty checks | `text.orNull`, `text.isNullOrEmpty`, `list.isNullOrEmpty` (wisecore) |
-| Show loading / data / error of a `LoadingStreamProvider` | `whenStream(...)` (wisecore) |
+| Show loading / data / error of a `LoadingStreamProvider` | `whenStream(notifier: ref.watch(provider.notifier), ...)` (wisecore) |
 | Debounce input, open URLs / mail / phone | `Debouncer`, `WiseLauncher` (wisecore) |
 | First element or null | `list.firstOrNull` (`package:collection`) |
 

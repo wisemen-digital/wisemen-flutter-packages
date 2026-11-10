@@ -41,6 +41,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
             child: ref
                 .watch(SettingsProviders.user)
                 .whenStream(
+                  notifier: ref.watch(SettingsProviders.user.notifier),
                   data: (data) => Text(
                     data?.fullName ?? '',
                     style: context.body.copyWith(color: context.textColors.primary),

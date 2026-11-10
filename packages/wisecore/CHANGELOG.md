@@ -1,3 +1,9 @@
+## 2.2.14
+
+- Added a `notifier` parameter to `whenStream`. Pass a `LoadingStreamProvider` notifier to show `loading` until its initial fetch completes while the stream has emitted no data, `null`, or an empty list. Cached data is shown right away. Without a notifier, `whenStream` behaves like `when`, as before
+- Changed `LoadingStreamProvider.initialLoading` to be true only until the first `refresh` completes, so later refreshes keep the current data or empty state on screen
+- Updated the providers skill to pass the notifier to `whenStream`
+
 ## 2.2.13
 
 - Removed Copilot support and the `--agent` option from the AI skills script; it now syncs for Claude Code only
