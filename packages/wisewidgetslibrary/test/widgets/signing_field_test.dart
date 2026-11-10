@@ -11,6 +11,32 @@ void main() {
   setUp(() => controller = SigningController());
   tearDown(() => controller.dispose());
 
+  testWidgets('applies the name border and Clear button style', (tester) async {
+    const border = OutlineInputBorder(
+      borderSide: BorderSide(color: Color(0xFF00FF00)),
+    );
+    await _mount(
+      tester,
+      controller,
+      nameBorder: border,
+      clearButtonStyle: TextButton.styleFrom(
+        backgroundColor: const Color(0xFFFF0000),
+      ),
+    );
+    final decoration = tester
+        .widget<TextField>(find.byType(TextField))
+        .decoration!;
+    expect(decoration.border, border);
+    expect(decoration.enabledBorder, border);
+    final clear = tester.widget<TextButton>(
+      find.widgetWithText(TextButton, 'Clear'),
+    );
+    expect(
+      clear.style!.backgroundColor!.resolve({}),
+      const Color(0xFFFF0000),
+    );
+  });
+
   testWidgets(
     'separate accessible name label, decorative Clear icon and compact card',
     (tester) async {
@@ -564,6 +590,8 @@ Future<void> _mount(
   TextStyle? metadataStyle,
   String? timestampFormat,
   ThemeData? theme,
+  InputBorder? nameBorder,
+  ButtonStyle? clearButtonStyle,
 }) {
   return tester.pumpWidget(
     MaterialApp(
@@ -586,6 +614,8 @@ Future<void> _mount(
                 clearIcon: clearIcon,
                 metadataStyle: metadataStyle,
                 timestampFormat: timestampFormat,
+                nameBorder: nameBorder,
+                clearButtonStyle: clearButtonStyle,
               ),
             ),
           ),

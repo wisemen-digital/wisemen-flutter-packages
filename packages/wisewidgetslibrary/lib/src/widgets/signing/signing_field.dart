@@ -23,6 +23,8 @@ class SigningField extends StatelessWidget {
     this.clearIcon,
     this.metadataStyle,
     this.timestampFormat,
+    this.nameBorder,
+    this.clearButtonStyle,
     super.key,
   });
 
@@ -44,6 +46,12 @@ class SigningField extends StatelessWidget {
   /// Optional `intl` date pattern; see [SigningCanvas.timestampFormat].
   final String? timestampFormat;
 
+  /// Optional border of the name input; see [SigningNameInput.border].
+  final InputBorder? nameBorder;
+
+  /// Optional Clear button style; see [SigningClearButton.style].
+  final ButtonStyle? clearButtonStyle;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -51,7 +59,11 @@ class SigningField extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       spacing: signingSectionGap,
       children: [
-        SigningNameInput(controller: controller, strings: strings),
+        SigningNameInput(
+          controller: controller,
+          strings: strings,
+          border: nameBorder,
+        ),
         Wrap(
           alignment: WrapAlignment.spaceBetween,
           crossAxisAlignment: WrapCrossAlignment.center,
@@ -65,6 +77,7 @@ class SigningField extends StatelessWidget {
               controller: controller,
               label: strings.clear,
               icon: clearIcon,
+              style: clearButtonStyle,
             ),
           ],
         ),

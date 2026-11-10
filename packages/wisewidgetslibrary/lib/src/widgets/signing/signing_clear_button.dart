@@ -11,6 +11,7 @@ class SigningClearButton extends StatelessWidget {
     required this.controller,
     required this.label,
     this.icon,
+    this.style,
     super.key,
   });
 
@@ -24,22 +25,30 @@ class SigningClearButton extends StatelessWidget {
   /// its semantics are excluded because [label] already names the action.
   final Widget? icon;
 
+  /// Overrides the app's `TextButtonTheme` and the pill defaults, e.g. its
+  /// colors.
+  final ButtonStyle? style;
+
   static const _minHeight = 36.0;
   static const _padding = EdgeInsets.symmetric(horizontal: 14, vertical: 6);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final style = (theme.textButtonTheme.style ?? const ButtonStyle()).merge(
-      TextButton.styleFrom(
-        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-        foregroundColor: theme.colorScheme.onSurface,
-        textStyle: theme.textTheme.bodyLarge,
-        minimumSize: const Size(0, _minHeight),
-        padding: _padding,
-        shape: const StadiumBorder(),
-      ),
-    );
+    final style = (this.style ?? const ButtonStyle())
+        .merge(
+          theme.textButtonTheme.style,
+        )
+        .merge(
+          TextButton.styleFrom(
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+            foregroundColor: theme.colorScheme.onSurface,
+            textStyle: theme.textTheme.bodyLarge,
+            minimumSize: const Size(0, _minHeight),
+            padding: _padding,
+            shape: const StadiumBorder(),
+          ),
+        );
     return ListenableBuilder(
       listenable: controller,
       builder: (context, child) => TextButton(

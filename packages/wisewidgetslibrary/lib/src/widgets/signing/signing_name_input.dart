@@ -11,6 +11,7 @@ class SigningNameInput extends StatelessWidget {
   const SigningNameInput({
     required this.controller,
     required this.strings,
+    this.border,
     super.key,
   });
 
@@ -19,6 +20,10 @@ class SigningNameInput extends StatelessWidget {
 
   /// Label and error text.
   final SigningStrings strings;
+
+  /// Border in every state except error. Falls back to the input theme's
+  /// border, or a rounded outline.
+  final InputBorder? border;
 
   static const _minHeight = 52.0;
   static const _contentPadding = EdgeInsets.symmetric(
@@ -30,6 +35,10 @@ class SigningNameInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final inputTheme = theme.inputDecorationTheme;
+    final border =
+        this.border ??
+        inputTheme.border ??
+        const OutlineInputBorder(borderRadius: radM);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
@@ -50,9 +59,8 @@ class SigningNameInput extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 autofillHints: const [AutofillHints.name],
                 decoration: InputDecoration(
-                  border:
-                      inputTheme.border ??
-                      const OutlineInputBorder(borderRadius: radM),
+                  border: border,
+                  enabledBorder: this.border,
                   contentPadding: inputTheme.contentPadding ?? _contentPadding,
                   errorText: controller.showsNameError
                       ? strings.nameRequired
