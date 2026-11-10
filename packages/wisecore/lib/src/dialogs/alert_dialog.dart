@@ -18,13 +18,13 @@ mixin class AlertDialog {
       windowTitle: title,
       text: message,
       positiveButtonTitle: confirmButton.text,
-      neutralButtonTitle: cancelButton.text,
-      negativeButtonTitle: customButton?.text,
+      negativeButtonTitle: cancelButton.text,
+      neutralButtonTitle: customButton?.text,
       options: PlatformAlertOptions(
         ios: IosAlertOptions(
           positiveButtonStyle: confirmButton.type.iosStyle,
-          neutralButtonStyle: cancelButton.type.iosStyle,
-          negativeButtonStyle: customButton?.type.iosStyle,
+          negativeButtonStyle: cancelButton.type.iosStyle,
+          neutralButtonStyle: customButton?.type.iosStyle,
         ),
       ),
       iconStyle: IconStyle.question,
@@ -71,19 +71,20 @@ mixin class AlertDialog {
       'Buttons length must be between 1 and 3',
     );
     final firstButton = buttons.first;
-    final secondButton = buttons.length > 1 ? buttons[1] : null;
-    final thirdButton = buttons.length > 2 ? buttons[2] : null;
+    // Work around the Android plugin's neutral-button guard for two buttons.
+    final negativeButton = buttons.length > 1 ? buttons.last : null;
+    final neutralButton = buttons.length > 2 ? buttons[1] : null;
     final option = await FlutterPlatformAlert.showCustomAlert(
       windowTitle: title,
       text: message,
       positiveButtonTitle: firstButton.text,
-      neutralButtonTitle: secondButton?.text,
-      negativeButtonTitle: thirdButton?.text,
+      neutralButtonTitle: neutralButton?.text,
+      negativeButtonTitle: negativeButton?.text,
       options: PlatformAlertOptions(
         ios: IosAlertOptions(
           positiveButtonStyle: firstButton.type.iosStyle,
-          neutralButtonStyle: secondButton?.type.iosStyle,
-          negativeButtonStyle: thirdButton?.type.iosStyle,
+          neutralButtonStyle: neutralButton?.type.iosStyle,
+          negativeButtonStyle: negativeButton?.type.iosStyle,
         ),
       ),
     );
@@ -91,9 +92,9 @@ mixin class AlertDialog {
       case CustomButton.positiveButton:
         return firstButton;
       case CustomButton.neutralButton:
-        return secondButton;
+        return neutralButton;
       case CustomButton.negativeButton:
-        return thirdButton;
+        return negativeButton;
       case CustomButton.other:
         return null;
     }
