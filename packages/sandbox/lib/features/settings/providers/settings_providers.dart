@@ -7,6 +7,7 @@ part 'settings_providers.g.dart';
 
 class SettingsProviders {
   static var user = userProviderProvider;
+  static var signatureDemo = signatureDemoControllerProvider;
 }
 
 @riverpod

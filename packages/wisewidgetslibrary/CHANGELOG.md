@@ -1,3 +1,8 @@
+## 2.2.0
+
+* Added `SignaturePad` and `SignatureController` with smooth velocity-based pen strokes, drawing statistics, transparent PNG export and proportional resizing.
+* Added `SigningField`, `SigningController` and `SigningResult` for name entry, validation, clearing and signature capture with device timestamps shown from the first ink. Text is supplied through `SigningStrings`; the canvas, Clear icon, Clear button style, name border, metadata style and timestamp format are configurable. `SigningNameInput`, `SigningClearButton`, `SigningCanvas` and the `signingLabelStyle` theme extension are exported for custom layouts; `SigningCanvas(fillHeight: true)` fills its parent, for example in a landscape signing mode.
+
 ## 2.1.8
 
 * Updated majors of transitive dependencies (cached network image wasm issue fixes)
