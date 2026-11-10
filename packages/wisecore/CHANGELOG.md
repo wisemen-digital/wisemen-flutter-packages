@@ -1,3 +1,7 @@
+## 2.2.14
+
+- Fixed missing cancel button in `confirmAction` and missing second button in two-button custom dialogs on Android
+
 ## 2.2.13
 
 - Removed Copilot support and the `--agent` option from the AI skills script; it now syncs for Claude Code only
