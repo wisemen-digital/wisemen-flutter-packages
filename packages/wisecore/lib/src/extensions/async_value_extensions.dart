@@ -1,4 +1,3 @@
-// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 import 'package:flutter/widgets.dart';
 import 'package:riverpod/riverpod.dart';
 
@@ -6,8 +5,29 @@ import '../utils/loading_stream_provider.dart';
 
 /// Extensions for [AsyncValue] to simplify handling its states.
 extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
-  /// Performs an action based on the state of the [AsyncValue]. mixed with
-  /// [LoadingStreamProvider] to handle loading states correctly.
+  /// Performs an action based on the state of the [AsyncValue], taking the
+  /// initial fetch of a [LoadingStreamProvider] into account.
+  ///
+  /// A stream read from a local database often emits `null` or an empty list
+  /// before the initial fetch has written anything to it. Pass the provider's
+  /// [notifier] to keep showing [loading] until that fetch completes, instead
+  /// of briefly rendering an empty state:
+  ///
+  /// ```dart
+  /// ref.watch(MyProviders.items).whenStream(
+  ///   notifier: ref.watch(MyProviders.items.notifier),
+  ///   data: (items) => ItemList(items: items),
+  ///   error: (error, stackTrace) => ErrorView(error),
+  ///   loading: () => const CircularProgressIndicator(),
+  /// );
+  /// ```
+  ///
+  /// [loading] is shown while [LoadingStreamProvider.initialLoading] is true
+  /// and the stream has produced no value, `null`, or an empty [Iterable].
+  /// Cached data is shown right away, and later refreshes keep showing it.
+  /// An error emitted by the stream is passed to [error] immediately.
+  ///
+  /// Without a [notifier], this behaves exactly like `when`.
   ///
   /// All cases are required, which allows returning a non-nullable value.
   ///
@@ -38,44 +58,30 @@ extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
     required Widget Function(T data) data,
     required Widget Function(Object error, StackTrace stackTrace) error,
     required Widget Function() loading,
+    LoadingStreamProvider<T>? notifier,
     bool skipLoadingOnReload = false,
     bool skipLoadingOnRefresh = true,
     bool skipError = false,
   }) {
-    if (this is! LoadingStreamProvider) {
-      return when(
-        data: data,
-        error: error,
-        loading: loading,
-        skipLoadingOnReload: skipLoadingOnReload,
-        skipLoadingOnRefresh: skipLoadingOnRefresh,
-        skipError: skipError,
-      );
-    }
-    return ValueListenableBuilder(
-      valueListenable: (this as LoadingStreamProvider).initialLoading,
-      builder: (_, initLoading, __) {
-        if (isLoading || initLoading) {
-          bool skip;
-          if (isRefreshing) {
-            skip = skipLoadingOnRefresh;
-          } else if (isReloading) {
-            skip = skipLoadingOnReload;
-          } else {
-            skip = false;
-          }
-          if (!skip) return loading();
-        }
+    Widget resolve() => when(
+      data: data,
+      error: error,
+      loading: loading,
+      skipLoadingOnReload: skipLoadingOnReload,
+      skipLoadingOnRefresh: skipLoadingOnRefresh,
+      skipError: skipError,
+    );
 
-        if (hasError && (!hasValue || !skipError)) {
-          return error(error, stackTrace!);
-        }
+    if (notifier == null) return resolve();
 
-        if (requireValue == null) {
-          return loading();
-        }
-
-        return data(requireValue);
+    return ValueListenableBuilder<bool>(
+      valueListenable: notifier.initialLoading,
+      builder: (_, initialLoading, _) {
+        final current = value;
+        final noData =
+            current == null || (current is Iterable && current.isEmpty);
+        if (initialLoading && !hasError && noData) return loading();
+        return resolve();
       },
     );
   }
