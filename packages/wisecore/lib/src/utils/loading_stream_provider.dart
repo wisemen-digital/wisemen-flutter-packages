@@ -1,12 +1,21 @@
-import 'package:flutter/foundation.dart';
-// ignore: depend_on_referenced_packages, implementation_imports
-import 'package:riverpod/src/providers/stream_notifier.dart';
+import 'package:riverpod/riverpod.dart';
 
 import '../extensions/list_extension.dart';
 
-/// Mixin for loading stream data in a provider with correct loading
-// ignore: invalid_use_of_internal_member
-mixin LoadingStreamProvider<T> on $StreamNotifier<T> {
+/// Mixin for stream providers that watch a local source (such as a database)
+/// and fill it with a fetch.
+///
+/// Until the first [refresh] has finished, an emission without data (`null`,
+/// or an empty [Iterable]) does not notify listeners. The UI keeps showing
+/// the loading state instead of an empty state while the first fetch is
+/// still running. When that fetch finishes, listeners are notified with
+/// whatever the stream emitted last, so a fetch that fails or returns
+/// nothing still ends the loading state.
+///
+/// Read the state with Riverpod's `when` on [AsyncValue]
+mixin LoadingStreamProvider<T> on AnyNotifier<AsyncValue<T>, T> {
+  bool _hasRunBefore = false;
+
   /// [refreshFunction] refreshes stream data and writes to wherever the stream is read from
   Future<void> refreshFunction();
 
@@ -16,21 +25,25 @@ mixin LoadingStreamProvider<T> on $StreamNotifier<T> {
   /// [refresh] is used to refresh the stream data
   Future<void> refresh() async {
     try {
-      if (state.value == null) {
-        initialLoading.value = true;
-      } else if (state.value is List? && (state.value as List?).isNullOrEmpty) {
-        initialLoading.value = true;
-      } else {
-        initialLoading.value = false;
-      }
       await refreshFunction();
     } catch (error, stackTrace) {
       await onError(error, stackTrace);
     } finally {
-      initialLoading.value = false;
+      if (!_hasRunBefore) {
+        _hasRunBefore = true;
+        // Notify in case the fetch did not make the stream emit again.
+        if (ref.mounted) ref.notifyListeners();
+      }
     }
   }
 
-  /// [initialLoading] is used to indicate if the initial data is being loaded
-  ValueNotifier<bool> initialLoading = ValueNotifier(true);
+  @override
+  bool updateShouldNotify(AsyncValue<T> previous, AsyncValue<T> next) {
+    if (!_hasRunBefore) {
+      final value = next.value;
+      if (value == null) return false;
+      if (value is Iterable && value.isNullOrEmpty) return false;
+    }
+    return super.updateShouldNotify(previous, next);
+  }
 }

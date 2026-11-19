@@ -306,6 +306,7 @@ class ItemDetailProvider extends _$ItemDetailProvider with LoadingStreamProvider
 ### Key Points
 
 - **Mixin from core**: `LoadingStreamProvider<T>` handles loading state and error recovery
+- **No empty flash**: until the first `refresh()` finishes, a `null` or empty emission does not reach the UI, so it keeps showing `loading` instead of an empty state. Only the notification is held back, not the value: a widget that rebuilds for another reason during the first fetch, or a `keepAlive` provider that is already alive, can still show the empty state
 - **`refresh()`**: Call in `build()` to trigger initial data fetch
 - **`refreshFunction()`**: Override to define the actual fetch operation
 - **`onError()`**: Optional override for custom error handling (logging, Sentry, etc.)
@@ -316,7 +317,7 @@ class ItemDetailProvider extends _$ItemDetailProvider with LoadingStreamProvider
 ```dart
 final itemAsync = ref.watch(MyProviders.itemDetail);
 
-return itemAsync.whenStream(
+return itemAsync.when(
   data: (item) => RefreshIndicator(
     onRefresh: () => ref.read(MyProviders.itemDetail.notifier).refresh(),
     child: ItemDetailContent(item: item),

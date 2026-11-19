@@ -6,10 +6,10 @@ import '../utils/loading_stream_provider.dart';
 
 /// Extensions for [AsyncValue] to simplify handling its states.
 extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
-  /// Performs an action based on the state of the [AsyncValue]. mixed with
-  /// [LoadingStreamProvider] to handle loading states correctly.
+  /// Same as Riverpod's `when` on [AsyncValue], which it now forwards to.
   ///
-  /// All cases are required, which allows returning a non-nullable value.
+  /// [LoadingStreamProvider] handles the initial loading state itself, so this
+  /// extension is no longer needed. Use `when` instead.
   ///
   /// {@template asyncValue.skip_flags}
   /// By default, [whenStream] skips "loading" states if triggered by a [Ref.refresh]
@@ -34,6 +34,9 @@ extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
   /// - [skipError] (false by default) decides whether to invoke [data] instead
   ///   of [error] if a previous state is available.
   /// {@endtemplate}
+  @Deprecated(
+    'Use AsyncValue.when. LoadingStreamProvider now handles the initial loading state itself.',
+  )
   Widget whenStream({
     required Widget Function(T data) data,
     required Widget Function(Object error, StackTrace stackTrace) error,
@@ -42,42 +45,13 @@ extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
     bool skipLoadingOnRefresh = true,
     bool skipError = false,
   }) {
-    print(this.runtimeType);
-    if (this is! LoadingStreamProvider) {
-      return when(
-        data: data,
-        error: error,
-        loading: loading,
-        skipLoadingOnReload: skipLoadingOnReload,
-        skipLoadingOnRefresh: skipLoadingOnRefresh,
-        skipError: skipError,
-      );
-    }
-    return ValueListenableBuilder(
-      valueListenable: (this as LoadingStreamProvider).initialLoading,
-      builder: (_, initLoading, __) {
-        if (isLoading || initLoading) {
-          bool skip;
-          if (isRefreshing) {
-            skip = skipLoadingOnRefresh;
-          } else if (isReloading) {
-            skip = skipLoadingOnReload;
-          } else {
-            skip = false;
-          }
-          if (!skip) return loading();
-        }
-
-        if (hasError && (!hasValue || !skipError)) {
-          return error(error, stackTrace!);
-        }
-
-        if (requireValue == null) {
-          return loading();
-        }
-
-        return data(requireValue);
-      },
+    return when(
+      data: data,
+      error: error,
+      loading: loading,
+      skipError: skipError,
+      skipLoadingOnRefresh: skipLoadingOnRefresh,
+      skipLoadingOnReload: skipLoadingOnReload,
     );
   }
 }
