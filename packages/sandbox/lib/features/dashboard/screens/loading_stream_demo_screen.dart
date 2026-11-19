@@ -6,12 +6,11 @@ import 'package:wisecore/wisecore.dart';
 
 import '../providers/loading_stream_demo_providers.dart';
 
-/// Shows the initial loading problem of [LoadingStreamProvider] with `whenStream`.
+/// Shows the initial loading of [LoadingStreamProvider].
 ///
-/// The database starts empty and the fetch takes 3 seconds. Expected: a
-/// spinner for 3 seconds, then the items. What happens: "No items" for 3
-/// seconds, because `whenStream` shows the empty list the database emits
-/// before the fetch has written anything.
+/// The database starts empty and the fetch takes 3 seconds. The screen shows
+/// a spinner for those 3 seconds, then the items: the empty list the database
+/// emits before the fetch has written anything never reaches the UI.
 @RoutePage()
 class LoadingStreamDemoScreen extends ConsumerWidget {
   const LoadingStreamDemoScreen({super.key});
@@ -35,10 +34,10 @@ class LoadingStreamDemoScreen extends ConsumerWidget {
       body: Material(
         type: MaterialType.transparency,
         child: RefreshIndicator(
-          onRefresh: () => ref.read(demoItemsProvider.notifier).refresh(),
+          onRefresh: ref.read(demoItemsProvider.notifier).refresh,
           child: ref
               .watch(demoItemsProvider)
-              .whenStream(
+              .when(
                 data: (items) => ListView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   children: [
