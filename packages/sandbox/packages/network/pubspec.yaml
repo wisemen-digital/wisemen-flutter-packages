@@ -9,6 +9,6 @@ environment:
 resolution: workspace
 dependencies:
   dio: '^5.7.0'
-  wiseclient: ^2.0.4
+  wiseclient: ^3.0.0
   openapi:
     path: ../generated_network

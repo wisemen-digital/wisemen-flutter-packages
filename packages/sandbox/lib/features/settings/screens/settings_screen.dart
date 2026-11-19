@@ -37,6 +37,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
             color: context.backgroundColors.brandPrimary,
             foregroundColor: context.foregroundColors.brandPrimary,
           ),
+          PlatformButton2.text(
+            text: 'LoadingStreamProvider demo',
+            textStyle: context.body,
+            onPressed: () => context.router.push(const LoadingStreamDemoScreenRoute()),
+            color: context.backgroundColors.brandPrimary,
+            foregroundColor: context.foregroundColors.brandPrimary,
+          ),
           Center(
             child: ref
                 .watch(SettingsProviders.user)

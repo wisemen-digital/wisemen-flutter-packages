@@ -42,6 +42,7 @@ extension AsyncStreamValueExtensions<T> on AsyncValue<T> {
     bool skipLoadingOnRefresh = true,
     bool skipError = false,
   }) {
+    print(this.runtimeType);
     if (this is! LoadingStreamProvider) {
       return when(
         data: data,

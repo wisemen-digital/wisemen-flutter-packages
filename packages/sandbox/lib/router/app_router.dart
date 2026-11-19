@@ -27,6 +27,11 @@ class AppRouter extends RootStackRouter {
       page: BiDirectionalCalendarDemoScreenRoute.page,
       title: (context, data) => 'Bi-directional calendar demo',
     ),
+    AdaptiveRoute(
+      path: '/loading-stream-demo',
+      page: LoadingStreamDemoScreenRoute.page,
+      title: (context, data) => 'LoadingStreamProvider demo',
+    ),
     AdaptiveRoute(page: SettingsScreenRoute.page),
     //mason: insert auto route
   ];

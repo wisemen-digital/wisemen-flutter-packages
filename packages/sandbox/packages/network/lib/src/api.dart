@@ -6,7 +6,7 @@ import 'services/services.dart';
 
 abstract class SandboxApi {
   Stream<AuthenticationStatus> get authenticationStatus;
-  Future<void> setToken(OAuthToken token);
+  Future<void> setToken(OAuth2Token token);
   Future<void> clearToken();
   //* Services
   UserService get userService;
@@ -36,7 +36,7 @@ class NetworkApi implements SandboxApi {
   }
 
   @override
-  Future<void> setToken(OAuthToken token) async {
+  Future<void> setToken(OAuth2Token token) async {
     await client.fresh.setToken(token);
   }
 }
