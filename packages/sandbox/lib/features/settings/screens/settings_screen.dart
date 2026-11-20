@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sandbox/features/dashboard/providers/loading_stream_demo_providers.dart';
 import 'package:sandbox/router/app_router.gr.dart';
 import 'package:wise_theming/wise_theming.dart';
 import 'package:wisecore/wisecore.dart';
@@ -33,21 +34,16 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> with VisibleAwa
           PlatformButton2.text(
             text: 'navigate to BiDirectional Paged List',
             textStyle: context.body,
-            onPressed: () => context.router.push(const BiDirectionalCalendarDemoScreenRoute()),
+            onPressed: () => ref.read(demoItemsDatabaseProvider).write([]),
             color: context.backgroundColors.brandPrimary,
             foregroundColor: context.foregroundColors.brandPrimary,
           ),
-          Center(
-            child: ref
-                .watch(SettingsProviders.user)
-                .whenStream(
-                  data: (data) => Text(
-                    data?.fullName ?? '',
-                    style: context.body.copyWith(color: context.textColors.primary),
-                  ),
-                  error: (error, stackTrace) => ErrorWidget(error),
-                  loading: () => const CircularProgressIndicator(),
-                ),
+          PlatformButton2.text(
+            text: 'LoadingStreamProvider demo',
+            textStyle: context.body,
+            onPressed: () => context.router.push(const LoadingStreamDemoScreenRoute()),
+            color: context.backgroundColors.brandPrimary,
+            foregroundColor: context.foregroundColors.brandPrimary,
           ),
         ],
       ),

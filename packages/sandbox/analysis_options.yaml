@@ -1,13 +1,18 @@
 analyzer:
   errors:
     invalid_annotation_target: ignore
-  plugins: 
-    - custom_lint
-  exclude: [build/**, lib/**.g.dart, lib/generated/**, packages/**.g.dart, packages/**.drift.dart, packages/generated_network/**]
+  exclude:
+    - build/**
+    - lib/**.g.dart
+    - lib/generated/**
+    - packages/**.g.dart
+    - packages/**.drift.dart
+    - packages/generated_network/**
+    - android/**
+    - ios/**
 
-custom_lint:
-  rules:
-    - avoid_manual_providers_as_generated_provider_dependency: false
+plugins:
+  riverpod_lint: ^3.2.0
 formatter:
   trailing_commas: preserve
   page_width: 150

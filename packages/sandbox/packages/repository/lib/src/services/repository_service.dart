@@ -20,23 +20,24 @@ class RepositoryService {
            useNativeAdapter: true,
            wiseInterceptors: [WiseInterceptor.fresh],
            refreshFunction: (token, client) async {
-             final response = await (client..httpClientAdapter = NativeAdapter()).post(
-               authUrl,
-               data: {
-                 'client_id': clientId,
-                 'grant_type': 'refresh_token',
-                 'refresh_token': token?.refreshToken,
-               },
-               options: Options(
-                 contentType: 'application/x-www-form-urlencoded',
-               ),
-             );
-
-             return OAuthToken.fromSnakeCase(response.data);
-           },
-           refreshErrorHandler: (e, stackTrace) async {
-             if (e is DioException && [401].contains(e.response?.statusCode)) {
-               onLogout();
+             try {
+               final response = await (client..httpClientAdapter = NativeAdapter()).post<Map<String, dynamic>>(
+                 authUrl,
+                 data: {
+                   'client_id': clientId,
+                   'grant_type': 'refresh_token',
+                   'refresh_token': token?.refreshToken,
+                 },
+                 options: Options(
+                   contentType: 'application/x-www-form-urlencoded',
+                 ),
+               );
+               return response.data!.toOAuth2TokenFromSnakeCase();
+             } on DioException catch (error) {
+               if (error.response?.statusCode == 401) {
+                 onLogout();
+               }
+               rethrow;
              }
            },
          ),
@@ -47,7 +48,7 @@ class RepositoryService {
 
   Stream<AuthenticationStatus> get authenticationStatus => api.authenticationStatus;
 
-  Future<void> setToken(OAuthToken token) async {
+  Future<void> setToken(OAuth2Token token) async {
     await api.setToken(token);
   }
 

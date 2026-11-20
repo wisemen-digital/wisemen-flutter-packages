@@ -1,5 +1,4 @@
-import 'package:fresh/src/fresh.dart';
-import 'package:wiseclient/src/token_model/oauth_token.dart';
+import 'package:wiseclient/wiseclient.dart';
 
 import '../api.dart';
 import '../services/services.dart';
@@ -19,7 +18,7 @@ class MockApi extends SandboxApi {
   }
 
   @override
-  Future<void> setToken(OAuthToken token) {
+  Future<void> setToken(OAuth2Token token) {
     return Future.value();
   }
 }

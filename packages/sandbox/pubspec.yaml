@@ -24,11 +24,11 @@ dependencies:
     path: packages/repository
 
   # Wisemen
-  wisecore: ^2.2.11
-  wisewidgetslibrary:
-    path: ../wisewidgetslibrary
+  wisecore:
+    path: ../wisecore
+  wisewidgetslibrary: ^2.1.8
   wise_nav_bar: ^0.0.3
-  wiseclient: ^2.0.4
+  wiseclient: ^3.0.0
   wise_zitadel_login:
     path: ../wise_zitadel_login
   wise_theming: ^1.0.0
@@ -51,7 +51,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.6.0+eol
   
   # Device info
-  package_info_plus: ^9.0.0
+  package_info_plus: ^10.0.0
 
   # Splash
   flutter_native_splash: ^2.4.1
@@ -71,7 +71,11 @@ dependencies:
   cupertino_calendar_picker: ^2.2.6
   opentelemetry: ^0.18.11
 
-dev_dependencies: 
+dependency_overrides:
+  wisewidgetslibrary:
+    path: ../wisewidgetslibrary
+
+dev_dependencies:
   # Code generation
   build_runner: ^2.10.4
 
@@ -90,10 +94,6 @@ dev_dependencies:
   # Flavors
   flutter_flavorizr: ^2.4.1
   
-  # Linting
-  riverpod_lint: ^3.1.0
-  custom_lint: ^0.8.1
-
   # Melos
   melos: ^7.5.1
 
