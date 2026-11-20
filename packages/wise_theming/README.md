@@ -33,7 +33,7 @@ flutter pub get
 ### 1. Basic Setup
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_theming/wise_theming.dart';
 
 void main() {

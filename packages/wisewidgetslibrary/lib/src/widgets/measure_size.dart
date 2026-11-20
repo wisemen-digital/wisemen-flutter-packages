@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// typedef for widget size change function
 typedef OnWidgetSizeChange = void Function(Size size);

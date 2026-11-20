@@ -196,7 +196,7 @@ class FeedbackOverlay extends StatefulWidget {
 Use `StatelessWidget` for simple widgets without state or Riverpod.
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 class InfoTile extends StatelessWidget {
   const InfoTile({
@@ -233,8 +233,8 @@ class InfoTile extends StatelessWidget {
 Use `ConsumerWidget` when widget needs Riverpod state.
 
 ```dart
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 class ItemListTile extends ConsumerWidget {
   const ItemListTile({

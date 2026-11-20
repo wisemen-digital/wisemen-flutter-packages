@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:feedback/feedback.dart' hide FeedbackController;
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../controller/feedback_controller.dart';
 import '../l10n/wise_feedback_strings.dart';
 import '../metadata/metadata_collector.dart';

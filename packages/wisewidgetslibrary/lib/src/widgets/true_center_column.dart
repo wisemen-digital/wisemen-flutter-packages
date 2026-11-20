@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [TrueCenterColumn] is a widget that centers its children vertically
 /// disregarding the first child

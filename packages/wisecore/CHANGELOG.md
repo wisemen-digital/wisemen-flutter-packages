@@ -1,3 +1,8 @@
+## 3.0.0
+
+- **Breaking:** Uses the decoupled `material_ui` package instead of `package:flutter/material.dart`. `TimeOfDayExtension`, `int.timeOfDay` and `DateTime.onlyTime` now work with the `material_ui` `TimeOfDay`, and the snackbar helper looks up the `material_ui` `ScaffoldMessenger`. Apps should migrate their own imports as well (add the packages, then run `dart fix --apply`): `package:flutter/material.dart` and `material_ui` are separate copies, so a theme or `ScaffoldMessenger` provided by one is not found by widgets built with the other
+- Requires Flutter 3.47 or later, the minimum `material_ui` supports
+
 ## 2.2.13
 
 - Removed Copilot support and the `--agent` option from the AI skills script; it now syncs for Claude Code only

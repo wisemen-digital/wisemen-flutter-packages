@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../l10n/wise_feedback_strings.dart';
 import '../models/feedback_exception.dart';
 import '../models/feedback_priority.dart';
@@ -105,99 +105,113 @@ class _FeedbackFormState extends State<FeedbackForm> {
     final theme = widget.theme;
     final strings = widget.strings;
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
-    return ColoredBox(
-      color: theme.backgroundColor,
-      child: SingleChildScrollView(
-        controller: widget.scrollController,
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: EdgeInsets.only(bottom: 16 + bottomInset),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            FeedbackSheetGrabber(theme: theme),
-            FeedbackFormHeader(
-              theme: theme,
-              title: strings.sheetTitle,
-              status: widget.status,
-              onClose: widget.onClose,
-              onSubmit: _submit,
-            ),
-            Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  FeedbackLabeledField(
-                    theme: theme,
-                    label: strings.titleFieldLabel,
-                    child: FeedbackTextInput(
-                      theme: theme,
-                      controller: _titleController,
-                      fieldKey: const Key('wise_feedback_title'),
-                    ),
-                  ),
-                  for (final field in widget.fields) ...[
-                    const SizedBox(height: 16),
-                    FeedbackLabeledField(
-                      theme: theme,
-                      label: _fieldLabel(field, strings),
-                      child: FeedbackTextInput(
+    // `feedback` still builds on `package:flutter/material.dart`, so the
+    // `Material` and `MaterialLocalizations` it wraps the form in are not
+    // visible to `material_ui` widgets.
+    return Localizations.override(
+      context: context,
+      delegates: const [GlobalMaterialLocalizations.delegate],
+      child: Material(
+        type: MaterialType.transparency,
+        textStyle: DefaultTextStyle.of(context).style,
+        child: ColoredBox(
+          color: theme.backgroundColor,
+          child: SingleChildScrollView(
+            controller: widget.scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.only(bottom: 16 + bottomInset),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FeedbackSheetGrabber(theme: theme),
+                FeedbackFormHeader(
+                  theme: theme,
+                  title: strings.sheetTitle,
+                  status: widget.status,
+                  onClose: widget.onClose,
+                  onSubmit: _submit,
+                ),
+                Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(16, 4, 16, 0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      FeedbackLabeledField(
                         theme: theme,
-                        controller: _fieldControllers[field.key]!,
-                        minLines: field.minLines,
-                        maxLines: field.maxLines,
-                        fieldKey: Key('wise_feedback_field_${field.key}'),
-                      ),
-                    ),
-                  ],
-                  if (widget.showPriority) ...[
-                    const SizedBox(height: 16),
-                    FeedbackLabeledField(
-                      theme: theme,
-                      label: strings.priorityLabel,
-                      child: FeedbackDropdown<FeedbackPriority>(
-                        theme: theme,
-                        value: _priority,
-                        fieldKey: const Key('wise_feedback_priority'),
-                        items: {
-                          for (final priority in FeedbackPriority.values)
-                            priority: _priorityLabel(priority, strings),
-                        },
-                        onChanged: (value) => setState(
-                          () => _priority = value ?? FeedbackPriority.none,
+                        label: strings.titleFieldLabel,
+                        child: FeedbackTextInput(
+                          theme: theme,
+                          controller: _titleController,
+                          fieldKey: const Key('wise_feedback_title'),
                         ),
                       ),
-                    ),
-                  ],
-                  if (widget.categories case final List<String> categories) ...[
-                    const SizedBox(height: 16),
-                    FeedbackLabeledField(
-                      theme: theme,
-                      label: strings.categoryLabel,
-                      child: FeedbackDropdown<String>(
-                        theme: theme,
-                        value: _category,
-                        fieldKey: const Key('wise_feedback_category'),
-                        hint: strings.categoryLabel,
-                        items: {for (final c in categories) c: c},
-                        onChanged: (value) => setState(() => _category = value),
-                      ),
-                    ),
-                  ],
-                  ValueListenableBuilder<FeedbackStatus>(
-                    valueListenable: widget.status,
-                    builder: (context, status, _) => status is FeedbackFailure
-                        ? FeedbackErrorMessage(
+                      for (final field in widget.fields) ...[
+                        const SizedBox(height: 16),
+                        FeedbackLabeledField(
+                          theme: theme,
+                          label: _fieldLabel(field, strings),
+                          child: FeedbackTextInput(
                             theme: theme,
-                            message: _errorMessage(status.error, strings),
-                          )
-                        : const SizedBox.shrink(),
+                            controller: _fieldControllers[field.key]!,
+                            minLines: field.minLines,
+                            maxLines: field.maxLines,
+                            fieldKey: Key('wise_feedback_field_${field.key}'),
+                          ),
+                        ),
+                      ],
+                      if (widget.showPriority) ...[
+                        const SizedBox(height: 16),
+                        FeedbackLabeledField(
+                          theme: theme,
+                          label: strings.priorityLabel,
+                          child: FeedbackDropdown<FeedbackPriority>(
+                            theme: theme,
+                            value: _priority,
+                            fieldKey: const Key('wise_feedback_priority'),
+                            items: {
+                              for (final priority in FeedbackPriority.values)
+                                priority: _priorityLabel(priority, strings),
+                            },
+                            onChanged: (value) => setState(
+                              () => _priority = value ?? FeedbackPriority.none,
+                            ),
+                          ),
+                        ),
+                      ],
+                      if (widget.categories
+                          case final List<String> categories) ...[
+                        const SizedBox(height: 16),
+                        FeedbackLabeledField(
+                          theme: theme,
+                          label: strings.categoryLabel,
+                          child: FeedbackDropdown<String>(
+                            theme: theme,
+                            value: _category,
+                            fieldKey: const Key('wise_feedback_category'),
+                            hint: strings.categoryLabel,
+                            items: {for (final c in categories) c: c},
+                            onChanged: (value) =>
+                                setState(() => _category = value),
+                          ),
+                        ),
+                      ],
+                      ValueListenableBuilder<FeedbackStatus>(
+                        valueListenable: widget.status,
+                        builder: (context, status, _) =>
+                            status is FeedbackFailure
+                            ? FeedbackErrorMessage(
+                                theme: theme,
+                                message: _errorMessage(status.error, strings),
+                              )
+                            : const SizedBox.shrink(),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

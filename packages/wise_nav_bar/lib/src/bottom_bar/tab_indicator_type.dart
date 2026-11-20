@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cupertino_ui/cupertino_ui.dart';
 
 /// Tab indicator type for the bottom navigation bar
 enum TabIndicatorType {

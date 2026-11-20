@@ -1,7 +1,7 @@
 // ignore_for_file: missing_override_of_must_be_overridden, overridden_fields
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_scalars/base/base.dart';
 
 void main() {

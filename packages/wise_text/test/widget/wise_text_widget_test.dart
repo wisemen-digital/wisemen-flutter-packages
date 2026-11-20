@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_text/wise_text.dart';
 
 /// A controllable [WiseTextClassifierInterface] stub.
@@ -168,7 +168,7 @@ void main() {
   });
 
   group('WiseTextWidget selectable variant', () {
-    testWidgets('renders a selectable StyledText backed by SelectableText', (
+    testWidgets('renders a selectable StyledText', (
       tester,
     ) async {
       await tester.pumpWidget(
@@ -184,8 +184,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
+      expect(find.byType(StyledText), findsOneWidget);
       expect(styledTextOf(tester).selectable, isTrue);
-      expect(find.byType(SelectableText), findsOneWidget);
     });
 
     testWidgets('classifies before rendering the selectable variant', (

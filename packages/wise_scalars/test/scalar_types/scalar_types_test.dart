@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_scalars/base/base.dart';
 import 'package:wise_scalars/scalar_types/scalar_types.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Platform widget with Material and Cupertino
 abstract class PlatformWidget<I extends Widget, A extends Widget>

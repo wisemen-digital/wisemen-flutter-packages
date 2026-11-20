@@ -53,8 +53,8 @@ Use `@RoutePage()` annotation and extend `ConsumerWidget` or `HookConsumerWidget
 
 ```dart
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 @RoutePage()
 class ItemsScreen extends ConsumerWidget {
@@ -81,9 +81,9 @@ Use `HookConsumerWidget` when you need lifecycle hooks (focus nodes, controllers
 
 ```dart
 import 'package:auto_route/annotations.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 
 @RoutePage()
 class LoginScreen extends HookConsumerWidget {
@@ -311,7 +311,7 @@ Create a router screen that serves as the navigation container:
 
 ```dart
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 @RoutePage(name: 'FeatureRouter')
 class FeatureRouterScreen extends StatelessWidget {

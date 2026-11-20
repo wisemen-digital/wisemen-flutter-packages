@@ -27,7 +27,7 @@ dependencies:
 Initialize the plugin and wrap your app with `WiseScalarScope`:
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_scalars/wise_scalars.dart';
 
 void main() async {

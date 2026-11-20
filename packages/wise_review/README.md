@@ -24,8 +24,8 @@ dependencies:
 Wrap your app's main widget with `WiseReview`:
 
 ```dart
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_review/wise_review.dart';
 
 void main() {

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A material widget for selecting from a list of items.
 /// Internally it uses the DropDownButton widget.
