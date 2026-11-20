@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_zitadel_login/src/providers/wise_zitadel_provider.dart';
 import 'package:wise_zitadel_login/src/routes/wise_login_screen_route.dart';
 

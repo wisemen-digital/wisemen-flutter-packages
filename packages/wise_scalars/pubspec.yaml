@@ -1,6 +1,6 @@
 name: wise_scalars
 description: "A Flutter plugin to handle scalar types and their localizations."
-version: 0.0.1
+version: 0.0.2
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_scalars
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_scalars
 
@@ -15,6 +15,9 @@ dependencies:
   intl: ">=0.20.2 <1.0.0"
   meta: ">=1.8.0 <2.0.0"
   plugin_platform_interface: ">=2.1.8 <3.0.0"
+
+  # Design libraries
+  material_ui: ">=1.11.1 <2.0.0"
 
 dev_dependencies:
   flutter_test:

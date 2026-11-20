@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:conditional_wrap/conditional_wrap.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A [TextField] with a label above it.
 class LabeledTextField extends StatelessWidget {

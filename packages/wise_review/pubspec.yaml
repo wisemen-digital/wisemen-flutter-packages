@@ -1,6 +1,6 @@
 name: wise_review
 description: A flutter package that automatically shows a store review prompt
-version: 1.0.0
+version: 2.0.0
 homepage: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_review
 repository: https://github.com/wisemen-digital/wisemen-flutter-packages/packages/wise_review
 
@@ -13,15 +13,17 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ">=1.8.0 <2.0.0"
-  wisecore: ">=2.0.0 <3.0.0"
+  wisecore: ">=3.0.0 <4.0.0"
   in_app_review: ">=2.0.0 <3.0.0"
   riverpod_annotation: ">=4.0.2 <5.0.0"
   hooks_riverpod: ">=3.0.0 <4.0.0"
 
+  # Design libraries
+  material_ui: ">=1.11.1 <2.0.0"
+
 dev_dependencies:
   # Static analysis & linting
   flutter_lints: ^6.0.0
-  custom_lint: ^0.8.1
   dependency_validator: ^5.0.5
 
   # Testing

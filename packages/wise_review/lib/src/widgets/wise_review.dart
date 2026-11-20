@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wisecore/wisecore.dart';
 
 import '../constants/constants.dart';

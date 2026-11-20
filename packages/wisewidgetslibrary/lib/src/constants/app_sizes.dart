@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Constant sizes to be used in the app (paddings, gaps, rounded corners etc.)
 class Sizes {

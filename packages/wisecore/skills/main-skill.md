@@ -98,7 +98,7 @@ Translations live in `lib/l10n/intl_<locale>.arb`, one file per language. The Fl
 import 'dart:async';
 
 // 2. Flutter
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 // 3. External packages
 import 'package:riverpod_annotation/riverpod_annotation.dart';

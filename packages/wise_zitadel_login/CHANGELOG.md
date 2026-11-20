@@ -1,3 +1,9 @@
+# 3.0.0
+
+- **Breaking:** Uses the decoupled `material_ui` package instead of `package:flutter/material.dart`. Apps should migrate their own imports as well (add the packages, then run `dart fix --apply`): `package:flutter/material.dart` and `material_ui` are separate copies, so a theme or `ScaffoldMessenger` provided by one is not found by widgets built with the other
+- **Breaking:** Requires wisewidgetslibrary 3 and wise_nav_bar 0.1
+- Requires Flutter 3.47 or later, the minimum `material_ui` supports
+
 # 2.0.0
 
 - Updated oidc major

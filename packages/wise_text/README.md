@@ -44,7 +44,7 @@ Style each type by adding it to the widget's `tags` map (see below).
 ## Usage
 
 ```dart
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:wise_text/wise_text.dart';
 
 WiseTextWidget(

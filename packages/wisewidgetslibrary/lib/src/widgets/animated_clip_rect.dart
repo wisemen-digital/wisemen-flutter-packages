@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 ///AnimatedClipRect is a widget that animates the clip of its child widget.
 class AnimatedClipRect extends StatefulWidget {

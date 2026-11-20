@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1
+
+- Uses the decoupled `material_ui` package instead of `package:flutter/material.dart`
+- Requires Flutter 3.47 or later, the minimum `material_ui` supports
+
 ## 0.5.0
 
 - Renamed the entry widget `LinearFeedback` → `WiseFeedback` (the transport was

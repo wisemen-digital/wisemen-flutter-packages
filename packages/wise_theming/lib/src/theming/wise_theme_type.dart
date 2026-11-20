@@ -1,6 +1,6 @@
 // ignore_for_file: comment_references
 
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// [WiseThemeType] to translate [WiseTheme] to Material [ThemeData]
 /// MaterialApp takes a `darkTheme` and `theme` parameter, this distinguishes
