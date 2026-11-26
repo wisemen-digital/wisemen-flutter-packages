@@ -375,5 +375,99 @@ void main() {
         expect(find.text('Large Title'), findsAtLeast(1));
       },
     );
+
+    testWidgets('creates Material SliverAppBar with leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: CustomScrollView(
+            slivers: [
+              PlatformSliverAppBar(
+                title: Text('Title'),
+                leading: SizedBox.expand(key: Key('leading')),
+                leadingWidth: 100,
+              ),
+            ],
+          ),
+        ),
+      );
+      final sliverAppBar = tester.widget<SliverAppBar>(
+        find.byType(SliverAppBar),
+      );
+      expect(sliverAppBar.leadingWidth, 100);
+      expect(tester.getSize(find.byKey(const Key('leading'))).width, 100);
+    });
+
+    testWidgets('creates Material SliverAppBar with default leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: CustomScrollView(
+            slivers: [
+              PlatformSliverAppBar(
+                title: Text('Title'),
+                leading: SizedBox.expand(key: Key('leading')),
+              ),
+            ],
+          ),
+        ),
+      );
+      final sliverAppBar = tester.widget<SliverAppBar>(
+        find.byType(SliverAppBar),
+      );
+      expect(sliverAppBar.leadingWidth, isNull);
+      expect(
+        tester.getSize(find.byKey(const Key('leading'))).width,
+        kToolbarHeight,
+      );
+    });
+
+    testWidgets('PlatformSliverAppBar.text passes leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: CustomScrollView(
+            slivers: [
+              PlatformSliverAppBar.text(
+                title: 'Title',
+                leadingWidth: 100,
+              ),
+            ],
+          ),
+        ),
+      );
+      final sliverAppBar = tester.widget<SliverAppBar>(
+        find.byType(SliverAppBar),
+      );
+      expect(sliverAppBar.leadingWidth, 100);
+    });
+
+    testWidgets('CupertinoSliverNavigationBar ignores leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      await tester.pumpWidget(
+        const CupertinoApp(
+          home: CustomScrollView(
+            slivers: [
+              PlatformSliverAppBar(
+                title: Text('Title'),
+                largeTitle: Text('Large Title'),
+                leading: SizedBox(key: Key('leading'), width: 30, height: 30),
+                leadingWidth: 100,
+              ),
+            ],
+          ),
+        ),
+      );
+      expect(find.byType(CupertinoSliverNavigationBar), findsOneWidget);
+      expect(tester.getSize(find.byKey(const Key('leading'))).width, 30);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
   });
 }

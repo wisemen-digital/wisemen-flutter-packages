@@ -16,6 +16,7 @@ class PlatformSliverAppBar extends PlatformWidget {
   const PlatformSliverAppBar({
     super.key,
     this.leading,
+    this.leadingWidth,
     this.previousPageTitle,
     this.title,
     this.largeTitle,
@@ -40,6 +41,7 @@ class PlatformSliverAppBar extends PlatformWidget {
     TextStyle androidLargeTitleStyle = const TextStyle(fontSize: 24),
     super.key,
     this.leading,
+    this.leadingWidth,
     this.previousPageTitle,
     this.actions,
     this.actionSpacing = 8,
@@ -85,6 +87,11 @@ class PlatformSliverAppBar extends PlatformWidget {
   /// Cupertino: [CupertinoSliverNavigationBar.leading] usually a back button
   /// with previous page title
   final Widget? leading;
+
+  /// [SliverAppBar.leadingWidth] Width reserved for the [leading] widget, Android only.
+  /// Defaults to [kToolbarHeight] (56) when null. Ignored on iOS, where
+  /// [CupertinoSliverNavigationBar] sizes the leading widget to its content
+  final double? leadingWidth;
 
   /// [CupertinoNavigationBar.previousPageTitle] Title of the previous route, iOS only
   /// Defaults to 'Back' when title is longer than 12 characters
@@ -132,6 +139,7 @@ class PlatformSliverAppBar extends PlatformWidget {
     return SliverAppBar.medium(
       key: key,
       leading: leading,
+      leadingWidth: leadingWidth,
       title: title,
       actions: actions
           ?.map<Widget>(

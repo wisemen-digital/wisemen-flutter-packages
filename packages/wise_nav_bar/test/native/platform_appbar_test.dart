@@ -226,5 +226,85 @@ void main() {
 
       debugDefaultTargetPlatformOverride = null;
     });
+
+    testWidgets('creates Material AppBar with leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            appBar: PlatformAppBar(
+              title: Text('Title'),
+              leading: SizedBox.expand(key: Key('leading')),
+              leadingWidth: 100,
+            ),
+          ),
+        ),
+      );
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      expect(appBar.leadingWidth, 100);
+      expect(tester.getSize(find.byKey(const Key('leading'))).width, 100);
+    });
+
+    testWidgets('creates Material AppBar with default leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            appBar: PlatformAppBar(
+              title: Text('Title'),
+              leading: SizedBox.expand(key: Key('leading')),
+            ),
+          ),
+        ),
+      );
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      expect(appBar.leadingWidth, isNull);
+      expect(
+        tester.getSize(find.byKey(const Key('leading'))).width,
+        kToolbarHeight,
+      );
+    });
+
+    testWidgets('PlatformAppBar.text passes leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            appBar: PlatformAppBar.text(
+              title: 'Title',
+              leadingWidth: 100,
+            ),
+          ),
+        ),
+      );
+      final appBar = tester.widget<AppBar>(find.byType(AppBar));
+      expect(appBar.leadingWidth, 100);
+    });
+
+    testWidgets('CupertinoNavigationBar ignores leadingWidth', (
+      WidgetTester tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+
+      await tester.pumpWidget(
+        CupertinoApp(
+          home: CupertinoPageScaffold(
+            navigationBar: const PlatformAppBar(
+              title: Text('Title'),
+              leading: SizedBox(key: Key('leading'), width: 30, height: 30),
+              leadingWidth: 100,
+            ),
+            child: Container(),
+          ),
+        ),
+      );
+      expect(find.byType(CupertinoNavigationBar), findsOneWidget);
+      expect(tester.getSize(find.byKey(const Key('leading'))).width, 30);
+
+      debugDefaultTargetPlatformOverride = null;
+    });
   });
 }

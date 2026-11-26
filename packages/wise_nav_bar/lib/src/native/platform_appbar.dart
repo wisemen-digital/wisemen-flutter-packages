@@ -17,6 +17,7 @@ class PlatformAppBar extends PlatformWidget
   const PlatformAppBar({
     super.key,
     this.leading,
+    this.leadingWidth,
     this.previousPageTitle,
     this.title,
     this.actions,
@@ -36,6 +37,7 @@ class PlatformAppBar extends PlatformWidget
     required String title,
     super.key,
     this.leading,
+    this.leadingWidth,
     this.previousPageTitle,
     this.actions,
     this.actionSpacing = 8,
@@ -62,6 +64,11 @@ class PlatformAppBar extends PlatformWidget
   /// Cupertino: [CupertinoNavigationBar.leading] usually a back button
   /// with previous page title
   final Widget? leading;
+
+  /// [AppBar.leadingWidth] Width reserved for the [leading] widget, Android only.
+  /// Defaults to [kToolbarHeight] (56) when null. Ignored on iOS, where
+  /// [CupertinoNavigationBar] sizes the leading widget to its content
+  final double? leadingWidth;
 
   /// [CupertinoNavigationBar.previousPageTitle] Title of the previous route, iOS only
   /// Defaults to 'Back' when title is longer than 12 characters
@@ -106,6 +113,7 @@ class PlatformAppBar extends PlatformWidget
     return AppBar(
       key: key,
       leading: leading,
+      leadingWidth: leadingWidth,
       title: title,
       actions: actions
           ?.map<Widget>(

@@ -1,3 +1,7 @@
+## 0.1.1
+
+* Added `leadingWidth` to `PlatformAppBar` and `PlatformSliverAppBar` to set the width of the leading widget on Android. It has no effect on iOS
+
 ## 0.1.0
 
 * **Breaking:** Uses the decoupled `material_ui` and `cupertino_ui` packages instead of `package:flutter/material.dart` and `package:flutter/cupertino.dart`. Apps should migrate their own imports as well (add the packages, then run `dart fix --apply`): `package:flutter/material.dart` and `material_ui` (and the Cupertino pair) are separate copies, so a theme or `ScaffoldMessenger` provided by one is not found by widgets built with the other
