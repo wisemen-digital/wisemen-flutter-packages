@@ -1,9 +1,9 @@
-import 'package:easy_infinite_pagination/easy_infinite_pagination.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../../wisewidgetslibrary.dart';
+import '../pagination/pagination.dart';
 
 /// [PagedList] that displays items using an items list and [InfiniteScrollController]
 class PagedList<T> extends StatelessWidget {

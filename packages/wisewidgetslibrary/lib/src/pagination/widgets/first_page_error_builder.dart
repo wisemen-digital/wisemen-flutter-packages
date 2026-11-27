@@ -1,0 +1,70 @@
+// coverage:ignore-file
+
+import 'package:flutter/material.dart';
+
+import '../utils/utils.dart';
+
+/// Builds a widget for displaying an error message when the first page
+/// of the application fails to load.
+///
+/// The [onRetry] callback is triggered when the user taps the 'Try Again' button.
+Widget firstPageErrorBuilder(BuildContext context, VoidCallback onRetry) {
+  return FirstPageErrorBuilder(onRetry: onRetry);
+}
+
+/// Default indicator shown when loading the first page fails.
+class FirstPageErrorBuilder extends StatelessWidget {
+  /// A widget that displays an error message when the first page of
+  /// the application fails to load.
+  const FirstPageErrorBuilder({
+    required this.onRetry,
+    super.key,
+  });
+
+  /// The callback that is triggered when the user taps the 'Try Again' button.
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 32,
+          horizontal: 16,
+        ),
+        child: Column(
+          children: [
+            // Error message title
+            Text(
+              'Something went wrong!',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            // Error message description
+            const Text(
+              defaultFirstPageErrorMessage,
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 48),
+            // Button for retrying
+            FilledButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(
+                Icons.refresh_rounded,
+                color: Colors.white,
+              ),
+              label: const Text(
+                'Try Again',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -49,7 +49,10 @@ abstract class InfiniteScrollController<PageKeyType>
   Future<void> refresh() async {
     isLoading.value = true;
     value = initial;
-    await fetchNewPage();
-    isLoading.value = false;
+    try {
+      await fetchNewPage();
+    } finally {
+      isLoading.value = false;
+    }
   }
 }

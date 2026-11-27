@@ -55,6 +55,55 @@ class LoadingController extends InfiniteScrollController<int> {
   Future<void> logError(Object error, StackTrace stackTrace) => Future.value();
 }
 
+class CountingController extends InfiniteScrollController<int> {
+  CountingController({required super.initialData});
+
+  int fetchCount = 0;
+
+  @override
+  Future<TestPaginationMeta> fetchNewPage() {
+    fetchCount++;
+    return Future.value(
+      TestPaginationMeta(
+        next: fetchCount == 1 ? 2 : null,
+        pageSize: TestPaginationMeta.appPageSize,
+      ),
+    );
+  }
+
+  @override
+  Future<void> logError(Object error, StackTrace stackTrace) => Future.value();
+}
+
+class PendingFirstFetchController extends InfiniteScrollController<int> {
+  PendingFirstFetchController({required super.initialData});
+
+  final Completer<TestPaginationMeta> firstFetch = Completer();
+  int fetchCount = 0;
+  int inFlight = 0;
+  int maxInFlight = 0;
+
+  @override
+  Future<TestPaginationMeta> fetchNewPage() async {
+    fetchCount++;
+    inFlight++;
+    if (inFlight > maxInFlight) maxInFlight = inFlight;
+    try {
+      return fetchCount == 1
+          ? await firstFetch.future
+          : const TestPaginationMeta(
+              next: null,
+              pageSize: TestPaginationMeta.appPageSize,
+            );
+    } finally {
+      inFlight--;
+    }
+  }
+
+  @override
+  Future<void> logError(Object error, StackTrace stackTrace) => Future.value();
+}
+
 void main() {
   // The backward direction renders above the anchor at negative scroll
   // offsets, which start outside the initial viewport (which shows the
@@ -252,6 +301,63 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.pumpAndSettle();
   });
+
+  testWidgets(
+    'fetches the next page when a list has no more items than '
+    'invisibleItemsThreshold',
+    (tester) async {
+      final forwardController = CountingController(
+        initialData: TestPaginationMeta.firstPage,
+      );
+
+      await tester.pumpWidget(
+        buildBiDirectionalPagedList(
+          forwardItems: [0, 1, 2],
+          forwardController: forwardController,
+        ),
+      );
+      await tester.pumpAndSettle();
+      // Fetches are debounced by defaultDebounceDuration (150 ms).
+      await tester.pump(const Duration(milliseconds: 200));
+
+      // The start fetch plus the next page.
+      expect(forwardController.fetchCount, 2);
+    },
+  );
+
+  testWidgets(
+    'does not fetch while the start fetch of a short list is in flight',
+    (tester) async {
+      final forwardController = PendingFirstFetchController(
+        initialData: TestPaginationMeta.firstPage,
+      );
+
+      await tester.pumpWidget(
+        buildBiDirectionalPagedList(
+          forwardItems: [0, 1, 2],
+          forwardController: forwardController,
+        ),
+      );
+      // One frame for the list to rebuild with the start fetch loading, then
+      // past the 150 ms debounce while that fetch is still pending.
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+      expect(forwardController.fetchCount, 1);
+
+      forwardController.firstFetch.complete(
+        const TestPaginationMeta(
+          next: 2,
+          pageSize: TestPaginationMeta.appPageSize,
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      // The next page is still fetched once the start fetch is done.
+      expect(forwardController.fetchCount, 2);
+      expect(forwardController.maxInFlight, 1);
+    },
+  );
 
   testWidgets('renders separatorBuilder between shimmer placeholders', (
     tester,
